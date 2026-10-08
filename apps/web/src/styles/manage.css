@@ -58,6 +58,8 @@
 }
 
 .mg-page {
+  /* How wide the page's content is, for things positioned outside it (the bottom dock) to line up with. */
+  --page-inner: 936px;
   width: min(100%, 1000px);
   margin: 0 auto;
   padding: clamp(22px, 4vw, 44px) clamp(16px, 4vw, 32px) 72px;
@@ -66,6 +68,7 @@
   align-content: start;
 }
 .mg-page--wide {
+  --page-inner: 1116px;
   width: min(100%, 1180px);
 }
 .mg-page > * {
@@ -473,10 +476,11 @@
 }
 .mg-choice__body {
   display: grid;
+  /* Title, text, chips: the text takes up any slack, so chips line up along the bottom of a row of cards. */
+  grid-template-rows: auto 1fr auto;
   gap: 8px;
-  align-content: start;
   height: 100%;
-  padding: 16px 44px 16px 16px;
+  padding: 14px 16px 16px;
   border-radius: var(--radius);
   border: 1px solid var(--glass-edge);
   background: var(--glass-bg);
@@ -517,6 +521,9 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  /* Room for the tick in the corner. Only the title gives way to it; the text and chips below run the full width. */
+  min-height: 24px;
+  padding-right: 30px;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 1.1875rem;
@@ -526,11 +533,21 @@
 .mg-choice__text {
   color: var(--text-dim);
   font-size: 0.875rem;
+  line-height: 1.4;
+  /* A long description is cut at three lines (the full text is in its tooltip), so one wordy card cannot stretch a row. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.mg-choice:has(> .mg-choice__del) .mg-choice__title {
+  padding-right: 64px;
 }
 .mg-choice__del {
   position: absolute;
-  right: 8px;
-  bottom: 8px;
+  top: 11px;
+  right: 46px;
   width: 30px;
   height: 30px;
 }
@@ -539,16 +556,44 @@
 
 .mg-setup {
   display: grid;
-  gap: clamp(22px, 3vw, 32px);
+  gap: clamp(18px, 2.4vw, 26px);
   min-width: 0;
   padding-bottom: 96px;
+}
+/* Format and questions: one above the other on a phone, side by side once both have room. */
+.mg-setup__pick {
+  display: grid;
+  gap: clamp(18px, 2.4vw, 28px);
+  align-items: start;
+  min-width: 0;
+}
+@media (min-width: 940px) {
+  .mg-setup__pick {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  }
+  /* Packs stack in their narrower column instead of trying to form a grid of their own. */
+  .mg-setup__pick > .mg-section:last-child .mg-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* The optional extras share a row while closed; opening either gives both the full width. */
+.mg-setup__more {
+  display: grid;
+  gap: 12px;
+  align-items: start;
+  min-width: 0;
+}
+@media (min-width: 760px) {
+  .mg-setup__more:not(:has(> [open])) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .mg-fold > summary {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 20px;
+  padding: 14px 18px;
   cursor: pointer;
   list-style: none;
   border-radius: var(--radius);
@@ -605,6 +650,13 @@
 }
 .mg-fields__wide {
   grid-column: 1 / -1;
+}
+.mg-rules .mg-fields {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 156px), 1fr));
+}
+/* A field whose choices are too long to read in one column. */
+.mg-fields__double {
+  grid-column: span 2;
 }
 @media (max-width: 560px) {
   .mg-fields {
@@ -738,7 +790,7 @@
   backdrop-filter: var(--bar-blur);
 }
 .mg-dock__inner {
-  width: min(100%, 936px);
+  width: min(100%, var(--page-inner, 936px));
   margin: 0 auto;
   display: flex;
   align-items: center;

@@ -46,9 +46,9 @@ export function NumField(props: { label: string; help?: ReactNode; value: number
   );
 }
 
-export function SelectField<T extends string>(props: { label: string; help?: ReactNode; value: T; options: readonly (readonly [T, string])[]; onChange: (v: T) => void }) {
+export function SelectField<T extends string>(props: { label: string; help?: ReactNode; value: T; options: readonly (readonly [T, string])[]; onChange: (v: T) => void; className?: string }) {
   return (
-    <label className="bz-field">
+    <label className={`bz-field ${props.className ?? ''}`}>
       <span>{props.label}</span>
       <select className="bz-select" value={props.value} onChange={(e) => props.onChange(e.target.value as T)}>
         {props.options.map(([value, text]) => (

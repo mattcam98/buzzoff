@@ -17,7 +17,7 @@ import { MODE_ICON, RulesEditor } from './RulesEditor';
 
 export function NewGame() {
   return (
-    <HostShell>
+    <HostShell wide>
       <Setup />
     </HostShell>
   );
@@ -202,111 +202,118 @@ function Setup() {
         lead={rematch ? 'Same room, same players, scores back to zero.' : 'Pick a format and some questions. You can start in two clicks.'}
       />
 
-      <section className="mg-section">
-        <div className="mg-section__head">
-          <h2>
-            <span className="mg-step">1</span> Format
-          </h2>
-        </div>
-        <div className="mg-grid" role="radiogroup" aria-label="Format">
-          {presets.map((p) => (
-            <label key={p.id} className="mg-choice">
-              <input type="radio" name="preset" checked={p.id === presetId} onChange={() => choosePreset(p)} />
-              <span className="mg-choice__body">
-                <span className="mg-choice__title">
-                  {p.name}
-                  {p.id === presetId && customised && <span className="bz-pill bz-pill--cyan">customised</span>}
-                  {!p.builtin && <span className="bz-pill">yours</span>}
-                </span>
-                <span className="mg-choice__text">{p.description || 'A custom format.'}</span>
-                <span className="mg-chips">
-                  {p.rules.rounds.map((r, i) => (
-                    <RoundChip key={i} round={r} />
-                  ))}
-                </span>
-              </span>
-              {!p.builtin && (
-                <button type="button" className="mg-tool mg-tool--bad mg-choice__del" aria-label={`Delete preset ${p.name}`} onClick={() => void deletePreset(p)}>
-                  ✕
-                </button>
-              )}
-            </label>
-          ))}
-        </div>
-      </section>
-
-      <section className="mg-section">
-        <div className="mg-section__head">
-          <h2>
-            <span className="mg-step">2</span> Questions
-          </h2>
-          <Link href="/host/packs" className="mg-link">
-            Manage packs
-          </Link>
-        </div>
-        {packs.length ? (
-          <div className="mg-grid" role="group" aria-label="Question packs">
-            {packs.map((p) => (
+      {/* The two choices that matter sit side by side where there is room; everything optional folds away below. */}
+      <div className="mg-setup__pick">
+        <section className="mg-section">
+          <div className="mg-section__head">
+            <h2>
+              <span className="mg-step">1</span> Format
+            </h2>
+          </div>
+          <div className="mg-grid" role="radiogroup" aria-label="Format">
+            {presets.map((p) => (
               <label key={p.id} className="mg-choice">
-                <input type="checkbox" checked={packIds.includes(p.id)} onChange={() => togglePack(p.id)} />
+                <input type="radio" name="preset" checked={p.id === presetId} onChange={() => choosePreset(p)} />
                 <span className="mg-choice__body">
-                  <span className="mg-choice__title">{p.title}</span>
-                  <span className="mg-choice__text">{p.description || 'No description.'}</span>
+                  <span className="mg-choice__title">
+                    {p.name}
+                    {p.id === presetId && customised && <span className="bz-pill bz-pill--cyan">customised</span>}
+                    {!p.builtin && <span className="bz-pill">yours</span>}
+                  </span>
+                  <span className="mg-choice__text">{p.description || 'A custom format.'}</span>
                   <span className="mg-chips">
-                    <span className="mg-chip">{plural(p.categoryCount, 'category', 'categories')}</span>
-                    <span className="mg-chip">{plural(p.surveyCount, 'survey')}</span>
+                    {p.rules.rounds.map((r, i) => (
+                      <RoundChip key={i} round={r} />
+                    ))}
                   </span>
                 </span>
+                {!p.builtin && (
+                  <button type="button" className="mg-tool mg-tool--bad mg-choice__del" aria-label={`Delete preset ${p.name}`} onClick={() => void deletePreset(p)}>
+                    ✕
+                  </button>
+                )}
               </label>
             ))}
           </div>
-        ) : (
-          <div className="bz-card mg-empty mg-empty--inline">
-            <p>No question packs yet.</p>
-            <Link href="/host/packs" className="bz-btn bz-btn--primary">
-              Create or import a pack
+        </section>
+
+        <section className="mg-section">
+          <div className="mg-section__head">
+            <h2>
+              <span className="mg-step">2</span> Questions
+            </h2>
+            <Link href="/host/packs" className="mg-link">
+              Manage packs
             </Link>
           </div>
-        )}
-      </section>
+          {packs.length ? (
+            <div className="mg-grid" role="group" aria-label="Question packs">
+              {packs.map((p) => (
+                <label key={p.id} className="mg-choice">
+                  <input type="checkbox" checked={packIds.includes(p.id)} onChange={() => togglePack(p.id)} />
+                  <span className="mg-choice__body">
+                    <span className="mg-choice__title">{p.title}</span>
+                    <span className="mg-choice__text" title={p.description || undefined}>
+                      {p.description || 'No description.'}
+                    </span>
+                    <span className="mg-chips">
+                      <span className="mg-chip">{plural(p.categoryCount, 'category', 'categories')}</span>
+                      <span className="mg-chip">{plural(p.surveyCount, 'survey')}</span>
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          ) : (
+            <div className="bz-card mg-empty mg-empty--inline">
+              <p>No question packs yet.</p>
+              <Link href="/host/packs" className="bz-btn bz-btn--primary">
+                Create or import a pack
+              </Link>
+            </div>
+          )}
+        </section>
+      </div>
 
-      <details className="bz-card mg-fold">
-        <summary>
-          <span>
-            <strong>Customise rules</strong>
-            <small>Rounds, timers, penalties, steals, teams.</small>
-          </span>
-        </summary>
-        <div className="mg-fold__body">
-          <RulesEditor rules={rules} onChange={changeRules} />
-          <div className="mg-row">
-            <Button variant="ghost" size="s" disabled={!parsed.success} onClick={() => setSaving(true)}>
-              Save as a preset
-            </Button>
-            {customised && preset && (
-              <Button variant="ghost" size="s" onClick={() => choosePreset(preset)}>
-                Reset to {preset.name}
+      <div className="mg-setup__more">
+        <details className="bz-card mg-fold">
+          <summary>
+            <span>
+              <strong>Customise rules</strong>
+              <small>Rounds, timers, penalties, steals, teams.</small>
+            </span>
+          </summary>
+          <div className="mg-fold__body">
+            <RulesEditor rules={rules} onChange={changeRules} />
+            <div className="mg-row">
+              <Button variant="ghost" size="s" disabled={!parsed.success} onClick={() => setSaving(true)}>
+                Save as a preset
               </Button>
+              {customised && preset && (
+                <Button variant="ghost" size="s" onClick={() => choosePreset(preset)}>
+                  Reset to {preset.name}
+                </Button>
+              )}
+            </div>
+          </div>
+        </details>
+
+        <details className="bz-card mg-fold" onToggle={(e) => setPicking(e.currentTarget.open)}>
+          <summary>
+            <span>
+              <strong>Choose content by hand</strong>
+              <small>{picks.some((p) => p?.length) ? 'Some rounds are hand-picked; the rest are drawn at random.' : 'Every round is drawn at random from the selected packs.'}</small>
+            </span>
+          </summary>
+          <div className="mg-fold__body">
+            {packIds.every((id) => full[id]) ? (
+              <PicksEditor rules={rules} packs={packIds.map((id) => full[id])} picks={picks} onChange={setPicks} />
+            ) : (
+              <i className="bz-spinner" aria-hidden />
             )}
           </div>
-        </div>
-      </details>
-
-      <details className="bz-card mg-fold" onToggle={(e) => setPicking(e.currentTarget.open)}>
-        <summary>
-          <span>
-            <strong>Choose content by hand</strong>
-            <small>{picks.some((p) => p?.length) ? 'Some rounds are hand-picked; the rest are drawn at random.' : 'Every round is drawn at random from the selected packs.'}</small>
-          </span>
-        </summary>
-        <div className="mg-fold__body">
-          {packIds.every((id) => full[id]) ? (
-            <PicksEditor rules={rules} packs={packIds.map((id) => full[id])} picks={picks} onChange={setPicks} />
-          ) : (
-            <i className="bz-spinner" aria-hidden />
-          )}
-        </div>
-      </details>
+        </details>
+      </div>
 
       <div className="mg-dock">
         <div className="mg-dock__inner">

@@ -84,6 +84,7 @@ export function RulesEditor({ rules, onChange }: Props) {
         <div className="mg-fields">
           <SelectField
             label="Who wins the buzz"
+            className="mg-fields__double"
             value={b.arbitration}
             onChange={(arbitration) => setBuzzer({ arbitration })}
             options={[['first', 'First buzz received'], ['latencyAdjusted', 'Latency-adjusted']]}
@@ -104,7 +105,7 @@ export function RulesEditor({ rules, onChange }: Props) {
           <NumField label="Wrong-answer penalty (%)" value={b.incorrectPenaltyPct} min={0} max={100} onChange={(incorrectPenaltyPct) => setBuzzer({ incorrectPenaltyPct })} help="Share of the clue value deducted. 0 means no penalty." />
         </div>
         <div className="mg-toggles">
-          <ToggleField label="Steals" checked={b.reopenOnIncorrect} onChange={(reopenOnIncorrect) => setBuzzer({ reopenOnIncorrect })} help="After a wrong answer, re-arm the buzzers for everyone else." />
+          <ToggleField label="Steals" checked={b.reopenOnIncorrect} onChange={(reopenOnIncorrect) => setBuzzer({ reopenOnIncorrect })} help="After a wrong answer, the buzzers open again for everyone else." />
           <ToggleField label="Second chances" checked={b.rebuzz} onChange={(rebuzz) => setBuzzer({ rebuzz })} help="A player who got it wrong may buzz again on the same clue." />
           {rules.teams.enabled && (
             <ToggleField label="Team lockout" checked={b.teamLockout} onChange={(teamLockout) => setBuzzer({ teamLockout })} help="A wrong answer locks out the whole team." />
@@ -181,7 +182,7 @@ function FastMoneyFields({ def, set }: { def: FastMoneyRoundDef; set: (p: Partia
       />
       <NumField label="Time per turn (s)" value={def.turnSec} min={10} max={600} onChange={(turnSec) => set({ turnSec })} />
       {def.participants === 'top2' && (
-        <NumField label="Extra time for later turns (s)" value={def.extraSecPerTurn} min={0} max={120} onChange={(extraSecPerTurn) => set({ extraSecPerTurn })} help="They have to avoid earlier answers." />
+        <NumField label="Extra per turn (s)" value={def.extraSecPerTurn} min={0} max={120} onChange={(extraSecPerTurn) => set({ extraSecPerTurn })} help="Added for each later turn: they have to avoid earlier answers." />
       )}
       <SelectField
         label="Stakes"
