@@ -1,0 +1,30 @@
+{
+  "name": "buzzoff",
+  "private": true,
+  "version": "1.0.0",
+  "description": "BuzzOff \u2014 a self-hosted, real-time multiplayer quiz-show platform",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c yellow,cyan \"npm run dev -w @buzzoff/server\" \"npm run dev -w @buzzoff/web\"",
+    "build": "npm run build -w @buzzoff/web && npm run build -w @buzzoff/server",
+    "start": "node apps/server/dist/index.js",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.4",
+    "concurrently": "^10.0.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}

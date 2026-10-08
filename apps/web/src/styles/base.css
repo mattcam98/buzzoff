@@ -1,0 +1,652 @@
+/*
+ * BuzzOff design system.
+ *
+ * Identity: a late-night studio lit in amber. Deep ink-violet backdrops, one
+ * loud signal colour (buzz amber), a honeycomb motif, and chunky controls that
+ * look like they would click if you pressed them. Tokens first, then the
+ * shared kit (`bz-` classes). Each surface adds its own stylesheet on top.
+ */
+
+:root {
+  /* ink */
+  --ink-950: #07061a;
+  --ink-900: #0d0b22;
+  --ink-800: #151233;
+  --ink-700: #1d1947;
+  --ink-600: #29235e;
+  --ink-500: #3a337c;
+  --ink-400: #5a52a6;
+  --line: rgb(255 255 255 / 0.1);
+  --line-strong: rgb(255 255 255 / 0.2);
+
+  /* signal */
+  --buzz: #ffc400;
+  --buzz-deep: #d99a00;
+  --buzz-ink: #1a1300;
+  --pink: #ff4d8d;
+  --cyan: #3ddcff;
+  --violet: #b58cff;
+  --good: #58e88a;
+  --good-deep: #2aa85a;
+  --bad: #ff5c6c;
+  --bad-deep: #c5303f;
+
+  /* text */
+  --text: #f6f4ff;
+  --text-dim: #b9b3dc;
+  --text-faint: #8a84b3;
+
+  /* type */
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Figtree Variable', 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* shape and motion */
+  --radius-s: 10px;
+  --radius: 16px;
+  --radius-l: 26px;
+  --hex: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0% 50%);
+  --hex-tall: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow: 0 18px 50px -18px rgb(0 0 0 / 0.7);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Safari 26 tints its toolbars from the page background rather than theme-color. */
+html {
+  background: var(--ink-900);
+}
+
+body {
+  margin: 0;
+  background: var(--ink-900);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--cyan);
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--buzz);
+  color: var(--buzz-ink);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- backdrop */
+
+.bz-stage {
+  position: relative;
+  min-height: 100%;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgb(90 60 220 / 0.38), transparent 60%),
+    radial-gradient(70% 60% at 100% 100%, rgb(255 77 141 / 0.16), transparent 65%),
+    radial-gradient(60% 50% at 0% 100%, rgb(61 220 255 / 0.12), transparent 60%),
+    linear-gradient(180deg, var(--ink-800), var(--ink-950));
+}
+
+/* A honeycomb, drawn once as an SVG tile and faded towards the edges. */
+.bz-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 1 55 16.5v32L28 64 1 48.5v-32zM28 64v32M1 48.5-26 64M55 48.5 82 64' fill='none' stroke='%23ffffff' stroke-opacity='.055' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-size: 56px 97px;
+  mask-image: radial-gradient(120% 90% at 50% 40%, #000 25%, transparent 78%);
+  pointer-events: none;
+}
+
+/*
+ * The fixed app shell used by the phone screens. It is exactly as tall as the
+ * visible part of the screen (lib/viewport.ts keeps --app-height and --app-top
+ * current, including while a keyboard is open), never scrolls as a page, and
+ * is a size container so everything inside can scale to the space it has.
+ */
+html.app-fixed,
+html.app-fixed body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+html.app-fixed body {
+  position: fixed;
+  inset: 0;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.bz-app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--app-height, 100dvh);
+  min-height: 0;
+  transform: translateY(var(--app-top, 0px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  container: app / size;
+}
+/* Regions that are allowed to scroll inside the shell: long lists, nothing else. */
+[data-scroll] {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+[data-scroll]::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- logo */
+
+.bz-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28em;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  font-stretch: 85%;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: var(--text);
+  text-decoration: none;
+  user-select: none;
+}
+.bz-logo__mark {
+  position: relative;
+  width: 0.92em;
+  height: 0.92em;
+  flex: none;
+  clip-path: var(--hex-tall);
+  background: linear-gradient(135deg, var(--buzz) 50%, var(--buzz-deep) 50%);
+}
+.bz-logo__mark::before,
+.bz-logo__mark::after {
+  content: '';
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: var(--ink-900);
+}
+.bz-logo__mark::after {
+  inset: 34%;
+  background: var(--pink);
+  animation: bz-pulse 2.4s ease-in-out infinite;
+}
+.bz-logo__off {
+  color: var(--buzz);
+}
+
+@keyframes bz-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.72); }
+}
+
+/* ---------------------------------------------------------------- buttons */
+
+.bz-btn {
+  --btn-bg: var(--ink-600);
+  --btn-edge: var(--ink-800);
+  --btn-fg: var(--text);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 44px;
+  padding: 0.55em 1.1em;
+  border: 0;
+  border-radius: var(--radius-s);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--btn-edge), inset 0 1px 0 rgb(255 255 255 / 0.18);
+  transform: translateY(0);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.bz-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+.bz-btn:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--btn-edge), inset 0 1px 0 rgb(255 255 255 / 0.18);
+}
+.bz-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.bz-btn--primary { --btn-bg: var(--buzz); --btn-edge: var(--buzz-deep); --btn-fg: var(--buzz-ink); }
+.bz-btn--good { --btn-bg: var(--good); --btn-edge: var(--good-deep); --btn-fg: #04220f; }
+.bz-btn--bad { --btn-bg: var(--bad); --btn-edge: var(--bad-deep); --btn-fg: #2a0308; }
+.bz-btn--pink { --btn-bg: var(--pink); --btn-edge: #c22a63; --btn-fg: #2a0314; }
+.bz-btn--ghost {
+  --btn-bg: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+}
+.bz-btn--ghost:active:not(:disabled) {
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  transform: scale(0.97);
+}
+.bz-btn--s { min-height: 34px; padding: 0.35em 0.75em; font-size: 0.875rem; border-radius: 8px; }
+.bz-btn--l { min-height: 58px; padding: 0.6em 1.5em; font-size: 1.25rem; border-radius: var(--radius); }
+.bz-btn--block { display: flex; width: 100%; }
+.bz-btn--icon { padding: 0; width: 44px; }
+.bz-btn--icon.bz-btn--s { width: 34px; }
+
+.bz-kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  padding: 0 0.4em;
+  border-radius: 5px;
+  background: rgb(0 0 0 / 0.22);
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ---------------------------------------------------------------- avatar */
+
+.bz-avatar {
+  --size: 48px;
+  --tone: var(--buzz);
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--size);
+  height: calc(var(--size) * 1.1);
+  clip-path: var(--hex-tall);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--tone) 100%, white 0%), color-mix(in srgb, var(--tone) 68%, black));
+}
+.bz-avatar > span {
+  font-size: calc(var(--size) * 0.52);
+  line-height: 1;
+  filter: drop-shadow(0 2px 0 rgb(0 0 0 / 0.25));
+}
+.bz-avatar[data-dim='true'] {
+  filter: grayscale(0.9) brightness(0.6);
+}
+
+/* ---------------------------------------------------------------- surfaces & forms */
+
+.bz-card {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.03));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+}
+
+.bz-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.bz-field {
+  display: grid;
+  gap: 6px;
+}
+.bz-field > span,
+.bz-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+.bz-field small {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.bz-input,
+.bz-select,
+.bz-textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55em 0.8em;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  background: rgb(0 0 0 / 0.28);
+  color: var(--text);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.bz-textarea {
+  resize: vertical;
+  min-height: 76px;
+  line-height: 1.4;
+}
+.bz-input::placeholder,
+.bz-textarea::placeholder {
+  color: var(--text-faint);
+}
+.bz-input:hover,
+.bz-select:hover,
+.bz-textarea:hover {
+  border-color: var(--ink-400);
+}
+.bz-input:focus-visible,
+.bz-select:focus-visible,
+.bz-textarea:focus-visible {
+  outline: none;
+  border-color: var(--buzz);
+  background: rgb(0 0 0 / 0.4);
+}
+.bz-select {
+  appearance: none;
+  padding-right: 2.2em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23b9b3dc' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8em center;
+}
+.bz-select option {
+  background: var(--ink-800);
+}
+
+.bz-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+}
+.bz-toggle input {
+  appearance: none;
+  flex: none;
+  width: 42px;
+  height: 24px;
+  margin: 0;
+  border-radius: 99px;
+  background: var(--ink-500);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.bz-toggle input::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.18s var(--spring);
+}
+.bz-toggle input:checked {
+  background: var(--buzz);
+}
+.bz-toggle input:checked::after {
+  transform: translateX(18px);
+}
+
+.bz-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em 0.65em;
+  border-radius: 99px;
+  background: rgb(255 255 255 / 0.1);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.bz-pill--buzz { background: var(--buzz); color: var(--buzz-ink); }
+.bz-pill--good { background: color-mix(in srgb, var(--good) 22%, transparent); color: var(--good); }
+.bz-pill--bad { background: color-mix(in srgb, var(--bad) 22%, transparent); color: var(--bad); }
+.bz-pill--cyan { background: color-mix(in srgb, var(--cyan) 20%, transparent); color: var(--cyan); }
+
+.bz-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.bz-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* ---------------------------------------------------------------- timer */
+
+.bz-timer {
+  position: relative;
+  height: 10px;
+  border-radius: 99px;
+  background: rgb(0 0 0 / 0.35);
+  overflow: hidden;
+}
+.bz-timer > i {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cyan), var(--buzz));
+  will-change: transform;
+}
+.bz-timer[data-low='true'] > i {
+  background: linear-gradient(90deg, var(--bad), var(--pink));
+}
+
+/* ---------------------------------------------------------------- toasts & modal */
+
+.bz-toasts {
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  /* Anchored to the bottom of the visible area, so a toast is never behind the keyboard. */
+  top: calc(var(--app-top, 0px) + var(--app-height, 100dvh));
+  transform: translate(-50%, calc(-100% - max(16px, env(safe-area-inset-bottom))));
+  display: grid;
+  gap: 8px;
+  width: min(92vw, 420px);
+  pointer-events: none;
+}
+.bz-toast {
+  padding: 12px 16px;
+  border-radius: var(--radius-s);
+  background: var(--ink-600);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  animation: bz-rise 0.3s var(--spring);
+}
+.bz-toast[data-kind='error'] { background: #5a1420; border-color: var(--bad); }
+.bz-toast[data-kind='good'] { background: #0f4527; border-color: var(--good); }
+
+.bz-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(5 4 18 / 0.72);
+  backdrop-filter: blur(6px);
+  animation: bz-fade 0.15s ease;
+}
+.bz-modal__panel {
+  width: min(100%, var(--modal-width, 520px));
+  max-height: calc(var(--app-height, 100dvh) - 32px);
+  overflow: auto;
+  padding: 24px;
+  border-radius: var(--radius-l);
+  background: var(--ink-700);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow);
+  animation: bz-pop 0.25s var(--spring);
+}
+.bz-modal__panel > h2 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+.bz-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+/* ---------------------------------------------------------------- status screens */
+
+.bz-center {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+}
+.bz-center > div {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  max-width: 440px;
+}
+.bz-center h1 {
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+}
+.bz-center p {
+  color: var(--text-dim);
+}
+
+.bz-spinner {
+  width: 44px;
+  height: 48px;
+  clip-path: var(--hex-tall);
+  background: conic-gradient(var(--buzz), transparent 70%);
+  animation: bz-spin 0.9s linear infinite;
+}
+
+.bz-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bad-deep);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- motion */
+
+@keyframes bz-spin { to { transform: rotate(1turn); } }
+@keyframes bz-fade { from { opacity: 0; } }
+@keyframes bz-rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes bz-pop { from { opacity: 0; transform: scale(0.86); } }
+@keyframes bz-slam {
+  0% { opacity: 0; transform: scale(1.8) rotate(-4deg); }
+  60% { opacity: 1; transform: scale(0.96) rotate(1deg); }
+  100% { transform: none; }
+}
+@keyframes bz-shake {
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+@keyframes bz-flip-in {
+  from { opacity: 0; transform: perspective(900px) rotateX(-80deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes bz-glow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--glow, var(--buzz)) 60%, transparent); }
+  50% { box-shadow: 0 0 0 14px transparent; }
+}
+
+.bz-rise { animation: bz-rise 0.45s var(--ease-out) both; }
+.bz-pop { animation: bz-pop 0.4s var(--spring) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

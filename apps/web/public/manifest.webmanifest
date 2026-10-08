@@ -1,0 +1,16 @@
+{
+  "name": "BuzzOff",
+  "short_name": "BuzzOff",
+  "description": "The quiz show you host from your own living room.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d0b22",
+  "theme_color": "#0d0b22",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

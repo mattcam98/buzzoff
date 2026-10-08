@@ -1,0 +1,69 @@
+services:
+  buzzoff:
+    build: .
+    image: buzzoff:local
+    container_name: buzzoff
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${BUZZOFF_PORT:-3210}:3210"
+    environment:
+      TZ: ${TZ:-Europe/Malta}
+      DATABASE_URL: postgres://buzzoff:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/buzzoff
+      # Required to host games or edit packs. Leave empty only on a network you fully trust.
+      BUZZOFF_ADMIN_PASSWORD: ${BUZZOFF_ADMIN_PASSWORD:-}
+      # The address players type, e.g. https://buzz.example.com. Shown on the lobby
+      # screen and encoded in the QR code. Empty means "whatever address the TV used".
+      PUBLIC_URL: ${PUBLIC_URL:-}
+      # Reverse proxies in front of the app: 0 for none, 1 for Nginx Proxy Manager,
+      # 2 for Cloudflare in front of Nginx Proxy Manager.
+      TRUST_PROXY: ${TRUST_PROXY:-1}
+      ROOM_TTL_HOURS: ${ROOM_TTL_HOURS:-24}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-25}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      # Uploaded question media. Everything else in the container is read-only.
+      - buzzoff-media:/data
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db:
+    image: postgres:17-alpine
+    container_name: buzzoff-db
+    environment:
+      TZ: ${TZ:-Europe/Malta}
+      POSTGRES_USER: buzzoff
+      POSTGRES_DB: buzzoff
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      # Packs, presets, live games and history.
+      - buzzoff-db:/var/lib/postgresql/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U buzzoff -d buzzoff"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  buzzoff-media:
+  buzzoff-db:

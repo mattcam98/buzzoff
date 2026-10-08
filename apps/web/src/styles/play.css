@@ -1,0 +1,903 @@
+/*
+ * The phone controller.
+ *
+ * One fixed screen, never a scrolling page. The shell (`.bz-app`, see base.css)
+ * is exactly as tall as the visible viewport — browser bars, safe areas and an
+ * open keyboard all accounted for — and is a size container, so the rules
+ * below respond to the space actually available rather than to the device:
+ *
+ *   regular   plenty of room (most phones, portrait)
+ *   short     height ≤ 560px  small phones with browser bars showing
+ *   tight     height ≤ 420px  keyboard open, or a phone on its side
+ *   wide      landscape and short: two columns instead of one
+ *
+ * Sizes use clamp() with container units (cqh/cqw) so type and controls scale
+ * smoothly between those points instead of jumping.
+ */
+
+.play {
+  --head-avatar: 40px;
+  --gap: clamp(8px, 1.7cqh, 14px);
+  --pad-x: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.play input {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* ---------------------------------------------------------------- header */
+
+.play__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: max(8px, env(safe-area-inset-top)) var(--pad-x) 8px;
+  background: rgb(13 11 34 / 0.72);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-bottom: 1px solid var(--line);
+}
+.play__id {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  line-height: 1.2;
+}
+.play__id strong {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.play__id span {
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.play__score {
+  display: grid;
+  justify-items: end;
+  line-height: 1.1;
+}
+.play__score .bz-num {
+  font-size: 1.5rem;
+  color: var(--buzz);
+}
+.play__score .bz-num[data-negative] {
+  color: var(--bad);
+}
+.play__net {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.play__net i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+.play__net[data-quality='good'] i { background: var(--good); }
+.play__net[data-quality='ok'] i { background: var(--buzz); }
+.play__net[data-quality='poor'] i { background: var(--bad); }
+
+.play > .bz-banner {
+  flex: none;
+  padding-top: max(8px, env(safe-area-inset-top));
+}
+.play > .bz-banner + .play__head {
+  padding-top: 8px;
+}
+
+/* ---------------------------------------------------------------- main area */
+
+.play__main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  /* `safe` keeps the top reachable in the one case content cannot fit; plain `center` is the fallback. */
+  justify-content: center;
+  justify-content: safe center;
+  gap: var(--gap);
+  width: min(100%, 540px);
+  margin: 0 auto;
+  padding: var(--gap) var(--pad-x) max(12px, env(safe-area-inset-bottom));
+  /* A last resort for sizes smaller than any real phone; the layouts below are built not to need it. */
+  overflow: hidden auto;
+  overscroll-behavior: none;
+  container: main / size;
+}
+/* Screens you type on stay at the top, so nothing moves when the keyboard slides up. */
+.play__main:has(> .play__fm),
+html.kb-open .play__main {
+  justify-content: flex-start;
+}
+/* The keyboard covers the home indicator, so its inset is dead space while typing. */
+html.kb-open .play__main {
+  padding-bottom: 8px;
+}
+
+.play__panel {
+  /* A panel keeps its natural height; only one that holds a scrolling list may be squeezed. */
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.6cqh, 12px);
+  padding: clamp(12px, 3cqh, 20px) 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
+  text-align: center;
+}
+.play__panel > * {
+  flex: none;
+}
+.play__panel:has(> [data-scroll]) {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.play__panel > [data-scroll] {
+  flex: 0 1 auto;
+}
+.play__panel h1 {
+  font-size: clamp(1.35rem, 3.2cqh + 2.6cqw, 2.25rem);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.play__panel p {
+  color: var(--text-dim);
+}
+.play__panel[data-tone='buzz'] { border-color: var(--buzz); background: rgb(255 196 0 / 0.12); }
+.play__panel[data-tone='good'] { border-color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+.play__panel[data-tone='bad'] { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, transparent); }
+.play__hint {
+  flex: none;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+}
+.play__delta {
+  font-size: clamp(1.75rem, 6cqh, 2.5rem);
+  line-height: 1;
+  color: var(--text) !important;
+}
+
+.play__teams {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+}
+.play__teams button {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: 8px;
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-s);
+  background: transparent;
+  cursor: pointer;
+}
+.play__teams button span {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+.play__teams button[aria-checked='true'] {
+  border-color: var(--cyan);
+  background: rgb(61 220 255 / 0.12);
+}
+
+/* ---------------------------------------------------------------- lists */
+
+.play__board,
+.play__totals,
+.play__cells {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  text-align: left;
+}
+/* The scoreboard shrinks to the room left over and scrolls within itself, but always shows two rows. */
+.play__board {
+  flex: 0 1 auto;
+  min-height: 86px;
+  align-content: start;
+}
+/* Two columns only where each is wide enough to read a name; otherwise the list simply scrolls. */
+@container main (min-width: 420px) {
+  .play__board[data-many] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.play__board li,
+.play__totals li {
+  display: grid;
+  grid-template-columns: 1.3em auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 12px;
+  background: #1a1640;
+}
+.play__totals li {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+.play__board li > .bz-num:first-child {
+  color: var(--text-faint);
+  text-align: center;
+}
+.play__board strong,
+.play__totals strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.play__board li[data-me],
+.play__totals li[data-me] {
+  /* Pinned inside the scroll region so your own score is always on screen. */
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  background: #3a3115;
+  box-shadow: inset 0 0 0 1.5px var(--buzz);
+}
+.play__totals li[data-winner] b {
+  color: var(--buzz);
+}
+.play__board li[data-out] strong {
+  text-decoration: line-through;
+  color: var(--text-faint);
+}
+.play__lists {
+  display: grid;
+  gap: 10px;
+}
+
+/* ---------------------------------------------------------------- the clue screen */
+
+.play__stage {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--gap);
+}
+.play__clue {
+  min-height: 0;
+  max-height: 44cqh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.2cqh, 10px);
+  padding: clamp(10px, 2cqh, 14px) 16px clamp(10px, 2.2cqh, 16px);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgb(44 36 112 / 0.8), rgb(22 18 60 / 0.8));
+  border: 1px solid var(--line);
+}
+.play__clue > * {
+  flex: none;
+}
+.play__clue header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+.play__clue header span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.play__clue header b {
+  padding: 2px 10px;
+  border-radius: 99px;
+  background: var(--buzz);
+  color: var(--buzz-ink);
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+.play__clue p {
+  flex: 0 1 auto;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.22;
+}
+/* Long clues step down in size before they are ever allowed to scroll. */
+.play__clue p[data-scale='l'] { font-size: clamp(1.0625rem, 2.6cqh + 1cqw, 1.375rem); }
+.play__clue p[data-scale='m'] { font-size: clamp(1rem, 2.2cqh + 1cqw, 1.1875rem); }
+.play__clue p[data-scale='s'] { font-size: clamp(0.9375rem, 1.9cqh + 0.8cqw, 1.0625rem); }
+.play__clue p[data-scale='xs'] { font-size: clamp(0.875rem, 1.6cqh + 0.8cqw, 1rem); }
+.play__clue .bz-pill {
+  align-self: start;
+}
+.play__media {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 18cqh;
+  align-self: center;
+}
+
+.play__center {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.play__buzz {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 6px;
+}
+/* The buzzer is as large as its region allows, measured by container units. */
+.play__buzzwrap {
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+.play__buzzer {
+  --face: var(--ink-500);
+  --edge: var(--ink-700);
+  --fg: var(--text-dim);
+  --depth: clamp(6px, 4cqh, 14px);
+  width: min(88cqw, calc(100cqh - var(--depth) * 2 - 6px), 330px);
+  aspect-ratio: 1;
+  display: grid;
+  place-content: center;
+  gap: 2px;
+  padding: 0 10%;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 26%, color-mix(in srgb, var(--face) 70%, white), var(--face) 52%, color-mix(in srgb, var(--face) 78%, black));
+  color: var(--fg);
+  box-shadow: 0 var(--depth) 0 var(--edge), 0 calc(var(--depth) * 2) 40px -10px rgb(0 0 0 / 0.6), inset 0 2px 0 rgb(255 255 255 / 0.3);
+  transform: translateY(calc(var(--depth) / -2));
+  transition: transform 0.07s ease, box-shadow 0.07s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  /* The label is sized from the button's own width, so it always fits inside the circle. */
+  container-type: inline-size;
+}
+.play__buzzer span {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 15cqi, 2.9rem);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.play__buzzer small {
+  font-size: clamp(0.625rem, 5.4cqi, 0.9375rem);
+  font-weight: 700;
+  opacity: 0.85;
+}
+.play__buzzer:active:not(:disabled),
+.play__buzzer[data-state='buzzed'],
+.play__buzzer[data-state='yours'] {
+  transform: translateY(calc(var(--depth) / 2 - 2px));
+  box-shadow: 0 2px 0 var(--edge), 0 12px 24px -8px rgb(0 0 0 / 0.6), inset 0 2px 0 rgb(255 255 255 / 0.3);
+}
+.play__buzzer[data-state='open'] {
+  --face: var(--bad);
+  --edge: #8f1626;
+  --fg: #fff;
+  animation: play-ready 0.9s ease-in-out infinite;
+}
+.play__buzzer[data-state='buzzed'] { --face: var(--buzz); --edge: var(--buzz-deep); --fg: var(--buzz-ink); }
+.play__buzzer[data-state='yours'] {
+  --face: var(--good);
+  --edge: var(--good-deep);
+  --fg: #04220f;
+  animation: bz-pop 0.4s var(--spring);
+}
+.play__buzzer[data-state='locked'] { --face: #6b2330; --edge: #3d1019; --fg: #ffb3bc; animation: bz-shake 0.4s ease; }
+.play__buzzer[data-state='taken'],
+.play__buzzer[data-state='out'] {
+  --face: var(--ink-600);
+  --edge: var(--ink-800);
+  --fg: var(--text-faint);
+  transform: none;
+  box-shadow: 0 calc(var(--depth) / 2) 0 var(--edge), inset 0 2px 0 rgb(255 255 255 / 0.12);
+}
+.play__buzzer[data-state='taken'] span,
+.play__buzzer[data-state='out'] span {
+  /* A player's name can be one long word, so this label alone may break mid-word. */
+  font-size: clamp(0.9375rem, 10cqi, 2rem);
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+@keyframes play-ready {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.18) drop-shadow(0 0 22px rgb(255 92 108 / 0.7)); }
+}
+/* Two lines are reserved so the buzzer does not jump when the text changes. */
+.play__readout {
+  min-height: 2.7em;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+.play__readout b {
+  color: var(--text);
+}
+.play__readout p[data-tone='bad'] {
+  color: var(--bad);
+  font-weight: 700;
+}
+.play__readout .bz-num {
+  font-size: 1.5rem;
+  color: var(--text);
+}
+.play__timing {
+  display: grid;
+  gap: 6px;
+  font-size: 0.8125rem;
+}
+.play__timing p {
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- choosing a clue */
+
+.play__pick {
+  flex: 0 1 auto;
+  min-height: 0;
+  padding-inline: 10px;
+}
+.play__pick h1 {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  font-size: clamp(1.125rem, 3.4cqh, 1.5rem);
+}
+/* Rows are up to 68px tall and give height back evenly when the screen is short. */
+.play__panel > .play__grid {
+  flex: 0 1 calc(2.6em + var(--rows, 5) * 73px);
+  min-height: 0;
+  display: grid;
+  gap: 5px;
+}
+.play__col {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  /* The header takes what it needs; clue rows share the rest equally. */
+  grid-template-rows: minmax(2.3em, auto);
+  grid-auto-rows: minmax(30px, 1fr);
+  gap: 5px;
+}
+.play__col span {
+  display: grid;
+  place-items: center;
+  font-size: 0.625rem;
+  font-weight: 800;
+  line-height: 1.05;
+  text-transform: uppercase;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.play__col button {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #2c2470, #1e1850);
+  box-shadow: 0 3px 0 rgb(0 0 0 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.14);
+  color: var(--buzz);
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.play__col button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+.play__col button:disabled {
+  background: rgb(255 255 255 / 0.04);
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------------- wagers */
+
+.play__amount {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 52px;
+  gap: 8px;
+}
+.play__amount button {
+  border: 0;
+  border-radius: var(--radius-s);
+  background: rgb(255 255 255 / 0.1);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+.play__amount button:disabled {
+  opacity: 0.35;
+}
+.play__amount button:active:not(:disabled) {
+  background: rgb(255 255 255 / 0.2);
+}
+.play__wager {
+  width: 100%;
+  min-width: 0;
+  padding: 2px 6px;
+  border: 2px solid var(--buzz);
+  border-radius: var(--radius);
+  background: rgb(0 0 0 / 0.35);
+  color: var(--buzz);
+  font-size: clamp(2rem, 9cqh, 3rem);
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.play__wager::-webkit-outer-spin-button,
+.play__wager::-webkit-inner-spin-button {
+  appearance: none;
+}
+.play__range {
+  width: 100%;
+  height: 32px;
+  accent-color: var(--buzz);
+}
+.play__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.play__chips button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 99px;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- typed answers (fast money, final) */
+
+.play__fm {
+  text-align: left;
+}
+.play__fmhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+}
+.play__fmhead .bz-eyebrow {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.play__fmclock {
+  flex: none;
+  font-size: 1.625rem;
+  line-height: 1;
+}
+.play__fmclock[data-low] {
+  color: var(--bad);
+}
+.play__panel .play__fmq {
+  flex: 0 1 auto;
+  line-height: 1.14;
+  text-align: left;
+}
+.play__fmq[data-scale='l'] { font-size: clamp(1.125rem, 3.4cqh + 1.6cqw, 1.75rem); }
+.play__fmq[data-scale='m'] { font-size: clamp(1.0625rem, 2.8cqh + 1.4cqw, 1.5rem); }
+.play__fmq[data-scale='s'] { font-size: clamp(1rem, 2.2cqh + 1cqw, 1.25rem); }
+.play__fmq[data-scale='xs'] { font-size: clamp(0.9375rem, 1.8cqh + 1cqw, 1.0625rem); }
+.play__entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+.play__entry .bz-btn {
+  min-height: 52px;
+}
+/* 16px or larger: anything smaller makes iOS zoom the page when the field is focused. */
+.play__fminput {
+  min-height: 52px;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.play__fminput[data-error] {
+  border-color: var(--bad);
+  animation: bz-shake 0.4s ease;
+}
+.play__fmfoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 32px;
+}
+.play__fmfoot p {
+  text-align: left;
+}
+.play__fmerror {
+  color: var(--bad) !important;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.play__pass {
+  flex: none;
+  min-height: 32px;
+  margin-left: auto;
+  padding: 0 14px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 99px;
+  background: transparent;
+  font-weight: 700;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.play__dots {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 6px;
+}
+.play__dots button {
+  flex: 0 1 30px;
+  min-width: 18px;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+.play__dots button[data-done] {
+  background: var(--good);
+  border-color: var(--good);
+  color: #04220f;
+}
+.play__dots button[aria-selected='true'] {
+  border-color: var(--buzz);
+  box-shadow: 0 0 0 3px rgb(255 196 0 / 0.25);
+}
+.play__cells li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgb(0 0 0 / 0.25);
+  font-weight: 700;
+}
+.play__cells li > span {
+  overflow-wrap: anywhere;
+}
+.play__cells li:has(button) {
+  padding: 0;
+  grid-template-columns: 1fr;
+}
+.play__cells button {
+  display: grid;
+  gap: 1px;
+  width: 100%;
+  padding: 7px 12px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.play__cells button small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.play__cells button span {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.play__cells b {
+  min-width: 2.2em;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--buzz);
+  color: var(--buzz-ink);
+  text-align: center;
+}
+.play__cells b:empty {
+  display: none;
+}
+.play__cells li[data-zero] b {
+  background: var(--bad);
+}
+
+.play__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 0;
+}
+.play__stats div {
+  padding: clamp(5px, 1.2cqh, 10px) 8px;
+  border-radius: 12px;
+  background: rgb(0 0 0 / 0.25);
+}
+.play__stats dt {
+  font-size: 0.6875rem;
+  color: var(--text-faint);
+}
+.play__stats dd {
+  margin: 0;
+  font-size: clamp(1rem, 3cqh, 1.25rem);
+  font-weight: 700;
+}
+
+/* ================================================================ short: small phones, browser bars showing */
+
+@container app (max-height: 560px) {
+  .play {
+    --head-avatar: 34px;
+  }
+  .play__head {
+    padding-bottom: 6px;
+  }
+  .play__score .bz-num {
+    font-size: 1.25rem;
+  }
+  .play__board li,
+  .play__totals li {
+    min-height: 36px;
+  }
+  .play__range {
+    height: 26px;
+  }
+  .play__main > .play__extra,
+  .play__roomy {
+    display: none;
+  }
+  .play__stats div {
+    padding-block: 4px;
+  }
+  .play__stats dt {
+    line-height: 1.2;
+  }
+}
+
+/* ================================================================ tight: keyboard open, or a phone on its side */
+
+@container app (max-height: 420px) {
+  .play {
+    --head-avatar: 28px;
+    --gap: 6px;
+  }
+  .play__head {
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+  /* One line: name and score. Rank and ping return when there is room again. */
+  .play__id span,
+  .play__net,
+  .play__extra {
+    display: none;
+  }
+  .play__panel {
+    padding: 10px 14px;
+    gap: 6px;
+    border-radius: var(--radius);
+  }
+  .play__panel > .bz-eyebrow:first-child {
+    display: none;
+  }
+  .play__fmhead {
+    min-height: 24px;
+  }
+  .play__fmclock {
+    font-size: 1.25rem;
+  }
+  .play__entry .bz-btn,
+  .play__fminput {
+    min-height: 46px;
+  }
+  .play__readout {
+    min-height: 1.4em;
+  }
+  .play__timing p {
+    display: none;
+  }
+}
+
+/* While typing, anything that is not the question, the field or its button gets out of the way. */
+html.kb-open .play__nokb,
+html.kb-open .play__extra {
+  display: none;
+}
+
+/* ================================================================ wide: landscape phones use two columns */
+
+/* Needs real width as well: a portrait phone with its keyboard open is also wider than it is tall. */
+@container app (min-aspect-ratio: 5/4) and (max-height: 520px) and (min-width: 560px) {
+  .play__main {
+    width: min(100%, 920px);
+  }
+  .play__stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: 16px;
+  }
+  .play__clue {
+    max-height: none;
+    align-self: center;
+  }
+  .play__center {
+    grid-column: 2;
+    grid-row: 1 / -1;
+  }
+  .play__timing {
+    grid-column: 1;
+  }
+  /* A scoreboard beside its panel rather than under it. */
+  .play__main:has(> .play__panel + .play__board) {
+    flex-direction: row;
+    align-items: center;
+  }
+  .play__main:has(> .play__panel + .play__board) > * {
+    flex: 1 1 0;
+    max-height: 100%;
+  }
+  .play__main:has(> .play__panel + .play__board) > .play__hint {
+    display: none;
+  }
+  .play__wagerpanel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    column-gap: 16px;
+  }
+  .play__wagerpanel > .bz-eyebrow,
+  .play__wagerpanel > .play__extra {
+    grid-column: 1 / -1;
+  }
+}

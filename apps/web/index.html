@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      viewport-fit=cover: draw edge to edge and read the safe-area insets.
+      interactive-widget=resizes-content: on Android the keyboard resizes the page.
+      Safari ignores that, so lib/viewport.ts tracks the visual viewport instead.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="theme-color" content="#0d0b22" />
+    <meta name="color-scheme" content="dark" />
+    <!-- Added to a Home Screen, BuzzOff opens full screen with no browser bars. -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BuzzOff" />
+    <meta name="description" content="BuzzOff — the quiz show you host from your own living room." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>BuzzOff</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

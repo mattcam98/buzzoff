@@ -1,0 +1,857 @@
+{
+  "format": "buzzoff.pack",
+  "version": 1,
+  "pack": {
+    "title": "BuzzOff Starter Pack",
+    "description": "A general-knowledge and pop-culture mix for a group of friends: 14 trivia categories (including one either/or Higher or Lower category) and 12 survey rounds. Survey numbers are illustrative, not from a real poll.",
+    "author": "BuzzOff",
+    "categories": [
+      {
+        "id": "cat-01",
+        "title": "Around the World",
+        "blurb": "Capitals, countries and the bits of the map in between.",
+        "clues": [
+          {
+            "id": "cat-01-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "What is the largest ocean on Earth?",
+            "answer": "The Pacific Ocean",
+            "accept": ["Pacific"]
+          },
+          {
+            "id": "cat-01-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In which country would you find the Inca citadel of Machu Picchu?",
+            "answer": "Peru",
+            "accept": []
+          },
+          {
+            "id": "cat-01-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What is the capital city of Australia?",
+            "answer": "Canberra",
+            "accept": [],
+            "notes": "Not Sydney or Melbourne. Canberra was purpose-built as a compromise between the two rivals."
+          },
+          {
+            "id": "cat-01-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which African kingdom is completely surrounded by South Africa?",
+            "answer": "Lesotho",
+            "accept": ["Kingdom of Lesotho"],
+            "notes": "Pronounced leh-SOO-too. Eswatini is not correct: it also borders Mozambique."
+          },
+          {
+            "id": "cat-01-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What is the capital city of Burkina Faso?",
+            "answer": "Ouagadougou",
+            "accept": ["Wagadugu", "Ouaga"],
+            "notes": "Pronounced wah-gah-DOO-goo. Be generous with pronunciation."
+          }
+        ]
+      },
+      {
+        "id": "cat-02",
+        "title": "Lab Rats",
+        "blurb": "Science and nature, no safety goggles required.",
+        "clues": [
+          {
+            "id": "cat-02-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which gas do plants absorb from the air to carry out photosynthesis?",
+            "answer": "Carbon dioxide",
+            "accept": ["CO2"]
+          },
+          {
+            "id": "cat-02-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which part of a cell is famously nicknamed \"the powerhouse of the cell\"?",
+            "answer": "Mitochondria",
+            "accept": ["Mitochondrion", "The mitochondria"]
+          },
+          {
+            "id": "cat-02-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which gas makes up about 78 percent of Earth's atmosphere?",
+            "answer": "Nitrogen",
+            "accept": ["N2"]
+          },
+          {
+            "id": "cat-02-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the name of the process in which a solid turns directly into a gas without becoming a liquid first?",
+            "answer": "Sublimation",
+            "accept": ["Sublimating", "Sublime"],
+            "notes": "Dry ice (frozen carbon dioxide) does exactly this at room temperature."
+          },
+          {
+            "id": "cat-02-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which German physicist gave his name to the uncertainty principle of quantum mechanics?",
+            "answer": "Werner Heisenberg",
+            "accept": ["Heisenberg"]
+          }
+        ]
+      },
+      {
+        "id": "cat-03",
+        "title": "Silver Screen",
+        "blurb": "Movies, from family favourites to cult classics.",
+        "clues": [
+          {
+            "id": "cat-03-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In the Pixar film \"Finding Nemo\", what kind of fish is Nemo?",
+            "answer": "Clownfish",
+            "accept": ["Clown fish", "Anemonefish"]
+          },
+          {
+            "id": "cat-03-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In which 1994 film does Tom Hanks sit on a bench and say that life is like a box of chocolates?",
+            "answer": "Forrest Gump",
+            "accept": []
+          },
+          {
+            "id": "cat-03-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What is the name of the haunted hotel in Stanley Kubrick's film \"The Shining\"?",
+            "answer": "The Overlook Hotel",
+            "accept": ["Overlook", "The Overlook"]
+          },
+          {
+            "id": "cat-03-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which film won the very first Academy Award for Best Animated Feature?",
+            "answer": "Shrek",
+            "accept": [],
+            "notes": "The category was introduced at the 2002 ceremony. Shrek beat Monsters, Inc. and Jimmy Neutron: Boy Genius."
+          },
+          {
+            "id": "cat-03-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "In the 1982 film \"Blade Runner\", what is the name of the test used to tell replicants apart from humans?",
+            "answer": "The Voight-Kampff test",
+            "accept": ["Voight-Kampff", "Voight Kampff", "Voigt-Kampff", "VK test"]
+          }
+        ]
+      },
+      {
+        "id": "cat-04",
+        "title": "Turn It Up",
+        "blurb": "Music across the decades and the genres.",
+        "clues": [
+          {
+            "id": "cat-04-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which band was made up of John, Paul, George and Ringo?",
+            "answer": "The Beatles",
+            "accept": ["Beatles"]
+          },
+          {
+            "id": "cat-04-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which artist released the 1982 album \"Thriller\"?",
+            "answer": "Michael Jackson",
+            "accept": ["Jackson", "MJ"]
+          },
+          {
+            "id": "cat-04-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which band released the 1991 album \"Nevermind\", featuring the song \"Smells Like Teen Spirit\"?",
+            "answer": "Nirvana",
+            "accept": []
+          },
+          {
+            "id": "cat-04-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which Italian Baroque composer wrote the set of violin concertos known as \"The Four Seasons\"?",
+            "answer": "Antonio Vivaldi",
+            "accept": ["Vivaldi"]
+          },
+          {
+            "id": "cat-04-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which jazz trumpeter recorded the 1959 album \"Kind of Blue\"?",
+            "answer": "Miles Davis",
+            "accept": ["Davis"]
+          }
+        ]
+      },
+      {
+        "id": "cat-05",
+        "title": "Press Start",
+        "blurb": "Video games, from the arcade to the couch.",
+        "clues": [
+          {
+            "id": "cat-05-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In Nintendo's games, what is the name of Mario's taller, green-clad brother?",
+            "answer": "Luigi",
+            "accept": []
+          },
+          {
+            "id": "cat-05-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In \"Minecraft\", what is the name of the green monster that sneaks up on you, hisses and explodes?",
+            "answer": "Creeper",
+            "accept": ["A Creeper", "Creepers"]
+          },
+          {
+            "id": "cat-05-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "In \"The Legend of Zelda\" series, what is the name of the hero the player controls?",
+            "answer": "Link",
+            "accept": [],
+            "notes": "Zelda is the princess, not the hero. A classic mix-up."
+          },
+          {
+            "id": "cat-05-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the name of the passive-aggressive artificial intelligence that runs the test chambers in the game \"Portal\"?",
+            "answer": "GLaDOS",
+            "accept": ["Glados", "Genetic Lifeform and Disk Operating System"]
+          },
+          {
+            "id": "cat-05-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which Soviet software engineer created \"Tetris\" in 1984?",
+            "answer": "Alexey Pajitnov",
+            "accept": ["Pajitnov", "Alexei Pajitnov", "Aleksei Pazhitnov"],
+            "notes": "The surname alone is enough; be generous with pronunciation."
+          }
+        ]
+      },
+      {
+        "id": "cat-06",
+        "title": "Extremely Online",
+        "blurb": "Internet and tech history for the chronically logged in.",
+        "clues": [
+          {
+            "id": "cat-06-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "What do the letters \"www\" at the start of a web address stand for?",
+            "answer": "World Wide Web",
+            "accept": []
+          },
+          {
+            "id": "cat-06-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which website's very first upload, in 2005, was a short clip called \"Me at the zoo\"?",
+            "answer": "YouTube",
+            "accept": []
+          },
+          {
+            "id": "cat-06-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What does the image file format abbreviation \"GIF\" stand for?",
+            "answer": "Graphics Interchange Format",
+            "accept": ["Graphic Interchange Format"],
+            "notes": "How to pronounce it is a fight for another night."
+          },
+          {
+            "id": "cat-06-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which British computer scientist invented the World Wide Web while working at CERN?",
+            "answer": "Tim Berners-Lee",
+            "accept": ["Berners-Lee", "Sir Tim Berners-Lee", "Timothy Berners-Lee"]
+          },
+          {
+            "id": "cat-06-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What was the name of the US Defense Department-funded network, first switched on in 1969, that became a forerunner of the internet?",
+            "answer": "ARPANET",
+            "accept": ["ARPA Net", "The ARPANET", "Advanced Research Projects Agency Network"]
+          }
+        ]
+      },
+      {
+        "id": "cat-07",
+        "title": "Food Coma",
+        "blurb": "Things you eat, things you drink, things you order twice.",
+        "clues": [
+          {
+            "id": "cat-07-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which fruit is the main ingredient of guacamole?",
+            "answer": "Avocado",
+            "accept": ["Avocados", "Avo"]
+          },
+          {
+            "id": "cat-07-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which spirit is the base of a classic mojito?",
+            "answer": "Rum",
+            "accept": ["White rum", "Light rum"]
+          },
+          {
+            "id": "cat-07-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which spice is made from the dried stigmas of a crocus flower?",
+            "answer": "Saffron",
+            "accept": [],
+            "notes": "Each flower gives just three threads, all picked by hand."
+          },
+          {
+            "id": "cat-07-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What Japanese word names the savoury so-called fifth taste, alongside sweet, sour, salty and bitter?",
+            "answer": "Umami",
+            "accept": []
+          },
+          {
+            "id": "cat-07-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which classic cocktail is made from equal parts gin, Campari and sweet vermouth?",
+            "answer": "Negroni",
+            "accept": ["A Negroni"]
+          }
+        ]
+      },
+      {
+        "id": "cat-08",
+        "title": "Good Sports",
+        "blurb": "Rules, scores and firsts from the world of sport.",
+        "clues": [
+          {
+            "id": "cat-08-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In soccer, how many players does each team have on the pitch at kick-off, including the goalkeeper?",
+            "answer": "11",
+            "accept": ["Eleven"]
+          },
+          {
+            "id": "cat-08-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In tennis, what word is used for a score of zero?",
+            "answer": "Love",
+            "accept": []
+          },
+          {
+            "id": "cat-08-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What is the highest possible score in a single game of ten-pin bowling?",
+            "answer": "300",
+            "accept": ["Three hundred"],
+            "notes": "A perfect game takes twelve strikes in a row."
+          },
+          {
+            "id": "cat-08-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which country both hosted and won the first FIFA World Cup in 1930?",
+            "answer": "Uruguay",
+            "accept": []
+          },
+          {
+            "id": "cat-08-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "In golf, which bird gives its name to a score of three under par on a single hole?",
+            "answer": "Albatross",
+            "accept": ["An albatross"],
+            "notes": "Also called a double eagle in the US, but the bird asked for is the albatross."
+          }
+        ]
+      },
+      {
+        "id": "cat-09",
+        "title": "Way Back When",
+        "blurb": "History, from last century to the Middle Ages.",
+        "clues": [
+          {
+            "id": "cat-09-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which ocean liner sank on its maiden voyage in April 1912 after hitting an iceberg?",
+            "answer": "The Titanic",
+            "accept": ["Titanic", "RMS Titanic"]
+          },
+          {
+            "id": "cat-09-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which barrier divided a German city in two from 1961 until 1989?",
+            "answer": "The Berlin Wall",
+            "accept": ["Berlin Wall"]
+          },
+          {
+            "id": "cat-09-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "In which year did the Second World War end?",
+            "answer": "1945",
+            "accept": ["Nineteen forty-five", "'45"]
+          },
+          {
+            "id": "cat-09-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which charter, sealed by King John of England in 1215, limited the power of the crown?",
+            "answer": "Magna Carta",
+            "accept": ["The Magna Carta", "The Great Charter"]
+          },
+          {
+            "id": "cat-09-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which empire was ruled by Suleiman the Magnificent in the sixteenth century?",
+            "answer": "The Ottoman Empire",
+            "accept": ["Ottoman", "Ottomans", "Ottoman Turks"]
+          }
+        ]
+      },
+      {
+        "id": "cat-10",
+        "title": "Word Nerd",
+        "blurb": "Language and wordplay. Spelling the answer is optional.",
+        "clues": [
+          {
+            "id": "cat-10-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which letter of the alphabet is used most often in written English?",
+            "answer": "E",
+            "accept": ["The letter E"]
+          },
+          {
+            "id": "cat-10-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What do you call a word or phrase that reads the same forwards and backwards, like \"level\" or \"racecar\"?",
+            "answer": "Palindrome",
+            "accept": ["A palindrome", "Palindromic"]
+          },
+          {
+            "id": "cat-10-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What do you call a word made by rearranging all the letters of another word, such as \"silent\" from \"listen\"?",
+            "answer": "Anagram",
+            "accept": ["An anagram"]
+          },
+          {
+            "id": "cat-10-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the term for a word that imitates the sound it describes, like \"buzz\", \"sizzle\" or \"thud\"?",
+            "answer": "Onomatopoeia",
+            "accept": ["Onomatopoeic", "Onomatopoetic"]
+          },
+          {
+            "id": "cat-10-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What is the term for a sentence that uses every letter of the alphabet at least once, such as \"The quick brown fox jumps over the lazy dog\"?",
+            "answer": "Pangram",
+            "accept": ["A pangram", "Holoalphabetic sentence"]
+          }
+        ]
+      },
+      {
+        "id": "cat-11",
+        "title": "Binge Watch",
+        "blurb": "Television worth cancelling plans for.",
+        "clues": [
+          {
+            "id": "cat-11-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In \"The Simpsons\", what is the first name of Homer's wife?",
+            "answer": "Marge",
+            "accept": ["Marjorie", "Marge Simpson"]
+          },
+          {
+            "id": "cat-11-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which sitcom's six main characters spend much of their time on the sofa at the Central Perk coffee house?",
+            "answer": "Friends",
+            "accept": []
+          },
+          {
+            "id": "cat-11-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "In \"Breaking Bad\", which school subject does Walter White teach?",
+            "answer": "Chemistry",
+            "accept": ["Chem", "High school chemistry"]
+          },
+          {
+            "id": "cat-11-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "In the American version of \"The Office\", what is the name of the paper company the characters work for?",
+            "answer": "Dunder Mifflin",
+            "accept": ["Dunder Mifflin Paper Company", "Dunder-Mifflin"]
+          },
+          {
+            "id": "cat-11-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "In the series \"Twin Peaks\", which homecoming queen's murder does FBI agent Dale Cooper come to town to investigate?",
+            "answer": "Laura Palmer",
+            "accept": ["Laura"]
+          }
+        ]
+      },
+      {
+        "id": "cat-12",
+        "title": "Animal Kingdom",
+        "blurb": "Creatures great, small and strangely named.",
+        "clues": [
+          {
+            "id": "cat-12-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "What is the largest animal on Earth?",
+            "answer": "The blue whale",
+            "accept": ["Blue whale"],
+            "notes": "\"Whale\" alone is not specific enough; ask which kind."
+          },
+          {
+            "id": "cat-12-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is the collective name for a group of lions?",
+            "answer": "A pride",
+            "accept": ["Pride"]
+          },
+          {
+            "id": "cat-12-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "How many hearts does an octopus have?",
+            "answer": "Three",
+            "accept": ["3"],
+            "notes": "Two pump blood through the gills and one pumps it around the rest of the body."
+          },
+          {
+            "id": "cat-12-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which bird of prey is the fastest animal on Earth, reaching more than 300 kilometres per hour in a hunting dive?",
+            "answer": "The peregrine falcon",
+            "accept": ["Peregrine falcon", "Peregrine"],
+            "notes": "\"Falcon\" alone is not specific enough; ask which kind."
+          },
+          {
+            "id": "cat-12-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What showy collective noun is used for a group of flamingos?",
+            "answer": "A flamboyance",
+            "accept": ["Flamboyance"]
+          }
+        ]
+      },
+      {
+        "id": "cat-13",
+        "title": "Final Frontier",
+        "blurb": "Space: planets, moons and the people and probes sent up there.",
+        "clues": [
+          {
+            "id": "cat-13-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which planet is known as the Red Planet?",
+            "answer": "Mars",
+            "accept": []
+          },
+          {
+            "id": "cat-13-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is the name of the galaxy that contains our Solar System?",
+            "answer": "The Milky Way",
+            "accept": ["Milky Way", "Milky Way Galaxy"]
+          },
+          {
+            "id": "cat-13-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which Soviet cosmonaut became the first human in space in 1961?",
+            "answer": "Yuri Gagarin",
+            "accept": ["Gagarin"]
+          },
+          {
+            "id": "cat-13-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the name of Saturn's largest moon?",
+            "answer": "Titan",
+            "accept": [],
+            "notes": "Titan is the only moon in the Solar System with a thick atmosphere."
+          },
+          {
+            "id": "cat-13-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which NASA probe, launched in 1977, became the first human-made object to enter interstellar space?",
+            "answer": "Voyager 1",
+            "accept": ["Voyager One", "Voyager I"],
+            "notes": "The number matters: Voyager 2 launched the same year but crossed over later."
+          }
+        ]
+      },
+      {
+        "id": "cat-14",
+        "title": "Higher or Lower",
+        "blurb": "We make a claim, you say whether the true number is higher or lower. One shot only.",
+        "singleAttempt": true,
+        "clues": [
+          {
+            "id": "cat-14-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "We claim a spider has 6 legs. Is the true number higher or lower than our claim?",
+            "answer": "Higher",
+            "accept": [],
+            "notes": "Spiders have 8 legs."
+          },
+          {
+            "id": "cat-14-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "We claim a standard deck of playing cards, not counting jokers, contains 60 cards. Is the true number higher or lower than our claim?",
+            "answer": "Lower",
+            "accept": [],
+            "notes": "A standard deck has 52 cards."
+          },
+          {
+            "id": "cat-14-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "We claim a standard full-size piano has 80 keys. Is the true number higher or lower than our claim?",
+            "answer": "Higher",
+            "accept": [],
+            "notes": "A standard piano has 88 keys: 52 white and 36 black."
+          },
+          {
+            "id": "cat-14-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "We claim a typical adult human skeleton has 250 bones. Is the true number higher or lower than our claim?",
+            "answer": "Lower",
+            "accept": [],
+            "notes": "A typical adult has 206 bones. Babies are born with many more, which fuse as they grow."
+          },
+          {
+            "id": "cat-14-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "We claim light from the Sun takes 5 minutes to reach Earth. Is the true time higher or lower than our claim?",
+            "answer": "Higher",
+            "accept": [],
+            "notes": "Sunlight takes a little over 8 minutes to reach us."
+          }
+        ]
+      }
+    ],
+    "surveys": [
+      {
+        "id": "sv-01",
+        "question": "Name something people do as soon as they wake up.",
+        "answers": [
+          { "text": "Check their phone", "points": 34, "aliases": ["phone", "look at phone", "scroll", "check messages", "check notifications"] },
+          { "text": "Use the bathroom", "points": 22, "aliases": ["pee", "toilet", "go to the loo", "bathroom", "wee"] },
+          { "text": "Hit snooze", "points": 14, "aliases": ["snooze", "go back to sleep", "snooze the alarm", "sleep more"] },
+          { "text": "Brush their teeth", "points": 10, "aliases": ["brush teeth", "teeth", "clean teeth"] },
+          { "text": "Make coffee", "points": 9, "aliases": ["coffee", "drink coffee", "tea", "make tea", "put the kettle on"] },
+          { "text": "Stretch", "points": 5, "aliases": ["yawn", "stretching", "stretch and yawn"] },
+          { "text": "Take a shower", "points": 4, "aliases": ["shower", "wash", "have a shower", "bath"] }
+        ]
+      },
+      {
+        "id": "sv-02",
+        "question": "Name something you'd find in a kitchen junk drawer.",
+        "answers": [
+          { "text": "Batteries", "points": 28, "aliases": ["battery", "dead batteries", "old batteries", "aa batteries"] },
+          { "text": "Pens", "points": 20, "aliases": ["pen", "pencils", "pens and pencils", "markers", "biros"] },
+          { "text": "Scissors", "points": 14, "aliases": ["pair of scissors", "shears"] },
+          { "text": "Tape", "points": 12, "aliases": ["sticky tape", "sellotape", "scotch tape", "duct tape", "masking tape"] },
+          { "text": "Rubber bands", "points": 9, "aliases": ["elastic bands", "rubber band", "elastics", "hair ties"] },
+          { "text": "Takeaway menus", "points": 7, "aliases": ["menus", "takeout menus", "menu", "coupons", "flyers"] },
+          { "text": "Keys", "points": 5, "aliases": ["spare keys", "old keys", "mystery keys", "key"] },
+          { "text": "Cables", "points": 4, "aliases": ["chargers", "charger", "old cables", "cords", "phone charger"] }
+        ]
+      },
+      {
+        "id": "sv-03",
+        "question": "Name a popular pizza topping.",
+        "answers": [
+          { "text": "Pepperoni", "points": 36, "aliases": ["peperoni", "salami", "pepperonis"] },
+          { "text": "Mushrooms", "points": 18, "aliases": ["mushroom", "shrooms"] },
+          { "text": "Extra cheese", "points": 12, "aliases": ["cheese", "mozzarella", "more cheese"] },
+          { "text": "Sausage", "points": 10, "aliases": ["italian sausage", "sausages", "meatballs"] },
+          { "text": "Pineapple", "points": 9, "aliases": ["hawaiian", "ham and pineapple", "pineapples"] },
+          { "text": "Onions", "points": 6, "aliases": ["onion", "red onion", "red onions"] },
+          { "text": "Olives", "points": 5, "aliases": ["olive", "black olives", "green olives"] },
+          { "text": "Peppers", "points": 3, "aliases": ["bell peppers", "green peppers", "capsicum", "jalapenos", "pepper"] }
+        ]
+      },
+      {
+        "id": "sv-04",
+        "question": "Name an excuse people give for being late to work.",
+        "answers": [
+          { "text": "Traffic", "points": 38, "aliases": ["stuck in traffic", "traffic jam", "roadworks", "accident on the road", "bad traffic"] },
+          { "text": "Overslept", "points": 26, "aliases": ["slept in", "alarm didn't go off", "oversleeping", "slept through my alarm", "woke up late"] },
+          { "text": "Car trouble", "points": 12, "aliases": ["car broke down", "car wouldn't start", "flat tyre", "flat tire", "car problems"] },
+          { "text": "Train or bus was late", "points": 9, "aliases": ["train was late", "bus was late", "missed the bus", "missed the train", "public transport", "train delay"] },
+          { "text": "The kids", "points": 6, "aliases": ["kids", "school run", "child was sick", "dropping off the kids", "childcare"] },
+          { "text": "Bad weather", "points": 5, "aliases": ["weather", "snow", "rain", "storm", "ice"] },
+          { "text": "Felt sick", "points": 3, "aliases": ["sick", "ill", "not feeling well", "doctor's appointment", "wasn't well"] }
+        ]
+      },
+      {
+        "id": "sv-05",
+        "question": "Name something people are always losing.",
+        "answers": [
+          { "text": "Keys", "points": 35, "aliases": ["car keys", "house keys", "key", "my keys"] },
+          { "text": "Phone", "points": 20, "aliases": ["mobile", "cell phone", "mobile phone", "cellphone"] },
+          { "text": "Wallet", "points": 13, "aliases": ["purse", "bank card", "credit card", "money"] },
+          { "text": "Glasses", "points": 11, "aliases": ["sunglasses", "reading glasses", "specs", "spectacles"] },
+          { "text": "TV remote", "points": 9, "aliases": ["remote", "remote control", "the remote", "tv controller"] },
+          { "text": "Socks", "points": 6, "aliases": ["sock", "a sock", "odd socks", "one sock"] },
+          { "text": "Pens", "points": 3, "aliases": ["pen", "pencils", "pencil"] },
+          { "text": "Umbrella", "points": 2, "aliases": ["umbrellas", "brolly", "an umbrella"] }
+        ]
+      },
+      {
+        "id": "sv-06",
+        "question": "Name something you'd bring to a house party.",
+        "answers": [
+          { "text": "Drinks", "points": 40, "aliases": ["alcohol", "beer", "wine", "booze", "a bottle", "bottle of wine"] },
+          { "text": "Snacks", "points": 22, "aliases": ["chips", "crisps", "food", "chips and dip", "nibbles", "dip"] },
+          { "text": "Dessert", "points": 10, "aliases": ["cake", "cookies", "brownies", "sweets", "something sweet"] },
+          { "text": "A game", "points": 8, "aliases": ["board game", "card game", "games", "cards", "party game"] },
+          { "text": "Music", "points": 7, "aliases": ["speaker", "a playlist", "bluetooth speaker", "playlist", "speakers"] },
+          { "text": "Ice", "points": 6, "aliases": ["bag of ice", "ice cubes"] },
+          { "text": "A friend", "points": 4, "aliases": ["friends", "a plus one", "plus one", "a date", "partner"] }
+        ]
+      },
+      {
+        "id": "sv-07",
+        "question": "Name something people do on their phone when they're bored.",
+        "answers": [
+          { "text": "Scroll social media", "points": 38, "aliases": ["social media", "scroll", "scrolling", "doomscroll", "instagram", "tiktok"] },
+          { "text": "Play games", "points": 20, "aliases": ["games", "play a game", "mobile games", "gaming", "wordle"] },
+          { "text": "Watch videos", "points": 15, "aliases": ["youtube", "videos", "watch youtube", "netflix", "streaming"] },
+          { "text": "Text friends", "points": 10, "aliases": ["text", "message people", "texting", "group chat", "messaging", "whatsapp"] },
+          { "text": "Online shopping", "points": 5, "aliases": ["shopping", "shop", "browse amazon", "window shopping", "buy stuff"] },
+          { "text": "Check email", "points": 5, "aliases": ["email", "emails", "check emails", "inbox"] },
+          { "text": "Read the news", "points": 4, "aliases": ["news", "read news", "read articles", "headlines"] },
+          { "text": "Look at old photos", "points": 2, "aliases": ["photos", "camera roll", "look at photos", "old pictures", "pictures"] }
+        ]
+      },
+      {
+        "id": "sv-08",
+        "question": "Name a reason someone gives for cancelling plans at the last minute.",
+        "answers": [
+          { "text": "Feeling sick", "points": 32, "aliases": ["sick", "ill", "not feeling well", "headache", "unwell", "migraine"] },
+          { "text": "Too tired", "points": 24, "aliases": ["tired", "exhausted", "worn out", "long day", "need sleep"] },
+          { "text": "Work", "points": 14, "aliases": ["working late", "stuck at work", "had to work", "work came up", "deadline"] },
+          { "text": "Bad weather", "points": 10, "aliases": ["weather", "rain", "raining", "snow", "storm"] },
+          { "text": "No money", "points": 7, "aliases": ["broke", "skint", "can't afford it", "money", "short on cash"] },
+          { "text": "Family emergency", "points": 6, "aliases": ["family", "kids", "emergency", "family thing", "no babysitter", "babysitter cancelled"] },
+          { "text": "Forgot", "points": 4, "aliases": ["forgot about it", "totally forgot", "slipped my mind"] },
+          { "text": "Double-booked", "points": 2, "aliases": ["double booked", "other plans", "something came up", "already had plans"] }
+        ]
+      },
+      {
+        "id": "sv-09",
+        "question": "Name a snack people buy at the cinema.",
+        "answers": [
+          { "text": "Popcorn", "points": 45, "aliases": ["pop corn", "buttered popcorn", "sweet popcorn", "salted popcorn"] },
+          { "text": "Candy", "points": 18, "aliases": ["sweets", "chocolate", "pick and mix", "lollies", "gummies", "m&ms"] },
+          { "text": "Nachos", "points": 10, "aliases": ["nachos and cheese", "tortilla chips", "nacho"] },
+          { "text": "Soda", "points": 9, "aliases": ["soft drink", "fizzy drink", "coke", "pop", "slushie", "drink"] },
+          { "text": "Hot dog", "points": 6, "aliases": ["hot dogs", "hotdog", "hotdogs"] },
+          { "text": "Pretzels", "points": 5, "aliases": ["pretzel", "soft pretzel", "pretzel bites"] },
+          { "text": "Ice cream", "points": 4, "aliases": ["icecream", "ice cream tub", "choc ice", "ben and jerry's"] }
+        ]
+      },
+      {
+        "id": "sv-10",
+        "question": "Name a superpower people wish they had.",
+        "answers": [
+          { "text": "Flying", "points": 30, "aliases": ["flight", "fly", "to fly", "being able to fly"] },
+          { "text": "Invisibility", "points": 22, "aliases": ["invisible", "being invisible", "turn invisible"] },
+          { "text": "Teleportation", "points": 15, "aliases": ["teleport", "teleporting", "teleporter"] },
+          { "text": "Mind reading", "points": 11, "aliases": ["read minds", "telepathy", "reading minds", "telepathic"] },
+          { "text": "Time travel", "points": 9, "aliases": ["time traveling", "stop time", "freeze time", "control time", "go back in time"] },
+          { "text": "Super strength", "points": 6, "aliases": ["strength", "super strong", "being strong"] },
+          { "text": "Super speed", "points": 4, "aliases": ["speed", "run fast", "super fast", "being fast"] },
+          { "text": "Healing", "points": 2, "aliases": ["immortality", "live forever", "never get sick", "regeneration", "heal"] }
+        ]
+      },
+      {
+        "id": "sv-11",
+        "question": "Name something that's almost always in the fridge.",
+        "answers": [
+          { "text": "Milk", "points": 26, "aliases": ["oat milk", "carton of milk", "almond milk"] },
+          { "text": "Eggs", "points": 18, "aliases": ["egg", "carton of eggs"] },
+          { "text": "Butter", "points": 13, "aliases": ["margarine", "spread", "marg"] },
+          { "text": "Cheese", "points": 12, "aliases": ["cheddar", "block of cheese", "sliced cheese"] },
+          { "text": "Ketchup", "points": 10, "aliases": ["condiments", "sauce", "mustard", "mayo", "tomato sauce", "mayonnaise"] },
+          { "text": "Leftovers", "points": 8, "aliases": ["leftover food", "last night's dinner", "leftover takeaway", "old takeout"] },
+          { "text": "Beer", "points": 6, "aliases": ["beers", "wine", "alcohol", "drinks", "cans"] },
+          { "text": "Vegetables", "points": 4, "aliases": ["veg", "veggies", "salad", "lettuce", "carrots"] }
+        ]
+      },
+      {
+        "id": "sv-12",
+        "question": "Name a household chore everybody hates.",
+        "answers": [
+          { "text": "Washing the dishes", "points": 28, "aliases": ["dishes", "washing up", "doing the dishes", "unloading the dishwasher", "dishwasher"] },
+          { "text": "Cleaning the bathroom", "points": 24, "aliases": ["cleaning the toilet", "toilet", "bathroom", "scrubbing the toilet", "cleaning the shower"] },
+          { "text": "Laundry", "points": 15, "aliases": ["washing clothes", "folding laundry", "folding clothes", "doing the washing", "washing"] },
+          { "text": "Taking out the trash", "points": 11, "aliases": ["trash", "bins", "taking the bins out", "rubbish", "garbage", "taking out the rubbish"] },
+          { "text": "Vacuuming", "points": 8, "aliases": ["hoovering", "vacuum", "hoover", "mopping", "sweeping"] },
+          { "text": "Ironing", "points": 6, "aliases": ["iron", "ironing clothes", "ironing shirts"] },
+          { "text": "Dusting", "points": 4, "aliases": ["dust", "polishing", "wiping surfaces"] },
+          { "text": "Mowing the lawn", "points": 3, "aliases": ["mowing", "cutting the grass", "gardening", "yard work", "lawn"] }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,385 @@
+/*
+ * Joining a game. Like the controller, this is a fixed single screen sized
+ * from the visible viewport (see `.bz-app` in base.css and play.css for the
+ * approach). Two short steps replace one long form, and each step sheds its
+ * optional parts as the screen gets shorter.
+ */
+
+.home {
+  --pad-x: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+  align-items: center;
+  gap: clamp(8px, 2.2cqh, 22px);
+  padding: max(14px, env(safe-area-inset-top)) var(--pad-x) max(12px, env(safe-area-inset-bottom));
+}
+html.kb-open .home {
+  padding-bottom: 8px;
+}
+
+.home__top {
+  flex: none;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin-top: clamp(0px, 4cqh, 40px);
+  text-align: center;
+}
+.home__top .bz-logo {
+  font-size: clamp(24px, 5cqh, 36px);
+}
+.home__top p {
+  color: var(--text-dim);
+  font-size: 0.9375rem;
+}
+
+.home__body {
+  flex: 1;
+  min-height: 0;
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  /* Sits in the upper part of the screen, where a keyboard will not cover it. */
+  justify-content: flex-start;
+  container: body / size;
+}
+.home__card {
+  flex: 0 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2.4cqh, 16px);
+  padding: clamp(14px, 3.4cqh, 22px) 18px;
+}
+.home__card > * {
+  flex: none;
+}
+.home__card > .bz-spinner {
+  align-self: center;
+}
+.home__card h2 {
+  text-align: center;
+  font-size: 1.5rem;
+}
+.home__hint {
+  text-align: center;
+  color: var(--text-dim);
+}
+
+/* ---------------------------------------------------------------- step 1: the code */
+
+.home__code {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.home__code input {
+  width: 100%;
+  min-width: 0;
+  padding: 4px 0 4px 0.32em;
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgb(0 0 0 / 0.35);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 9cqh + 6cqw, 4rem);
+  letter-spacing: 0.32em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--buzz);
+  caret-color: var(--pink);
+}
+.home__code input::placeholder {
+  color: var(--ink-500);
+}
+.home__code input:focus-visible {
+  outline: none;
+  border-color: var(--buzz);
+  box-shadow: 0 0 0 4px rgb(255 196 0 / 0.18);
+}
+.home__status {
+  min-height: 1.45em;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+}
+.home__status[data-state='missing'] {
+  color: var(--bad);
+  font-weight: 700;
+}
+.home__status strong,
+.home__room strong {
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------------- step 2: who you are */
+
+.home__room {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  background: rgb(0 0 0 / 0.25);
+  text-align: left;
+  cursor: pointer;
+}
+.home__room b {
+  padding: 3px 8px 3px 12px;
+  border-radius: 99px;
+  background: var(--buzz);
+  color: var(--buzz-ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.home__room span {
+  font-size: 0.8125rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.home__room i {
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.home__who {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2.2cqh, 14px);
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.home__who > * {
+  flex: none;
+}
+.home__who:disabled {
+  opacity: 0.4;
+}
+.home__name {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+.home__name .bz-input {
+  min-height: 48px;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.home__dice {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 12px;
+  background: transparent;
+  font-size: 1.375rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.home__dice:active {
+  transform: rotate(40deg) scale(0.94);
+}
+
+.home__emoji {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 4px;
+  overflow: visible;
+}
+.home__emoji button {
+  aspect-ratio: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font-size: clamp(1.1rem, 5.2cqw, 1.5rem);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s var(--spring), background 0.15s ease;
+}
+.home__emoji button[aria-checked='true'] {
+  background: rgb(255 255 255 / 0.16);
+  transform: scale(1.1);
+}
+.home__colors {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(34px, 1fr);
+  overflow: auto hidden;
+  margin-inline: -18px;
+  padding-inline: 18px;
+}
+.home__colors button {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.home__colors button::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--swatch);
+  transition: transform 0.15s var(--spring);
+}
+.home__colors button[aria-checked='true']::before {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px var(--ink-800), 0 0 0 5px #fff;
+}
+
+.home__rejoin {
+  display: grid;
+  gap: 12px;
+}
+.home__link {
+  align-self: center;
+  justify-self: center;
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+.home__error {
+  padding: 8px 12px;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--bad) 18%, transparent);
+  color: #ffd1d6;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+.home__foot {
+  flex: none;
+  display: flex;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: var(--text-faint);
+}
+.home__foot a {
+  color: var(--text-dim);
+}
+
+/* ================================================================ shorter screens */
+
+/* The emoji grid folds into a sideways strip: two rows, then one. */
+@container app (max-height: 700px) {
+  .home__emoji {
+    grid-template-columns: none;
+    grid-template-rows: repeat(2, 40px);
+    grid-auto-flow: column;
+    grid-auto-columns: 40px;
+    overflow: auto hidden;
+    scroll-snap-type: x proximity;
+    margin-inline: -18px;
+    padding-inline: 18px;
+  }
+  .home__emoji button {
+    font-size: 1.375rem;
+    scroll-snap-align: center;
+  }
+  .home__top p {
+    display: none;
+  }
+  .home__top {
+    margin-top: 0;
+  }
+}
+@container app (max-height: 560px) {
+  .home__emoji {
+    grid-template-rows: 40px;
+  }
+  .home__extra {
+    display: none;
+  }
+}
+@container app (max-height: 440px) {
+  .home__foot {
+    display: none;
+  }
+  .home__top .bz-logo {
+    font-size: 20px;
+  }
+  .home__code .bz-eyebrow {
+    display: none;
+  }
+}
+
+/* Typing a name: only the name, the room and the Join button need to be on screen. */
+html.kb-open .home[data-step='who'] .home__emoji,
+html.kb-open .home[data-step='who'] .home__colors,
+html.kb-open .home .home__extra,
+html.kb-open .home .home__foot,
+html.kb-open .home .home__top p {
+  display: none;
+}
+html.kb-open .home .home__top {
+  margin-top: 0;
+}
+
+/* A phone on its side: logo beside the card. */
+/* Needs real width as well: a portrait phone with its keyboard open is also wider than it is tall. */
+@container app (min-aspect-ratio: 5/4) and (max-height: 520px) and (min-width: 560px) {
+  .home {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    column-gap: 28px;
+  }
+  .home__top {
+    flex: 0 0 auto;
+  }
+  .home__body {
+    flex: 0 1 440px;
+    height: 100%;
+    justify-content: center;
+  }
+  .home__foot {
+    flex-basis: 100%;
+    justify-content: center;
+  }
+  .home__card {
+    gap: 8px;
+    padding-block: 12px;
+  }
+  .home__who {
+    gap: 8px;
+  }
+  .home__who .bz-btn--l {
+    min-height: 46px;
+  }
+  .home__name .bz-input {
+    min-height: 44px;
+  }
+  .home__extra {
+    display: none;
+  }
+}
+
+/* The in-game profile editor reuses these fields inside a modal. */
+.bz-modal .home__who {
+  gap: 14px;
+}
+html.kb-open .bz-modal .home__emoji,
+html.kb-open .bz-modal .home__colors {
+  display: none;
+}
