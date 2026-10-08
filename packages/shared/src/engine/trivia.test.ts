@@ -226,8 +226,8 @@ describe('hiding the question while an answer is judged', () => {
     const s = new Sim().start().open(0, 1);
     s.advance(4000);
     s.buzz('ann');
-    // The answer clock is a different clock; the question's 26 seconds are waiting.
-    expect(s.trivia.clue!.timer).toEqual({ endsAt: s.now + 12_000, totalMs: 12_000 });
+    // The answer clock is a different clock, thirty seconds of its own; the question's 26 seconds are waiting.
+    expect(s.trivia.clue!.timer).toEqual({ endsAt: s.now + 30_000, totalMs: 30_000 });
     s.advance(9000);
     s.host({ t: 'judge', correct: false });
     expect(s.trivia.clue!.timer).toEqual({ endsAt: s.now + 26_000, totalMs: 30_000 });

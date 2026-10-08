@@ -45,7 +45,7 @@ These are BuzzOff's assumptions. All are settings, not fixed behaviour.
   back for the players still in. A wager clue is answered alone, so its
   question stays up.
 - **Timers.** The show's answer time is an informal host countdown. BuzzOff
-  shows a clock (a 30 s question timer, then 12 s to answer, by default). The
+  shows a clock (a 30 s question timer, then 30 s to answer, by default). The
   question timer stands still while an answer is judged and carries on from
   where it stopped if the buzzers reopen, never with less than five seconds
   so that a steal is possible. The host can add ten seconds or stop the clock

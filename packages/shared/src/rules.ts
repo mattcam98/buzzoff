@@ -126,7 +126,7 @@ export const DEFAULT_BUZZER: BuzzerRules = {
   collectionWindowMs: 150,
   maxCompensationMs: 150,
   buzzSec: 30,
-  answerSec: 12,
+  answerSec: 30,
   reopenOnIncorrect: true,
   rebuzz: false,
   incorrectPenaltyPct: 100,

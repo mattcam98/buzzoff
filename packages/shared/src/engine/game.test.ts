@@ -153,7 +153,7 @@ describe('pause, undo and recovery', () => {
     expect(s.state.order).toEqual(['ann', 'bob', 'dan']);
     expect(s.trivia.clue).toMatchObject({ stage: 'answering', answererId: 'ann' });
     // The answer timer keeps the time it had left when the snapshot was taken.
-    expect(s.trivia.clue!.timer!.endsAt - s.now).toBe(12_000);
+    expect(s.trivia.clue!.timer!.endsAt - s.now).toBe(30_000);
     s.host({ t: 'judge', correct: true });
     expect(s.score('ann')).toBe(200);
   });
