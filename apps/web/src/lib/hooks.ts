@@ -1,22 +1,8 @@
 import type { GameEvent, TimerView } from '@buzzoff/shared';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import type { Connection } from './connection';
 
-/** Re-render on every animation frame while `active`, returning server time. */
-export function useServerNow(clockOffset: number, active = true): number {
-  const [now, setNow] = useState(() => Date.now() + clockOffset);
-  useEffect(() => {
-    if (!active) return;
-    let frame = requestAnimationFrame(function loop() {
-      setNow(Date.now() + clockOffset);
-      frame = requestAnimationFrame(loop);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [clockOffset, active]);
-  return now;
-}
-
-export interface Countdown {
+interface Countdown {
   /** Milliseconds left, never negative. */
   remaining: number;
   /** 1 at the start, 0 when time is up. */
@@ -24,11 +10,23 @@ export interface Countdown {
   seconds: number;
 }
 
-/** A countdown against the server clock. It freezes while the game is paused. */
+/**
+ * A countdown against the server clock. It re-renders every animation frame
+ * while time is running, and not at all once it is up or the game is paused.
+ */
 export function useCountdown(timer: TimerView | null, clockOffset: number, pausedAt: number | null): Countdown | null {
-  const now = useServerNow(clockOffset, !!timer && pausedAt === null);
+  const [, frame] = useReducer((n: number) => n + 1, 0);
+  const remaining = timer ? Math.max(0, timer.endsAt - (pausedAt ?? Date.now() + clockOffset)) : 0;
+  const running = remaining > 0 && pausedAt === null;
+  useEffect(() => {
+    if (!running) return;
+    let id = requestAnimationFrame(function loop() {
+      frame();
+      id = requestAnimationFrame(loop);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [running]);
   if (!timer) return null;
-  const remaining = Math.max(0, timer.endsAt - (pausedAt ?? now));
   return { remaining, fraction: Math.min(1, remaining / timer.totalMs), seconds: Math.ceil(remaining / 1000) };
 }
 
@@ -37,15 +35,6 @@ export function useGameEvents(conn: Connection, handler: (event: GameEvent) => v
   const latest = useRef(handler);
   latest.current = handler;
   useEffect(() => conn.onEvent((e) => latest.current(e)), [conn]);
-}
-
-/** Remember the previous value of something across renders. */
-export function usePrevious<T>(value: T): T | undefined {
-  const ref = useRef<T | undefined>(undefined);
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
 }
 
 /** Run a handler for a keyboard shortcut, ignoring keys typed into form fields. */
@@ -69,9 +58,12 @@ export function useHotkeys(handler: (key: string, event: KeyboardEvent) => void,
 export function useWakeLock() {
   useEffect(() => {
     let lock: WakeLockSentinel | null = null;
+    let done = false;
     const acquire = async () => {
       try {
         if (document.visibilityState === 'visible') lock = await navigator.wakeLock?.request('screen');
+        // The request can resolve after the screen that asked for it has gone.
+        if (done) void lock?.release();
       } catch {
         /* unsupported or refused: nothing to do */
       }
@@ -79,6 +71,7 @@ export function useWakeLock() {
     void acquire();
     document.addEventListener('visibilitychange', acquire);
     return () => {
+      done = true;
       document.removeEventListener('visibilitychange', acquire);
       void lock?.release();
     };

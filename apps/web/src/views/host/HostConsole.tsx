@@ -6,10 +6,9 @@ import { CUE_NAMES, type CueName, type HostAction, type HostRoomView, type Publi
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
-import { useConnection, type Connection, type Snapshot } from '../../lib/connection';
+import { useConnection, type Snapshot } from '../../lib/connection';
 import { byScore, fmtScore, joinAddress, playerMap, plural } from '../../lib/format';
 import { useHotkeys } from '../../lib/hooks';
-import { unlockAudio } from '../../lib/sound';
 import { storage } from '../../lib/storage';
 import { roundBlurb, Score } from '../../ui/game';
 import { Avatar, Button, cx, Logo, Modal, Notice, toast } from '../../ui/kit';
@@ -40,7 +39,6 @@ const SHORTCUTS: [string, string][] = [
   ['C', 'Rule the answer correct'],
   ['X', 'Rule the answer incorrect'],
   ['R', 'Reveal the answer (nobody gets it)'],
-  ['B', 'Arm or disarm the buzzers'],
   ['U', 'Undo the last ruling or step'],
   ['P', 'Pause or resume'],
   ['?', 'Show this list'],
@@ -78,10 +76,16 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
   // something the visible controls would not.
   useHotkeys((key, e) => {
     if (key === '?') return setHelp(true);
+    const focused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    // Enter on a focused button or link presses that control, as it does everywhere else.
+    if (key === 'Enter' && focused?.closest('button, a, summary')) return;
     const name = key === ' ' || key === 'Enter' ? 'space' : key;
     const target = document.querySelector<HTMLButtonElement>(`.hc [data-hotkey="${CSS.escape(name)}"]:not(:disabled)`);
     if (target) {
       e.preventDefault();
+      // The space bar always means "next step", even right after clicking some other button:
+      // letting go of that button's focus keeps the same key press from also pressing it.
+      if (focused !== target) focused?.blur();
       target.click();
     }
   }, !help && !managing);
@@ -104,7 +108,7 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
   const props: StageProps = { pub, host, snap, players, run };
 
   return (
-    <div className="bz-stage hc" onPointerDown={unlockAudio}>
+    <div className="bz-stage hc">
       {snap.status !== 'online' && <div className="bz-banner">Connection lost — reconnecting. The game is safe on the server.</div>}
       <header className="hc-top">
         <Logo to="/host" />
@@ -137,14 +141,14 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
         <main className="hc-main">
           {pub.paused && (
             <div className="hc-paused">
-              <strong>Paused.</strong> Timers are frozen and buzzers are disarmed. Scores can still be corrected.
+              <strong>Paused.</strong> Timers are frozen and buzzers are shut until you resume. Scores can still be corrected.
               <Button size="s" variant="primary" onClick={() => run({ t: 'pause', paused: false })}>
                 Resume
               </Button>
             </div>
           )}
           <Rundown pub={pub} />
-          <Stage {...props} conn={conn} />
+          <Stage {...props} />
         </main>
 
         <aside className="hc-side">
@@ -214,7 +218,7 @@ function Rundown({ pub }: { pub: PublicView }) {
   );
 }
 
-function Stage(props: StageProps & { conn: Connection }) {
+function Stage(props: StageProps) {
   const { pub, run } = props;
   const round = pub.round;
   if (pub.phase === 'lobby') return <LobbyStage {...props} />;
@@ -259,7 +263,7 @@ function Stage(props: StageProps & { conn: Connection }) {
   return null;
 }
 
-export function StageCard({ eyebrow, title, children, tone }: { eyebrow?: string; title?: ReactNode; children?: ReactNode; tone?: 'buzz' | 'good' }) {
+function StageCard({ eyebrow, title, children, tone }: { eyebrow?: string; title?: ReactNode; children?: ReactNode; tone?: 'buzz' }) {
   return (
     <section className="hc-card hc-stage" data-tone={tone}>
       {eyebrow && <span className="bz-eyebrow">{eyebrow}</span>}
@@ -461,14 +465,18 @@ function Roster({ pub, snap, run, onManage }: StageProps & { onManage: (id: stri
 
 function ManagePlayer({ pub, run, player, onClose }: StageProps & { player: PublicPlayer; onClose: () => void }) {
   const [name, setName] = useState(player.name);
-  const [score, setScore] = useState(String(player.score));
+  // The score as it stood when the dialog opened: only a figure the host actually typed is ever sent.
+  const [opened] = useState(String(player.score));
+  const [score, setScore] = useState(opened);
   const trivia = pub.round?.mode === 'trivia';
   const save = async (e: FormEvent) => {
     e.preventDefault();
+    const typed = score.trim();
+    const value = Number(typed);
+    if (typed && !Number.isInteger(value)) return toast('Enter the score as a whole number', 'error');
     let ok = true;
     if (name.trim() && name.trim() !== player.name) ok = await run({ t: 'player.rename', id: player.id, name: name.trim() });
-    const value = Number(score);
-    if (ok && Number.isInteger(value) && value !== player.score) ok = await run({ t: 'score.set', id: player.id, score: value });
+    if (ok && typed && typed !== opened) ok = await run({ t: 'score.set', id: player.id, score: value });
     if (ok) onClose();
   };
   const then = (action: HostAction) => run(action).then((ok) => ok && onClose());

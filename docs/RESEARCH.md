@@ -24,9 +24,9 @@ held in every episode.
 | Three contestants; Board 1, Board 2, "Final Trivia", then the top two play Fast Money. | *The Full Show* preset has exactly these four rounds. Player count is not limited to three. |
 | Boards are 5 categories × 5 clues, harder as the value rises. Board 1 is 100–500, Board 2 is double. Scores are points. | Same defaults; board size and multiplier are configurable per round. |
 | A wrong answer deducts the clue value; scores go negative. No penalty for staying quiet. | Default. The penalty is a configurable percentage. |
-| After a wrong answer the buzzers reopen for a steal, and the same player may buzz again. | `reopenOnIncorrect` and `rebuzz`. *The Full Show* enables both; other presets lock a player out after a miss, which suits bigger groups. |
+| After a wrong answer the buzzers reopen for a steal, and the same player may buzz again. | `reopenOnIncorrect` and `rebuzz`. Every built-in format reopens for a steal but keeps the player who missed locked out of that clue; "Second chances" in the rules turns the show's behaviour on. |
 | Either/or categories ("Higher or Lower") allow no steals. | A category can be marked *single attempt*. |
-| A correct answer takes the board; after a miss or silence the previous picker keeps it. Last place picks first on Board 2. | Implemented as described. |
+| A correct answer takes the board; after a miss or silence the previous picker keeps it. Last place picks first on Board 2. | Implemented as described. As on the show, the contestant calls the clue out loud and the host puts it up: phones show the board but cannot select from it. |
 | One hidden wager clue per board; only the finder answers; the wager is set before the clue is shown; "up to all your points, or 1,000 if you have less". | Implemented; the count per board and the 1,000 floor are configurable. |
 | Final Trivia: all play, the category is shown first, wagers are entered on phones, about a minute to write an answer, reveals one at a time. | The `final` mode. Trailing players are revealed first. |
 | Fast Money is head to head: board scores only seed it, the leader goes first with the opponent out of the room, five survey questions, a duplicate answer gets a buzzer and must be replaced, the higher total wins. No target score. | *The Full Show* uses `stakes: decider` with duplicate blocking and no target. |
@@ -36,14 +36,22 @@ held in every episode.
 
 These are BuzzOff's assumptions. All are settings, not fixed behaviour.
 
-- **Early buzzing.** No timed lockout was seen on the show. BuzzOff defaults to
-  a 250 ms lockout because, with phones, mashing the button before the host
-  finishes reading otherwise pays off. It can be set to ignore or to a points
-  penalty.
+- **Buzzing in.** Buzzers open the moment the host puts a clue up; there is no
+  separate arming step and so no such thing as buzzing too early. Players may
+  buzz while the host is still reading, as on the show.
+- **The question while someone answers.** Once a player has buzzed in, the
+  question leaves the TV and every phone until the host has ruled, so nobody
+  keeps reading while another player is on the spot. A wrong answer brings it
+  back for the players still in. A wager clue is answered alone, so its
+  question stays up.
 - **Timers.** The show's answer time is an informal host countdown. BuzzOff
-  shows a clock (10 s to buzz, 12 s to answer by default) but never rules on
-  its own: when the answer clock runs out the room hears it and the host still
-  decides. Either timer can be turned off.
+  shows a clock (a 30 s question timer, then 12 s to answer, by default). The
+  question timer stands still while an answer is judged and carries on from
+  where it stopped if the buzzers reopen, never with less than five seconds
+  so that a steal is possible. The host can add ten seconds or stop the clock
+  at any point. The answer clock
+  never rules on its own: when it runs out the room hears it and the host
+  still decides. Either timer can be turned off.
 - **Fast Money clock.** The show gives 30 and 35 seconds for spoken answers.
   Typing on a phone is slower, so BuzzOff defaults to 45 seconds plus 10 for
   each later turn. The host can also type answers for a contestant who says
@@ -53,8 +61,9 @@ These are BuzzOff's assumptions. All are settings, not fixed behaviour.
   question, after both have played, which also works when the second
   contestant cannot leave the room. The classic "reveal the first contestant,
   then cover the board" order is available as `reveal: afterEachTurn`.
-- **First pick on Board 1.** Decided differently each episode. BuzzOff draws at
-  random; the host can hand the board to anyone.
+- **First pick on Board 1.** Decided differently each episode. BuzzOff has
+  everyone roll a die on their phone: the highest roll takes the board and
+  ties roll again. The host can skip it by handing the board to anyone.
 - **Wagers when a player has nothing.** The show improvised the cap for Final
   Trivia. BuzzOff applies the same "your score, or the floor if you have less"
   rule as for hidden wagers.

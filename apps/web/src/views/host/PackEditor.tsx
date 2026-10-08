@@ -19,6 +19,8 @@ export function PackEditor({ id }: { id: string }) {
   );
 }
 
+const SAVE_KEY = /Mac|iPhone|iPad/.test(navigator.userAgent) ? '⌘S' : 'Ctrl+S';
+
 const blankClue = (value: number, difficulty?: number): Clue => ({ id: shortId(), value, difficulty, question: '', answer: '', accept: [] });
 const blankCategory = (): Category => ({ id: shortId(), title: '', clues: [100, 200, 300, 400, 500].map((v, i) => blankClue(v, i + 1)) });
 const blankAnswer = (): SurveyAnswer => ({ text: '', points: 0, aliases: [] });
@@ -101,7 +103,8 @@ function Editor({ id }: { id: string }) {
     setError(null);
     try {
       const { id: _id, createdAt: _c, updatedAt: _u, ...content } = await api.savePack(id, check.data);
-      setDraft(content);
+      // Anything typed while the request was in flight stays, and stays unsaved.
+      setDraft((current) => (current === draft ? content : current));
       setSaved(JSON.stringify(content));
       toast('Pack saved', 'good');
     } catch (err) {
@@ -191,7 +194,7 @@ function Editor({ id }: { id: string }) {
         <span className={cx('bz-pill', dirty ? 'bz-pill--buzz' : 'bz-pill--good')} aria-live="polite">
           {dirty ? 'Unsaved changes' : 'All changes saved'}
         </span>
-        <Button variant="primary" disabled={!dirty || saving} onClick={() => void save()} hotkey="⌘S">
+        <Button variant="primary" disabled={!dirty || saving} onClick={() => void save()} hotkey={SAVE_KEY}>
           {saving ? 'Saving…' : 'Save'}
         </Button>
         {error && (
@@ -498,12 +501,22 @@ function MediaField({ media, onChange }: { media: Media | undefined; onChange: (
   const [kind, setKind] = useState<Media['kind']>('image');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // An upload can outlast many edits. When it lands it must go through the handler of the
+  // current render, not the one captured when the file was picked, which would undo them.
+  const latest = useRef(onChange);
+  latest.current = onChange;
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => void (mounted.current = false);
+  }, []);
 
   async function upload(f: File) {
     setBusy(true);
     setError(null);
     try {
-      onChange(await api.uploadMedia(f));
+      const uploaded = await api.uploadMedia(f);
+      if (mounted.current) latest.current(uploaded);
     } catch (err) {
       setError(fail(err));
     } finally {

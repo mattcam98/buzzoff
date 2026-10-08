@@ -1277,3 +1277,146 @@
   color: var(--text-faint);
   font-size: 0.75rem;
 }
+
+/* ---------------------------------------------------------------- settings */
+
+.mg-settings {
+  display: grid;
+  gap: clamp(18px, 2.4vw, 24px);
+  min-width: 0;
+}
+.mg-settings .mg-savebar > .mg-link {
+  margin-right: 0;
+}
+.mg-settings .mg-savebar > .bz-btn {
+  margin-left: auto;
+}
+
+/* What a group is on the left, its controls on the right; stacked when there is no room for both. */
+.mg-set {
+  display: grid;
+  grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+  gap: 18px clamp(20px, 4vw, 40px);
+  padding: clamp(18px, 3vw, 26px);
+  box-shadow: none;
+}
+.mg-set[data-tone='warn'] {
+  border-color: color-mix(in srgb, var(--buzz) 45%, transparent);
+}
+.mg-set__about {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+.mg-set__icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.75rem;
+  margin-bottom: 4px;
+  clip-path: var(--hex-tall);
+  background: rgb(255 255 255 / 0.1);
+  font-size: 1.125rem;
+}
+.mg-set__about h2 {
+  font-size: 1.25rem;
+}
+.mg-set__about p {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+}
+.mg-set__body {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+.mg-set .bz-field small[data-bad] {
+  color: #ffb3ba;
+}
+.mg-set code {
+  padding: 0.1em 0.4em;
+  border-radius: 5px;
+  background: rgb(0 0 0 / 0.35);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+.mg-set .mg-stack > .bz-btn {
+  justify-self: start;
+}
+@media (max-width: 760px) {
+  .mg-set {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mg-set .mg-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.mg-devices {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+}
+.mg-devices li {
+  display: grid;
+  gap: 2px;
+  padding: 10px 14px;
+}
+.mg-devices li + li {
+  border-top: 1px solid var(--line);
+}
+.mg-devices li > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.mg-devices small {
+  color: var(--text-faint);
+  font-size: 0.75rem;
+}
+
+.mg-log {
+  min-width: 520px;
+}
+.mg-log th,
+.mg-log td {
+  text-align: left;
+}
+.mg-log td:nth-child(2) {
+  white-space: normal;
+}
+.mg-log td:first-child {
+  color: var(--text-dim);
+}
+.mg-log tr[data-bad] td:nth-child(2) {
+  color: #ffb3ba;
+}
+
+.mg-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+  gap: 14px 20px;
+  margin: 0;
+}
+.mg-facts dt {
+  color: var(--text-faint);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.mg-facts dd {
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+.mg-facts small {
+  color: var(--text-faint);
+  font-size: 0.75rem;
+  font-weight: 500;
+}

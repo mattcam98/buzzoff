@@ -23,15 +23,39 @@ Open `http://<server>:3210/host`, sign in with `BUZZOFF_ADMIN_PASSWORD`, and
 press **New game → Create game**. A starter pack (14 categories, 12 surveys) is
 installed on first boot so there is something to play immediately.
 
-| Setting | Default | What it does |
+`.env` holds only what the server needs before it can read its own settings:
+
+| Variable | Default | What it does |
 |---|---|---|
 | `POSTGRES_PASSWORD` | required | Database password. Letters and digits only; it is embedded in a URL. |
-| `BUZZOFF_ADMIN_PASSWORD` | empty | Password for hosting and editing packs. **Empty means anyone who can reach the server can host and read every answer.** |
+| `BUZZOFF_ADMIN_PASSWORD` | empty | The host password a **new** server starts with. Read once; after that the password is changed in Settings. **Empty means the server starts open: anyone who can reach it can host, read every answer and set the password.** |
 | `BUZZOFF_PORT` | `3210` | Port published on the Docker host. |
-| `PUBLIC_URL` | empty | Address players type, e.g. `https://buzz.example.com`. Shown in the lobby and in the QR code. Empty uses whatever address the TV was opened with. |
 | `TRUST_PROXY` | `1` | Reverse proxies in front of the app: `0` if exposed directly, `1` behind one proxy, `2` behind Cloudflare *and* a local proxy. Rate limits are per client address, so a value that is too low lumps every player together. |
-| `ROOM_TTL_HOURS` | `24` | Idle games are deleted after this long (finished games after 6 hours). |
-| `MAX_UPLOAD_MB` | `25` | Largest image, audio or video file a question may use. |
+
+Everything else is under **Settings** in the app (`/host/settings`) and takes
+effect the moment it is saved, with no restart:
+
+| Setting | Default | What it does |
+|---|---|---|
+| Players' address | empty | Address players type, e.g. `https://buzz.example.com`. Shown in the lobby and in the QR code. Empty uses whatever address the TV was opened with. |
+| Default format | last played | The format the New game page opens on. |
+| Keep idle / finished games | 24 h / 6 h | How long a game nobody is touching stays on the server. |
+| Largest file | 25 MB | Largest image, audio or video file a question may use. |
+| Host password | from `.env` | Changing it needs the current one and signs every device out. |
+| Sign-in lasts | 30 days | How long a device stays signed in as host. |
+
+The same page lists the devices signed in as host and keeps an activity log of
+sign-ins, password changes and settings changes.
+
+**Upgrading from a version configured through `.env`:** nothing to do. On the
+first start, `BUZZOFF_ADMIN_PASSWORD`, `PUBLIC_URL`, `ROOM_TTL_HOURS` and
+`MAX_UPLOAD_MB` are copied into the database; from then on they are ignored and
+can be deleted from `.env`. Hosts sign in once more, because sessions changed.
+
+**Lost the host password?** Run
+`docker compose exec buzzoff node apps/server/dist/index.js reset-admin-password`,
+then `docker compose restart buzzoff`. The password is removed (or goes back to
+`BUZZOFF_ADMIN_PASSWORD` if that is set) and every device is signed out.
 
 **Behind a reverse proxy** (Nginx Proxy Manager, Caddy, Traefik): forward to
 port 3210 and enable WebSocket support. BuzzOff uses WebSockets only — it does
@@ -47,8 +71,21 @@ the proxy must pass `Upgrade` requests through.
    play sound until someone has interacted with the page.
 3. **Players** — go to the address on the TV, enter the code (or scan the QR),
    pick a name and avatar.
-4. **Run the show from the keyboard.** The next step is always on the space
-   bar: start, begin round, arm buzzers, back to the board. `C` and `X` rule an
+4. **Roll for the first pick.** When the first board begins, every phone shows
+   a die. Players tap to roll, the dice land on their phones and on the TV, and
+   the highest roll gets the board; tied players roll again on their own. The
+   server rolls for anyone who has not tapped after twelve seconds.
+5. **Players call the clue, you select it.** Whoever has the board says a
+   category and a value out loud ("Movies for 300") and you click it on the
+   console. Phones show the board and whose pick it is, but only the host can
+   put a clue in play. A correct answer takes the board. Buzzers open the
+   moment you select the clue, with a 30-second question timer; **+10 s** and
+   **Stop clock** are next to it if you need longer. When someone buzzes in,
+   the question disappears from the TV and every phone while you judge the
+   answer (you still see it, with the answer). If they are wrong it comes
+   back for everyone else, with the timer carrying on where it stopped.
+6. **Run the show from the keyboard.** The next step is always on the space
+   bar: start, begin round, back to the board. `C` and `X` rule an
    answer correct or incorrect, `R` reveals an answer nobody got, `U` undoes
    the last step, `P` pauses, `?` lists the shortcuts.
 
@@ -57,7 +94,8 @@ Things that go wrong at a party, and what to do:
 | Situation | What to do |
 |---|---|
 | Wrong ruling, wrong clue, fat-fingered anything | **Undo** (`U`). The last 40 host steps can be unwound. |
-| A buzz is disputed | **Re-do the buzz** discards it and re-arms for everyone still in. |
+| The dice roll is taking too long, or you want to skip it | **Space** rolls for everyone who has not. Or click a player and *Give control of the board*. |
+| A buzz is disputed | **Re-do the buzz** discards it and opens the buzzers again for everyone still in. |
 | A clue was bad | **Throw out clue** reverses its scoring and puts it back on the board. |
 | A score needs correcting | `−` / `+` next to the player, or click the player to type a score. |
 | A phone dies or a browser closes | Reopening the page puts them straight back in their seat. |
@@ -89,9 +127,9 @@ Daniel    355 ms   +28 ms
 Jake      411 ms   +84 ms
 ```
 
-These are **server-recorded times**: the milliseconds between the server arming
+These are **server-recorded times**: the milliseconds between the server opening
 the buzzers and the server receiving each buzz, on the server's monotonic
-clock. They are not reaction times. Each one includes the time the "armed"
+clock. They are not reaction times. Each one includes the time the "open"
 signal took to reach that phone and the time the buzz took to travel back, so
 a player on a slow connection is at a real disadvantage that the number cannot
 separate from slow thumbs.
@@ -117,9 +155,10 @@ New game page and saved as your own preset. The options:
 
 - **Rounds** — any sequence of *trivia board*, *final* (everyone wagers on one
   written-answer question) and *Fast Money* (survey questions against the clock).
-- **Buzzers** — host-armed or automatic; what an early buzz costs (nothing, a
-  lockout, points); whether a wrong answer re-arms for steals; whether the same
-  player may buzz again; penalty as a percentage of the clue; timers.
+- **Buzzers** — they open by themselves when a clue is selected. The rules
+  cover the question timer (30 seconds by default) and the answer timer;
+  whether a wrong answer opens them again for steals; whether the same player
+  may buzz again; and the penalty as a percentage of the clue.
 - **Fast Money** — who plays (leader, top two, everybody at once), time per
   turn, duplicate blocking, reveal between turns or side by side at the end,
   and what is at stake: points added to scores (optionally with a target and
@@ -171,6 +210,6 @@ state machine, the security model, and how to add a game mode.
 No code, artwork or audio from any other project or show is included. Sounds
 are synthesised in the browser. Fonts (Bricolage Grotesque, Figtree, JetBrains
 Mono) are bundled under the SIL Open Font License. Runtime dependencies are
-permissively licensed: React, Express, Socket.IO, pg, zod, multer and qrcode
+permissively licensed: React, Express, Socket.IO, pg, zod, multer, compression and qrcode
 under MIT, wouter under the Unlicense. The survey numbers in the starter pack
 are invented for illustration; they are not from a real poll.

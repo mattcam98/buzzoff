@@ -33,8 +33,7 @@ export const surveys = (n: number): Survey[] =>
   }));
 
 export const TRIVIA: TriviaRoundDef = {
-  mode: 'trivia', title: 'Board', categories: 2, cluesPerCategory: 2, valueMultiplier: 1, wagers: 0, wagerCap: 1000,
-  selection: 'control', eliminateLowest: 0,
+  mode: 'trivia', title: 'Board', categories: 2, cluesPerCategory: 2, valueMultiplier: 1, wagers: 0, wagerCap: 1000, eliminateLowest: 0,
 };
 export const FAST_MONEY = BUILTIN_PRESETS[0].rules.rounds.find((r): r is FastMoneyRoundDef => r.mode === 'fastMoney')!;
 export const FINAL = BUILTIN_PRESETS[0].rules.rounds.find((r): r is FinalRoundDef => r.mode === 'final')!;
@@ -115,13 +114,22 @@ export class Sim {
     return this;
   }
 
-  /** Start the game and enter the first round's play stage. */
+  /** Start the game and enter the first round's play stage, past the roll for the first pick. */
   start() {
-    return this.host({ t: 'start' }).host({ t: 'round.begin' });
+    return this.host({ t: 'start' }).host({ t: 'round.begin' }).rollOff();
   }
-  /** Select a clue and arm the buzzers. */
+  /** Play the dice roll through to its winner: everyone rolls as soon as they may. */
+  rollOff() {
+    for (let guard = 0; guard < 200 && this.state.rounds[this.state.roundIndex].stage === 'roll'; guard++) {
+      const roll = this.trivia.roll!;
+      if (roll.phase === 'rolling') for (const id of roll.contenders) if (roll.rolls[id] === undefined) this.player(id, { t: 'roll' });
+      this.advance(nextDeadline(this.state)! - this.now);
+    }
+    return this;
+  }
+  /** Select a clue, which opens the buzzers. */
   open(cat = 0, idx = 0) {
-    return this.host({ t: 'clue.select', cat, idx }).host({ t: 'buzz.open' });
+    return this.host({ t: 'clue.select', cat, idx });
   }
 
   get pub() {

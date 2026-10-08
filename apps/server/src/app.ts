@@ -3,12 +3,14 @@ import { createServer, type Server as HttpServer } from 'node:http';
 import { HandshakeSchema, PackFileSchema, type Pack } from '@buzzoff/shared';
 import { Server } from 'socket.io';
 import type { Config } from './config';
-import { AdminAuth, createHttp } from './http';
+import { AdminAuth } from './auth';
+import { createHttp } from './http';
 import type { AppServer } from './room';
 import { Rooms } from './rooms';
+import { auditTo, Settings } from './settings';
 import starterPack from './seed/starter-pack.json' with { type: 'json' };
 import type { Store } from './store/types';
-import { clientAddress, Limiter, log, randomId, randomToken } from './util';
+import { clientAddress, Limiter, log, randomId } from './util';
 
 export interface App {
   server: HttpServer;
@@ -27,18 +29,15 @@ async function seed(store: Store) {
   log.info('installed starter pack', { categories: pack.categories.length, surveys: pack.surveys.length });
 }
 
-async function serverSecret(store: Store) {
-  const existing = await store.getSetting('server_secret');
-  if (existing) return existing;
-  const created = randomToken(32);
-  await store.setSetting('server_secret', created);
-  return created;
-}
-
 export async function createApp(config: Config, store: Store): Promise<App> {
   await store.init();
   await seed(store);
-  const auth = new AdminAuth(config.BUZZOFF_ADMIN_PASSWORD, await serverSecret(store));
+  // Sessions used to be tokens signed with this key; they are now random and stored hashed, so it has no use.
+  await store.deleteSetting('server_secret');
+  const audit = auditTo(store);
+  const settings = await Settings.load(store, config, audit);
+  const auth = await AdminAuth.load(store, settings, audit, config.BUZZOFF_ADMIN_PASSWORD);
+  if (!auth.required) log.warn('no host password is set: anyone who can reach this server can host games, read question packs and change settings');
 
   const server = createServer();
   const io: AppServer = new Server(server, {
@@ -49,11 +48,16 @@ export async function createApp(config: Config, store: Store): Promise<App> {
     pingInterval: 10_000,
     pingTimeout: 8_000,
   });
-  const rooms = new Rooms(io, store, config);
+  const rooms = new Rooms(io, store, settings);
   await rooms.restore();
-  server.on('request', createHttp({ config, store, rooms, auth }));
+  // Socket.IO answers its own path; everything else is the HTTP app's.
+  const http = createHttp({ config, store, rooms, auth, settings, audit });
+  server.on('request', (req, res) => {
+    if (!req.url?.startsWith('/socket.io/')) http(req, res);
+  });
 
-  const connections = new Limiter(2, 30);
+  // The burst covers a full room behind one address all reconnecting at once.
+  const connections = new Limiter(2, 80);
   io.use((socket, next) => {
     const reject = (message: string) => next(new Error(message));
     // Behind a reverse proxy every socket arrives from the proxy's address, so
@@ -91,8 +95,10 @@ export async function createApp(config: Config, store: Store): Promise<App> {
     io,
     rooms,
     async close() {
+      // Hang up first, so nothing can be acknowledged after the final save.
+      const hungUp = io.close();
       await rooms.shutdown();
-      await io.close();
+      await hungUp;
       await store.close();
     },
   };

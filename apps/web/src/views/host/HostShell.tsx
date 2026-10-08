@@ -15,6 +15,8 @@ interface Shell {
   info: ServerInfo;
   /** Turn a caught error into a message; a 401 also sends the host back to the password form. */
   fail: (err: unknown) => string;
+  /** Ask the server again who we are and what it is set to, after signing out or changing settings. */
+  refresh: () => Promise<void>;
 }
 
 const ShellContext = createContext<Shell | null>(null);
@@ -35,23 +37,30 @@ const NAV = [
   { href: '/host', label: 'Games', match: (path: string) => path === '/host' || path.startsWith('/host/new') },
   { href: '/host/packs', label: 'Packs', match: (path: string) => path.startsWith('/host/packs') },
   { href: '/host/history', label: 'History', match: (path: string) => path.startsWith('/host/history') },
+  { href: '/host/settings', label: 'Settings', match: (path: string) => path.startsWith('/host/settings') },
 ];
 
+/** Once the server has let this browser in, moving between host pages does not ask again. */
+let admitted: ServerInfo | null = null;
+
 export function HostShell({ children, wide }: { children: ReactNode; wide?: boolean }) {
-  const [gate, setGate] = useState<Gate>({ state: 'loading' });
+  const [gate, setGate] = useState<Gate>(admitted ? { state: 'ready', info: admitted } : { state: 'loading' });
   const [path] = useLocation();
 
-  const check = useCallback(async () => {
-    setGate({ state: 'loading' });
+  const check = useCallback(async (quiet = false) => {
+    if (admitted && !quiet) return;
+    if (!quiet) setGate({ state: 'loading' });
+    const admit = (info: ServerInfo) => setGate({ state: 'ready', info: (admitted = info) });
     try {
       const info = await api.info();
-      if (!info.authRequired) return setGate({ state: 'ready', info });
+      if (!info.authRequired) return admit(info);
       try {
         await api.checkAuth();
-        setGate({ state: 'ready', info });
+        admit(info);
       } catch (err) {
-        if (err instanceof ApiFailure && err.status === 401) setGate({ state: 'login', info });
-        else throw err;
+        if (!(err instanceof ApiFailure) || err.status !== 401) throw err;
+        admitted = null;
+        setGate({ state: 'login', info });
       }
     } catch (err) {
       setGate({ state: 'offline', message: err instanceof ApiFailure ? err.message : 'Could not reach the server' });
@@ -68,13 +77,15 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
         fail(err) {
           if (err instanceof ApiFailure && err.status === 401) {
             storage.setAdminToken(null);
+            admitted = null;
             setGate({ state: 'login', info });
             return 'Your session has ended — sign in again';
           }
           return err instanceof Error ? err.message : 'Something went wrong';
         },
+        refresh: () => check(true),
       },
-    [info],
+    [info, check],
   );
 
   return (
@@ -109,7 +120,7 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
             </Button>
           </div>
         )}
-        {gate.state === 'login' && <Login onDone={() => setGate({ state: 'ready', info: gate.info })} />}
+        {gate.state === 'login' && <Login onDone={() => setGate({ state: 'ready', info: (admitted = gate.info) })} />}
         {gate.state === 'ready' && shell && <ShellContext.Provider value={shell}>{children}</ShellContext.Provider>}
       </main>
     </div>

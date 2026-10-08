@@ -258,6 +258,9 @@
   align-content: start;
   gap: 1em 0.6em;
   overflow: hidden;
+  /* The "Ready" pill sits above its player; room for it inside the clip, without moving the list. */
+  padding-top: 0.3em;
+  margin-top: -0.3em;
 }
 .tv-lobby__players[data-many] {
   font-size: 0.74em;
@@ -301,6 +304,96 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   animation: bz-pop 0.3s var(--spring) both;
+}
+
+/* ---------------------------------------------------------------- the roll for the first pick */
+
+.tv-roll {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 1.2em;
+  align-content: center;
+}
+.tv-roll__head {
+  display: grid;
+  justify-items: center;
+  gap: 0.3em;
+  text-align: center;
+}
+.tv-roll__head .bz-eyebrow {
+  font-size: 0.9em;
+  color: var(--buzz);
+}
+.tv-roll__head h2 {
+  font-size: 4.2em;
+  font-stretch: 82%;
+  line-height: 1;
+}
+.tv-roll[data-phase='won'] .tv-roll__head h2 {
+  color: var(--buzz);
+}
+.tv-roll__head p {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  font-size: 1.3em;
+  color: var(--text-dim);
+}
+.tv-roll__count {
+  min-width: 1.6em;
+  font-size: 1.5em;
+  color: var(--text);
+}
+.tv-roll__count[data-low] {
+  color: var(--bad);
+}
+.tv-roll__players {
+  list-style: none;
+  margin: 0;
+  padding: 0.4em 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  gap: 1em;
+  overflow: hidden;
+}
+.tv-roll__players[data-count='few'] { font-size: 1.5em; }
+.tv-roll__players[data-count='many'] { font-size: 0.72em; }
+.tv-roll__players li {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.35em;
+  width: 8.4em;
+  padding: 0.9em 0.6em 1em;
+  border-radius: 1.2em;
+  border: 1px solid var(--line);
+  background: rgb(255 255 255 / 0.05);
+  text-align: center;
+  transition: opacity 0.4s ease, transform 0.4s var(--spring), border-color 0.4s ease, background 0.4s ease;
+  animation: bz-pop 0.5s var(--spring) both;
+}
+.tv-roll__players strong {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tv-roll__die {
+  margin-top: 0.15em;
+  font-size: 3.2em;
+}
+.tv-roll__players li[data-out] {
+  opacity: 0.4;
+  transform: scale(0.92);
+}
+.tv-roll__players li[data-winner] {
+  border-color: var(--buzz);
+  background: rgb(255 196 0 / 0.16);
+  box-shadow: 0 0 2.4em rgb(255 196 0 / 0.35);
+  transform: scale(1.08);
 }
 
 /* ---------------------------------------------------------------- round intro */
@@ -394,6 +487,7 @@
   animation: bz-flip-in 0.5s var(--ease-out) both;
 }
 .tv-board__cell {
+  position: relative;
   display: grid;
   place-items: center;
   min-height: 0;
@@ -413,8 +507,17 @@
   border-color: transparent;
   box-shadow: none;
 }
-.tv-board__cell[data-used] .bz-avatar {
-  opacity: 0.55;
+/* Played: still there to read, plainly out of play. */
+.tv-board__cell[data-used] .bz-num {
+  color: var(--text-faint);
+  opacity: 0.5;
+  text-shadow: none;
+}
+.tv-board__won {
+  position: absolute;
+  top: 0.35em;
+  right: 0.4em;
+  opacity: 0.8;
 }
 .tv-board__picker {
   display: flex;
@@ -507,6 +610,16 @@ video.tv-clue__media {
 .tv-clue__body[data-media='image'] .tv-clue__q,
 .tv-clue__body[data-media='video'] .tv-clue__q {
   font-size: 2em;
+}
+.tv-clue__hidden {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-align: center;
+  animation: bz-fade 0.3s ease both;
+}
+.tv-clue__body[data-hidden] {
+  background: rgb(22 18 60 / 0.45);
 }
 .tv-clue__timer {
   height: 0.5em;
@@ -1407,10 +1520,6 @@ video.tv-clue__media {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   white-space: nowrap;
-}
-.tv-podium__tag--bad {
-  background: var(--bad);
-  color: #2a0308;
 }
 
 /* Spectators on a phone get the same scenes, stacked. */

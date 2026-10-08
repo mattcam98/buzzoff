@@ -1,14 +1,9 @@
 /**
  * The phone controller. The screen follows the game: a buzzer during trivia,
- * a wager slider when one is asked for, a text box in Fast Money.
+ * a wager slider when one is asked for, a text box in Fast Money. Spectators
+ * get the same screens without the controls.
  *
- * Spectators get the same screens without any of the controls.
- *
- * Every screen is laid out to fit the visible part of the phone without
- * scrolling the page: a fixed shell (`bz-app`) holds a compact header and one
- * main area, and each screen divides that area between fixed-size controls
- * and one flexible region. The only things that ever scroll are long lists,
- * and they scroll inside their own region (`data-scroll`).
+ * No screen scrolls as a page; only long lists do, inside a `data-scroll` region.
  */
 import {
   accuracy, averageBuzzMs,
@@ -19,14 +14,13 @@ import { Redirect, useLocation } from 'wouter';
 import type { Connection, Snapshot } from '../lib/connection';
 import { useConnection } from '../lib/connection';
 import { byScore, fmtDelta, fmtGap, fmtMs, fmtPercent, fmtScore, ordinal, playerMap } from '../lib/format';
-import { useGameEvents, useServerNow, useWakeLock } from '../lib/hooks';
+import { useGameEvents, useWakeLock } from '../lib/hooks';
 import { useFixedViewport } from '../lib/viewport';
 import { haptic, play, unlockAudio } from '../lib/sound';
 import { storage } from '../lib/storage';
-import { BuzzLadder, roundBlurb, Score, Seconds, textScale } from '../ui/game';
+import { BuzzLadder, Die, MediaView, rollLeaders, roundBlurb, Score, Seconds, textScale } from '../ui/game';
 import { Avatar, Button, Modal, Notice, TimerBar, toast } from '../ui/kit';
 import { IdentityFields } from './Home';
-import { MediaView } from './tv/Scenes';
 import '../styles/game.css';
 import '../styles/home.css';
 import '../styles/play.css';
@@ -70,6 +64,12 @@ function Session({ code, token, playerId }: { code: string; token: string | null
       play(e.correct ? 'correct' : 'wrong');
     } else if (e.type === 'fm.duplicate' && e.playerId === playerId) {
       haptic([80, 40, 80]);
+    } else if (e.type === 'dice.rolled' && e.playerId === playerId) {
+      haptic([20, 50, 20, 50, 30]);
+      play('dice');
+    } else if (e.type === 'dice.won' && e.playerId === playerId) {
+      haptic([30, 40, 30, 40, 120]);
+      play('correct');
     }
   });
 
@@ -108,7 +108,8 @@ function Session({ code, token, playerId }: { code: string; token: string | null
   const ctx: Ctx = { conn, snap, pub, you: snap.you, me: playerId ? (players[playerId] ?? null) : null, players };
 
   return (
-    <div className="bz-stage bz-app play" data-phase={pub.phase} onPointerDown={unlockAudio}>
+    // Lifting a finger counts as a gesture that may start audio; touching down does not.
+    <div className="bz-stage bz-app play" data-phase={pub.phase} onPointerUp={unlockAudio}>
       {snap.status !== 'online' && <div className="bz-banner">Reconnecting… your seat is safe</div>}
       <Header {...ctx} />
       <main className="play__main">
@@ -288,36 +289,42 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
   const { conn, pub, snap, you, me, players, round } = ctx;
   const clue = round.clue;
 
+  if (round.stage === 'roll' && round.roll) return <RollPanel {...ctx} roll={round.roll} />;
   if (!clue) {
+    // Everyone sees the board, nobody can press it: the player whose pick it is says it out loud and the host selects it.
     const picker = round.controlId ? players[round.controlId] : null;
-    if (you?.canSelect) {
-      return (
-        <section className="play__panel play__pick bz-rise" data-tone="buzz">
-          <h1>
-            <span className="bz-eyebrow">Your pick</span> Choose a clue
-          </h1>
-          <div className="play__grid" style={{ gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))`, '--rows': Math.max(...round.board.map((c) => c.clues.length)) } as CSSProperties}>
-            {round.board.map((cat, c) => (
-              <div key={c} className="play__col">
-                <span>{cat.title}</span>
-                {cat.clues.map((cl, k) => (
-                  <button key={k} disabled={cl.used} onClick={() => send(conn, { t: 'select', cat: c, idx: k })} aria-label={`${cat.title} for ${cl.value}`}>
-                    {cl.used ? '' : cl.value}
-                  </button>
-                ))}
-              </div>
-            ))}
-          </div>
-        </section>
-      );
-    }
+    const mine = !!me && picker?.id === me.id;
     return (
-      <>
-        <Panel eyebrow={round.title} title={picker ? `${picker.name} is picking` : 'Next clue coming up'}>
-          {round.selection === 'control' && <p className="play__hint">Answer correctly to take control of the board.</p>}
-        </Panel>
-        <MiniBoard pub={pub} me={me} />
-      </>
+      <section className="play__panel play__pick bz-rise" data-tone={mine ? 'buzz' : undefined}>
+        <h1>
+          {mine ? (
+            <>
+              <span className="bz-eyebrow">Your pick</span> Tell the host
+            </>
+          ) : picker ? (
+            `${picker.name} is picking`
+          ) : (
+            'Next clue coming up'
+          )}
+        </h1>
+        <div
+          className="play__grid"
+          role="group"
+          aria-label={mine ? 'The board. Say the category and the points you want; the host will select it.' : 'The board'}
+          style={{ gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))`, '--rows': Math.max(...round.board.map((c) => c.clues.length)) } as CSSProperties}
+        >
+          {round.board.map((cat, c) => (
+            <div key={c} className="play__col">
+              <span>{cat.title}</span>
+              {cat.clues.map((cl, k) => (
+                <b key={k} className="bz-num" data-used={cl.used || undefined} aria-label={cl.used ? `${cat.title}, ${cl.value}: played` : `${cat.title} for ${cl.value}`}>
+                  {cl.value}
+                </b>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
     );
   }
 
@@ -345,11 +352,16 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
         </header>
         {clue.media?.kind === 'image' && <MediaView media={clue.media} className="play__media" />}
         {clue.media && clue.media.kind !== 'image' && <span className="bz-pill bz-pill--cyan">{clue.media.kind === 'audio' ? '🎧 Listen' : '🎬 Watch'} on the big screen</span>}
-        {/* Long clues shrink first and only then scroll, inside the card. */}
-        <p data-scroll data-scale={textScale(clue.question ?? '')}>
-          {clue.question}
-        </p>
-        <TimerBar timer={clue.timer} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} />
+        {clue.question === null ? (
+          // Nobody reads on while an answer is judged; the question comes back if the buzzers reopen.
+          <p className="play__hidden">Question hidden while {answerer?.id === me?.id ? 'you answer' : `${answerer?.name ?? 'someone'} answers`}</p>
+        ) : (
+          // Long clues shrink first and only then scroll, inside the card.
+          <p data-scroll data-scale={textScale(clue.question)}>
+            {clue.question}
+          </p>
+        )}
+        <TimerBar timer={clue.timer} held={clue.held} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} />
       </section>
 
       <div className="play__center">
@@ -376,21 +388,90 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
   );
 }
 
+/**
+ * The roll for the first pick. Tapping only asks the server to roll; the number is the
+ * server's, and the die on screen tumbles onto it when it arrives.
+ */
+function RollPanel({ conn, pub, snap, me, players, roll }: Ctx & { roll: NonNullable<TriviaPublic['roll']> }) {
+  const [pressed, setPressed] = useState(false);
+  useEffect(() => setPressed(false), [roll.round]);
+
+  const inIt = !!me && roll.contenders.includes(me.id);
+  const mine = me ? (roll.rolls[me.id] ?? roll.out[me.id] ?? null) : null;
+  const canRoll = inIt && roll.phase === 'rolling' && mine === null;
+  const tied = roll.phase === 'tied' ? rollLeaders(roll) : [];
+  const winner = roll.winnerId ? players[roll.winnerId] : null;
+  const waitingFor = roll.contenders.filter((id) => roll.rolls[id] === undefined).length;
+
+  const tap = async () => {
+    if (!canRoll || pressed) return;
+    setPressed(true);
+    haptic(25);
+    if (!(await send(conn, { t: 'roll' }))) setPressed(false);
+  };
+
+  const [title, hint] = winner
+    ? winner.id === me?.id
+      ? ['You pick first!', 'Tell the host your category and points.']
+      : [`${winner.name} picks first`, 'Eyes on the board.']
+    : tied.length
+      ? me && tied.includes(me.id)
+        ? ['A tie — you roll again', 'Get ready.']
+        : ['A tie!', `${tied.map((id) => players[id]?.name).filter(Boolean).join(' and ')} roll again.`]
+      : canRoll
+        ? ['Tap to roll', 'The highest roll picks the first clue.']
+        : inIt
+          ? [`You rolled a ${mine}`, waitingFor ? `Waiting for ${waitingFor} more…` : 'Here it comes…']
+          : me && mine !== null
+            ? [`You rolled a ${mine}`, 'Not enough this time. Watch the tie-break.']
+            : ['Rolling for the first pick', 'The highest roll picks the first clue.'];
+
+  return (
+    <section className="play__panel play__roll bz-rise" data-tone={winner?.id === me?.id && winner ? 'good' : canRoll ? 'buzz' : undefined}>
+      <span className="bz-eyebrow">{roll.round === 1 ? 'Who picks first?' : `Tie-break ${roll.round - 1}`}</span>
+      <h1 aria-live="polite">{title}</h1>
+      {me && (
+        <button
+          className="play__dice"
+          data-ready={canRoll && !pressed ? true : undefined}
+          disabled={!canRoll || pressed}
+          // Like the buzzer, this answers the touch itself rather than the finger lifting.
+          onPointerDown={(e) => {
+            e.preventDefault();
+            void tap();
+          }}
+          aria-label={canRoll ? 'Roll the die' : `Your die: ${mine ?? 'not rolled'}`}
+        >
+          <Die value={mine} />
+        </button>
+      )}
+      <p className="play__hint">
+        {hint} {canRoll && <Seconds pub={pub} snap={snap} />}
+      </p>
+      <ul className="play__rolls" data-scroll aria-label="Everyone’s rolls">
+        {pub.players
+          .filter((p) => roll.contenders.includes(p.id) || roll.out[p.id] !== undefined)
+          .map((p) => (
+            <li key={p.id} data-out={!roll.contenders.includes(p.id) || undefined} data-winner={p.id === roll.winnerId || undefined} data-me={p.id === me?.id || undefined}>
+              <Avatar avatar={p.avatar} size={22} dim={!roll.contenders.includes(p.id)} />
+              <span>{p.name}</span>
+              <Die value={roll.rolls[p.id] ?? roll.out[p.id] ?? null} />
+            </li>
+          ))}
+      </ul>
+    </section>
+  );
+}
+
 function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerView; round: TriviaPublic }) {
   const clue = round.clue!;
-  const { state, until, ms, deltaMs } = you.buzzer;
+  const { state, ms, deltaMs } = you.buzzer;
   const [pressed, setPressed] = useState(false);
-  const [note, setNote] = useState<string | null>(null);
-  const now = useServerNow(snap.clockOffset, until !== null);
-  const locked = until !== null && until > now;
-  const canPress = (state === 'open' || state === 'wait') && !locked;
+  const canPress = state === 'open';
   const answerer = clue.answererId ? players[clue.answererId] : null;
 
-  // Whenever the server changes our buzzer state (a new clue, a re-arm, a reset), forget the last press.
-  useEffect(() => {
-    setPressed(false);
-    if (state !== 'wait' && state !== 'open') setNote(null);
-  }, [state, clue.cat, clue.idx, clue.judgments.length]);
+  // Whenever the server changes our buzzer state (a new clue, a steal, a reset), forget the last press.
+  useEffect(() => setPressed(false), [state, clue.cat, clue.idx, clue.judgments.length]);
 
   const press = async () => {
     if (!canPress || pressed) return;
@@ -399,15 +480,7 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
     const ack = await conn.buzz();
     if (!ack.ok) {
       setPressed(false);
-      return toast(ack.error.message, 'error');
-    }
-    if (ack.data.status === 'early') {
-      setPressed(false);
-      haptic([70, 50, 70]);
-      setNote(pub.buzzer.earlyBuzz === 'ignore' ? 'Not yet — wait for the buzzers to open' : 'Too early! You’re briefly locked out');
-    } else if (ack.data.status === 'lockedOut') {
-      setPressed(false);
-      setNote('Still locked out');
+      toast(ack.error.message, 'error');
     }
   };
 
@@ -425,11 +498,9 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const visual = locked ? 'locked' : pressed && (state === 'open' || state === 'wait') ? 'buzzed' : state;
+  const visual = pressed && state === 'open' ? 'buzzed' : state;
   const label: Record<string, [string, string]> = {
-    wait: ['Wait', 'Buzzers are locked'],
     open: ['Buzz!', 'Tap now'],
-    locked: ['Locked', `${Math.max(0, Math.ceil(((until ?? 0) - now) / 10) / 100).toFixed(2)} s`],
     buzzed: ['Buzzed', ms !== null ? fmtMs(ms) : 'Sent…'],
     yours: ['You’re up!', 'Answer out loud'],
     taken: [answerer?.name ?? 'Taken', 'buzzed first'],
@@ -457,9 +528,7 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
         </button>
       </div>
       <div className="play__readout" aria-live="polite">
-        {note ? (
-          <p data-tone="bad">{note}</p>
-        ) : ms !== null ? (
+        {ms !== null ? (
           <p>
             Your buzz registered at <b className="bz-mono">{fmtMs(ms)}</b>
             {deltaMs !== null && state !== 'yours' && deltaMs !== 0 && (
@@ -471,7 +540,7 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
             {state === 'yours' && ' · first in'}
           </p>
         ) : state === 'yours' || state === 'taken' ? null : (
-          <p>{state === 'wait' ? (pub.buzzer.earlyBuzz === 'ignore' ? 'Wait for the host to open the buzzers.' : 'Don’t jump the gun: buzzing early locks you out.') : state === 'open' ? <Seconds pub={pub} snap={snap} /> : null}</p>
+          <p>{state === 'open' && <Seconds pub={pub} snap={snap} />}</p>
         )}
       </div>
     </section>
@@ -479,8 +548,17 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
 }
 
 function WagerPanel({ conn, wager, title, hint }: { conn: Connection; wager: NonNullable<PlayerView['wager']>; title: string; hint: string }) {
-  const [amount, setAmount] = useState(wager.amount ?? Math.min(wager.max, Math.max(wager.min, Math.round(wager.max / 2 / 100) * 100)));
   const clamp = (n: number) => Math.max(wager.min, Math.min(wager.max, Math.round(n) || 0));
+  // The field holds what was typed, so it can be cleared and retyped; the wager is that, kept within bounds.
+  const [typed, setTyped] = useState(() => String(wager.amount ?? clamp(Math.round(wager.max / 2 / 100) * 100)));
+  const [sending, setSending] = useState(false);
+  const amount = clamp(Number(typed));
+  const setAmount = (n: number) => setTyped(String(clamp(n)));
+  const lockIn = async () => {
+    setSending(true);
+    await send(conn, { t: 'wager', amount });
+    setSending(false);
+  };
   // The +/− buttons and slider mean a wager can be set without ever opening the keyboard.
   const step = wager.max <= 1000 ? 50 : wager.max <= 5000 ? 100 : 500;
   if (wager.amount !== null) {
@@ -495,22 +573,22 @@ function WagerPanel({ conn, wager, title, hint }: { conn: Connection; wager: Non
       <span className="bz-eyebrow">{title}</span>
       <p className="play__extra">{hint}</p>
       <div className="play__amount">
-        <button type="button" onClick={() => setAmount(clamp(amount - step))} disabled={amount <= wager.min} aria-label={`Wager ${step} less`}>
+        <button type="button" onClick={() => setAmount(amount - step)} disabled={amount <= wager.min} aria-label={`Wager ${step} less`}>
           −
         </button>
-        <input className="play__wager bz-num" type="number" inputMode="numeric" min={wager.min} max={wager.max} value={amount} onChange={(e) => setAmount(clamp(Number(e.target.value)))} aria-label="Wager amount" />
-        <button type="button" onClick={() => setAmount(clamp(amount + step))} disabled={amount >= wager.max} aria-label={`Wager ${step} more`}>
+        <input className="play__wager bz-num" type="number" inputMode="numeric" min={wager.min} max={wager.max} value={typed} onChange={(e) => setTyped(e.target.value)} onBlur={() => setAmount(amount)} aria-label="Wager amount" />
+        <button type="button" onClick={() => setAmount(amount + step)} disabled={amount >= wager.max} aria-label={`Wager ${step} more`}>
           +
         </button>
       </div>
-      <input type="range" className="play__range play__nokb" min={wager.min} max={wager.max} step={Math.max(1, Math.round(wager.max / 100))} value={amount} onChange={(e) => setAmount(clamp(Number(e.target.value)))} aria-label="Wager slider" />
+      <input type="range" className="play__range play__nokb" min={wager.min} max={wager.max} step={Math.max(1, Math.round(wager.max / 100))} value={amount} onChange={(e) => setAmount(Number(e.target.value))} aria-label="Wager slider" />
       <div className="play__chips play__nokb">
         <button type="button" onClick={() => setAmount(wager.min)}>{fmtScore(wager.min)}</button>
-        <button type="button" onClick={() => setAmount(clamp(wager.max / 4))}>¼</button>
-        <button type="button" onClick={() => setAmount(clamp(wager.max / 2))}>½</button>
+        <button type="button" onClick={() => setAmount(wager.max / 4)}>¼</button>
+        <button type="button" onClick={() => setAmount(wager.max / 2)}>½</button>
         <button type="button" onClick={() => setAmount(wager.max)}>All in · {fmtScore(wager.max)}</button>
       </div>
-      <Button variant="primary" size="l" block onClick={() => send(conn, { t: 'wager', amount })}>
+      <Button variant="primary" size="l" block disabled={sending} onClick={lockIn}>
         Lock in {fmtScore(amount)}
       </Button>
     </section>
@@ -599,6 +677,8 @@ function FastMoneyInput({ conn, pub, snap, round, mine }: Ctx & { round: FastMon
   const [error, setError] = useState<string | null>(null);
   const [review, setReview] = useState(firstBlank < 0);
   const input = useRef<HTMLInputElement>(null);
+  const live = useRef({ q, text });
+  live.current = { q, text };
 
   const go = (index: number, value = answers[index] ?? '', problem: string | null = null) => {
     setQ(index);
@@ -632,7 +712,9 @@ function FastMoneyInput({ conn, pub, snap, round, mine }: Ctx & { round: FastMon
       if (ack.ok) return;
       haptic([80, 40, 80]);
       if (ack.error.code === 'duplicate') play('strike');
-      go(index, value, ack.error.message);
+      // Go back to fix it, unless they are already part-way through typing another answer.
+      if (live.current.q !== index && live.current.text.trim()) toast(`Question ${index + 1}: ${ack.error.message}`, 'error');
+      else go(index, value, ack.error.message);
     });
     advance(answers.map((a, i) => (i === index ? value : a)));
   };

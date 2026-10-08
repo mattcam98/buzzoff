@@ -3,15 +3,13 @@
  * no audio files, so there is nothing to license and nothing to download.
  */
 import type { CueName, GameEvent } from '@buzzoff/shared';
-import { storage } from './storage';
 
 export type SoundName =
-  | 'join' | 'select' | 'open' | 'buzz' | 'early' | 'correct' | 'wrong' | 'timeup' | 'reveal' | 'ding' | 'strike'
+  | 'join' | 'select' | 'open' | 'buzz' | 'dice' | 'correct' | 'wrong' | 'timeup' | 'reveal' | 'ding' | 'strike'
   | 'intro' | 'fanfare' | 'tick' | 'lock' | CueName;
 
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
-let muted = storage.muted();
 
 /** Browsers only allow audio after a user gesture; call this from a click or tap. */
 export function unlockAudio() {
@@ -27,11 +25,6 @@ export function unlockAudio() {
 }
 
 export const audioReady = () => ctx?.state === 'running';
-export const isMuted = () => muted;
-export function setMuted(value: boolean) {
-  muted = value;
-  storage.setMuted(value);
-}
 
 interface Tone {
   freq: number;
@@ -99,7 +92,10 @@ const RECIPES: Record<SoundName, Recipe> = {
     { freq: 196, dur: 0.38, type: 'sawtooth', gain: 0.22 },
     { freq: 294, dur: 0.38, type: 'square', gain: 0.1 },
   ]),
-  early: tones([{ freq: 150, to: 110, dur: 0.16, type: 'square', gain: 0.14 }]),
+  // A die clattering to a stop: a few taps, each lower and quieter.
+  dice: (c, out, t) => {
+    for (const [at, from] of [[0, 2600], [0.11, 2200], [0.24, 1800], [0.4, 1400], [0.62, 1100]]) noise(c, out, t, { at, dur: 0.06, from, q: 3, gain: 0.3 });
+  },
   correct: tones(run([659, 784, 988, 1319], 0.085, { dur: 0.32, type: 'triangle', gain: 0.26 })),
   wrong: tones([
     { freq: 155, to: 98, dur: 0.6, type: 'sawtooth', gain: 0.24 },
@@ -156,7 +152,7 @@ const RECIPES: Record<SoundName, Recipe> = {
 };
 
 export function play(name: SoundName) {
-  if (muted || !ctx || !master || ctx.state !== 'running') return;
+  if (!ctx || !master || ctx.state !== 'running') return;
   RECIPES[name](ctx, master, ctx.currentTime + 0.01);
 }
 
@@ -196,11 +192,12 @@ export function haptic(pattern: number | number[]) {
 export function soundFor(event: GameEvent): SoundName | null {
   switch (event.type) {
     case 'player.joined': return 'join';
-    case 'game.started': return null;
     case 'round.intro': return 'intro';
     case 'clue.selected': return event.wager ? 'tada' : 'select';
     case 'buzz.open': return 'open';
-    case 'buzz.early': return 'early';
+    case 'dice.rolled': return 'dice';
+    case 'dice.tied': return 'timeup';
+    case 'dice.won': return 'tada';
     case 'buzz.winner': return 'buzz';
     case 'judged': return event.correct ? 'correct' : 'wrong';
     case 'timeup': return 'timeup';

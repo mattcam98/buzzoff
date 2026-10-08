@@ -12,6 +12,9 @@ interface Kind {
 
 const ascii = (b: Buffer, start: number, text: string) => b.subarray(start, start + text.length).toString('latin1') === text;
 
+/** HEIC and AVIF photos share the MP4 container but are not video, and most browsers cannot show them. */
+const STILL_BRANDS = ['heic', 'heix', 'hevc', 'hevx', 'heim', 'heis', 'mif1', 'msf1', 'avif', 'avis'];
+
 /** Recognised by magic bytes. SVG and HTML are deliberately absent: they can carry scripts. */
 const KINDS: Kind[] = [
   { ext: 'png', kind: 'image', test: (b) => b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) },
@@ -22,7 +25,7 @@ const KINDS: Kind[] = [
   { ext: 'mp3', kind: 'audio', test: (b) => ascii(b, 0, 'ID3') || (b[0] === 0xff && (b[1] & 0xe0) === 0xe0) },
   { ext: 'ogg', kind: 'audio', test: (b) => ascii(b, 0, 'OggS') },
   { ext: 'm4a', kind: 'audio', test: (b) => ascii(b, 4, 'ftypM4A') },
-  { ext: 'mp4', kind: 'video', test: (b) => ascii(b, 4, 'ftyp') },
+  { ext: 'mp4', kind: 'video', test: (b) => ascii(b, 4, 'ftyp') && !STILL_BRANDS.includes(b.subarray(8, 12).toString('latin1')) },
   { ext: 'webm', kind: 'video', test: (b) => b.subarray(0, 4).equals(Buffer.from([0x1a, 0x45, 0xdf, 0xa3])) },
 ];
 

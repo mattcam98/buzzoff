@@ -2,9 +2,6 @@
  * Final: one written-answer question that every active player wagers on.
  *
  *   wager ──all in / time──▶ answering ──time / host──▶ reveal (one player at a time, host judges)
- *
- * It doubles as proof that a third mode slots in beside trivia and Fast Money
- * without touching either of them.
  */
 import { sameAnswer } from '../normalize';
 import type { FinalRound, GameState } from '../state';
@@ -108,6 +105,7 @@ export const final: Mode<FinalRound, FinalPublic, FinalSecret> = {
     r.deadline = shiftTime(r.deadline, delta);
   },
   interrupt() {},
+  resume() {},
 
   playerRemoved(_g, r, playerId) {
     if (r.stage === 'reveal') {

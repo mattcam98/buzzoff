@@ -7,18 +7,22 @@ const EnvSchema = z.object({
   PORT: z.coerce.number().int().min(0).max(65535).default(3210),
   /** Postgres connection string. Without it, games live in memory only. */
   DATABASE_URL: optional,
-  /** When set, creating games and managing content requires this password. */
-  BUZZOFF_ADMIN_PASSWORD: optional,
-  /** The address players use to reach the server, e.g. https://buzz.example.com. Used for the join QR code. */
-  PUBLIC_URL: optional,
   MEDIA_DIR: z.string().default('./data/media'),
   WEB_DIR: z.string().default(path.join(import.meta.dirname, '../../web/dist')),
   /** Number of reverse proxies in front of the app (e.g. 2 for Cloudflare plus Nginx Proxy Manager). Used to find the real client address. */
   TRUST_PROXY: z.coerce.number().int().min(0).max(10).default(1),
-  /** Hours an untouched game is kept before it is deleted. */
-  ROOM_TTL_HOURS: z.coerce.number().min(1).max(24 * 30).default(24),
-  MAX_UPLOAD_MB: z.coerce.number().min(1).max(500).default(25),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+
+  /**
+   * The first host password for a server that has none yet, so a new install is never left open.
+   * Once a password exists it is changed in Settings and this is ignored.
+   */
+  BUZZOFF_ADMIN_PASSWORD: optional,
+  // Settings that used to be configured here. They are read once, to carry an existing
+  // install's values into the database, and have no effect after that.
+  PUBLIC_URL: optional,
+  ROOM_TTL_HOURS: optional,
+  MAX_UPLOAD_MB: optional,
 });
 
 export type Config = z.infer<typeof EnvSchema>;

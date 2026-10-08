@@ -8,8 +8,6 @@ import { z } from 'zod';
 const int = (min: number, max: number) => z.number().int().min(min).max(max);
 
 export const BuzzerRulesSchema = z.object({
-  /** `manual`: the host arms the buzzers after reading. `auto`: armed as soon as the clue appears. */
-  arming: z.enum(['manual', 'auto']),
   /**
    * `first`: the first buzz the server receives wins.
    * `latencyAdjusted`: buzzes are collected for a short window and ranked after
@@ -19,15 +17,11 @@ export const BuzzerRulesSchema = z.object({
   collectionWindowMs: int(50, 500),
   /** Upper bound on how much any one buzz may be adjusted. */
   maxCompensationMs: int(0, 300),
-  /** What happens to a buzz that arrives before the buzzers are armed. */
-  earlyBuzz: z.enum(['ignore', 'lockout', 'penalty']),
-  earlyLockoutMs: int(0, 5000),
-  earlyPenalty: int(0, 100_000),
-  /** Seconds players have to buzz once armed. 0 disables the timer. */
+  /** The question timer: seconds players have to buzz, counted from the moment the clue goes up. 0 disables it. */
   buzzSec: int(0, 120),
   /** Seconds the buzz winner has to answer. 0 disables the timer. */
   answerSec: int(0, 120),
-  /** After an incorrect answer, re-arm the buzzers so others can steal. */
+  /** After an incorrect answer, open the buzzers again so others can steal. */
   reopenOnIncorrect: z.boolean(),
   /** Let a player who answered incorrectly buzz again on the same clue. */
   rebuzz: z.boolean(),
@@ -47,8 +41,6 @@ export const TriviaRoundSchema = z.object({
   wagers: int(0, 6),
   /** A player may wager up to their score, or up to this amount if they have less. */
   wagerCap: int(0, 1_000_000),
-  /** `host`: only the host picks clues. `control`: the player in control may also pick from their phone. */
-  selection: z.enum(['host', 'control']),
   /** Eliminate this many of the lowest-scoring players when the round ends. */
   eliminateLowest: int(0, 20),
 });
@@ -130,14 +122,10 @@ export interface Preset {
 }
 
 export const DEFAULT_BUZZER: BuzzerRules = {
-  arming: 'manual',
   arbitration: 'first',
   collectionWindowMs: 150,
   maxCompensationMs: 150,
-  earlyBuzz: 'lockout',
-  earlyLockoutMs: 250,
-  earlyPenalty: 0,
-  buzzSec: 10,
+  buzzSec: 30,
   answerSec: 12,
   reopenOnIncorrect: true,
   rebuzz: false,
@@ -155,7 +143,6 @@ const trivia = (title: string, over: Partial<TriviaRoundDef> = {}): TriviaRoundD
   valueMultiplier: 1,
   wagers: 0,
   wagerCap: 1000,
-  selection: 'control',
   eliminateLowest: 0,
   ...over,
 });
@@ -210,7 +197,7 @@ export const BUILTIN_PRESETS: Preset[] = [
         final(),
         fastMoney(),
       ],
-      buzzer: { ...DEFAULT_BUZZER, rebuzz: true },
+      buzzer: DEFAULT_BUZZER,
     },
   },
   {
@@ -238,7 +225,7 @@ export const BUILTIN_PRESETS: Preset[] = [
         trivia('Lightning Board', { categories: 4, cluesPerCategory: 4 }),
         everyoneSurvey({ title: 'Survey Scramble', questions: 3, turnSec: 60 }),
       ],
-      buzzer: { ...DEFAULT_BUZZER, arming: 'auto', earlyBuzz: 'ignore' },
+      buzzer: DEFAULT_BUZZER,
     },
   },
   {

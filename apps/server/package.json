@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/index.ts",
-    "build": "esbuild src/index.ts --bundle --platform=node --target=node22 --format=esm --outfile=dist/index.js --external:express --external:socket.io --external:pg --external:multer --external:zod --sourcemap",
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node22 --format=esm --outfile=dist/index.js --external:compression --external:express --external:socket.io --external:pg --external:multer --external:zod --sourcemap",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@buzzoff/shared": "^1.0.0",
+    "compression": "^1.8.2",
     "express": "^5.2.1",
     "multer": "^2.4.0",
     "pg": "^8.23.1",
@@ -17,6 +18,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@types/compression": "^1.8.1",
     "@types/express": "^5.0.6",
     "@types/multer": "^2.3.0",
     "@types/pg": "^8.23.1",

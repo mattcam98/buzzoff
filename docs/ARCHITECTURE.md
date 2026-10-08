@@ -32,7 +32,7 @@ any mode beyond that interface.
 
 | Mode | Stages |
 |---|---|
-| `trivia` | board → reading → open → answering → result → board. A wrong answer loops back to *open* for a steal; a wager clue goes wager → answering. |
+| `trivia` | roll → board → open → answering → result → board. The first board opens with a dice roll for the first pick (`engine/dice.ts`). Selecting a clue opens the buzzers; nobody arms them. A wrong answer loops back to *open* for a steal; a wager clue goes wager → answering. |
 | `final` | wager → answering → reveal (show an answer, host rules, repeat). |
 | `fastMoney` | ready → answering, per turn; then reveal (answer, then points, per cell) → result. |
 
@@ -52,9 +52,12 @@ Money were finished.
 monotonic within a process (buzz order can never be disturbed by a clock
 adjustment) and epoch-aligned (clients can render deadlines). The engine keeps
 deadlines in state and reports the next one; the room holds a single timer
-pointed at it. Pausing interrupts anything that depends on continuous time —
-armed buzzers go back to "reading" — and resuming shifts every stored deadline
-by the length of the pause.
+pointed at it. Randomness is an argument too: the room passes a generator
+backed by the operating system's secure source, and every dice roll and
+shuffle is drawn from it on the server. Pausing interrupts anything that depends on continuous time —
+open buzzers are shut (the clue's *reading* stage, which exists only while
+paused) — and resuming shifts every stored deadline by the length of the pause
+and opens them again as a fresh buzz.
 
 ## The room (`apps/server/src/room.ts`)
 
@@ -70,8 +73,9 @@ undo history, the timer, persistence, connection quality.
   passes it to the engine. The payload is empty: the only inputs are who sent
   it (from the authenticated socket) and when it arrived.
 - **Idempotency.** Actions travel in an envelope with a client-generated id.
-  The room remembers recent ids and acknowledges a repeat without applying it,
-  so the client can safely retry when an acknowledgement is lost. Beyond that,
+  The room remembers the ids of actions it has applied and acknowledges a
+  repeat without applying it again, so the client can safely retry when an
+  acknowledgement is lost; a rejected action is judged afresh. Beyond that,
   every transition is guarded by the current stage: a second "correct" finds
   nobody answering and is rejected.
 - **Undo.** State is immutable, so the room keeps the previous state before
@@ -88,7 +92,9 @@ After every change the room computes three things from the state
 - `PublicView` → TV, spectators and every phone. Built field by field; an
   answer appears in it only once it is on screen. Tests assert that no public
   or player view ever contains an unrevealed answer, an accepted alternative
-  or a host note.
+  or a host note. The same mechanism hides the *question* while a buzz-in
+  answer is being judged: it is simply not in the view, so no screen can show
+  it, and it returns with the buzzers if the answer was wrong.
 - `HostView` → the host socket only: answers, typed Fast Money responses,
   which clues hide wagers.
 - `PlayerView` → one phone: whether *this* player may buzz and why not, their
@@ -103,9 +109,9 @@ drive sound and animation only; missing one never leaves a screen wrong.
 
 | Who | Proves it with | Can do |
 |---|---|---|
-| Admin | `BUZZOFF_ADMIN_PASSWORD` → an HMAC-signed, expiring token | Create games, read and edit packs and presets, view history |
+| Admin | The host password → a session token kept in that browser | Create games, read and edit packs and presets, view history, change settings |
 | Host of a game | A 256-bit host key returned once at creation and kept in that browser | Everything in that room |
-| Player | A token issued on joining and kept on that phone | Buzz and act as that one player |
+| Player | A token issued on joining and kept on that phone | Buzz, wager and answer as that one player. Never pick a clue: the board is the host's |
 | TV / spectator | The room code | Receive the public view; send nothing |
 
 - A socket's role is fixed at the handshake after its credential is checked.
@@ -121,21 +127,57 @@ drive sound and animation only; missing one never leaves a screen wrong.
 - Uploads are identified by their leading bytes, not their name, and stored
   under random names. SVG and HTML are not accepted. A content security policy
   allows scripts from the server itself only.
-- With no admin password set, anyone who can reach the server can host and can
-  read packs, answers included. The server logs a warning and the dashboard
-  says so.
+- With no host password set, anyone who can reach the server can host, read
+  packs (answers included) and change settings, including setting the
+  password. The server logs a warning and the dashboard says so.
+  `BUZZOFF_ADMIN_PASSWORD` exists so a new server never has to start that way.
+
+## Settings and sign-in
+
+Configuration is split by when the server needs it. What it needs before it
+can open the database, or that describes the machine and network around it
+(port, database URL, media folder, trusted proxy count, log level), stays in
+the environment. Everything an administrator might change while games are
+running lives in the database and is edited at `/host/settings`:
+
+- **`settings.ts`** holds one validated document (`AppSettingsSchema`): the
+  players' address, the default format, how long games are kept, the upload
+  limit and the session length. Readers always go through `settings.current`,
+  so a save applies to the next request, upload or expiry sweep.
+- **`auth.ts`** holds the host password as a scrypt hash (cost parameters
+  stored with it) and the signed-in sessions. A session is a random 256-bit
+  token; the database stores only its SHA-256. So nothing in the database can
+  be used to sign in: there is no signing key to leak and nothing to decrypt,
+  which is also why nothing here needs an encryption key in the environment.
+- Changing the password requires the current one even from a signed-in
+  browser, is throttled like signing in, and ends every session. Sessions can
+  also be ended from the page ("sign out other devices") or all at once from
+  the server with `reset-admin-password`.
+- **The audit log** records sign-ins (failed ones included), password and
+  session changes, and each settings change with its old and new value. It
+  keeps the last 1,000 entries and never contains a password or token.
+- The API returns settings and session metadata only: never the hash, and a
+  session is identified to the browser by a label that cannot act as it.
+- `TRUST_PROXY` deliberately stays out of reach of the page. It decides which
+  address the sign-in throttle believes, so being able to change it from a
+  signed-in browser would let a stolen session weaken the protection around
+  the password.
+
+The first time a server starts with no settings document, values from the
+environment variables that used to hold them are imported, so upgrading
+changes nothing; afterwards those variables are ignored.
 
 ## Persistence
 
-Postgres holds five tables: `packs`, `presets`, `games`, `results`,
-`settings`. Each row's payload is a JSONB document, because each is always
-read and written whole and the zod schemas in `packages/shared` are the
-source of truth for their shape.
+Postgres holds seven tables: `packs`, `presets`, `games`, `results`,
+`settings`, `admin_sessions` and `audit_log`. The first four hold a JSONB
+document per row, because each is always read and written whole and the zod
+schemas in `packages/shared` are the source of truth for their shape.
 
 A live game is saved as one row (state and credential hashes together, in one
 statement) shortly after each change, with writes chained so an older snapshot
 can never overwrite a newer one, and flushed on shutdown. On boot every saved
-game is restored paused, with buzzers disarmed and all players marked offline
+game is restored paused, with buzzers shut and all players marked offline
 until their phones reconnect — which they do on their own, with their stored
 tokens.
 
@@ -150,14 +192,20 @@ sticky routing by room code or a shared room store; the room boundary
 ## Web app (`apps/web`)
 
 A single-page React app with four surfaces that share a design system
-(`styles/base.css`) and a connection layer (`lib/connection.ts`):
+(`styles/base.css`) and a connection layer (`lib/connection.ts`). It is built
+as three pieces: the join screen and phone controller load first, and the TV
+and the host's pages each load as their own chunk when opened, so a phone
+never downloads the dashboard, the pack editor or zod. `@buzzoff/shared` is
+marked side-effect free and keeps what a phone needs (room codes, avatars,
+statistics) out of the modules that define schemas, which is what lets the
+bundler leave the rest behind.
 
 | Route | Surface |
 |---|---|
 | `/`, `/join/CODE` | Join |
 | `/play/CODE`, `/watch/CODE` | Phone controller, spectator |
 | `/tv/CODE` | Shared screen, sized entirely from the viewport so it fills any display |
-| `/host`, `/host/new`, `/host/packs`, `/host/history` | Dashboard |
+| `/host`, `/host/new`, `/host/packs`, `/host/history`, `/host/settings` | Dashboard |
 | `/host/game/CODE` | Live console |
 
 **Phone layout.** The join and controller screens sit in a fixed shell
@@ -183,9 +231,9 @@ never do something the visible controls would not allow.
 
 | Layer | What it covers |
 |---|---|
-| Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, early-buzz lockouts, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching and reveal order, the final, answer secrecy |
-| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch |
-| Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; reload and wrong-device behaviour; every phone screen measured for fit across phone sizes, orientations and keyboard heights |
+| Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, the dice roll for the first pick, automatic opening, the hidden question and its held timer, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching and reveal order, the final, answer secrecy |
+| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch |
+| Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; every phone screen measured for fit across phone sizes, orientations and keyboard heights |
 
 The server tests use the in-memory store. The Postgres store is exercised by
 running the Compose stack.

@@ -8,11 +8,6 @@ import { GameRulesSchema } from './rules';
 import type { GameEvent, GamePhase } from './state';
 import type { HostView, PlayerView, PublicView } from './views';
 
-export const ROOM_CODE_LENGTH = 4;
-/** No vowels (so codes never spell words) and nothing easily misheard or misread. */
-export const ROOM_CODE_ALPHABET = 'BCDFGHJKLMNPQRSTVWXZ';
-export const normalizeRoomCode = (raw: string) => raw.toUpperCase().replace(/[^A-Z]/g, '').slice(0, ROOM_CODE_LENGTH);
-
 export type Role = 'host' | 'player' | 'display' | 'spectator';
 
 export const HandshakeSchema = z.object({
@@ -21,7 +16,6 @@ export const HandshakeSchema = z.object({
   /** Host key or player token; displays and spectators need none. */
   token: z.string().max(200).optional(),
 });
-export type Handshake = z.infer<typeof HandshakeSchema>;
 
 export type Ack<T = undefined> = { ok: true; data: T } | { ok: false; error: { code: string; message: string } };
 
@@ -112,6 +106,8 @@ export interface ServerInfo {
   authRequired: boolean;
   /** Where players should be sent, if the server was told its public address. */
   publicUrl: string | null;
+  /** The format the New game page should start on, if the administrator chose one. */
+  defaultPresetId: string | null;
 }
 
 export interface ApiError {

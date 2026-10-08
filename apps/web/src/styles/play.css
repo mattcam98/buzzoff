@@ -414,7 +414,6 @@ html.kb-open .play__main {
   --fg: #04220f;
   animation: bz-pop 0.4s var(--spring);
 }
-.play__buzzer[data-state='locked'] { --face: #6b2330; --edge: #3d1019; --fg: #ffb3bc; animation: bz-shake 0.4s ease; }
 .play__buzzer[data-state='taken'],
 .play__buzzer[data-state='out'] {
   --face: var(--ink-600);
@@ -447,10 +446,6 @@ html.kb-open .play__main {
 .play__readout b {
   color: var(--text);
 }
-.play__readout p[data-tone='bad'] {
-  color: var(--bad);
-  font-weight: 700;
-}
 .play__readout .bz-num {
   font-size: 1.5rem;
   color: var(--text);
@@ -467,7 +462,7 @@ html.kb-open .play__main {
   text-align: center;
 }
 
-/* ---------------------------------------------------------------- choosing a clue */
+/* ---------------------------------------------------------------- the board (read-only: the host selects) */
 
 .play__pick {
   flex: 0 1 auto;
@@ -507,26 +502,114 @@ html.kb-open .play__main {
   overflow: hidden;
   overflow-wrap: anywhere;
 }
-.play__col button {
+/* Flat tiles, not raised keys: these show what is left, they are not for pressing. */
+.play__col b {
+  display: grid;
+  place-items: center;
   min-height: 0;
-  padding: 0;
-  border: 0;
   border-radius: 10px;
-  background: linear-gradient(180deg, #2c2470, #1e1850);
-  box-shadow: 0 3px 0 rgb(0 0 0 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.14);
+  background: #221c58;
   color: var(--buzz);
-  font-family: var(--font-display);
   font-size: 1.0625rem;
-  font-weight: 800;
-  cursor: pointer;
 }
-.play__col button:active:not(:disabled) {
-  transform: translateY(2px);
-  box-shadow: none;
-}
-.play__col button:disabled {
+/* Played: the value stays, dimmed. */
+.play__col b[data-used] {
   background: rgb(255 255 255 / 0.04);
-  box-shadow: none;
+  color: rgb(138 132 179 / 0.6);
+}
+
+/* ---------------------------------------------------------------- the roll for the first pick */
+
+.play__roll {
+  align-items: center;
+}
+/* The die is the button: as big as the screen allows, and it bobs while it waits to be tapped. */
+.play__dice {
+  display: grid;
+  place-items: center;
+  padding: clamp(8px, 2cqh, 16px);
+  border: 0;
+  border-radius: 28%;
+  background: none;
+  font-size: clamp(64px, 24cqh, 150px);
+  line-height: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.play__dice:disabled {
+  cursor: default;
+}
+/* The die moves inside the button's padding, so the bobbing never reaches what is around it. */
+.play__dice[data-ready] .bz-die {
+  background: linear-gradient(145deg, #fff3bf, var(--buzz));
+  box-shadow: 0 0.06em 0 var(--buzz-deep), 0 0 0.5em rgb(255 196 0 / 0.5);
+  animation: play-dice-wait 1.1s ease-in-out infinite;
+}
+.play__dice[data-ready] .bz-die > i {
+  opacity: 0;
+}
+@keyframes play-dice-wait {
+  0%, 100% { transform: translateY(2px) rotate(-3deg); }
+  50% { transform: translateY(-2px) rotate(3deg); }
+}
+.play__roll .play__hint .bz-num {
+  margin-left: 4px;
+  color: var(--text);
+}
+/* Everyone's dice, as chips; the row wraps and, in a crowded room, scrolls inside itself. */
+.play__rolls {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  align-self: stretch;
+  min-height: 34px;
+}
+.play__rolls li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 4px 8px 4px 4px;
+  border-radius: 99px;
+  background: #1a1640;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.play__rolls li > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.play__rolls .bz-die {
+  font-size: 22px;
+}
+.play__rolls li[data-me] {
+  box-shadow: inset 0 0 0 1.5px var(--buzz);
+}
+.play__rolls li[data-out] {
+  color: var(--text-faint);
+}
+.play__rolls li[data-out] .bz-die {
+  opacity: 0.45;
+}
+.play__rolls li[data-winner] {
+  background: var(--good);
+  color: #04220f;
+}
+
+.play__clue p.play__hidden {
+  padding: clamp(6px, 2cqh, 16px) 0;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-align: center;
 }
 
 /* ---------------------------------------------------------------- wagers */

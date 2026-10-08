@@ -16,9 +16,9 @@ import {
 import type { Server, Socket } from 'socket.io';
 import { z } from 'zod';
 import type { SavedGame, Store } from './store/types';
-import { Bucket, clock, log, randomId, randomToken, RecentIds, sha256, tokenMatches } from './util';
+import { Bucket, clock, log, random, randomId, randomToken, RecentIds, sha256, tokenMatches } from './util';
 
-export interface SocketData {
+interface SocketData {
   role: Role;
   code: string;
   playerId?: string;
@@ -41,6 +41,7 @@ const RTT_SAMPLES = 7;
 const PROBE_INTERVAL_MS = 2500;
 const CLAIM_TTL_MS = 10 * 60_000;
 const MAX_PENDING_CLAIMS = 8;
+const JOIN_GRACE_MS = 5000;
 
 const envelope = <T extends z.ZodType>(action: T) => z.object({ id: z.string().min(1).max(64), action });
 const HostEnvelope = envelope(HostActionSchema);
@@ -73,6 +74,8 @@ export class Room {
   private playerSockets = new Map<string, AppSocket>();
   private audience = { display: new Set<string>(), spectator: new Set<string>() };
   private lastYou = new Map<string, string>();
+  /** Players who have joined but whose phone has never connected. */
+  private unconnected = new Set<string>();
   private seen = new RecentIds();
   private tickTimer: NodeJS.Timeout | null = null;
   private saveTimer: NodeJS.Timeout | null = null;
@@ -109,7 +112,7 @@ export class Room {
   }
 
   private env(now = clock()): Env {
-    return { now, rand: Math.random, rtt: (id) => this.netStat(id)?.rttMs ?? null };
+    return { now, rand: random, rtt: (id) => this.netStat(id)?.rttMs ?? null };
   }
 
   // -------------------------------------------------------------- credentials
@@ -181,12 +184,14 @@ export class Room {
     if (due === null) return;
     this.tickTimer = setTimeout(() => {
       this.tickTimer = null;
+      // Timers can fire a moment early; a tick before the deadline would change nothing but still be broadcast.
+      if (clock() < due) return this.schedule();
       try {
         this.commit(applySystem(this.state, { t: 'tick' }, this.env()));
       } catch (err) {
         log.error('tick failed', { code: this.code, err });
       }
-    }, Math.max(0, due - clock()));
+    }, Math.max(0, Math.ceil(due - clock())));
   }
 
   host(action: HostAction) {
@@ -201,7 +206,7 @@ export class Room {
       this.history.push({ state: before, at, label });
       if (this.history.length > HISTORY_LIMIT) this.history.shift();
     }
-    if (action.t === 'player.kick') this.forget(action.id, 'kicked');
+    if (action.t === 'player.kick') this.forget(action.id);
     this.commit(out);
   }
 
@@ -243,7 +248,10 @@ export class Room {
 
   join(name: string, avatar: Avatar): JoinResponse {
     const existing = findPlayerByName(this.state, name);
-    if (existing && !existing.connected && this.state.phase !== 'finished') {
+    // A seat whose phone has not connected yet is not abandoned, it is still arriving: two people
+    // picking the same name at the same moment must not end up sharing one.
+    const arriving = existing && this.unconnected.has(existing.id) && clock() - existing.joinedAt < JOIN_GRACE_MS;
+    if (existing && !arriving && !existing.connected && this.state.phase !== 'finished') {
       // Someone is asking for a disconnected player's seat. In the lobby
       // nothing is at stake, so hand it over; mid-game the host decides.
       if (this.state.phase === 'lobby') return { status: 'joined', playerId: existing.id, token: this.issueToken(existing.id) };
@@ -252,6 +260,7 @@ export class Room {
     const id = randomId();
     const out = applySystem(this.state, { t: 'join', id, name, avatar }, this.env());
     const token = this.issueToken(id);
+    this.unconnected.add(id);
     this.commit(out);
     return { status: 'joined', playerId: id, token };
   }
@@ -302,13 +311,14 @@ export class Room {
     return claim.status === 'approved' && claim.token ? { status: 'approved', playerId: claim.playerId, token: claim.token } : { status: 'denied' };
   }
 
-  private forget(playerId: string, reason: 'kicked') {
+  private forget(playerId: string) {
     delete this.secrets.players[playerId];
     this.rtt.delete(playerId);
     this.lastYou.delete(playerId);
+    this.unconnected.delete(playerId);
     const socket = this.playerSockets.get(playerId);
     this.playerSockets.delete(playerId);
-    socket?.emit('bye', reason);
+    socket?.emit('bye', 'kicked');
     socket?.disconnect(true);
   }
 
@@ -376,9 +386,10 @@ export class Room {
         if (!bucket.take()) return ack(limited);
         const parsed = HostEnvelope.safeParse(msg);
         if (!parsed.success) return ack(failure('invalid', 'That request was not understood'));
-        if (!this.seen.add(parsed.data.id)) return ack(OK);
+        if (this.seen.has(parsed.data.id)) return ack(OK);
         try {
           this.host(parsed.data.action);
+          this.seen.add(parsed.data.id);
           ack(OK);
         } catch (err) {
           ack(toFailure(err, this.code));
@@ -390,6 +401,7 @@ export class Room {
     if (role === 'player' && playerId) {
       const previous = this.playerSockets.get(playerId);
       this.playerSockets.set(playerId, socket);
+      this.unconnected.delete(playerId);
       if (previous) {
         previous.emit('bye', 'replaced');
         previous.disconnect(true);
@@ -414,9 +426,10 @@ export class Room {
         if (!bucket.take()) return ack(limited);
         const parsed = PlayerEnvelope.safeParse(msg);
         if (!parsed.success) return ack(failure('invalid', parsed.error.issues[0]?.message ?? 'That request was not understood'));
-        if (!this.seen.add(parsed.data.id)) return ack(OK);
+        if (this.seen.has(parsed.data.id)) return ack(OK);
         try {
           this.player(playerId, parsed.data.action);
+          this.seen.add(parsed.data.id);
           ack(OK);
         } catch (err) {
           ack(toFailure(err, this.code));

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { HostActionSchema, PlayerActionSchema, type PlayerAction } from '../actions';
 import { GameError } from './core';
+import { nextDeadline } from './game';
 import { categories, Sim, surveys, TRIVIA } from './testkit';
 
 describe('buzzer arbitration', () => {
@@ -57,8 +59,6 @@ describe('buzzer arbitration', () => {
 
   it('tells each player their own buzzer state', () => {
     const s = new Sim().start().host({ t: 'clue.select', cat: 0, idx: 0 });
-    expect(s.you('ann').buzzer.state).toBe('wait');
-    s.host({ t: 'buzz.open' });
     expect(s.you('ann').buzzer.state).toBe('open');
     s.advance(50);
     s.buzz('ann');
@@ -122,34 +122,166 @@ describe('latency-adjusted arbitration', () => {
   });
 });
 
-describe('early buzzing', () => {
-  it('locks out an early buzzer for the configured time after their last early press', () => {
-    const s = new Sim({ buzzer: { earlyBuzz: 'lockout', earlyLockoutMs: 250 } }).start().host({ t: 'clue.select', cat: 0, idx: 0 });
-    expect(s.buzz('ann').status).toBe('early');
-    s.advance(100);
-    s.host({ t: 'buzz.open' });
-    expect(s.you('ann').buzzer.until).toBe(s.now + 150);
-    s.advance(100);
-    expect(s.buzz('ann').status).toBe('lockedOut');
-    s.advance(60);
-    expect(s.buzz('ann').status).toBe('registered');
-    expect(s.state.stats.ann.earlyBuzzes).toBe(1);
+describe('removing a player mid-clue', () => {
+  it('closes a collection window that the kicked player was the only one in', () => {
+    const s = new Sim({ buzzer: { arbitration: 'latencyAdjusted', collectionWindowMs: 100, maxCompensationMs: 150, buzzSec: 0 } }).start().open();
+    s.buzz('ann');
+    s.host({ t: 'player.kick', id: 'ann' });
+    // Nothing is left to wait for, so no deadline may remain in the past.
+    expect(nextDeadline(s.state)).toBeNull();
+    s.advance(500);
+    expect(s.trivia.clue).toMatchObject({ stage: 'open', answererId: null });
+    expect(s.buzz('bob').status).toBe('registered');
   });
 
-  it('can be ignored entirely', () => {
-    const s = new Sim({ buzzer: { earlyBuzz: 'ignore' } }).start().host({ t: 'clue.select', cat: 0, idx: 0 });
-    const seq = s.state.seq;
-    expect(s.buzz('ann').status).toBe('early');
-    expect(s.state.seq).toBe(seq);
-    s.host({ t: 'buzz.open' });
-    expect(s.buzz('ann').status).toBe('registered');
+  it('throws the clue out, scoring included, when the player answering is kicked', () => {
+    const s = new Sim().start().open(0, 1);
+    s.buzz('ann');
+    s.host({ t: 'judge', correct: false });
+    s.buzz('bob');
+    s.host({ t: 'player.kick', id: 'bob' });
+    expect(s.trivia.clue).toBeNull();
+    expect(s.trivia.board[0].clues[1]).toMatchObject({ used: false, winnerId: null });
+    expect(s.score('ann')).toBe(0);
   });
 
-  it('charges the penalty once per clue', () => {
-    const s = new Sim({ buzzer: { earlyBuzz: 'penalty', earlyPenalty: 50, earlyLockoutMs: 0 } }).start().host({ t: 'clue.select', cat: 0, idx: 0 });
+  it('leaves a clue that is already settled alone', () => {
+    const s = new Sim().start().open(0, 1);
     s.buzz('ann');
+    s.host({ t: 'judge', correct: true });
+    s.host({ t: 'player.kick', id: 'bob' });
+    expect(s.trivia.clue!.stage).toBe('result');
+    expect(s.trivia.board[0].clues[1].used).toBe(true);
+    expect(s.score('ann')).toBe(200);
+  });
+});
+
+describe('buzzers open by themselves', () => {
+  it('lets players buzz the moment a clue is selected, with thirty seconds on the clock by default', () => {
+    const s = new Sim().start();
+    s.host({ t: 'clue.select', cat: 0, idx: 0 });
+    expect(s.trivia.clue).toMatchObject({ stage: 'open', timer: { endsAt: s.now + 30_000, totalMs: 30_000 } });
+    expect(s.eventTypes()).toContain('buzz.open');
+    expect(s.you('ann').buzzer.state).toBe('open');
+    expect(s.buzz('ann')).toEqual({ status: 'registered', ms: 0 });
+  });
+
+  it('gives the host no switch for it: arming and disarming are not actions any more', () => {
+    for (const t of ['buzz.open', 'buzz.close']) expect(HostActionSchema.safeParse({ t }).success).toBe(false);
+    expect(HostActionSchema.safeParse({ t: 'buzz.reset' }).success).toBe(true);
+  });
+
+  it('keeps the host’s +10 seconds and stop-clock controls on the question timer', () => {
+    const s = new Sim().start().open();
+    s.advance(5000);
+    s.host({ t: 'timer.extend', sec: 10 });
+    expect(s.trivia.clue!.timer).toEqual({ endsAt: s.now + 35_000, totalMs: 40_000 });
+    s.host({ t: 'timer.stop' });
+    expect(s.trivia.clue!.timer).toBeNull();
+    s.advance(120_000);
+    expect(s.trivia.clue!.stage).toBe('open');
+  });
+
+  it('ends the clue when the thirty seconds run out with nobody in', () => {
+    const s = new Sim().start().open();
+    s.advance(29_999);
+    expect(s.trivia.clue!.stage).toBe('open');
+    s.advance(1);
+    expect(s.trivia.clue).toMatchObject({ stage: 'result', timedOut: true });
+  });
+});
+
+describe('hiding the question while an answer is judged', () => {
+  const question = 'Question 0.1?';
+
+  it('takes the question off every screen but the host’s the moment someone buzzes in', () => {
+    const s = new Sim().start().open(0, 1);
+    expect(s.trivia.clue!.question).toBe(question);
+    s.advance(4000);
     s.buzz('ann');
-    expect(s.score('ann')).toBe(-50);
+    expect(s.trivia.clue).toMatchObject({ stage: 'answering', answererId: 'ann', question: null, media: null });
+    // No player's own view carries it either; only the host still has the question and the answer.
+    for (const id of ['ann', 'bob', 'cat']) expect(JSON.stringify(s.you(id))).not.toContain('Question');
+    expect(s.secret.round).toMatchObject({ clue: { question, answer: 'Answer 0.1' } });
+  });
+
+  it('brings it back with the buzzers for everyone but the player who got it wrong', () => {
+    const s = new Sim().start().open(0, 1);
+    s.advance(4000);
+    s.buzz('ann');
+    s.advance(9000);
+    s.host({ t: 'judge', correct: false });
+    expect(s.trivia.clue).toMatchObject({ stage: 'open', question, answererId: null, excluded: ['ann'] });
+    expect(s.you('ann').buzzer.state).toBe('out');
+    expect(s.you('bob').buzzer.state).toBe('open');
+    expect(s.buzz('ann').status).toBe('excluded');
+
+    s.buzz('bob');
+    expect(s.trivia.clue).toMatchObject({ stage: 'answering', answererId: 'bob', question: null });
+    s.host({ t: 'judge', correct: true });
+    expect(s.trivia.clue).toMatchObject({ stage: 'result', question, answer: 'Answer 0.1' });
+  });
+
+  it('holds the question timer still while the answer is judged and resumes it where it stopped', () => {
+    const s = new Sim().start().open(0, 1);
+    s.advance(4000);
+    s.buzz('ann');
+    // The answer clock is a different clock; the question's 26 seconds are waiting.
+    expect(s.trivia.clue!.timer).toEqual({ endsAt: s.now + 12_000, totalMs: 12_000 });
+    s.advance(9000);
+    s.host({ t: 'judge', correct: false });
+    expect(s.trivia.clue!.timer).toEqual({ endsAt: s.now + 26_000, totalMs: 30_000 });
+    s.advance(25_999);
+    expect(s.trivia.clue!.stage).toBe('open');
+    s.advance(1);
+    expect(s.trivia.clue).toMatchObject({ stage: 'result', timedOut: true });
+  });
+
+  it('always leaves time for a steal, and leaves a stopped clock stopped', () => {
+    const s = new Sim().start().open(0, 1);
+    s.advance(29_000);
+    s.buzz('ann');
+    s.host({ t: 'judge', correct: false });
+    expect(s.trivia.clue!.timer).toEqual({ endsAt: s.now + 5000, totalMs: 30_000 });
+
+    const t = new Sim().start().open(0, 1);
+    t.host({ t: 'timer.stop' });
+    t.buzz('ann');
+    t.host({ t: 'judge', correct: false });
+    expect(t.trivia.clue).toMatchObject({ stage: 'open', timer: null });
+  });
+
+  it('does the same when the host throws a buzz out', () => {
+    const s = new Sim().start().open(0, 1);
+    s.advance(10_000);
+    s.buzz('ann');
+    s.advance(5000);
+    s.host({ t: 'buzz.reset' });
+    expect(s.trivia.clue).toMatchObject({ stage: 'open', question, excluded: [], timer: { endsAt: s.now + 20_000, totalMs: 30_000 } });
+  });
+});
+
+describe('picking a clue', () => {
+  it('is the host’s job alone: a player has no way to ask for one, even with the board', () => {
+    const s = new Sim().start();
+    const control = s.trivia.controlId!;
+    const pick = { t: 'select', cat: 0, idx: 0 };
+    expect(PlayerActionSchema.safeParse(pick).success).toBe(false);
+    // Even a message that got past validation would do nothing.
+    expect(() => s.player(control, pick as unknown as PlayerAction)).toThrow(GameError);
+    expect(s.trivia.clue).toBeNull();
+    expect(s.you(control)).not.toHaveProperty('canSelect');
+
+    s.host({ t: 'clue.select', cat: 0, idx: 0 });
+    expect(s.trivia.clue).toMatchObject({ cat: 0, idx: 0, stage: 'open' });
+  });
+
+  it('still shows every player the board and whose pick it is', () => {
+    const s = new Sim().start().open(0, 0);
+    s.buzz('bob');
+    s.host({ t: 'judge', correct: true }).host({ t: 'clue.continue' });
+    expect(s.trivia.controlId).toBe('bob');
+    expect(s.trivia.board.map((cat) => cat.clues.map((c) => [c.value, c.used]))).toEqual([[[100, true], [200, false]], [[100, false], [200, false]]]);
   });
 });
 
@@ -237,15 +369,12 @@ describe('judging and scoring', () => {
     expect(s.eventTypes().filter((t) => t === 'timeup')).toHaveLength(2);
   });
 
-  it('supports reset, close and cancel for disputes', () => {
+  it('supports reset and cancel for disputes', () => {
     const s = new Sim().start().open(0, 1);
     s.buzz('ann');
     s.host({ t: 'buzz.reset' });
     expect(s.trivia.clue).toMatchObject({ stage: 'open', answererId: null, attempts: [] });
     expect(s.state.stats.ann.buzzWins).toBe(0);
-    s.host({ t: 'buzz.close' });
-    expect(s.trivia.clue!.stage).toBe('reading');
-    s.host({ t: 'buzz.open' });
     s.buzz('bob');
     s.host({ t: 'judge', correct: false });
     s.host({ t: 'clue.cancel' });
@@ -290,11 +419,15 @@ describe('wager clues', () => {
     expect(() => s.player(other, { t: 'wager', amount: 100 })).toThrow(/not yours/);
     expect(() => s.player(control, { t: 'wager', amount: 1001 })).toThrow(GameError);
     s.player(control, { t: 'wager', amount: 800 });
+    // A wager is answered alone, so its question stays up while it is answered.
     expect(s.trivia.clue).toMatchObject({ stage: 'answering', answererId: control, question: 'Question 0.1?' });
     expect(s.buzz(other).status).toBe('closed');
     s.host({ t: 'judge', correct: false });
     expect(s.score(control)).toBe(-800);
     expect(s.trivia.clue!.stage).toBe('result');
+    // Kicking the player afterwards must not put the settled clue back in play.
+    s.host({ t: 'player.kick', id: control });
+    expect(s.trivia.board[0].clues[1].used).toBe(true);
   });
 
   it('lets a rich player wager their whole score', () => {

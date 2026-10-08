@@ -9,17 +9,13 @@ const isTextEntry = (el: Element | null): boolean =>
 const KEYBOARD_MIN_PX = 100;
 
 /**
- * Pin the app to exactly the part of the screen the player can see, so a
- * screen never needs scrolling and nothing hides behind browser chrome or the
- * on-screen keyboard.
+ * Pin the app to exactly the part of the screen the player can see.
  *
  * CSS alone cannot do this on iOS: Safari does not shrink the layout viewport
- * (or `dvh`) when the keyboard opens, and it has no `interactive-widget`
- * support. The visual viewport is the only reliable measure of what is
- * visible, so its height and offset are published as `--app-height` and
- * `--app-top` for the `.bz-app` shell, and `kb-open` is set on <html> while a
- * keyboard is covering part of the screen. On Android the viewport meta tag
- * asks the browser to resize the layout instead; this handles both.
+ * (or `dvh`) when the keyboard opens and ignores `interactive-widget`. So the
+ * visual viewport's height and offset are published as `--app-height` and
+ * `--app-top` for the `.bz-app` shell, and <html> gets `kb-open` while a
+ * keyboard covers part of the screen.
  */
 export function useFixedViewport() {
   useEffect(() => {

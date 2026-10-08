@@ -1,5 +1,5 @@
-import type { GameResult, Pack, Preset } from '@buzzoff/shared';
-import type { SavedGame, Store } from './types';
+import type { AuditEntry, GameResult, Pack, Preset } from '@buzzoff/shared';
+import { AUDIT_KEEP, type AdminSession, type SavedGame, type Store } from './types';
 
 const copy = <T>(value: T): T => structuredClone(value);
 
@@ -10,6 +10,8 @@ export class MemoryStore implements Store {
   private games = new Map<string, SavedGame>();
   private results = new Map<string, GameResult>();
   private settings = new Map<string, string>();
+  private sessions = new Map<string, AdminSession>();
+  private audit: AuditEntry[] = [];
 
   async init() {}
   async close() {}
@@ -63,5 +65,29 @@ export class MemoryStore implements Store {
   }
   async setSetting(key: string, value: string) {
     this.settings.set(key, value);
+  }
+  async deleteSetting(key: string) {
+    this.settings.delete(key);
+  }
+
+  async listSessions() {
+    return [...this.sessions.values()].map(copy);
+  }
+  async saveSession(session: AdminSession) {
+    this.sessions.set(session.tokenHash, copy(session));
+  }
+  async deleteSessions(except?: string) {
+    for (const hash of this.sessions.keys()) if (hash !== except) this.sessions.delete(hash);
+  }
+  async deleteSession(tokenHash: string) {
+    this.sessions.delete(tokenHash);
+  }
+
+  async addAudit(entry: Omit<AuditEntry, 'id'>) {
+    this.audit.push({ ...copy(entry), id: (this.audit.at(-1)?.id ?? 0) + 1 });
+    if (this.audit.length > AUDIT_KEEP) this.audit.shift();
+  }
+  async listAudit(limit: number) {
+    return this.audit.slice(-limit).reverse().map(copy);
   }
 }

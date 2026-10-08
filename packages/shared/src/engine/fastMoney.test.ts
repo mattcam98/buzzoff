@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { FastMoneyRoundDef } from '../rules';
-import { FAST_MONEY, Sim } from './testkit';
+import { FAST_MONEY, Sim, TRIVIA } from './testkit';
 
 const def = (over: Partial<FastMoneyRoundDef> = {}): FastMoneyRoundDef => ({ ...FAST_MONEY, questions: 2, ...over });
 
@@ -81,6 +81,28 @@ describe('fast money: head-to-head decider', () => {
     expect([s.score('ann'), s.score('bob')]).toEqual([500, 300]);
     s.host({ t: 'round.end' });
     expect(s.pub).toMatchObject({ phase: 'finished', champions: ['bob'] });
+  });
+
+  it('only settles the game when nothing is played after it', () => {
+    const s = new Sim({ rounds: [def(), TRIVIA] }).start();
+    s.host({ t: 'fm.start' });
+    const [first, second] = s.fm.turns.flat();
+    s.player(first, { t: 'fm.answer', q: 0, text: 'apple' }).player(first, { t: 'fm.done' });
+    s.host({ t: 'fm.start' }).player(second, { t: 'fm.done' });
+    revealAll(s);
+    s.host({ t: 'fm.next' }).host({ t: 'round.end' }).host({ t: 'round.next' }).host({ t: 'round.begin' });
+    s.host({ t: 'score.set', id: second, score: 5000 }).host({ t: 'round.end' });
+    expect(s.pub).toMatchObject({ phase: 'finished', champions: [second] });
+  });
+
+  it('announces a revealed answer without giving its points away', () => {
+    const s = sim();
+    s.host({ t: 'fm.start' }).player('ann', { t: 'fm.answer', q: 0, text: 'apple' }).player('ann', { t: 'fm.done' });
+    s.host({ t: 'fm.start' }).player('bob', { t: 'fm.done' });
+    s.host({ t: 'fm.reveal' });
+    expect(s.events.at(-1)).toEqual({ type: 'fm.reveal', kind: 'answer' });
+    s.host({ t: 'fm.reveal' });
+    expect(s.events.at(-1)).toEqual({ type: 'fm.reveal', kind: 'points', points: 40 });
   });
 
   it('lets the host fix a match before or after the points are shown', () => {

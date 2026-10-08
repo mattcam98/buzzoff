@@ -1,7 +1,7 @@
-import type { GameResult, GameState, Pack, Preset } from '@buzzoff/shared';
+import type { AuditEntry, GameResult, GameState, Pack, Preset } from '@buzzoff/shared';
 
 /** Credentials for a room. Only hashes are stored. */
-export interface RoomSecrets {
+interface RoomSecrets {
   hostKeyHash: string;
   /** playerId -> sha256 of that player's token. */
   players: Record<string, string>;
@@ -14,6 +14,15 @@ export interface SavedGame {
   state: GameState;
   secrets: RoomSecrets;
   updatedAt: number;
+}
+
+/** A device signed in as host. Only the hash of its token is ever stored. */
+export interface AdminSession {
+  tokenHash: string;
+  createdAt: number;
+  expiresAt: number;
+  ip: string;
+  agent: string;
 }
 
 /**
@@ -43,4 +52,17 @@ export interface Store {
 
   getSetting(key: string): Promise<string | null>;
   setSetting(key: string, value: string): Promise<void>;
+  deleteSetting(key: string): Promise<void>;
+
+  listSessions(): Promise<AdminSession[]>;
+  saveSession(session: AdminSession): Promise<void>;
+  /** Delete every session, or every session except the one with this token hash. */
+  deleteSessions(except?: string): Promise<void>;
+  deleteSession(tokenHash: string): Promise<void>;
+
+  /** Append to the audit log. Only the most recent entries are kept. */
+  addAudit(entry: Omit<AuditEntry, 'id'>): Promise<void>;
+  listAudit(limit: number): Promise<AuditEntry[]>;
 }
+
+export const AUDIT_KEEP = 1000;

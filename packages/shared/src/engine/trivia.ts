@@ -3,11 +3,17 @@
  *
  * Clue stages:
  *
- *   board ──select──▶ reading ──arm──▶ open ──buzz──▶ answering ──correct──▶ result ──continue──▶ board
- *                        ▲              │  ▲               │
- *                        └────close─────┘  └──incorrect────┘ (re-armed for steals, if allowed)
+ *   board ──select──▶ open ──buzz──▶ answering ──correct──▶ result ──continue──▶ board
+ *                      ▲                 │
+ *                      └────incorrect────┘ (opened again for steals, if allowed)
  *
- * A wager clue skips the buzzer: the player in control wagers, then answers.
+ * Buzzers open the moment the host selects a clue; nobody arms them. A wager
+ * clue skips the buzzer: the player in control wagers, then answers. Pausing
+ * shuts an open buzzer (`reading`) and resuming opens it again.
+ *
+ * While a buzz-in answer is judged the question is hidden from everyone but
+ * the host and its timer stands still. A wrong answer brings both back for
+ * the players who are still in.
  */
 import type { BuzzAck } from '../actions';
 import type { ActiveClue, BuzzAttempt, GameState, TriviaRound } from '../state';
@@ -16,8 +22,12 @@ import {
   activePlayers, addScore, fail, maxWager, ranked, requirePlayer, round3, setTimer, shiftTime, timerView,
   type Ctx, type Mode,
 } from './core';
+import { endRoll, removeFromRoll, rollDie, rollForRest, startRoll, tickRoll } from './dice';
 
-const HIDDEN: BuzzerView = { state: 'hidden', until: null, ms: null, deltaMs: null, rank: null };
+/** Reopened buzzers always get at least this long, so a steal is possible however late the first buzz came. */
+const MIN_REOPEN_MS = 5_000;
+
+const HIDDEN: BuzzerView = { state: 'hidden', ms: null, deltaMs: null, rank: null };
 
 const activeClue = (r: TriviaRound): ActiveClue => r.clue ?? fail('no_clue', 'No clue is in play');
 
@@ -38,7 +48,7 @@ function selectClue(g: GameState, r: TriviaRound, cat: number, idx: number, ctx:
 
   const c: ActiveClue = {
     cat, idx, value: clue.value, stage: 'reading', cycle: 0, openedAt: null, windowEndsAt: null, decided: null,
-    deadline: null, timerMs: null, attempts: [], answererId: null, excluded: [], lockouts: {}, early: [],
+    deadline: null, timerMs: null, held: null, attempts: [], answererId: null, excluded: [],
     wager: null, judgments: [], timedOut: false, answerTimeUp: false,
   };
   r.clue = c;
@@ -48,12 +58,21 @@ function selectClue(g: GameState, r: TriviaRound, cat: number, idx: number, ctx:
   if (clue.wager && controller) {
     c.stage = 'wager';
     c.wager = { playerId: controller.id, amount: null };
-  } else if (g.rules.buzzer.arming === 'auto') {
-    armBuzzers(g, c, ctx);
+  } else {
+    openBuzzers(g, c, ctx, 'full');
   }
 }
 
-function armBuzzers(g: GameState, c: ActiveClue, ctx: Ctx): void {
+/** Stop the question timer where it stands, to be picked up when the buzzers next open. */
+function holdTimer(c: ActiveClue, now: number): void {
+  c.held = c.deadline === null || c.timerMs === null ? null : { leftMs: Math.max(0, c.deadline - now), totalMs: c.timerMs };
+}
+
+/**
+ * Start a fresh buzz for everyone still eligible. `full` starts the question
+ * timer from the top; `resume` carries on with whatever `holdTimer` set aside.
+ */
+function openBuzzers(g: GameState, c: ActiveClue, ctx: Pick<Ctx, 'now' | 'events'>, clock: 'full' | 'resume'): void {
   c.stage = 'open';
   c.cycle += 1;
   c.openedAt = ctx.now;
@@ -62,7 +81,14 @@ function armBuzzers(g: GameState, c: ActiveClue, ctx: Ctx): void {
   c.windowEndsAt = null;
   c.answererId = null;
   c.answerTimeUp = false;
-  setTimer(c, g.rules.buzzer.buzzSec, ctx.now);
+  if (clock === 'full') {
+    setTimer(c, g.rules.buzzer.buzzSec, ctx.now);
+  } else {
+    const left = c.held && Math.max(c.held.leftMs, MIN_REOPEN_MS);
+    c.deadline = left ? ctx.now + left : null;
+    c.timerMs = left ? Math.max(c.held!.totalMs, left) : null;
+  }
+  c.held = null;
   ctx.events.push({ type: 'buzz.open' });
 }
 
@@ -73,6 +99,7 @@ function decide(g: GameState, c: ActiveClue, ctx: Ctx): void {
   c.windowEndsAt = null;
   c.answererId = winner.playerId;
   c.stage = 'answering';
+  holdTimer(c, ctx.now);
   setTimer(c, g.rules.buzzer.answerSec, ctx.now);
   g.stats[winner.playerId].buzzWins += 1;
   ctx.events.push({ type: 'buzz.winner', playerId: winner.playerId });
@@ -128,7 +155,7 @@ function judge(g: GameState, r: TriviaRound, correct: boolean, ctx: Ctx): void {
     }
   }
   const stealable = !c.wager && !r.board[c.cat].singleAttempt && rules.reopenOnIncorrect && canStillBuzz(g, c).length > 0;
-  if (stealable) armBuzzers(g, c, ctx);
+  if (stealable) openBuzzers(g, c, ctx, 'resume');
   else finish(r, c, null, ctx);
 }
 
@@ -141,15 +168,6 @@ function cancelClue(g: GameState, r: TriviaRound): void {
   clue.winnerId = null;
   r.clue = null;
   r.stage = 'board';
-}
-
-function firstControl(g: GameState, ctx: Ctx): string | null {
-  const players = activePlayers(g);
-  if (!players.length) return null;
-  // The trailing player opens every board after the first; the first is drawn at random.
-  const anyScore = players.some((p) => p.score !== 0);
-  if (g.roundIndex > 0 && anyScore) return ranked(players)[players.length - 1].id;
-  return players[Math.floor(ctx.rand() * players.length)].id;
 }
 
 function publicAttempts(c: ActiveClue): PublicAttempt[] {
@@ -172,8 +190,12 @@ function publicAttempts(c: ActiveClue): PublicAttempt[] {
 
 export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
   begin(g, r, ctx) {
+    const players = activePlayers(g);
     r.stage = 'board';
-    r.controlId = firstControl(g, ctx);
+    // The trailing player opens every board after the first; the first pick of the game is rolled for.
+    if (g.roundIndex > 0 && players.some((p) => p.score !== 0)) r.controlId = ranked(players)[players.length - 1].id;
+    else if (players.length > 1) startRoll(r, players.map((p) => p.id), ctx);
+    else r.controlId = players[0]?.id ?? null;
   },
 
   host(g, r, a, ctx) {
@@ -181,25 +203,14 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
       case 'clue.select':
         selectClue(g, r, a.cat, a.idx, ctx);
         return true;
-      case 'buzz.open': {
-        const c = activeClue(r);
-        if (c.stage !== 'reading') fail('bad_stage', 'Buzzers can only be armed while the clue is being read');
-        armBuzzers(g, c, ctx);
-        return true;
-      }
-      case 'buzz.close': {
-        const c = activeClue(r);
-        if (c.stage !== 'open') fail('bad_stage', 'Buzzers are not armed');
-        trivia.interrupt(r);
-        return true;
-      }
       case 'buzz.reset': {
-        // Dispute handling: discard the current buzz and re-arm for everyone still eligible.
+        // Dispute handling: discard the current buzz and open again for everyone still eligible.
         const c = activeClue(r);
         if (c.stage !== 'open' && c.stage !== 'answering') fail('bad_stage', 'There is no buzz to reset');
         if (c.wager) fail('bad_stage', 'A wager clue has no buzzer');
         if (c.answererId) g.stats[c.answererId].buzzWins -= 1;
-        armBuzzers(g, c, ctx);
+        if (c.stage === 'open') holdTimer(c, ctx.now);
+        openBuzzers(g, c, ctx, 'resume');
         return true;
       }
       case 'judge':
@@ -222,9 +233,14 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
       case 'clue.cancel':
         cancelClue(g, r);
         return true;
+      case 'roll.finish':
+        rollForRest(r, ctx);
+        return true;
       case 'control.set':
         requirePlayer(g, a.id);
         r.controlId = a.id;
+        // Handing someone the board settles the question the roll was asking.
+        if (r.stage === 'roll') endRoll(r);
         if (r.clue?.stage === 'wager' && r.clue.wager) r.clue.wager.playerId = a.id;
         return true;
       case 'wager.set':
@@ -235,18 +251,12 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     }
   },
 
+  // Players never touch the board: they call a clue out loud and the host puts it in play.
   player(g, r, playerId, a, ctx) {
-    switch (a.t) {
-      case 'select':
-        if (r.def.selection !== 'control' || r.controlId !== playerId) fail('not_yours', 'You are not picking right now');
-        selectClue(g, r, a.cat, a.idx, ctx);
-        return true;
-      case 'wager':
-        setWager(g, r, playerId, a.amount, ctx);
-        return true;
-      default:
-        return false;
-    }
+    if (a.t === 'roll') rollDie(r, playerId, ctx);
+    else if (a.t === 'wager') setWager(g, r, playerId, a.amount, ctx);
+    else return false;
+    return true;
   },
 
   buzz(g, r, playerId, ctx) {
@@ -257,21 +267,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     if (!c || !player || c.wager) return reject('closed');
     if (player.eliminated || c.excluded.includes(playerId)) return reject('excluded');
 
-    if (c.stage === 'reading') {
-      if (rules.earlyBuzz === 'ignore') return reject('early');
-      if (rules.earlyBuzz === 'penalty' && !c.early.includes(playerId)) addScore(g, playerId, -rules.earlyPenalty);
-      if (!c.early.includes(playerId)) {
-        c.early.push(playerId);
-        g.stats[playerId].earlyBuzzes += 1;
-      }
-      // Every early press restarts the lockout, so mashing the button never helps.
-      c.lockouts[playerId] = ctx.now + rules.earlyLockoutMs;
-      ctx.events.push({ type: 'buzz.early', playerId });
-      return { ack: { status: 'early' }, changed: true };
-    }
-
     if (c.stage !== 'open' && c.stage !== 'answering') return reject('closed');
-    if ((c.lockouts[playerId] ?? 0) > ctx.now) return reject('lockedOut');
     if (c.answererId === playerId || c.attempts.some((a) => a.playerId === playerId)) return reject('duplicate');
 
     const ms = round3(ctx.now - c.openedAt!);
@@ -293,6 +289,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
   },
 
   tick(g, r, ctx) {
+    if (r.stage === 'roll') return tickRoll(r, ctx);
     const c = r.clue;
     if (!c) return;
     if (c.stage === 'open') {
@@ -313,55 +310,68 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     }
   },
 
-  deadlines: (r) => (r.clue ? [r.clue.windowEndsAt, r.clue.deadline] : []),
+  deadlines: (r) => (r.stage === 'roll' ? [r.roll?.deadline ?? null] : r.clue ? [r.clue.windowEndsAt, r.clue.deadline] : []),
 
   timer: (r) => r.clue,
 
   shift(r, delta) {
+    if (r.roll) r.roll.deadline = shiftTime(r.roll.deadline, delta);
     const c = r.clue;
     if (!c) return;
     c.openedAt = shiftTime(c.openedAt, delta);
     c.windowEndsAt = shiftTime(c.windowEndsAt, delta);
     c.deadline = shiftTime(c.deadline, delta);
-    for (const id of Object.keys(c.lockouts)) c.lockouts[id] += delta;
   },
 
   interrupt(r) {
-    // Buzz timing cannot straddle a pause, so an armed buzzer goes back to "reading".
+    // Buzz timing cannot straddle a pause, so an open buzzer is shut until play resumes.
     const c = r.clue;
     if (c?.stage !== 'open') return;
+    // The question timer keeps its deadline: it is moved along with everything else when play resumes.
     c.stage = 'reading';
     c.attempts = [];
     c.decided = null;
     c.windowEndsAt = null;
-    c.deadline = null;
-    c.timerMs = null;
   },
 
-  playerRemoved(_g, r, playerId) {
+  resume(g, r, ctx) {
+    const c = r.clue;
+    if (c?.stage !== 'reading') return;
+    holdTimer(c, ctx.now);
+    openBuzzers(g, c, ctx, 'resume');
+  },
+
+  playerRemoved(g, r, playerId) {
     if (r.controlId === playerId) r.controlId = null;
+    removeFromRoll(r, playerId);
     const c = r.clue;
     if (!c) return;
     c.attempts = c.attempts.filter((a) => a.playerId !== playerId);
     if (c.decided !== null) c.decided = Math.min(c.decided, c.attempts.length);
-    if (c.answererId === playerId || c.wager?.playerId === playerId) {
-      // Their turn cannot be completed; put the clue back on the board.
-      r.board[c.cat].clues[c.idx].used = false;
-      r.clue = null;
-      r.stage = 'board';
-    }
+    // A collection window with nothing left in it would never close.
+    if (!c.attempts.length) c.windowEndsAt = null;
+    // Their turn cannot be completed; throw the clue out. A clue that is already settled stays settled.
+    if (c.stage !== 'result' && (c.answererId === playerId || c.wager?.playerId === playerId)) cancelClue(g, r);
   },
 
   publicView(g, r) {
     const c = r.clue;
     const source = c ? r.board[c.cat].clues[c.idx] : null;
+    // A wager is placed blind, so the clue stays hidden until it is locked in. And while a buzz-in
+    // answer is being judged nobody gets to keep reading: the question returns with the buzzers.
+    const hidden = c?.stage === 'wager' || (c?.stage === 'answering' && !c.wager);
     return {
       mode: 'trivia',
       title: r.def.title,
       stage: r.stage,
       multiplier: r.def.valueMultiplier,
-      selection: r.def.selection,
       controlId: r.controlId,
+      roll: r.roll
+        ? {
+            round: r.roll.round, phase: r.roll.phase, contenders: r.roll.contenders, rolls: r.roll.rolls, out: r.roll.out,
+            winnerId: r.roll.winnerId, timer: r.roll.phase === 'rolling' ? timerView(r.roll) : null,
+          }
+        : null,
       board: r.board.map((cat) => ({
         title: cat.title,
         blurb: cat.blurb,
@@ -377,16 +387,15 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
               stage: c.stage,
               isWager: !!c.wager,
               singleAttempt: r.board[c.cat].singleAttempt,
-              // A wager is placed blind: the clue stays hidden until it is locked in.
-              question: c.stage === 'wager' ? null : source.question,
-              media: c.stage === 'wager' ? null : (source.media ?? null),
+              question: hidden ? null : source.question,
+              media: hidden ? null : (source.media ?? null),
               answer: c.stage === 'result' ? source.answer : null,
               timer: timerView(c),
+              held: c.stage === 'answering' ? (c.held ?? null) : null,
               collecting: c.stage === 'open' && c.attempts.length > 0,
               attempts: publicAttempts(c),
               answererId: c.answererId,
               excluded: c.excluded,
-              early: c.early,
               judgments: c.judgments,
               wager: c.wager
                 ? { ...c.wager, max: maxWager(g.players[c.wager.playerId]?.score ?? 0, r.def.wagerCap) }
@@ -413,8 +422,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
   playerView(g, r, playerId) {
     const player = g.players[playerId];
     const c = r.clue;
-    const canSelect = r.stage === 'board' && r.def.selection === 'control' && r.controlId === playerId;
-    if (!c || !player) return { buzzer: HIDDEN, canSelect, wager: null };
+    if (!c || !player) return { buzzer: HIDDEN, wager: null };
 
     const wager =
       c.stage === 'wager' && c.wager?.playerId === playerId
@@ -424,22 +432,19 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     const mine = c.attempts.find((a) => a.playerId === playerId);
     const shown = publicAttempts(c);
     const rank = shown.findIndex((a) => a.playerId === playerId);
-    const view = (state: BuzzerView['state'], until: number | null = null): BuzzerView => ({
+    const view = (state: BuzzerView['state']): BuzzerView => ({
       state,
-      until,
       ms: mine?.ms ?? null,
       deltaMs: rank >= 0 ? shown[rank].deltaMs : null,
       rank: rank >= 0 ? rank + 1 : null,
     });
 
     let buzzer: BuzzerView;
-    const lockedUntil = c.lockouts[playerId] ?? 0;
-    if (c.wager || c.stage === 'result' || c.stage === 'wager') buzzer = HIDDEN;
+    if (c.wager || c.stage === 'result' || c.stage === 'wager' || c.stage === 'reading') buzzer = HIDDEN;
     else if (player.eliminated || c.excluded.includes(playerId)) buzzer = view('out');
     else if (c.stage === 'answering') buzzer = view(c.answererId === playerId ? 'yours' : 'taken');
     else if (mine) buzzer = view('buzzed');
-    else if (c.stage === 'reading') buzzer = view('wait', lockedUntil || null);
-    else buzzer = view('open', lockedUntil || null);
-    return { buzzer, canSelect, wager };
+    else buzzer = view('open');
+    return { buzzer, wager };
   },
 };

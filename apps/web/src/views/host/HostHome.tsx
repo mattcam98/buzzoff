@@ -92,8 +92,8 @@ function Dashboard() {
 
       {!info.authRequired && (
         <p className="mg-note" role="note">
-          <strong>No host password is set.</strong> Anyone who can reach this server can host games and read your question packs. Set{' '}
-          <code>BUZZOFF_ADMIN_PASSWORD</code> to lock hosting down.
+          <strong>No host password is set.</strong> Anyone who can reach this server can host games, read your question packs and change
+          its settings. <Link href="/host/settings">Set a password in Settings</Link> to lock hosting down.
         </p>
       )}
 

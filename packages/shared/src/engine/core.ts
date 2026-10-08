@@ -1,10 +1,7 @@
 /**
- * Shared engine plumbing: the context every transition receives, the error
- * type for rejected actions, and the interface a game mode implements.
- *
- * The engine is pure. It never reads a clock, generates randomness or talks to
- * the network; all of that arrives through `Ctx`, which is what makes buzzer
- * ordering and state transitions deterministic and unit-testable.
+ * Shared engine plumbing. The engine is pure: the clock, randomness and network
+ * measurements all arrive through `Ctx`, which is what makes buzzer ordering
+ * and every transition deterministic and unit-testable.
  */
 import type { BuzzAck, HostAction, PlayerAction } from '../actions';
 import type { GameEvent, GameState, Player, RoundState } from '../state';
@@ -37,7 +34,7 @@ export function fail(code: string, message: string): never {
 /**
  * A game mode. To add a new mode: define its round definition in rules.ts and
  * its state in state.ts, implement this interface, and register it in
- * engine/modes.ts. Nothing else in the engine needs to change.
+ * engine/game.ts. Nothing else in the engine needs to change.
  */
 export interface Mode<R extends RoundState, Pub, Secret> {
   /** Leave the intro and start play. */
@@ -55,8 +52,10 @@ export interface Mode<R extends RoundState, Pub, Secret> {
   timer(r: R): { deadline: number | null; timerMs: number | null } | null;
   /** Move every stored server time by `deltaMs` (resume after pause, undo, restart). */
   shift(r: R, deltaMs: number): void;
-  /** Stop anything that only makes sense in continuous time, such as an armed buzzer. */
+  /** Stop anything that only makes sense in continuous time, such as an open buzzer. */
   interrupt(r: R): void;
+  /** Start again whatever `interrupt` stopped, now that time is running. */
+  resume(g: GameState, r: R, ctx: Pick<Ctx, 'now' | 'events'>): void;
   playerRemoved(g: GameState, r: R, playerId: string): void;
   publicView(g: GameState, r: R): Pub;
   hostView(g: GameState, r: R): Secret;

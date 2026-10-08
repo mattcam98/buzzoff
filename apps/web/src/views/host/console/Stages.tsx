@@ -2,7 +2,7 @@
 import type { FastMoneyPublic, FastMoneySecret, FinalPublic, FinalSecret, TriviaPublic, TriviaSecret } from '@buzzoff/shared';
 import { useState, type FormEvent } from 'react';
 import { fmtDelta, fmtScore, plural } from '../../../lib/format';
-import { BuzzLadder, Seconds } from '../../../ui/game';
+import { BuzzLadder, Die, rollLeaders, Seconds } from '../../../ui/game';
 import { Avatar, Button, cx, TimerBar } from '../../../ui/kit';
 import type { StageProps } from '../HostConsole';
 
@@ -28,6 +28,8 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
   const clue = round.clue;
   const [wager, setWager] = useState('');
 
+  if (round.stage === 'roll' && round.roll) return <RollStage {...props} roll={round.roll} />;
+
   if (!clue) {
     const left = round.board.reduce((n, c) => n + c.clues.filter((cl) => !cl.used).length, 0);
     const picker = round.controlId ? players[round.controlId] : null;
@@ -52,11 +54,14 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
                   <button
                     key={k}
                     disabled={cl.used || pub.paused}
+                    data-used={cl.used || undefined}
                     data-wager={hidden?.wager || undefined}
                     onClick={() => run({ t: 'clue.select', cat: c, idx: k })}
+                    aria-label={`${cat.title} for ${cl.value}${cl.used ? ', already played' : ''}`}
                     title={hidden ? `${hidden.question}\n→ ${hidden.answer}` : undefined}
                   >
-                    {cl.used ? (cl.winnerId && players[cl.winnerId] ? <Avatar avatar={players[cl.winnerId].avatar} size={22} /> : '·') : fmtScore(cl.value)}
+                    {fmtScore(cl.value)}
+                    {cl.used && cl.winnerId && players[cl.winnerId] && <Avatar avatar={players[cl.winnerId].avatar} size={18} className="hc-board__won" />}
                     {hidden?.wager && !cl.used && <i aria-label="Hidden wager">★</i>}
                   </button>
                 );
@@ -65,7 +70,8 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
           ))}
         </div>
         <p className="hc-note">
-          ★ marks a hidden wager (only you can see it). Hover a clue to preview it.{round.selection === 'control' && ' The player with the board can also pick from their phone.'}
+          {picker ? `${picker.name} calls a category and a value; you click it. ` : 'Players call the clue; you click it. '}★ marks a hidden wager (only you
+          can see it). Hover a clue to preview it.
         </p>
       </section>
     );
@@ -73,7 +79,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
 
   const answerer = clue.answererId ? players[clue.answererId] : null;
   const wagerer = clue.wager ? players[clue.wager.playerId] : null;
-  const stageLabel = { wager: 'Taking a wager', reading: 'Buzzers locked — read the clue', open: 'Buzzers armed', answering: 'Waiting for your ruling', result: 'Answer revealed' }[clue.stage];
+  const stageLabel = { wager: 'Taking a wager', reading: 'Paused — buzzers open again when you resume', open: 'Buzzers are open', answering: clue.held ? 'Waiting for your ruling — question hidden, its timer paused' : 'Waiting for your ruling', result: 'Answer revealed' }[clue.stage];
   const submitWager = (e: FormEvent) => {
     e.preventDefault();
     const amount = Number(wager);
@@ -92,7 +98,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
         </div>
         <TimerTools pub={pub} snap={snap} run={run} running={!!clue.timer} />
       </div>
-      <TimerBar timer={clue.timer} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} />
+      <TimerBar timer={clue.timer} held={clue.held} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} />
 
       <p className="hc-clue__q">{secret.clue?.question}</p>
       <div className="hc-clue__answer">
@@ -126,16 +132,6 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
       )}
 
       <div className="hc-actions">
-        {clue.stage === 'reading' && (
-          <Button variant="primary" size="l" hotkey="Space" disabled={pub.paused} onClick={() => run({ t: 'buzz.open' })}>
-            Arm buzzers
-          </Button>
-        )}
-        {clue.stage === 'open' && (
-          <Button variant="ghost" size="l" hotkey="B" onClick={() => run({ t: 'buzz.close' })}>
-            Disarm buzzers
-          </Button>
-        )}
         {clue.stage === 'answering' && (
           <>
             <Button variant="good" size="l" hotkey="C" disabled={pub.paused} onClick={() => run({ t: 'judge', correct: true })}>
@@ -145,7 +141,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
               Incorrect
             </Button>
             {!clue.isWager && (
-              <Button variant="ghost" onClick={() => run({ t: 'buzz.reset' })} title="Throw this buzz out and re-arm for everyone still in">
+              <Button variant="ghost" onClick={() => run({ t: 'buzz.reset' })} title="Throw this buzz out and open the buzzers again for everyone still in">
                 Re-do the buzz
               </Button>
             )}
@@ -161,16 +157,12 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
             Reveal answer
           </Button>
         )}
-        {clue.stage === 'reading' && (
-          // Space arms; B is the same switch from the other side.
-          <button hidden data-hotkey="b" onClick={() => run({ t: 'buzz.open' })} />
-        )}
         <Button variant="ghost" onClick={() => confirm('Throw this clue out? Its scoring is reversed and it goes back on the board.') && run({ t: 'clue.cancel' })}>
           Throw out clue
         </Button>
       </div>
 
-      {(clue.attempts.length > 0 || clue.early.length > 0 || clue.judgments.length > 0) && (
+      {(clue.attempts.length > 0 || clue.judgments.length > 0) && (
         <div className="hc-log">
           {clue.attempts.length > 0 && (
             <div>
@@ -184,13 +176,61 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
                 {players[j.playerId]?.name} {j.correct ? 'correct' : 'incorrect'} <b className="bz-num">{fmtDelta(j.delta)}</b>
               </li>
             ))}
-            {clue.early.map((id) => (
-              <li key={`e${id}`}>{players[id]?.name} buzzed early</li>
-            ))}
             {clue.excluded.length > 0 && clue.stage !== 'result' && <li>Locked out: {clue.excluded.map((id) => players[id]?.name).join(', ')}</li>}
           </ul>
         </div>
       )}
+    </section>
+  );
+}
+
+/** The roll for the first pick. It runs itself; the host can only hurry it or skip it. */
+function RollStage({ pub, snap, players, run, round, roll }: StageProps & { round: TriviaPublic; roll: NonNullable<TriviaPublic['roll']> }) {
+  const tied = roll.phase === 'tied' ? rollLeaders(roll) : [];
+  const winner = roll.winnerId ? players[roll.winnerId] : null;
+  const waiting = roll.contenders.filter((id) => roll.rolls[id] === undefined);
+  const title = winner
+    ? `${winner.name} picks first`
+    : tied.length
+      ? `A tie: ${tied.map((id) => players[id]?.name).join(' and ')} roll again`
+      : waiting.length
+        ? `Waiting for ${plural(waiting.length, 'roll')}`
+        : 'The dice are landing…';
+  return (
+    <section className="hc-card hc-stage" data-tone={winner ? 'buzz' : undefined}>
+      <div className="hc-stage__head">
+        <div>
+          <span className="bz-eyebrow">
+            {round.title} · {roll.round === 1 ? 'rolling for the first pick' : `tie-break ${roll.round - 1}`}
+          </span>
+          <h1>{title}</h1>
+        </div>
+        {roll.phase === 'rolling' && (
+          <div className="hc-timer">
+            <Seconds pub={pub} snap={snap} className="hc-timer__count" />
+          </div>
+        )}
+      </div>
+      <ul className="hc-rolls">
+        {pub.players
+          .filter((p) => roll.contenders.includes(p.id) || roll.out[p.id] !== undefined)
+          .map((p) => (
+            <li key={p.id} data-out={!roll.contenders.includes(p.id) || undefined} data-winner={p.id === roll.winnerId || undefined}>
+              <Avatar avatar={p.avatar} size={28} dim={!roll.contenders.includes(p.id)} />
+              <strong>{p.name}</strong>
+              <Die value={roll.rolls[p.id] ?? roll.out[p.id] ?? null} />
+            </li>
+          ))}
+      </ul>
+      <div className="hc-actions">
+        <Button variant="primary" size="l" hotkey="Space" disabled={roll.phase !== 'rolling' || pub.paused} onClick={() => run({ t: 'roll.finish' })}>
+          Roll for everyone still to roll
+        </Button>
+      </div>
+      <p className="hc-note">
+        Players tap their phones; the highest roll picks the first clue and ties roll again by themselves. Anyone who has not rolled when the clock runs out
+        is rolled for. To skip the roll, click a player and give them the board.
+      </p>
     </section>
   );
 }

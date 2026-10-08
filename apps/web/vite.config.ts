@@ -15,5 +15,5 @@ export default defineConfig({
       '/socket.io': { target: server, ws: true },
     },
   },
-  build: { target: 'es2022', sourcemap: false },
+  build: { target: 'es2022', sourcemap: true },
 });

@@ -3,10 +3,10 @@
  * else on the page is optional and stays folded away until it is wanted.
  */
 import {
-  GameRulesSchema, normalizeRoomCode,
+  GameRulesSchema, normalizeRoomCode, ROOM_CODE_LENGTH,
   type CreateGameRequest, type GameRules, type Pack, type PackSummary, type Picks, type Preset, type RoundDef,
 } from '@buzzoff/shared';
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link, useLocation } from 'wouter';
 import { api } from '../../lib/api';
 import { plural } from '../../lib/format';
@@ -25,24 +25,24 @@ export function NewGame() {
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
-/** What a ruleset draws from the selected packs. A final round takes one category. */
+/** How many categories (or, for Fast Money, survey questions) a round draws. A final round takes one category. */
+const drawCount = (r: RoundDef) => (r.mode === 'trivia' ? r.categories : r.mode === 'final' ? 1 : r.questions);
+
+/** What a ruleset draws from the selected packs. */
 function needs(rules: GameRules) {
-  let categories = 0;
-  let surveys = 0;
-  for (const r of rules.rounds) {
-    if (r.mode === 'trivia') categories += r.categories;
-    else if (r.mode === 'final') categories += 1;
-    else surveys += r.questions;
-  }
-  return { categories, surveys };
+  const total = (rounds: RoundDef[]) => rounds.reduce((n, r) => n + drawCount(r), 0);
+  return {
+    categories: total(rules.rounds.filter((r) => r.mode !== 'fastMoney')),
+    surveys: total(rules.rounds.filter((r) => r.mode === 'fastMoney')),
+  };
 }
 
 function Setup() {
-  const { fail } = useShell();
+  const { fail, info } = useShell();
   const [, navigate] = useLocation();
   const rematch = useMemo(() => {
     const code = normalizeRoomCode(new URLSearchParams(window.location.search).get('rematch') ?? '');
-    return code.length === 4 && storage.hostKey(code) ? code : null;
+    return code.length === ROOM_CODE_LENGTH && storage.hostKey(code) ? code : null;
   }, []);
 
   const [presets, setPresets] = useState<Preset[] | null>(null);
@@ -65,7 +65,9 @@ function Setup() {
         if (cancelled) return;
         const last = storage.lastSetup();
         const previous = rematch ? storage.gameSetup(rematch) : null;
-        const preset = presetList.find((p) => p.id === last?.presetId) ?? presetList.find((p) => p.id === 'full-show') ?? presetList[0];
+        // The server's chosen default, else whatever this browser played last, else the flagship format.
+        const wantedPreset = info.defaultPresetId ?? last?.presetId;
+        const preset = presetList.find((p) => p.id === wantedPreset) ?? presetList.find((p) => p.id === 'full-show') ?? presetList[0];
         const wanted = (previous?.packIds ?? last?.packIds ?? []).filter((id) => packList.some((p) => p.id === id));
         setPresets(presetList);
         setPacks(packList);
@@ -80,19 +82,24 @@ function Setup() {
     return () => {
       cancelled = true;
     };
-  }, [fail, rematch]);
+  }, [fail, rematch, info.defaultPresetId]);
 
   // Hand-picking needs the packs' contents, which are only fetched once asked for.
+  const requested = useRef(new Set<string>());
   useEffect(() => {
     if (!picking) return;
     for (const id of packIds) {
-      if (full[id]) continue;
+      if (requested.current.has(id)) continue;
+      requested.current.add(id);
       api.pack(id).then(
         (pack) => setFull((f) => ({ ...f, [id]: pack })),
-        (err) => setError(fail(err)),
+        (err) => {
+          requested.current.delete(id);
+          setError(fail(err));
+        },
       );
     }
-  }, [picking, packIds, full, fail]);
+  }, [picking, packIds, fail]);
 
   if (loadError) {
     return (
@@ -142,6 +149,8 @@ function Setup() {
   function changeRules(next: GameRules, structural?: boolean) {
     setRules(next);
     if (structural || next.rounds.length !== picks.length) setPicks(next.rounds.map(() => null));
+    // A round that now draws fewer items keeps only as many hand-picks as it can use.
+    else setPicks(picks.map((p, i) => p && p.slice(0, drawCount(next.rounds[i]))));
   }
 
   async function create(e: FormEvent) {
@@ -426,7 +435,7 @@ function PicksEditor({ rules, packs, picks, onChange }: { rules: GameRules; pack
     <div className="mg-stack">
       {rules.rounds.map((round, i) => {
         const items = round.mode === 'fastMoney' ? surveys : categories;
-        const max = round.mode === 'trivia' ? round.categories : round.mode === 'final' ? 1 : round.questions;
+        const max = drawCount(round);
         const mine = picks[i] ?? [];
         const taken = new Set(picks.flatMap((p, k) => (k === i ? [] : (p ?? []))));
         const noun = round.mode === 'fastMoney' ? 'survey' : 'category';

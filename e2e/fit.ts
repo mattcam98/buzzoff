@@ -9,7 +9,7 @@
 import { expect, type Page } from '@playwright/test';
 
 /** Visible areas to test, not device sizes: several are what Safari leaves once its bars are showing. */
-export const PHONE_SIZES: [name: string, width: number, height: number][] = [
+const PHONE_SIZES: [name: string, width: number, height: number][] = [
   ['tiny, browser bars', 320, 480],
   ['iPhone SE, browser bars', 375, 553],
   ['iPhone SE, full', 375, 667],
@@ -22,7 +22,7 @@ export const PHONE_SIZES: [name: string, width: number, height: number][] = [
 ];
 
 /** What is left above an on-screen keyboard. */
-export const KEYBOARD_SIZES: [name: string, width: number, height: number][] = [
+const KEYBOARD_SIZES: [name: string, width: number, height: number][] = [
   ['iPhone SE + keyboard', 375, 300],
   ['iPhone 15 + keyboard', 393, 400],
   ['Android + keyboard', 360, 330],

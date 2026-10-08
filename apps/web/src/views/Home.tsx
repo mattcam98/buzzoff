@@ -107,10 +107,11 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
   // A takeover request is waiting on the host: poll until they answer.
   useEffect(() => {
     if (!claim) return;
+    let cancelled = false;
     const timer = window.setInterval(async () => {
       try {
         const status = await api.claim(code, claim.id, claim.secret);
-        if (status.status === 'pending') return;
+        if (cancelled || status.status === 'pending') return;
         setClaim(null);
         if (status.status === 'approved') {
           storage.setSeat(code, { playerId: status.playerId, token: status.token });
@@ -118,12 +119,17 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
         } else {
           setError('The host did not approve that. Pick a different name to join as a new player.');
         }
-      } catch {
+      } catch (err) {
+        // A dropped request is not an answer; only the server saying the request is gone ends the wait.
+        if (cancelled || !(err instanceof ApiFailure) || err.status !== 404) return;
         setClaim(null);
         setError('That request expired. Try again.');
       }
     }, 1500);
-    return () => window.clearInterval(timer);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
   }, [claim, code, navigate]);
 
   async function join(e: FormEvent) {
@@ -214,12 +220,12 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
 
         {step === 'who' && game && (
           <form className="bz-card home__card bz-rise" onSubmit={join}>
-            <button type="button" className="home__room" onClick={() => setChangingCode(true)} aria-label={`Room ${code}. Change room code`}>
+            <button type="button" className="home__room" onClick={() => setChangingCode(true)}>
               <b>{code}</b>
               <span id="room-status" data-state="found">
                 {status}
               </span>
-              <i aria-hidden>Change</i>
+              <i>Change</i>
             </button>
 
             {seat ? (

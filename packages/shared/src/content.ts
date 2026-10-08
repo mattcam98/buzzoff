@@ -9,7 +9,7 @@ const text = (max: number) => z.string().trim().min(1).max(max);
 const id = z.string().trim().min(1).max(40);
 
 /** Media is either an upload served by this server or an absolute http(s) URL. */
-export const isSafeMediaUrl = (url: string) => /^\/media\/[\w.-]+$/.test(url) || /^https?:\/\/[^\s]+$/i.test(url);
+const isSafeMediaUrl = (url: string) => /^\/media\/[\w.-]+$/.test(url) || /^https?:\/\/[^\s]+$/i.test(url);
 
 export const MediaSchema = z.object({
   kind: z.enum(['image', 'audio', 'video']),

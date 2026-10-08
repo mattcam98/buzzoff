@@ -11,7 +11,7 @@ import { useConnection, type Snapshot } from '../lib/connection';
 import { byScore, fmtMs, fmtPercent, joinAddress, ordinal, playerMap, plural } from '../lib/format';
 import { useGameEvents, useWakeLock } from '../lib/hooks';
 import { audioReady, play, soundFor, unlockAudio } from '../lib/sound';
-import { roundBlurb, Score, useFinalSecondsTick } from '../ui/game';
+import { FinalSecondsTick, roundBlurb, Score } from '../ui/game';
 import { Avatar, Button, Confetti, cx, Logo, Notice } from '../ui/kit';
 import { FastMoneyScene, FinalScene, TriviaScene } from './tv/Scenes';
 import '../styles/game.css';
@@ -111,7 +111,6 @@ export function Tv({ code }: { code: string }) {
 
 function TvContent({ pub, snap, publicUrl }: { pub: PublicView; snap: Snapshot; publicUrl: string | null }) {
   const players = useMemo(() => playerMap(pub), [pub]);
-  useFinalSecondsTick(pub, snap);
   const props: SceneProps = { pub, snap, players };
   const round = pub.round;
   const join = joinAddress(publicUrl);
@@ -122,6 +121,7 @@ function TvContent({ pub, snap, publicUrl }: { pub: PublicView; snap: Snapshot; 
   const title = pub.phase === 'standings' ? 'Standings' : (round?.title ?? '');
   return (
     <>
+      <FinalSecondsTick pub={pub} snap={snap} />
       <header className="tv-top">
         <Logo />
         <div className="tv-top__title">
@@ -135,7 +135,7 @@ function TvContent({ pub, snap, publicUrl }: { pub: PublicView; snap: Snapshot; 
           <b>{pub.code}</b>
         </div>
       </header>
-      <main className="tv-main" key={`${pub.phase}-${pub.roundIndex}-${round?.stage === 'intro' ? 'intro' : 'play'}`}>
+      <main className="tv-main" key={`${pub.phase}-${pub.roundIndex}-${round?.stage === 'intro' || round?.stage === 'roll' ? round.stage : 'play'}`}>
         {pub.phase === 'standings' ? (
           <Standings {...props} />
         ) : !round ? null : round.stage === 'intro' ? (
@@ -164,7 +164,7 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
   const ready = pub.players.filter((p) => p.ready).length;
 
   return (
-    <div className="tv-lobby">
+    <main className="tv-lobby">
       <section className="tv-lobby__join">
         <Logo />
         <p className="tv-lobby__step">
@@ -217,7 +217,7 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
         )}
         <footer>{pub.lobbyLocked ? 'The room is locked.' : 'The host starts the show when everyone is in.'}</footer>
       </section>
-    </div>
+    </main>
   );
 }
 
@@ -323,7 +323,7 @@ function Finale({ pub }: SceneProps) {
   const team = pub.teams?.find((t) => champions.length > 0 && champions.every((p) => p.teamId === t.id));
 
   return (
-    <div className="tv-finale">
+    <main className="tv-finale">
       <Logo />
       <span className="bz-eyebrow">{pub.name}</span>
       <h1>{champions.length === 0 ? 'That’s the show' : champions.length > 1 && !team ? 'It’s a tie!' : 'Champion'}</h1>
@@ -362,7 +362,7 @@ function Finale({ pub }: SceneProps) {
           </li>
         ))}
       </ul>
-    </div>
+    </main>
   );
 }
 
@@ -397,7 +397,6 @@ function Podiums({ pub, players }: SceneProps) {
               <Score value={p.score} />
             </div>
             {control === p.id && <span className="tv-podium__tag">Picking</span>}
-            {clue?.early.includes(p.id) && clue.stage === 'reading' && <span className="tv-podium__tag tv-podium__tag--bad">Too early</span>}
           </div>
         );
       })}

@@ -43,7 +43,6 @@ export interface PlayerStats {
   buzzWins: number;
   correct: number;
   incorrect: number;
-  earlyBuzzes: number;
   surveyPoints: number;
 }
 
@@ -54,7 +53,6 @@ export const emptyStats = (): PlayerStats => ({
   buzzWins: 0,
   correct: 0,
   incorrect: 0,
-  earlyBuzzes: 0,
   surveyPoints: 0,
 });
 
@@ -99,6 +97,10 @@ export interface Judgment {
   delta: number;
 }
 
+/**
+ * Buzzers open the moment a clue goes up. `reading` is the one time a clue is on
+ * screen with them shut: while the game is paused. Resuming opens them again.
+ */
 export type ClueStage = 'wager' | 'reading' | 'open' | 'answering' | 'result';
 
 export interface ActiveClue {
@@ -106,7 +108,7 @@ export interface ActiveClue {
   idx: number;
   value: number;
   stage: ClueStage;
-  /** Incremented every time the buzzers are armed for this clue. */
+  /** Incremented every time the buzzers open for this clue. */
   cycle: number;
   openedAt: number | null;
   /** End of the collection window in latency-adjusted mode. */
@@ -115,14 +117,16 @@ export interface ActiveClue {
   decided: number | null;
   deadline: number | null;
   timerMs: number | null;
+  /**
+   * The question timer as it stood when someone buzzed in: time left and its full length.
+   * It does not run while an answer is judged, and picks up from here if the buzzers reopen.
+   * Null when the clue has no question timer.
+   */
+  held: { leftMs: number; totalMs: number } | null;
   attempts: BuzzAttempt[];
   answererId: string | null;
   /** Players who can no longer buzz on this clue. */
   excluded: string[];
-  /** playerId -> server time until which their buzzes are rejected. */
-  lockouts: Record<string, number>;
-  /** Players who buzzed before the buzzers were armed. */
-  early: string[];
   wager: { playerId: string; amount: number | null } | null;
   judgments: Judgment[];
   /** Nobody buzzed before the buzz timer ran out. */
@@ -131,13 +135,31 @@ export interface ActiveClue {
   answerTimeUp: boolean;
 }
 
+/** The dice roll that decides who picks first. See engine/dice.ts. */
+export interface DiceRoll {
+  /** 1 for the opening roll; one more for each tie-break. */
+  round: number;
+  phase: 'rolling' | 'landing' | 'tied' | 'won';
+  /** Players still in it. After a tie, only the tied players. */
+  contenders: string[];
+  /** This round's rolls so far. */
+  rolls: Record<string, number>;
+  /** Players beaten in an earlier round, with the roll that put them out. */
+  out: Record<string, number>;
+  winnerId: string | null;
+  /** While rolling: when the server rolls for anyone who has not. Otherwise: when the next phase begins. */
+  deadline: number | null;
+  timerMs: number | null;
+}
+
 export interface TriviaRound {
   mode: 'trivia';
   def: TriviaRoundDef;
-  stage: 'intro' | 'board' | 'clue' | 'done';
+  stage: 'intro' | 'roll' | 'board' | 'clue' | 'done';
   board: BoardCategory[];
   /** The player who picks the next clue (and plays any wager clue). */
   controlId: string | null;
+  roll: DiceRoll | null;
   clue: ActiveClue | null;
 }
 
@@ -243,7 +265,9 @@ export type GameEvent =
   | { type: 'round.started'; index: number }
   | { type: 'clue.selected'; wager: boolean }
   | { type: 'buzz.open' }
-  | { type: 'buzz.early'; playerId: string }
+  | { type: 'dice.rolled'; playerId: string; value: number }
+  | { type: 'dice.tied'; playerIds: string[] }
+  | { type: 'dice.won'; playerId: string }
   | { type: 'buzz.winner'; playerId: string }
   | { type: 'judged'; playerId: string; correct: boolean; delta: number }
   | { type: 'timeup'; what: 'buzz' | 'answer' | 'turn' }
@@ -252,7 +276,8 @@ export type GameEvent =
   | { type: 'round.ended'; index: number }
   | { type: 'fm.turn'; turn: number }
   | { type: 'fm.duplicate'; playerId: string }
-  | { type: 'fm.reveal'; kind: 'answer' | 'points'; points: number }
+  | { type: 'fm.reveal'; kind: 'answer' }
+  | { type: 'fm.reveal'; kind: 'points'; points: number }
   | { type: 'fm.result'; won: boolean }
   | { type: 'final.stage'; stage: 'wager' | 'answering' | 'reveal' }
   | { type: 'final.shown'; playerId: string }

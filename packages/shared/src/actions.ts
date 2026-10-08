@@ -50,14 +50,13 @@ export const HostActionSchema = z.discriminatedUnion('t', [
   act('claim.resolve', { claimId: id, approve: z.boolean() }),
   // trivia
   act('clue.select', { cat: index, idx: index }),
-  act('buzz.open'),
-  act('buzz.close'),
   act('buzz.reset'),
   act('judge', { correct: z.boolean() }),
   act('clue.reveal'),
   act('clue.continue'),
   act('clue.cancel'),
   act('control.set', { id }),
+  act('roll.finish'),
   act('wager.set', { amount: z.number().int().min(0).max(10_000_000) }),
   // fast money
   act('fm.start'),
@@ -76,7 +75,7 @@ export const PlayerActionSchema = z.discriminatedUnion('t', [
   act('ready', { ready: z.boolean() }),
   act('profile', { name: NameSchema, avatar: AvatarSchema }),
   act('team', { teamId: z.number().int().min(0).max(5) }),
-  act('select', { cat: index, idx: index }),
+  act('roll'),
   act('wager', { amount: z.number().int().min(0).max(10_000_000) }),
   act('fm.answer', { q: index, text: z.string().trim().max(80) }),
   act('fm.done'),
@@ -90,13 +89,11 @@ export type PlayerAction = z.infer<typeof PlayerActionSchema>;
 export type BuzzStatus =
   | 'registered' // recorded; a winner may not be decided yet
   | 'duplicate' // already buzzed in this cycle
-  | 'early' // buzzers were not armed yet
-  | 'lockedOut' // still serving an early-buzz lockout
   | 'excluded' // already answered this clue, or eliminated
   | 'closed'; // nothing to buzz for
 
 export interface BuzzAck {
   status: BuzzStatus;
-  /** Server-recorded milliseconds since the buzzers were armed. */
+  /** Server-recorded milliseconds since the buzzers opened. */
   ms?: number;
 }

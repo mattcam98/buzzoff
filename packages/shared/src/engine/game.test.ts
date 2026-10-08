@@ -65,26 +65,38 @@ describe('round flow', () => {
     s.host({ t: 'game.end' });
     expect(s.pub.champions).toEqual(['a1', 'a2']);
   });
+
+  it('does not crown a team with nobody on it', () => {
+    const s = new Sim({ rules: { teams: { enabled: true, names: ['Red', 'Blue'] } }, players: ['ann'] }).start();
+    s.host({ t: 'score.set', id: 'ann', score: -100 }).host({ t: 'game.end' });
+    expect(s.pub.champions).toEqual(['ann']);
+  });
 });
 
 describe('pause, undo and recovery', () => {
-  it('freezes timers while paused and disarms the buzzers', () => {
+  it('freezes timers while paused, and shuts the buzzers until play resumes', () => {
     const s = new Sim({ buzzer: { answerSec: 10 } }).start().open();
     s.buzz('ann');
     s.advance(4000);
     s.host({ t: 'pause', paused: true });
     expect(() => s.host({ t: 'judge', correct: true })).toThrow(/Resume/);
-    expect(() => s.player('bob', { t: 'select', cat: 0, idx: 1 })).toThrow(GameError);
+    expect(() => s.player('bob', { t: 'wager', amount: 0 })).toThrow(/paused/);
     s.advance(60_000);
     expect(s.trivia.clue!.answerTimeUp).toBe(false);
     s.host({ t: 'pause', paused: false });
     expect(s.trivia.clue!.timer!.endsAt - s.now).toBe(6000);
 
     const t = new Sim().start().open();
+    t.advance(20_000);
     t.host({ t: 'pause', paused: true });
     expect(t.buzz('ann').status).toBe('closed');
+    expect(t.you('ann').buzzer.state).toBe('hidden');
+    t.advance(60_000);
+    // Resuming opens them again by itself, as a fresh buzz, with the question timer where it stopped.
     t.host({ t: 'pause', paused: false });
-    expect(t.trivia.clue!.stage).toBe('reading');
+    expect(t.trivia.clue).toMatchObject({ stage: 'open', timer: { endsAt: t.now + 10_000, totalMs: 30_000 } });
+    t.advance(40);
+    expect(t.buzz('ann')).toEqual({ status: 'registered', ms: 40 });
   });
 
   it('restores a snapshot while keeping the current roster', () => {
@@ -106,7 +118,31 @@ describe('pause, undo and recovery', () => {
     expect(s.score('ann')).toBe(200);
   });
 
-  it('comes back from a restart paused, with buzzers disarmed and everyone offline', () => {
+  it('keeps a paused game paused, and a running game running, through an undo', () => {
+    const s = new Sim({ buzzer: { answerSec: 10 } }).start().open();
+    s.buzz('ann');
+    const snapshot = s.state;
+    const takenAt = s.now;
+    s.host({ t: 'judge', correct: false });
+    s.host({ t: 'pause', paused: true });
+    s.advance(3000);
+    s.state = restoreSnapshot(s.state, snapshot, takenAt, s.now);
+    expect(s.pub).toMatchObject({ paused: true, pausedAt: s.now });
+    s.advance(60_000);
+    expect(s.trivia.clue!.answerTimeUp).toBe(false);
+    s.host({ t: 'pause', paused: false });
+    expect(s.trivia.clue!.timer!.endsAt - s.now).toBe(10_000);
+
+    // The other way round: a snapshot taken while paused does not re-pause a running game.
+    const t = new Sim().start().open();
+    t.host({ t: 'pause', paused: true });
+    const paused = t.state;
+    t.host({ t: 'pause', paused: false });
+    t.state = restoreSnapshot(t.state, paused, t.now, t.now);
+    expect(t.pub).toMatchObject({ paused: false, pausedAt: null });
+  });
+
+  it('comes back from a restart paused, with buzzers shut and everyone offline', () => {
     const s = new Sim().start().open();
     s.state = applySystem(s.state, { t: 'presence', id: 'ann', connected: true }, { now: s.now, rand: s.rand, rtt: () => null }).state;
     const savedAt = s.now;
@@ -114,8 +150,11 @@ describe('pause, undo and recovery', () => {
     s.state = applySystem(s.state, { t: 'recover', savedAt }, { now: s.now, rand: s.rand, rtt: () => null }).state;
     expect(s.pub.paused).toBe(true);
     expect(s.pub.players.every((p) => !p.connected)).toBe(true);
-    s.host({ t: 'pause', paused: false });
     expect(s.trivia.clue!.stage).toBe('reading');
+    expect(s.buzz('ann').status).toBe('closed');
+    s.host({ t: 'pause', paused: false });
+    expect(s.trivia.clue!.stage).toBe('open');
+    expect(s.buzz('ann').status).toBe('registered');
   });
 
   it('plays again in the same room with scores reset', () => {

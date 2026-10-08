@@ -174,6 +174,38 @@
   align-items: center;
   gap: 10px;
 }
+.hc-rolls {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px;
+}
+.hc-rolls li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 8px;
+  border-radius: 10px;
+  background: rgb(0 0 0 / 0.22);
+}
+.hc-rolls strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hc-rolls .bz-die {
+  font-size: 28px;
+}
+.hc-rolls li[data-out] {
+  opacity: 0.5;
+}
+.hc-rolls li[data-winner] {
+  background: rgb(255 196 0 / 0.18);
+  box-shadow: inset 0 0 0 1.5px var(--buzz);
+}
 .hc-timer {
   display: flex;
   align-items: center;
@@ -289,11 +321,21 @@
   transform: translateY(2px);
   box-shadow: none;
 }
+/* Paused: the board is untouched, just not live. */
 .hc-board__col button:disabled {
+  cursor: default;
+}
+/* Played: the value stays, dimmed, with whoever won it in the corner. */
+.hc-board__col button[data-used] {
   background: rgb(255 255 255 / 0.03);
   box-shadow: none;
-  color: var(--text-faint);
-  cursor: default;
+  color: rgb(138 132 179 / 0.6);
+}
+.hc-board__won {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  opacity: 0.85;
 }
 .hc-board__col button i {
   position: absolute;

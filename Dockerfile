@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- build: compile the web app and bundle the server
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY packages/shared/package.json packages/shared/
@@ -14,7 +14,7 @@ COPY apps apps
 RUN npm run build
 
 # ---- runtime: production dependencies and the two build outputs, nothing else
-FROM node:22-alpine
+FROM node:24-alpine
 ENV NODE_ENV=production PORT=3210 MEDIA_DIR=/data/media
 WORKDIR /app
 COPY package.json package-lock.json ./

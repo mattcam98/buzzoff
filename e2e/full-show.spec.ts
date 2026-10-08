@@ -14,13 +14,13 @@ const PHONE = { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, has
 const RULES = {
   name: 'E2E Night',
   rounds: [
-    { mode: 'trivia', title: 'Board One', categories: 3, cluesPerCategory: 2, valueMultiplier: 1, wagers: 1, wagerCap: 1000, selection: 'control', eliminateLowest: 0 },
+    { mode: 'trivia', title: 'Board One', categories: 3, cluesPerCategory: 2, valueMultiplier: 1, wagers: 1, wagerCap: 1000, eliminateLowest: 0 },
     { mode: 'final', title: 'Final Trivia', wagerSec: 45, answerSec: 60, wagerCap: 1000 },
     { mode: 'fastMoney', title: 'Fast Money', questions: 2, participants: 'top2', turnSec: 45, extraSecPerTurn: 10, blockDuplicates: true, reveal: 'atEnd', stakes: 'decider', pointMultiplier: 10, target: 0, targetBonus: 0 },
   ],
   buzzer: {
-    arming: 'manual', arbitration: 'first', collectionWindowMs: 150, maxCompensationMs: 150, earlyBuzz: 'lockout', earlyLockoutMs: 250, earlyPenalty: 0,
-    buzzSec: 20, answerSec: 20, reopenOnIncorrect: true, rebuzz: false, incorrectPenaltyPct: 100, teamLockout: true,
+    arbitration: 'first', collectionWindowMs: 150, maxCompensationMs: 150,
+    buzzSec: 30, answerSec: 20, reopenOnIncorrect: true, rebuzz: false, incorrectPenaltyPct: 100, teamLockout: true,
   },
   teams: { enabled: false, names: ['Team Honey', 'Team Sting'] },
   lateJoin: true,
@@ -60,11 +60,23 @@ const buzzer = (page: Page) => page.locator('.play__buzzer');
 
 /**
  * Press a host shortcut once the button it belongs to is on screen. Waiting for
- * the label is what a human does too: you press Space when you see "Arm buzzers".
+ * the label is what a human does too: you press C when you see "Correct".
  */
-async function key(host: Page, shortcut: 'Space' | 'c' | 'x' | 'u' | 'r', label: RegExp) {
+async function key(host: Page, shortcut: 'Space' | 'c' | 'x' | 'u' | 'r' | 'p', label: RegExp) {
   await expect(host.locator(`.hc [data-hotkey="${shortcut.toLowerCase()}"]:not(:disabled)`).filter({ hasText: label })).toBeVisible();
   await host.keyboard.press(shortcut);
+}
+
+/** Play the roll for the first pick the way a room does: every phone that may roll taps its die, tie-breaks included. */
+async function rollOff(tv: Page, phones: Page[]) {
+  await expect(async () => {
+    for (const phone of phones) {
+      // The waiting die bobs, so it is tapped where it is rather than waited on to hold still.
+      const die = phone.locator('.play__dice[data-ready]');
+      if (await die.count()) await die.dispatchEvent('pointerdown');
+    }
+    await expect(tv.locator('.tv-roll[data-phase="won"]')).toBeVisible({ timeout: 250 });
+  }).toPass({ timeout: 90_000 });
 }
 
 test('a full show from lobby to champion', async ({ browser, request }) => {
@@ -108,7 +120,30 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await snap(tv, 'tv-round-intro');
   await snap(cat, 'phone-round-intro');
   await key(host, 'Space', /Begin round/);
-  await expect(tv.locator('.tv-board__cell')).toHaveCount(6);
+
+  // The first pick is rolled for. Cat taps her die; the number the server rolled lands on her phone and on the TV.
+  await expect(tv.getByRole('heading', { name: 'Roll for the first pick' })).toBeVisible();
+  await expect(cat.getByRole('heading', { name: 'Tap to roll' })).toBeVisible();
+  await expect(host.getByRole('heading', { name: 'Waiting for 3 rolls' })).toBeVisible();
+  await expect(host.locator('.hc-board__col button')).toHaveCount(0);
+  await cat.locator('.play__dice').dispatchEvent('pointerdown');
+  const catOnTv = tv.locator('.tv-roll__players li').filter({ hasText: 'Cat' }).locator('.bz-die');
+  await expect(catOnTv).toHaveAttribute('data-face', /^[1-6]$/);
+  await expect(catOnTv).not.toHaveAttribute('data-tumbling');
+  await expect(cat.locator('.play__dice .bz-die')).not.toHaveAttribute('data-tumbling');
+  expect(await cat.locator('.play__dice .bz-die').getAttribute('data-face')).toBe(await catOnTv.getAttribute('data-face'));
+  await expect(cat.locator('.play__dice')).toBeDisabled();
+  await tv.screenshot({ path: `${SHOTS}/tv-roll.png` });
+  await snap(cat, 'phone-rolled');
+
+  // Everyone else rolls (or is rolled for), ties go again by themselves, and the winner gets the board.
+  await rollOff(tv, [ann, bob, cat]);
+  await tv.screenshot({ path: `${SHOTS}/tv-roll-won.png` });
+  const firstPick = (await tv.locator('.tv-roll__players li[data-winner] strong').innerText()).trim();
+  await expect(tv.getByRole('heading', { name: `${firstPick} picks first!` })).toBeVisible();
+  await expect(tv.locator('.tv-board__cell')).toHaveCount(6, { timeout: 15_000 });
+  await expect(tv.locator('.tv-board__picker')).toContainText(firstPick);
+  await expect(host.getByRole('heading', { name: `${firstPick} picks` })).toBeVisible();
   await snap(tv, 'tv-board');
   await snap(cat, 'phone-waiting-for-pick');
   await snap(host, 'host-board');
@@ -117,14 +152,17 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   const plain = host.locator('.hc-board__col button:not([data-wager]):not(:disabled)').first();
   const value = Number((await plain.innerText()).replace(/\D/g, ''));
   await plain.click();
-  await expect(buzzer(bob)).toHaveAttribute('data-state', 'wait');
-  await snap(bob, 'phone-buzzer-locked');
-
-  // Ann jumps the gun and is locked out for a moment.
-  await buzzer(ann).click();
-  await expect(ann.locator('.play__readout')).toContainText('Too early');
-
-  await key(host, 'Space', /Arm buzzers/);
+  // Selecting the clue is all it takes: buzzers are open, with thirty seconds on the clock.
+  await expect(buzzer(bob)).toHaveAttribute('data-state', 'open');
+  await expect(host.locator('.hc-clue__state')).toHaveText('Buzzers are open');
+  await expect(host.getByRole('button', { name: /Arm buzzers|Disarm buzzers/ })).toHaveCount(0);
+  const clock = host.locator('.hc-timer__count');
+  expect(Number(await clock.innerText())).toBeGreaterThan(27);
+  // The host can still buy time or stop the clock.
+  await host.getByRole('button', { name: '+10 s' }).click();
+  await expect.poll(async () => Number(await clock.innerText())).toBeGreaterThan(35);
+  await host.getByRole('button', { name: 'Stop clock' }).click();
+  await expect(clock).toHaveCount(0);
   await expect(buzzer(bob)).toHaveAttribute('data-state', 'open');
   await snap(tv, 'tv-buzzers-open');
   await snap(cat, 'phone-buzzer-open');
@@ -132,10 +170,15 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await expect(buzzer(bob)).toHaveAttribute('data-state', 'yours');
   await expect(buzzer(cat)).toHaveAttribute('data-state', 'taken');
   await buzzer(cat).click({ force: true }).catch(() => undefined); // a late press changes nothing
-  await ann.waitForTimeout(300);
   await buzzer(ann).click({ force: true }).catch(() => undefined);
   await expect(tv.locator('.tv-answering h2')).toHaveText('Bob');
   await expect(bob.locator('.play__readout')).toContainText(/registered at [\d.]+ m?s/);
+  // While Bob's answer is judged the question is off the TV and every phone; the host still has it.
+  await expect(tv.locator('.tv-clue__hidden')).toHaveText('Question hidden while Bob answers');
+  await expect(tv.locator('.tv-clue__q')).toHaveCount(0);
+  await expect(bob.locator('.play__hidden')).toHaveText('Question hidden while you answer');
+  await expect(cat.locator('.play__hidden')).toHaveText('Question hidden while Bob answers');
+  await expect(host.locator('.hc-clue__q')).not.toBeEmpty();
   await snap(tv, 'tv-answering');
   await snap(bob, 'phone-won-buzz');
   await snap(cat, 'phone-beaten');
@@ -148,15 +191,31 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await snap(bob, 'phone-correct');
   await key(host, 'Space', /Back to the board/);
 
-  // A wrong answer costs points and re-arms for the others; undo puts it right.
+  // A wrong answer costs points and opens the buzzers for the others; undo puts it right.
   await host.locator('.hc-board__col button:not([data-wager]):not(:disabled)').first().click();
-  await key(host, 'Space', /Arm buzzers/);
+  await expect(buzzer(cat)).toHaveAttribute('data-state', 'open');
+  // Pausing shuts the buzzers; resuming opens them again without anyone arming anything.
+  await key(host, 'p', /Pause/);
+  await expect(cat.getByRole('heading', { name: 'Paused' })).toBeVisible();
+  await expect(host.locator('.hc-clue__state')).toHaveText('Paused — buzzers open again when you resume');
+  await key(host, 'p', /Resume/);
   await expect(buzzer(cat)).toHaveAttribute('data-state', 'open');
   await buzzer(cat).click();
   await expect(buzzer(cat)).toHaveAttribute('data-state', 'yours');
+  // The question timer stands still while Cat answers.
+  await expect(tv.locator('.tv-clue__timer')).toHaveAttribute('data-held');
+  await expect(ann.locator('.play__hidden')).toBeVisible();
+  await expect(host.locator('.hc-clue__state')).toContainText('timer paused');
   await key(host, 'x', /Incorrect/);
+  // Wrong: the question and the buzzers come back for the others, with the timer carrying on; Cat stays out.
   await expect(buzzer(cat)).toHaveAttribute('data-state', 'out');
   await expect(buzzer(ann)).toHaveAttribute('data-state', 'open');
+  await expect(tv.locator('.tv-clue__q')).not.toBeEmpty();
+  await expect(tv.locator('.tv-clue__timer')).not.toHaveAttribute('data-held');
+  await expect(ann.locator('.play__clue p[data-scroll]')).not.toBeEmpty();
+  const resumed = Number(await host.locator('.hc-timer__count').innerText());
+  expect(resumed).toBeLessThanOrEqual(30);
+  expect(resumed).toBeGreaterThan(15);
   await expect(cat.locator('.play__score .bz-num')).toHaveAttribute('data-negative', 'true');
   await key(host, 'u', /Undo/);
   await expect(buzzer(cat)).toHaveAttribute('data-state', 'yours');
@@ -177,8 +236,24 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await key(host, 'c', /Correct/);
   await key(host, 'Space', /Back to the board/);
 
-  // Bob may pick the next clue from his phone.
-  await expect(bob.getByRole('heading', { name: 'Choose a clue' })).toBeVisible();
+  // Bob has the board. His phone shows it and tells him to call it out; only the host can select a clue.
+  await expect(bob.getByRole('heading', { name: /Tell the host/ })).toBeVisible();
+  await expect(bob.locator('.play__grid b')).toHaveCount(6);
+  await expect(bob.locator('.play__grid b[data-used]')).toHaveCount(3);
+  // Played clues stay on every board with their value, dimmed, and cannot be selected again.
+  for (const used of [bob.locator('.play__grid b[data-used]'), tv.locator('.tv-board__cell[data-used]'), host.locator('.hc-board__col button[data-used]')]) {
+    await expect(used).toHaveCount(3);
+    for (const cell of await used.all()) await expect(cell).toHaveText(/^[\d,]+/); // the value, then the winner's avatar where there is one
+  }
+  for (const cell of await host.locator('.hc-board__col button[data-used]').all()) await expect(cell).toBeDisabled();
+  const dimmed = (page: Page, selector: string) => page.locator(selector).first().evaluate((el) => getComputedStyle(el.querySelector('.bz-num') ?? el).color);
+  expect(await dimmed(tv, '.tv-board__cell[data-used]')).not.toBe(await dimmed(tv, '.tv-board__cell:not([data-used])'));
+  expect(await dimmed(bob, '.play__grid b[data-used]')).not.toBe(await dimmed(bob, '.play__grid b:not([data-used])'));
+  await snap(tv, 'tv-board-played');
+  await snap(host, 'host-board-played');
+  await expect(bob.locator('.play__grid').getByRole('button')).toHaveCount(0);
+  await expect(ann.getByRole('heading', { name: 'Bob is picking' })).toBeVisible();
+  await expect(host.getByText('Bob calls a category and a value; you click it.')).toBeVisible();
   await snap(bob, 'phone-pick-clue');
   host.once('dialog', (d) => d.accept());
   await host.getByRole('button', { name: 'End round' }).click();

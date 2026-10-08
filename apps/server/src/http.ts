@@ -2,46 +2,22 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import {
-  AvatarSchema, BUILTIN_PRESETS, CreateGameSchema, GameError, GameRulesSchema, JoinSchema, PackContentSchema, PackFileSchema,
-  summarizePack,
-  type ApiError, type GameInfo, type Pack, type PackContent, type PackFile, type Preset, type ServerInfo,
+  AppSettingsSchema, BUILTIN_PRESETS, ChangePasswordSchema, CreateGameSchema, GameError, GameRulesSchema, JoinSchema,
+  PackContentSchema, PackFileSchema, summarizePack,
+  type ApiError, type GameInfo, type Pack, type PackContent, type PackFile, type Preset, type ServerInfo, type SettingsView,
 } from '@buzzoff/shared';
+import compression from 'compression';
 import express, { type NextFunction, type Request, type RequestHandler, type Response } from 'express';
 import multer from 'multer';
 import { z } from 'zod';
+import type { AdminAuth, Caller } from './auth';
 import { VERSION, type Config } from './config';
 import { storeMedia } from './media';
 import type { Room } from './room';
 import type { Rooms } from './rooms';
+import type { Audit, Settings } from './settings';
 import type { Store } from './store/types';
-import { hmac, Limiter, log, randomId, safeEqual, sha256 } from './util';
-
-const SESSION_MS = 30 * 24 * 3_600_000;
-
-/** Optional password protection for everything a host can do. */
-export class AdminAuth {
-  private secret: string;
-  constructor(
-    private password: string | undefined,
-    serverSecret: string,
-  ) {
-    // Changing the password invalidates every session issued under the old one.
-    this.secret = sha256(`${serverSecret}:${password ?? ''}`);
-  }
-  get required() {
-    return !!this.password;
-  }
-  login(password: string): string | null {
-    if (!this.password || !safeEqual(sha256(password), sha256(this.password))) return null;
-    const expires = String(Date.now() + SESSION_MS);
-    return `${expires}.${hmac(this.secret, expires)}`;
-  }
-  verify(token: string | undefined): boolean {
-    if (!this.required) return true;
-    const [expires, signature] = (token ?? '').split('.');
-    return !!expires && !!signature && Number(expires) > Date.now() && safeEqual(signature, hmac(this.secret, expires));
-  }
-}
+import { Limiter, log, randomId } from './util';
 
 class HttpError extends Error {
   constructor(
@@ -53,7 +29,14 @@ class HttpError extends Error {
   }
 }
 
+/** The 4xx status carried by an error Express raised about the request, if that is what this is. */
+function clientError(err: unknown): number | null {
+  const status = (err as { status?: unknown } | null)?.status;
+  return typeof status === 'number' && status >= 400 && status < 500 ? status : null;
+}
+
 const bearer = (req: Request) => req.get('authorization')?.replace(/^Bearer\s+/i, '');
+const caller = (req: Request): Caller => ({ ip: req.ip ?? 'unknown', agent: req.get('user-agent') ?? '' });
 
 function parse<T extends z.ZodType>(schema: T, value: unknown): z.infer<T> {
   const result = schema.safeParse(value);
@@ -63,8 +46,8 @@ function parse<T extends z.ZodType>(schema: T, value: unknown): z.infer<T> {
   throw new HttpError(400, 'invalid', `${where}${issue.message}`);
 }
 
-export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; auth: AdminAuth }) {
-  const { config, store, rooms, auth } = deps;
+export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; auth: AdminAuth; settings: Settings; audit: Audit }) {
+  const { config, store, rooms, auth, settings, audit } = deps;
   const app = express();
   app.set('trust proxy', config.TRUST_PROXY);
   app.disable('x-powered-by');
@@ -81,6 +64,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
     });
     next();
   });
+  app.use(compression());
   app.use(express.json({ limit: '4mb' }));
 
   // Generous for people playing, tight for anything that guesses secrets. A whole
@@ -94,7 +78,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
       next(limiter.allow(req.ip ?? 'unknown') ? undefined : new HttpError(429, 'rate_limited', 'Too many requests — wait a moment and try again'));
 
   const admin: RequestHandler = (req, _res, next) =>
-    next(auth.verify(bearer(req)) ? undefined : new HttpError(401, 'unauthorized', 'Host password required'));
+    next(auth.allows(bearer(req)) ? undefined : new HttpError(401, 'unauthorized', 'Host password required'));
 
   const roomOf = (req: Request): Room => rooms.get(String(req.params.code)) ?? notFound('No game with that code');
   const notFound = (message: string): never => {
@@ -114,17 +98,59 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
   });
 
   api.get('/info', (_req, res) => {
-    res.json({ version: VERSION, authRequired: auth.required, publicUrl: config.PUBLIC_URL ?? null } satisfies ServerInfo);
+    const { publicUrl, defaultPresetId } = settings.current;
+    res.json({ version: VERSION, authRequired: auth.required, publicUrl, defaultPresetId } satisfies ServerInfo);
   });
 
-  api.post('/auth/login', limit(logins), (req, res) => {
+  // ------------------------------------------------------------ sign-in
+
+  api.post('/auth/login', limit(logins), async (req, res) => {
     const { password } = parse(z.object({ password: z.string().max(200) }), req.body);
-    const token = auth.login(password);
+    const token = await auth.login(password, caller(req));
     if (!token) throw new HttpError(401, 'unauthorized', 'Wrong password');
     res.json({ token });
   });
   api.get('/auth/check', admin, (_req, res) => {
     res.json({ ok: true });
+  });
+  api.post('/auth/logout', async (req, res) => {
+    await auth.logout(bearer(req), caller(req));
+    res.status(204).end();
+  });
+  // Throttled like signing in: it checks the current password, so it must not become a way to guess it.
+  api.post('/auth/password', admin, limit(logins), async (req, res) => {
+    const { current, next } = parse(ChangePasswordSchema, req.body);
+    const token = await auth.setPassword(current, next, caller(req));
+    if (!token) throw new HttpError(403, 'wrong_password', 'That is not the current password');
+    res.json({ token });
+  });
+  api.post('/auth/sessions/revoke', admin, async (req, res) => {
+    res.json({ ended: await auth.revokeOthers(bearer(req), caller(req)) });
+  });
+
+  // ------------------------------------------------------------ settings
+
+  const settingsView = (req: Request): SettingsView => ({
+    settings: settings.current,
+    passwordSet: auth.required,
+    sessions: auth.list(bearer(req)),
+    server: { version: VERSION, persistent: !!config.DATABASE_URL, trustProxy: config.TRUST_PROXY },
+  });
+
+  api.get('/settings', admin, (req, res) => {
+    res.json(settingsView(req));
+  });
+  api.put('/settings', admin, async (req, res) => {
+    const next = parse(AppSettingsSchema, req.body);
+    const presets = [...BUILTIN_PRESETS, ...(await store.listPresets())];
+    if (next.defaultPresetId && !presets.some((p) => p.id === next.defaultPresetId)) throw new HttpError(400, 'invalid', 'That format no longer exists');
+    const before = settings.current;
+    const changed = await settings.update(next);
+    if (changed.length) audit('settings.changed', caller(req).ip, { changes: Object.fromEntries(changed.map((key) => [key, { from: before[key], to: next[key] }])) });
+    res.json(settingsView(req));
+  });
+  api.get('/audit', admin, async (_req, res) => {
+    res.json(await store.listAudit(100));
   });
 
   // ------------------------------------------------------------ packs
@@ -201,8 +227,10 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
 
   // ------------------------------------------------------------ media
 
-  const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: config.MAX_UPLOAD_MB * 1024 * 1024, files: 1 } });
-  api.post('/media', admin, upload.single('file'), async (req, res) => {
+  // The size limit is read per upload, so changing it in Settings applies to the next file.
+  const upload: RequestHandler = (req, res, next) =>
+    multer({ storage: multer.memoryStorage(), limits: { fileSize: settings.current.maxUploadMb * 1024 * 1024, files: 1 } }).single('file')(req, res, next);
+  api.post('/media', admin, upload, async (req, res) => {
     if (!req.file) throw new HttpError(400, 'invalid', 'No file was uploaded');
     res.status(201).json(await storeMedia(config.MEDIA_DIR, req.file.buffer));
   });
@@ -222,7 +250,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
   });
   api.post('/games/:code/join', limit(joining), (req, res) => {
     const body = parse(JoinSchema, req.body);
-    res.json(roomOf(req).join(body.name, parse(AvatarSchema, body.avatar)));
+    res.json(roomOf(req).join(body.name, body.avatar));
   });
   api.get('/games/:code/claims/:id', (req, res) => {
     const status = roomOf(req).claimStatus(String(req.params.id), String(req.query.secret ?? ''));
@@ -262,7 +290,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
     app.use(express.static(config.WEB_DIR, { index: false, setHeaders: (res, file) => {
       if (file.includes(`${path.sep}assets${path.sep}`)) res.set('Cache-Control', 'public, max-age=31536000, immutable');
     } }));
-    app.get(/^(?!\/(api|media|socket\.io)\/).*/, (_req, res) => {
+    app.get(/^(?!\/(api|assets|media|socket\.io)\/).*/, (_req, res) => {
       res.set('Cache-Control', 'no-cache').sendFile(index);
     });
   } else {
@@ -278,15 +306,19 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
     } else if (err instanceof GameError) {
       status = err.code === 'content' ? 422 : 409;
       body = { error: { code: err.code, message: err.message } };
-    } else if (err instanceof multer.MulterError) {
+    } else if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
       status = 413;
-      body = { error: { code: 'too_large', message: `Files can be at most ${config.MAX_UPLOAD_MB} MB` } };
-    } else if ((err as { type?: string })?.type === 'entity.too.large' || (err as { status?: number })?.status === 400) {
-      status = (err as { status?: number }).status ?? 400;
-      body = { error: { code: 'invalid', message: 'That request could not be read' } };
-    } else if ((err as { status?: number })?.status === 404) {
+      body = { error: { code: 'too_large', message: `Files can be at most ${settings.current.maxUploadMb} MB` } };
+    } else if (err instanceof multer.MulterError) {
+      status = 400;
+      body = { error: { code: 'invalid', message: 'That upload could not be read' } };
+    } else if (clientError(err) === 404) {
       status = 404;
       body = { error: { code: 'not_found', message: 'Not found' } };
+    } else if (clientError(err)) {
+      // Raised by Express itself: an unreadable body, an oversized one, a range a file cannot satisfy.
+      status = clientError(err)!;
+      body = { error: { code: 'invalid', message: 'That request could not be read' } };
     } else {
       log.error('unhandled request error', { method: req.method, path: req.path, err });
     }

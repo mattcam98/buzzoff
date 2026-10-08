@@ -66,7 +66,4 @@ export const storage = {
   /** The exact request a game was created with, so a rematch is one click. */
   gameSetup: (code: string) => read<CreateGameRequest | null>(`buzzoff.setup.${code}`, null),
   setGameSetup: (code: string, setup: CreateGameRequest | null) => write(`buzzoff.setup.${code}`, setup),
-
-  muted: () => read<boolean>('buzzoff.muted', false),
-  setMuted: (muted: boolean) => write('buzzoff.muted', muted),
 };

@@ -5,6 +5,8 @@ export * from './actions';
 export * from './views';
 export * from './normalize';
 export * from './protocol';
+export * from './roomCode';
+export * from './settings';
 export * from './stats';
 export { GameError, type Ctx } from './engine/core';
 export {

@@ -5,9 +5,9 @@
 import type { AddressInfo } from 'node:net';
 import {
   BUILTIN_PRESETS, DEFAULT_BUZZER,
-  type Ack, type BuzzAck, type ClientToServerEvents, type CreateGameResponse, type GameEvent, type GameRules, type HostAction,
-  type HostRoomView, type JoinResponse, type NetStat, type PackSummary, type PlayerAction, type PlayerView, type PublicView,
-  type Role, type ServerToClientEvents,
+  type Ack, type ApiError, type AuditEntry, type BuzzAck, type ClientToServerEvents, type CreateGameResponse, type GameEvent,
+  type GameRules, type HostAction, type HostRoomView, type JoinResponse, type NetStat, type PackSummary, type PlayerAction,
+  type PlayerView, type PublicView, type Role, type ServerInfo, type ServerToClientEvents, type SettingsView,
 } from '@buzzoff/shared';
 import { io, type Socket } from 'socket.io-client';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -21,8 +21,8 @@ setLogLevel('error');
 
 const RULES: GameRules = {
   name: 'Test Night',
-  rounds: [{ mode: 'trivia', title: 'Board', categories: 2, cluesPerCategory: 2, valueMultiplier: 1, wagers: 0, wagerCap: 1000, selection: 'control', eliminateLowest: 0 }],
-  buzzer: { ...DEFAULT_BUZZER, earlyBuzz: 'ignore', buzzSec: 0, answerSec: 0 },
+  rounds: [{ mode: 'trivia', title: 'Board', categories: 2, cluesPerCategory: 2, valueMultiplier: 1, wagers: 0, wagerCap: 1000, eliminateLowest: 0 }],
+  buzzer: { ...DEFAULT_BUZZER, buzzSec: 0, answerSec: 0 },
   teams: { enabled: false, names: ['A', 'B'] },
   lateJoin: true,
   maxPlayers: 30,
@@ -120,8 +120,20 @@ class Harness {
 let h: Harness;
 afterEach(async () => h?.stop());
 
+/** Play the roll for the first pick over the wire, tie-breaks included, the way phones do: by asking to roll. */
+async function rollOff(watcher: Client, players: { client: Client; playerId: string }[]) {
+  const trivia = () => (watcher.pub.round?.mode === 'trivia' ? watcher.pub.round : null);
+  await until(() => trivia()?.stage === 'roll', 'the roll to start');
+  while (trivia()?.stage === 'roll') {
+    const roll = trivia()!.roll!;
+    const due = players.filter((p) => roll.phase === 'rolling' && roll.contenders.includes(p.playerId) && roll.rolls[p.playerId] === undefined);
+    await Promise.all(due.map((p) => p.client.act({ t: 'roll' })));
+    await new Promise((r) => setTimeout(r, 25));
+  }
+}
+
 describe('a game over the wire', () => {
-  it('plays a clue end to end and keeps every screen in sync', async () => {
+  it('plays a clue end to end and keeps every screen in sync', { timeout: 60_000 }, async () => {
     h = await new Harness().start();
     const { code, hostKey } = await h.createGame();
     expect(code).toMatch(/^[BCDFGHJKLMNPQRSTVWXZ]{4}$/);
@@ -135,10 +147,26 @@ describe('a game over the wire', () => {
 
     expect(await host.host({ t: 'start' })).toEqual({ ok: true });
     await host.host({ t: 'round.begin' });
+
+    // The first pick is rolled for. Phones only ask to roll; the number is the server's.
+    await until(() => tv.pub.round?.mode === 'trivia' && tv.pub.round.stage === 'roll', 'the roll to start');
+    expect(await host.host({ t: 'clue.select', cat: 0, idx: 0 })).toMatchObject({ ok: false, error: { code: 'bad_stage' } });
+    await expect(tv.socket.timeout(300).emitWithAck('player:action', { id: 'tv-roll', action: { t: 'roll' } })).rejects.toThrow();
+    await rollOff(tv, [ann, bob]);
+    const rolled = tv.events.filter((e) => e.type === 'dice.rolled');
+    expect(rolled.length).toBeGreaterThanOrEqual(2);
+    for (const e of rolled) expect([1, 2, 3, 4, 5, 6]).toContain(e.value);
+    const won = tv.events.find((e) => e.type === 'dice.won')!;
+    expect(tv.pub.round).toMatchObject({ stage: 'board', controlId: won.playerId, roll: null });
+    // Whoever won out-rolled the other in the deciding round.
+    const [mine, theirs] = [rolled.findLast((e) => e.playerId === won.playerId)!, rolled.findLast((e) => e.playerId !== won.playerId)!];
+    expect(mine.value).toBeGreaterThan(theirs.value);
+
     await host.host({ t: 'clue.select', cat: 0, idx: 0 });
-    await until(() => ann.client.you?.buzzer.state === 'wait', 'buzzer waiting');
-    await host.host({ t: 'buzz.open' });
-    await until(() => ann.client.you?.buzzer.state === 'open');
+    await until(() => ann.client.you?.buzzer.state === 'open', 'buzzers open on selection');
+    const question = tv.pub.round!.mode === 'trivia' ? tv.pub.round!.clue!.question : null;
+    expect(question).toBeTruthy();
+    expect(await host.host({ t: 'buzz.close' } as unknown as HostAction)).toMatchObject({ ok: false, error: { code: 'invalid' } });
 
     const first = await ann.client.buzz();
     const second = await bob.client.buzz();
@@ -152,8 +180,12 @@ describe('a game over the wire', () => {
     expect(clue!.attempts[1].deltaMs).toBeGreaterThan(0);
     expect(clue!.answer).toBeNull();
     expect(bob.client.you!.buzzer).toMatchObject({ state: 'taken', rank: 2 });
+    // While Ann's answer is judged the question is gone from every screen but the host's.
+    expect(clue!.question).toBeNull();
+    for (const view of [tv.pub, ann.client.pub, bob.client.pub]) expect(JSON.stringify(view)).not.toContain(question!);
     // The answer is on the host's screen and nowhere else.
     const secret = host.hostView!.round!.mode === 'trivia' ? host.hostView!.round! : null;
+    expect(secret!.clue).toMatchObject({ question });
     expect(secret!.clue!.answer).toBeTruthy();
     for (const view of [tv.pub, ann.client.pub, bob.client.pub, ann.client.you]) {
       expect(JSON.stringify(view)).not.toMatch(/"accept"|"notes"|"answer":"/);
@@ -176,8 +208,9 @@ describe('a game over the wire', () => {
     const players = await Promise.all(Array.from({ length: 12 }, (_, i) => h.join(code, `P${i}`)));
     await host.host({ t: 'start' });
     await host.host({ t: 'round.begin' });
+    // Skip the roll for the first pick: handing someone the board ends it.
+    await host.host({ t: 'control.set', id: players[0].playerId });
     await host.host({ t: 'clue.select', cat: 0, idx: 0 });
-    await host.host({ t: 'buzz.open' });
 
     // Everyone buzzes three times in the same tick.
     const acks = await Promise.all(players.flatMap((p) => [p.client.buzz(), p.client.buzz(), p.client.buzz()]));
@@ -204,6 +237,44 @@ describe('a game over the wire', () => {
     await host.host(adjust, 'another-id');
     await until(() => host.pub.players[0].score > 0);
     expect(host.pub.players[0].score).toBe(200);
+  });
+
+  it('answers a retried message that was rejected with the same rejection', async () => {
+    h = await new Harness().start();
+    const { code, hostKey } = await h.createGame();
+    const host = await h.connect('host', code, hostKey);
+    const first = await host.host({ t: 'judge', correct: true }, 'rejected-id');
+    const retry = await host.host({ t: 'judge', correct: true }, 'rejected-id');
+    expect(first.ok).toBe(false);
+    expect(retry).toEqual(first);
+  });
+
+  it('does not let two people who pick the same name at once share a seat', async () => {
+    h = await new Harness().start();
+    const { code } = await h.createGame();
+    const join = () => h.api<JoinResponse>('POST', `/games/${code}/join`, { name: 'Sam', avatar: AVATAR });
+    const [first, second] = [await join(), await join()];
+    expect(first.body.status).toBe('joined');
+    expect(second.status).toBe(409);
+    if (first.body.status !== 'joined') throw new Error('expected a seat');
+    await h.connect('player', code, first.body.token);
+  });
+
+  it('leaves Socket.IO its own path and answers bad uploads and ranges with the right status', async () => {
+    h = await new Harness().start();
+    expect((await fetch(`${h.url}/socket.io/?EIO=4&transport=polling`)).status).toBe(400);
+    const form = new FormData();
+    form.append('file', new Blob([Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex')]), 'dot.png');
+    const upload = await fetch(`${h.url}/api/media`, { method: 'POST', body: form });
+    const { url } = (await upload.json()) as { url: string };
+    expect((await fetch(h.url + url, { headers: { range: 'bytes=9999-' } })).status).toBe(416);
+
+    const heic = new FormData();
+    heic.append('file', new Blob([Buffer.from('00000018667479706865696300000000', 'hex')]), 'photo.mp4');
+    expect((await fetch(`${h.url}/api/media`, { method: 'POST', body: heic })).status).toBe(409);
+    const stray = new FormData();
+    stray.append('wrong-field', new Blob(['x']), 'x.png');
+    expect((await fetch(`${h.url}/api/media`, { method: 'POST', body: stray })).status).toBe(400);
   });
 
   it('measures round-trip time on the server and reports it', async () => {
@@ -236,9 +307,16 @@ describe('authorisation', () => {
     await expect(tv.socket.timeout(300).emitWithAck('buzz')).rejects.toThrow();
 
     const host = await h.connect('host', code, hostKey);
+    // Only the host can put a clue in play; a player asking for one is not understood, whoever has the board.
+    await host.host({ t: 'start' });
+    await host.host({ t: 'round.begin' });
+    await host.host({ t: 'control.set', id: ann.playerId });
+    expect(await ann.client.act({ t: 'select', cat: 0, idx: 0 } as unknown as PlayerAction)).toMatchObject({ ok: false, error: { code: 'invalid' } });
+    expect(host.pub.round).toMatchObject({ stage: 'board', clue: null });
+
     expect(await host.host({ t: 'score.adjust', id: ann.playerId, delta: 1.5 } as HostAction)).toMatchObject({ ok: false, error: { code: 'invalid' } });
     expect(await host.host({ t: 'made.up' } as unknown as HostAction)).toMatchObject({ ok: false, error: { code: 'invalid' } });
-    expect(await host.host({ t: 'judge', correct: true })).toMatchObject({ ok: false, error: { code: 'bad_stage' } });
+    expect(await host.host({ t: 'judge', correct: true })).toMatchObject({ ok: false, error: { code: 'no_clue' } });
     expect(host.pub.players[0].score).toBe(0);
 
     expect((await h.api('GET', `/games/${code}/host`, undefined, { 'x-host-key': 'nope' })).status).toBe(403);
@@ -268,6 +346,112 @@ describe('authorisation', () => {
     for (let i = 0; i < 10; i++) statuses.push((await h.api('POST', '/auth/login', { password: `guess${i}` })).status);
     expect(statuses.slice(0, 6)).toEqual(Array(6).fill(401));
     expect(statuses.slice(6)).toEqual(Array(4).fill(429));
+  });
+});
+
+describe('settings and sign-in', () => {
+  const bearer = (token: string) => ({ authorization: `Bearer ${token}` });
+  const login = (password: string) => h.api<{ token: string }>('POST', '/auth/login', { password });
+
+  it('imports the old environment settings once, after which the database is in charge', async () => {
+    const store = new MemoryStore();
+    const env = { BUZZOFF_ADMIN_PASSWORD: 'hunter2', PUBLIC_URL: 'https://buzz.example.com/', ROOM_TTL_HOURS: '2', MAX_UPLOAD_MB: '10' };
+    h = await new Harness().start(store, env);
+    expect((await h.api<ServerInfo>('GET', '/info')).body).toMatchObject({ authRequired: true, publicUrl: 'https://buzz.example.com' });
+    const { token } = (await login('hunter2')).body;
+    const view = await h.api<SettingsView>('GET', '/settings', undefined, bearer(token));
+    expect(view.body.settings).toMatchObject({ roomTtlHours: 2, finishedTtlHours: 2, maxUploadMb: 10, sessionDays: 30 });
+    const { code } = await h.createGame(RULES, bearer(token));
+    await h.stop();
+
+    // The environment says something else now; nobody is listening to it any more.
+    const [saved] = await store.loadGames();
+    await store.saveGame({ ...saved, updatedAt: Date.now() - 3 * 3_600_000 });
+    h = await new Harness().start(store, { BUZZOFF_ADMIN_PASSWORD: 'something-else', PUBLIC_URL: 'https://other.example', ROOM_TTL_HOURS: '500' });
+    expect((await h.api<ServerInfo>('GET', '/info')).body.publicUrl).toBe('https://buzz.example.com');
+    expect((await login('something-else')).status).toBe(401);
+    // The session outlived the restart, and the game idle for longer than the saved two hours did not.
+    expect((await h.api('GET', '/packs', undefined, bearer(token))).status).toBe(200);
+    expect((await h.api('GET', `/games/${code}`)).status).toBe(404);
+
+    const [session] = await store.listSessions();
+    await store.saveSession({ ...session, expiresAt: Date.now() - 1 });
+    await h.stop();
+    h = await new Harness().start(store);
+    expect((await h.api('GET', '/packs', undefined, bearer(token))).status).toBe(401);
+  });
+
+  it('applies changes at once, validates them, and turns away anyone who is not signed in', async () => {
+    h = await new Harness().start(new MemoryStore(), { BUZZOFF_ADMIN_PASSWORD: 'hunter2' });
+    for (const [method, path] of [['GET', '/settings'], ['PUT', '/settings'], ['GET', '/audit'], ['POST', '/auth/password'], ['POST', '/auth/sessions/revoke']]) {
+      expect((await h.api(method, path, method === 'GET' ? undefined : {})).status).toBe(401);
+    }
+    const auth = bearer((await login('hunter2')).body.token);
+    const { settings } = (await h.api<SettingsView>('GET', '/settings', undefined, auth)).body;
+
+    for (const bad of [
+      { publicUrl: 'javascript:alert(1)' }, { publicUrl: 'https://buzz.example.com/some/path' }, { publicUrl: 'https://user:pw@buzz.example.com' },
+      { roomTtlHours: 0 }, { maxUploadMb: 9999 }, { sessionDays: 1.5 }, { defaultPresetId: 'no-such-format' },
+    ]) {
+      expect((await h.api('PUT', '/settings', { ...settings, ...bad }, auth)).status).toBe(400);
+    }
+    const next = { ...settings, publicUrl: 'http://192.168.1.50:3210', defaultPresetId: 'full-show', maxUploadMb: 1, sessionDays: 7 };
+    expect((await h.api('PUT', '/settings', next, auth)).status).toBe(200);
+    expect((await h.api<ServerInfo>('GET', '/info')).body).toMatchObject({ publicUrl: 'http://192.168.1.50:3210', defaultPresetId: 'full-show' });
+
+    const big = new FormData();
+    big.append('file', new Blob([Buffer.concat([Buffer.from('89504e470d0a1a0a', 'hex'), Buffer.alloc(1_500_000)])]), 'big.png');
+    const upload = await fetch(`${h.url}/api/media`, { method: 'POST', body: big, headers: auth });
+    expect(upload.status).toBe(413);
+    expect(((await upload.json()) as ApiError).error.message).toContain('1 MB');
+
+    expect((await h.api('POST', '/auth/password', { current: 'hunter2', next: 'short' }, auth)).status).toBe(400);
+    await login('hunter2');
+    const { sessions } = (await h.api<SettingsView>('GET', '/settings', undefined, auth)).body;
+    expect(sessions.map((s) => s.current)).toEqual([false, true]);
+    expect(sessions[0].expiresAt - sessions[0].createdAt).toBe(7 * 24 * 3_600_000);
+
+    const log = (await h.api<AuditEntry[]>('GET', '/audit', undefined, auth)).body;
+    expect(log.find((e) => e.action === 'settings.changed')!.detail).toEqual({
+      changes: {
+        publicUrl: { from: null, to: 'http://192.168.1.50:3210' }, defaultPresetId: { from: null, to: 'full-show' },
+        maxUploadMb: { from: 25, to: 1 }, sessionDays: { from: 30, to: 7 },
+      },
+    });
+  });
+
+  it('sets, changes and protects the password, storing nothing that could be used to sign in', async () => {
+    const store = new MemoryStore();
+    h = await new Harness().start(store);
+    expect((await h.api<SettingsView>('GET', '/settings')).body.passwordSet).toBe(false);
+
+    const first = (await h.api<{ token: string }>('POST', '/auth/password', { next: 'correct horse' })).body.token;
+    expect((await h.api<ServerInfo>('GET', '/info')).body.authRequired).toBe(true);
+    expect((await h.api('GET', '/packs')).status).toBe(401);
+    expect((await h.api('GET', '/packs', undefined, bearer(first))).status).toBe(200);
+    const second = (await login('correct horse')).body.token;
+
+    // Being signed in is not enough to change the password.
+    expect((await h.api('POST', '/auth/password', { next: 'battery staple' }, bearer(first))).status).toBe(403);
+    const changed = await h.api<{ token: string }>('POST', '/auth/password', { current: 'correct horse', next: 'battery staple' }, bearer(first));
+    expect(changed.status).toBe(200);
+    const third = changed.body.token;
+    for (const token of [first, second]) expect((await h.api('GET', '/packs', undefined, bearer(token))).status).toBe(401);
+    expect((await login('correct horse')).status).toBe(401);
+    const fourth = (await login('battery staple')).body.token;
+
+    expect((await h.api('POST', '/auth/sessions/revoke', {}, bearer(third))).body).toEqual({ ended: 1 });
+    expect((await h.api('GET', '/packs', undefined, bearer(fourth))).status).toBe(401);
+
+    const log = (await h.api<AuditEntry[]>('GET', '/audit', undefined, bearer(third))).body;
+    expect(log.map((e) => e.action)).toEqual(['sessions.revoked', 'login', 'login.failed', 'password.changed', 'login.failed', 'login', 'password.set']);
+    const everythingSaved = JSON.stringify([log, await store.listSessions(), await store.getSetting('admin_password'), await store.getSetting('app')]);
+    for (const secret of ['correct horse', 'battery staple', first, second, third, fourth]) expect(everythingSaved).not.toContain(secret);
+    expect(await store.getSetting('admin_password')).toMatch(/^scrypt\$15\$8\$1\$/);
+    expect(JSON.stringify((await h.api('GET', '/settings', undefined, bearer(third))).body)).not.toContain('scrypt');
+
+    expect((await h.api('POST', '/auth/logout', {}, bearer(third))).status).toBe(204);
+    expect((await h.api('GET', '/packs', undefined, bearer(third))).status).toBe(401);
   });
 });
 
@@ -344,7 +528,6 @@ describe('reconnection and recovery', () => {
     await host.host({ t: 'round.begin' });
     await host.host({ t: 'score.adjust', id: ann.playerId, delta: 700 });
     await host.host({ t: 'clue.select', cat: 1, idx: 1 });
-    await host.host({ t: 'buzz.open' });
     await ann.client.buzz();
     await h.stop();
 

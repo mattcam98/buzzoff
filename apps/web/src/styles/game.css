@@ -76,3 +76,46 @@
 [data-negative] {
   color: var(--bad);
 }
+
+/* ---------------------------------------------------------------- the die */
+
+/* One em square; its size is whatever font-size it is given. Nine cells, of which a face lights some. */
+.bz-die {
+  display: inline-grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  width: 1em;
+  height: 1em;
+  padding: 0.13em;
+  border-radius: 0.2em;
+  background: linear-gradient(145deg, #fff, #dcd6ff);
+  box-shadow: 0 0.06em 0 #a79fe0, 0 0.12em 0.2em rgb(0 0 0 / 0.35), inset 0 0.03em 0 #fff;
+  flex: none;
+}
+.bz-die > i {
+  margin: 14%;
+  border-radius: 50%;
+  background: var(--ink-900);
+  opacity: 0;
+}
+.bz-die[data-face='0'] {
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 0.04em var(--line-strong);
+}
+.bz-die[data-face='1'] > :nth-child(5),
+.bz-die[data-face='2'] > :is(:nth-child(1), :nth-child(9)),
+.bz-die[data-face='3'] > :is(:nth-child(1), :nth-child(5), :nth-child(9)),
+.bz-die[data-face='4'] > :is(:nth-child(1), :nth-child(3), :nth-child(7), :nth-child(9)),
+.bz-die[data-face='5'] > :is(:nth-child(1), :nth-child(3), :nth-child(5), :nth-child(7), :nth-child(9)),
+.bz-die[data-face='6'] > :is(:nth-child(1), :nth-child(3), :nth-child(4), :nth-child(6), :nth-child(7), :nth-child(9)) {
+  opacity: 1;
+}
+.bz-die[data-tumbling] {
+  animation: bz-tumble 0.36s linear infinite;
+}
+@keyframes bz-tumble {
+  0% { transform: rotate(0) translateY(0); }
+  25% { transform: rotate(90deg) translateY(-0.12em); }
+  50% { transform: rotate(180deg) translateY(0); }
+  75% { transform: rotate(270deg) translateY(-0.08em); }
+  100% { transform: rotate(360deg) translateY(0); }
+}

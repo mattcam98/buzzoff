@@ -9,8 +9,8 @@ import { move, NumField, RowTools, SelectField, ToggleField } from './fields';
 const MODE_LABEL: Record<RoundDef['mode'], string> = { trivia: 'Trivia board', fastMoney: 'Fast Money', final: 'Final question' };
 export const MODE_ICON: Record<RoundDef['mode'], string> = { trivia: '▦', fastMoney: '⚡', final: '✍' };
 
-/** Starting points for a newly added round, borrowed from the flagship preset. */
-const TEMPLATE = Object.fromEntries(BUILTIN_PRESETS[0].rules.rounds.map((r) => [r.mode, r])) as {
+/** Starting points for a newly added round: the flagship preset's first round of each kind. */
+const TEMPLATE = Object.fromEntries(BUILTIN_PRESETS[0].rules.rounds.toReversed().map((r) => [r.mode, r])) as {
   trivia: TriviaRoundDef;
   fastMoney: FastMoneyRoundDef;
   final: FinalRoundDef;
@@ -83,13 +83,6 @@ export function RulesEditor({ rules, onChange }: Props) {
         <h3>Buzzer</h3>
         <div className="mg-fields">
           <SelectField
-            label="Arming"
-            value={b.arming}
-            onChange={(arming) => setBuzzer({ arming })}
-            options={[['manual', 'Host arms them'], ['auto', 'Automatic']]}
-            help={b.arming === 'manual' ? 'You arm the buzzers once you have read the clue.' : 'Armed the moment the clue appears.'}
-          />
-          <SelectField
             label="Who wins the buzz"
             value={b.arbitration}
             onChange={(arbitration) => setBuzzer({ arbitration })}
@@ -106,18 +99,7 @@ export function RulesEditor({ rules, onChange }: Props) {
               <NumField label="Max adjustment (ms)" value={b.maxCompensationMs} min={0} max={300} onChange={(maxCompensationMs) => setBuzzer({ maxCompensationMs })} help="The most any one buzz can be moved forward." />
             </>
           )}
-          <SelectField
-            label="Buzzing too early"
-            value={b.earlyBuzz}
-            onChange={(earlyBuzz) => setBuzzer({ earlyBuzz })}
-            options={[['ignore', 'Ignored'], ['lockout', 'Brief lockout'], ['penalty', 'Lockout + penalty']]}
-            help="What happens to a buzz before the buzzers are armed."
-          />
-          {b.earlyBuzz !== 'ignore' && (
-            <NumField label="Early lockout (ms)" value={b.earlyLockoutMs} min={0} max={5000} onChange={(earlyLockoutMs) => setBuzzer({ earlyLockoutMs })} />
-          )}
-          {b.earlyBuzz === 'penalty' && <NumField label="Early penalty (points)" value={b.earlyPenalty} min={0} max={100000} onChange={(earlyPenalty) => setBuzzer({ earlyPenalty })} />}
-          <NumField label="Time to buzz (s)" value={b.buzzSec} min={0} max={120} onChange={(buzzSec) => setBuzzer({ buzzSec })} help="0 turns the timer off." />
+          <NumField label="Question timer (s)" value={b.buzzSec} min={0} max={120} onChange={(buzzSec) => setBuzzer({ buzzSec })} help="Buzzers open as soon as you select a clue, and players have this long to buzz. 0 turns the timer off." />
           <NumField label="Time to answer (s)" value={b.answerSec} min={0} max={120} onChange={(answerSec) => setBuzzer({ answerSec })} help="0 turns the timer off. The host always makes the call." />
           <NumField label="Wrong-answer penalty (%)" value={b.incorrectPenaltyPct} min={0} max={100} onChange={(incorrectPenaltyPct) => setBuzzer({ incorrectPenaltyPct })} help="Share of the clue value deducted. 0 means no penalty." />
         </div>
@@ -182,13 +164,6 @@ function TriviaFields({ def, set }: { def: TriviaRoundDef; set: (p: Partial<Triv
       <NumField label="Value multiplier" value={def.valueMultiplier} min={1} max={20} onChange={(valueMultiplier) => set({ valueMultiplier })} help="2 doubles every clue value." />
       <NumField label="Hidden wagers" value={def.wagers} min={0} max={6} onChange={(wagers) => set({ wagers })} help="Wager clues placed at random on the board." />
       <NumField label="Wager cap" value={def.wagerCap} min={0} max={1000000} step={100} onChange={(wagerCap) => set({ wagerCap })} help="Players may wager up to their score, or this if they have less." />
-      <SelectField
-        label="Who picks clues"
-        value={def.selection}
-        onChange={(selection) => set({ selection })}
-        options={[['control', 'Host or player'], ['host', 'Host only']]}
-        help={def.selection === 'control' ? 'The player in control can also pick from their phone.' : 'Players call it out; you tap it.'}
-      />
       <NumField label="Eliminate lowest" value={def.eliminateLowest} min={0} max={20} onChange={(eliminateLowest) => set({ eliminateLowest })} help="Knock out this many trailing players when the round ends." />
     </>
   );

@@ -1,27 +1,15 @@
 /** The in-round scenes of the shared screen, one per game mode. */
-import type { FastMoneyPublic, FinalPublic, Media, TriviaPublic } from '@buzzoff/shared';
+import type { FastMoneyPublic, FinalPublic, TriviaPublic } from '@buzzoff/shared';
 import { fmtDelta, fmtScore } from '../../lib/format';
-import { BuzzLadder, Seconds, textScale } from '../../ui/game';
+import { BuzzLadder, Die, MediaView, rollLeaders, Seconds, textScale } from '../../ui/game';
 import { Avatar, cx, TimerBar } from '../../ui/kit';
 import type { SceneProps } from '../Tv';
-
-export function MediaView({ media, className }: { media: Media; className?: string }) {
-  if (media.kind === 'image') return <img className={cx('bz-media', className)} src={media.url} alt="" />;
-  if (media.kind === 'audio') {
-    return (
-      <div className={cx('bz-media bz-media--audio', className)}>
-        <span aria-hidden>🎧</span>
-        <audio src={media.url} autoPlay controls />
-      </div>
-    );
-  }
-  return <video className={cx('bz-media', className)} src={media.url} autoPlay controls playsInline />;
-}
 
 // ---------------------------------------------------------------- trivia
 
 export function TriviaScene({ pub, snap, players, round }: SceneProps & { round: TriviaPublic }) {
   const clue = round.clue;
+  if (round.stage === 'roll' && round.roll) return <RollScene pub={pub} snap={snap} players={players} roll={round.roll} />;
   if (!clue) return <Board round={round} players={players} />;
 
   const answerer = clue.answererId ? players[clue.answererId] : null;
@@ -49,14 +37,19 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
         <span className="tv-clue__value bz-num">{clue.isWager ? `Wager ${fmtScore(clue.wager?.amount ?? 0)}` : fmtScore(clue.value)}</span>
       </header>
 
-      <div className="tv-clue__body" data-media={clue.media?.kind}>
+      <div className="tv-clue__body" data-media={clue.media?.kind} data-hidden={clue.question === null || undefined}>
         {clue.media && <MediaView media={clue.media} className="tv-clue__media" />}
-        <p className="tv-clue__q" data-scale={textScale(clue.question ?? '')}>
-          {clue.question}
-        </p>
+        {clue.question === null ? (
+          // Nobody reads on while an answer is judged; the question comes back if the buzzers reopen.
+          <p className="tv-clue__hidden">Question hidden while {answerer?.name ?? 'the answer'} {answerer ? 'answers' : 'is judged'}</p>
+        ) : (
+          <p className="tv-clue__q" data-scale={textScale(clue.question)}>
+            {clue.question}
+          </p>
+        )}
       </div>
 
-      <TimerBar timer={clue.timer} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} className="tv-clue__timer" />
+      <TimerBar timer={clue.timer} held={clue.held} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} className="tv-clue__timer" />
 
       <div className="tv-clue__status" key={`${clue.stage}-${clue.answererId}-${clue.judgments.length}`}>
         {clue.stage === 'reading' && (
@@ -112,6 +105,42 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
   );
 }
 
+/** The roll for the first pick: every player's die, side by side. */
+function RollScene({ pub, snap, players, roll }: SceneProps & { roll: NonNullable<TriviaPublic['roll']> }) {
+  const tied = roll.phase === 'tied' ? rollLeaders(roll) : [];
+  const names = (ids: string[]) => ids.map((id) => players[id]?.name).filter(Boolean).join(' & ');
+  const winner = roll.winnerId ? players[roll.winnerId] : null;
+  const title = winner ? `${winner.name} picks first!` : tied.length ? 'It’s a tie!' : roll.round === 1 ? 'Roll for the first pick' : `Tie-break: ${names(roll.contenders)}`;
+  const shown = pub.players.filter((p) => roll.contenders.includes(p.id) || roll.out[p.id] !== undefined);
+
+  return (
+    <div className="tv-roll" data-phase={roll.phase}>
+      <header className="tv-roll__head">
+        <span className="bz-eyebrow">{roll.round === 1 ? 'Who picks first?' : `Tie-break ${roll.round - 1}`}</span>
+        <h2 key={title} className="bz-pop">
+          {title}
+        </h2>
+        <p>
+          {winner ? 'Call your category and points.' : tied.length ? `${names(tied)} roll again.` : 'Tap your phone to roll. Highest roll wins.'}
+          {roll.phase === 'rolling' && <Seconds pub={pub} snap={snap} className="tv-roll__count" />}
+        </p>
+      </header>
+      <ul className="tv-roll__players" data-count={shown.length > 8 ? 'many' : shown.length > 4 ? 'some' : 'few'}>
+        {shown.map((p) => {
+          const inIt = roll.contenders.includes(p.id);
+          return (
+            <li key={p.id} data-out={!inIt || (tied.length > 0 && !tied.includes(p.id)) || undefined} data-winner={p.id === roll.winnerId || undefined}>
+              <Avatar avatar={p.avatar} size="3.4em" dim={!inIt} />
+              <strong>{p.name}</strong>
+              <Die value={roll.rolls[p.id] ?? roll.out[p.id] ?? null} className="tv-roll__die" />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 function Board({ round, players }: { round: TriviaPublic; players: SceneProps['players'] }) {
   const picker = round.controlId ? players[round.controlId] : null;
   const rows = Math.max(...round.board.map((c) => c.clues.length));
@@ -126,7 +155,9 @@ function Board({ round, players }: { round: TriviaPublic; players: SceneProps['p
         {round.board.flatMap((cat, c) =>
           cat.clues.map((cl, k) => (
             <div key={`${c}-${k}`} className="tv-board__cell" data-used={cl.used || undefined} style={{ gridColumn: c + 1, gridRow: k + 2, animationDelay: `${200 + (c + k) * 45}ms` }}>
-              {cl.used ? cl.winnerId && players[cl.winnerId] ? <Avatar avatar={players[cl.winnerId].avatar} size="1.5em" /> : null : <span className="bz-num">{fmtScore(cl.value)}</span>}
+              {/* A played clue keeps its value, dimmed, with whoever won it in the corner. */}
+              <span className="bz-num">{fmtScore(cl.value)}</span>
+              {cl.used && cl.winnerId && players[cl.winnerId] && <Avatar avatar={players[cl.winnerId].avatar} size="1em" className="tv-board__won" />}
             </div>
           )),
         )}
@@ -157,7 +188,7 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
     round.outcome?.targetHit ? 'Jackpot!' : round.outcome?.targetHit === false ? 'So close…' : 'Final totals';
 
   return (
-    <div className="tv-fm" data-stage={round.stage} data-crowd={crowd || undefined}>
+    <div className="tv-fm" data-stage={round.stage}>
       <header className="tv-fm__head">
         <h2 key={banner} className="bz-pop">{banner}</h2>
         {round.timer && (
@@ -288,7 +319,7 @@ function CrowdBoard({ round, players, focusQ }: { round: FastMoneyPublic; player
           const cell = round.cells[id]?.[focusQ];
           if (!p || !cell || cell.text === null) return null;
           return (
-            <li key={id} data-zero={cell.points === 0 || undefined} data-scored={cell.points !== null || undefined} style={{ animationDelay: `${i * 60}ms` }}>
+            <li key={id} data-zero={cell.points === 0 || undefined} style={{ animationDelay: `${i * 60}ms` }}>
               <Avatar avatar={p.avatar} size="1.7em" />
               <span>
                 <small>{p.name}</small>

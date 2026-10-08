@@ -41,7 +41,7 @@ export function Avatar({ avatar, size = 48, dim, className }: { avatar: AvatarDa
 }
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'default' | 'primary' | 'good' | 'bad' | 'pink' | 'ghost';
+  variant?: 'default' | 'primary' | 'good' | 'bad' | 'ghost';
   size?: 's' | 'm' | 'l';
   block?: boolean;
   icon?: boolean;
@@ -65,9 +65,26 @@ export function Button({ variant = 'default', size = 'm', block, icon, hotkey, c
   );
 }
 
-/** A draining bar for a server-side deadline. */
-export function TimerBar({ timer, clockOffset, pausedAt, className }: { timer: TimerView | null; clockOffset: number; pausedAt: number | null; className?: string }) {
-  const count = useCountdown(timer, clockOffset, pausedAt);
+/**
+ * A draining bar for a server-side deadline. Given `held`, it shows a timer that is
+ * not running: stopped at what is left, waiting to carry on.
+ */
+export function TimerBar({ timer, held, clockOffset, pausedAt, className }: {
+  timer: TimerView | null;
+  held?: { leftMs: number; totalMs: number } | null;
+  clockOffset: number;
+  pausedAt: number | null;
+  className?: string;
+}) {
+  const count = useCountdown(held ? null : timer, clockOffset, pausedAt);
+  if (held) {
+    const seconds = Math.ceil(held.leftMs / 1000);
+    return (
+      <div className={cx('bz-timer', className)} data-held role="timer" aria-label={`Question timer paused with ${seconds} seconds left`}>
+        <i style={{ transform: `scaleX(${Math.min(1, held.leftMs / held.totalMs)})` }} />
+      </div>
+    );
+  }
   if (!count) return null;
   return (
     <div className={cx('bz-timer', className)} data-low={count.remaining < 3000 || undefined} role="timer" aria-label={`${count.seconds} seconds left`}>
@@ -76,17 +93,34 @@ export function TimerBar({ timer, clockOffset, pausedAt, className }: { timer: T
   );
 }
 
-export function Modal({ title, children, onClose, width }: { title: string; children: ReactNode; onClose: () => void; width?: number }) {
+export function Modal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
   const panel = useRef<HTMLDivElement>(null);
+  const close = useRef(onClose);
+  close.current = onClose;
+  // Runs once per dialog: focus moves in when it opens, stays in while it is open, and goes back when it closes.
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    const opener = document.activeElement;
+    const controls = () => [...(panel.current?.querySelectorAll<HTMLElement>('input, select, textarea, button, a[href]') ?? [])].filter((el) => !el.matches(':disabled'));
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') return close.current();
+      if (e.key !== 'Tab') return;
+      const list = controls();
+      const [from, to] = e.shiftKey ? [list[0], list.at(-1)] : [list.at(-1), list[0]];
+      if (document.activeElement === from || !panel.current?.contains(document.activeElement)) {
+        e.preventDefault();
+        to?.focus();
+      }
+    };
     window.addEventListener('keydown', onKey);
-    panel.current?.querySelector<HTMLElement>('input, select, textarea, button')?.focus();
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+    controls()[0]?.focus();
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      if (opener instanceof HTMLElement) opener.focus();
+    };
+  }, []);
   return (
     <div className="bz-modal" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div ref={panel} className="bz-modal__panel" role="dialog" aria-modal="true" aria-label={title} style={width ? ({ '--modal-width': `${width}px` } as CSSProperties) : undefined}>
+      <div ref={panel} className="bz-modal__panel" role="dialog" aria-modal="true" aria-label={title}>
         <h2>{title}</h2>
         {children}
       </div>

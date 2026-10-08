@@ -10,7 +10,7 @@
 import type { Media } from './content';
 import type { MatchKind } from './normalize';
 import type { BuzzerRules, FastMoneyRoundDef, GameMode } from './rules';
-import type { Avatar, ClueStage, FmOutcome, GamePhase, Judgment, PlayerStats } from './state';
+import type { Avatar, ClueStage, DiceRoll, FmOutcome, GamePhase, Judgment, PlayerStats } from './state';
 
 export interface TimerView {
   endsAt: number;
@@ -51,10 +51,12 @@ export interface PublicAttempt {
 export interface TriviaPublic {
   mode: 'trivia';
   title: string;
-  stage: 'intro' | 'board' | 'clue' | 'done';
+  stage: 'intro' | 'roll' | 'board' | 'clue' | 'done';
   multiplier: number;
-  selection: 'host' | 'control';
+  /** The player whose turn it is to call the next clue. Only the host can put one in play. */
   controlId: string | null;
+  /** The dice roll for the first pick, while it is being played. Nothing about it is secret. */
+  roll: (Pick<DiceRoll, 'round' | 'phase' | 'contenders' | 'rolls' | 'out' | 'winnerId'> & { timer: TimerView | null }) | null;
   board: { title: string; blurb?: string; clues: { value: number; used: boolean; winnerId: string | null }[] }[];
   clue: {
     cat: number;
@@ -68,12 +70,13 @@ export interface TriviaPublic {
     media: Media | null;
     answer: string | null;
     timer: TimerView | null;
+    /** The question timer, standing still while an answer is judged: how much is left of how much. */
+    held: { leftMs: number; totalMs: number } | null;
     /** True while buzzes are being collected and no winner is known yet. */
     collecting: boolean;
     attempts: PublicAttempt[];
     answererId: string | null;
     excluded: string[];
-    early: string[];
     judgments: Judgment[];
     wager: { playerId: string; amount: number | null; max: number } | null;
     timedOut: boolean;
@@ -152,7 +155,7 @@ export interface PublicView {
   stats: Record<string, PlayerStats> | null;
   /** Winning player ids once the game has finished. */
   champions: string[] | null;
-  buzzer: Pick<BuzzerRules, 'arbitration' | 'earlyBuzz' | 'arming' | 'rebuzz'>;
+  buzzer: Pick<BuzzerRules, 'arbitration' | 'rebuzz'>;
 }
 
 // ---------------------------------------------------------------- host
@@ -197,7 +200,6 @@ export interface HostView {
 
 export type BuzzerState =
   | 'hidden' // nothing to buzz for
-  | 'wait' // clue is up but buzzers are not armed; pressing now is an early buzz
   | 'open'
   | 'out' // cannot buzz on this clue
   | 'buzzed' // registered, winner not decided yet
@@ -206,8 +208,6 @@ export type BuzzerState =
 
 export interface BuzzerView {
   state: BuzzerState;
-  /** Server time until which an early-buzz lockout rejects your buzzes. */
-  until: number | null;
   /** Your registered buzz for the current cycle, if any. */
   ms: number | null;
   deltaMs: number | null;
@@ -217,8 +217,6 @@ export interface BuzzerView {
 export interface PlayerView {
   id: string;
   buzzer: BuzzerView;
-  /** You are in control and may pick the next clue. */
-  canSelect: boolean;
   /** A wager is being asked of you. */
   wager: { min: number; max: number; amount: number | null } | null;
   fastMoney: {

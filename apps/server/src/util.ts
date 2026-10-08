@@ -1,4 +1,4 @@
-import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
+import { createHash, randomBytes, randomInt, scrypt, timingSafeEqual, type ScryptOptions } from 'node:crypto';
 import { ROOM_CODE_ALPHABET, ROOM_CODE_LENGTH } from '@buzzoff/shared';
 
 /**
@@ -32,11 +32,18 @@ export const log = {
 
 // ---------------------------------------------------------------- secrets
 
+/**
+ * A fraction in [0, 1) from the operating system's secure generator. The engine draws every
+ * dice roll and shuffle from this, so no outcome can be predicted or nudged from outside.
+ */
+const RANDOM_RANGE = 2 ** 48 - 1; // the widest range randomInt takes
+export const random = () => randomInt(RANDOM_RANGE) / RANDOM_RANGE;
+
 export const randomToken = (bytes = 24) => randomBytes(bytes).toString('base64url');
 export const randomId = (bytes = 6) => randomBytes(bytes).toString('base64url');
 export const sha256 = (value: string) => createHash('sha256').update(value).digest('hex');
 
-export function safeEqual(a: string, b: string): boolean {
+function safeEqual(a: string, b: string): boolean {
   const x = Buffer.from(a);
   const y = Buffer.from(b);
   return x.length === y.length && timingSafeEqual(x, y);
@@ -46,7 +53,34 @@ export function safeEqual(a: string, b: string): boolean {
 export const tokenMatches = (token: string | undefined, hash: string | undefined) =>
   !!token && !!hash && safeEqual(sha256(token), hash);
 
-export const hmac = (secret: string, value: string) => createHmac('sha256', secret).update(value).digest('base64url');
+const derive = (password: string, salt: Buffer, length: number, options: ScryptOptions) =>
+  new Promise<Buffer>((resolve, reject) => scrypt(password, salt, length, options, (err, key) => (err ? reject(err) : resolve(key))));
+
+/** scrypt cost: 2^15 blocks of 8 KiB, about 32 MB and a twentieth of a second per guess. */
+const SCRYPT = { logN: 15, r: 8, p: 1 };
+const scryptOptions = (logN: number, r: number, p: number): ScryptOptions => ({ N: 2 ** logN, r, p, maxmem: 256 * 2 ** logN * r });
+
+/**
+ * Hash a password for storage. The cost parameters travel with the hash, so they can be raised later
+ * without invalidating existing passwords. The work happens off the main thread: a game in progress
+ * must never stall because someone is signing in.
+ */
+export async function hashPassword(password: string): Promise<string> {
+  const salt = randomBytes(16);
+  const key = await derive(password, salt, 32, scryptOptions(SCRYPT.logN, SCRYPT.r, SCRYPT.p));
+  return ['scrypt', SCRYPT.logN, SCRYPT.r, SCRYPT.p, salt.toString('base64url'), key.toString('base64url')].join('$');
+}
+
+export async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  const [scheme, logN, r, p, salt, expected] = stored.split('$');
+  if (scheme !== 'scrypt' || !salt || !expected) return false;
+  const want = Buffer.from(expected, 'base64url');
+  const cost = [Number(logN), Number(r), Number(p)] as const;
+  // Refuse absurd parameters rather than let a tampered row tie up the server.
+  if (!cost.every(Number.isInteger) || cost[0] < 10 || cost[0] > 20 || cost[1] < 1 || cost[1] > 16 || cost[2] < 1 || cost[2] > 4) return false;
+  const got = await derive(password, Buffer.from(salt, 'base64url'), want.length, scryptOptions(...cost));
+  return got.length === want.length && timingSafeEqual(got, want);
+}
 
 export function randomRoomCode(): string {
   let code = '';
@@ -117,11 +151,11 @@ export class Limiter {
 export class RecentIds {
   private seen = new Set<string>();
   constructor(private size = 500) {}
-  /** Returns true the first time an id is offered and false for repeats. */
-  add(id: string): boolean {
-    if (this.seen.has(id)) return false;
+  has(id: string): boolean {
+    return this.seen.has(id);
+  }
+  add(id: string): void {
     this.seen.add(id);
     if (this.seen.size > this.size) this.seen.delete(this.seen.values().next().value!);
-    return true;
   }
 }

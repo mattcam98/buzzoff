@@ -1,7 +1,14 @@
-import type { GameResult, Pack, Preset } from '@buzzoff/shared';
+import type { AuditAction, AuditEntry, GameResult, Pack, Preset } from '@buzzoff/shared';
 import pg from 'pg';
 import { log } from '../util';
-import type { SavedGame, Store } from './types';
+import { AUDIT_KEEP, type AdminSession, type SavedGame, type Store } from './types';
+
+/**
+ * Postgres text cannot hold NUL and jsonb rejects unpaired surrogates. Either can arrive in anything a
+ * person types (a player's name, an answer), and one in a game's state would fail every later save of it.
+ */
+const clean = (text: string) => text.toWellFormed().replaceAll('\u0000', '');
+const json = (value: unknown) => JSON.stringify(value, (_key, v) => (typeof v === 'string' ? clean(v) : v));
 
 /**
  * Schema migrations, applied in order inside a transaction. Append new
@@ -38,6 +45,22 @@ const MIGRATIONS: string[] = [
   CREATE TABLE settings (
     key    text PRIMARY KEY,
     value  text NOT NULL
+  );
+  `,
+  `
+  CREATE TABLE admin_sessions (
+    token_hash  text PRIMARY KEY,
+    created_at  timestamptz NOT NULL,
+    expires_at  timestamptz NOT NULL,
+    ip          text NOT NULL,
+    agent       text NOT NULL
+  );
+  CREATE TABLE audit_log (
+    id      bigserial PRIMARY KEY,
+    at      timestamptz NOT NULL,
+    action  text NOT NULL,
+    ip      text NOT NULL,
+    detail  jsonb NOT NULL
   );
   `,
 ];
@@ -103,7 +126,7 @@ export class PostgresStore implements Store {
     await this.pool.query(
       `INSERT INTO packs (id, title, data, updated_at) VALUES ($1, $2, $3, to_timestamp($4 / 1000.0))
        ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, data = EXCLUDED.data, updated_at = EXCLUDED.updated_at`,
-      [pack.id, pack.title, JSON.stringify(pack), pack.updatedAt],
+      [pack.id, clean(pack.title), json(pack), pack.updatedAt],
     );
   }
   async deletePack(id: string) {
@@ -116,7 +139,7 @@ export class PostgresStore implements Store {
   async savePreset(preset: Preset) {
     await this.pool.query('INSERT INTO presets (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data', [
       preset.id,
-      JSON.stringify(preset),
+      json(preset),
     ]);
   }
   async deletePreset(id: string) {
@@ -128,7 +151,7 @@ export class PostgresStore implements Store {
     await this.pool.query(
       `INSERT INTO games (code, state, secrets, updated_at) VALUES ($1, $2, $3, to_timestamp($4 / 1000.0))
        ON CONFLICT (code) DO UPDATE SET state = EXCLUDED.state, secrets = EXCLUDED.secrets, updated_at = EXCLUDED.updated_at`,
-      [game.code, JSON.stringify(game.state), JSON.stringify(game.secrets), game.updatedAt],
+      [game.code, json(game.state), json(game.secrets), game.updatedAt],
     );
   }
   async loadGames() {
@@ -145,7 +168,7 @@ export class PostgresStore implements Store {
     await this.pool.query(
       `INSERT INTO results (id, finished_at, data) VALUES ($1, to_timestamp($2 / 1000.0), $3)
        ON CONFLICT (id) DO UPDATE SET finished_at = EXCLUDED.finished_at, data = EXCLUDED.data`,
-      [result.id, result.finishedAt, JSON.stringify(result)],
+      [result.id, result.finishedAt, json(result)],
     );
   }
   async listResults(limit: number) {
@@ -160,5 +183,46 @@ export class PostgresStore implements Store {
   }
   async setSetting(key: string, value: string) {
     await this.pool.query('INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value', [key, value]);
+  }
+  async deleteSetting(key: string) {
+    await this.pool.query('DELETE FROM settings WHERE key = $1', [key]);
+  }
+
+  async listSessions() {
+    const rows = await this.rows<{ token_hash: string; created_at: Date; expires_at: Date; ip: string; agent: string }>(
+      'SELECT token_hash, created_at, expires_at, ip, agent FROM admin_sessions',
+    );
+    return rows.map((r) => ({ tokenHash: r.token_hash, createdAt: r.created_at.getTime(), expiresAt: r.expires_at.getTime(), ip: r.ip, agent: r.agent }));
+  }
+  async saveSession(session: AdminSession) {
+    await this.pool.query(
+      `INSERT INTO admin_sessions (token_hash, created_at, expires_at, ip, agent)
+       VALUES ($1, to_timestamp($2 / 1000.0), to_timestamp($3 / 1000.0), $4, $5)
+       ON CONFLICT (token_hash) DO UPDATE SET expires_at = EXCLUDED.expires_at`,
+      [session.tokenHash, session.createdAt, session.expiresAt, clean(session.ip), clean(session.agent)],
+    );
+  }
+  async deleteSessions(except?: string) {
+    await this.pool.query('DELETE FROM admin_sessions WHERE token_hash <> $1', [except ?? '']);
+  }
+  async deleteSession(tokenHash: string) {
+    await this.pool.query('DELETE FROM admin_sessions WHERE token_hash = $1', [tokenHash]);
+  }
+
+  async addAudit(entry: Omit<AuditEntry, 'id'>) {
+    await this.pool.query(
+      `WITH added AS (
+         INSERT INTO audit_log (at, action, ip, detail) VALUES (to_timestamp($1 / 1000.0), $2, $3, $4) RETURNING id
+       )
+       DELETE FROM audit_log WHERE id <= (SELECT id FROM added) - $5`,
+      [entry.at, entry.action, clean(entry.ip), json(entry.detail), AUDIT_KEEP],
+    );
+  }
+  async listAudit(limit: number) {
+    const rows = await this.rows<{ id: string; at: Date; action: AuditAction; ip: string; detail: Record<string, unknown> }>(
+      'SELECT id, at, action, ip, detail FROM audit_log ORDER BY id DESC LIMIT $1',
+      [limit],
+    );
+    return rows.map((r) => ({ id: Number(r.id), at: r.at.getTime(), action: r.action, ip: r.ip, detail: r.detail }));
   }
 }

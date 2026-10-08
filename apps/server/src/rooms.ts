@@ -3,12 +3,11 @@ import {
   applySystem, assembleRounds, createGame, GameError, normalizeRoomCode,
   type ContentPool, type CreateGameRequest, type CreateGameResponse,
 } from '@buzzoff/shared';
-import type { Config } from './config';
 import { Room, type AppServer } from './room';
+import type { Settings } from './settings';
 import type { Store } from './store/types';
-import { clock, log, randomRoomCode, randomToken, sha256 } from './util';
+import { clock, log, random, randomRoomCode, randomToken, sha256 } from './util';
 
-const FINISHED_TTL_MS = 6 * 3_600_000;
 const SWEEP_INTERVAL_MS = 10 * 60_000;
 const MAX_ROOMS = 500;
 
@@ -19,7 +18,7 @@ export class Rooms {
   constructor(
     private io: AppServer,
     private store: Store,
-    private config: Config,
+    private settings: Settings,
   ) {
     this.sweeper = setInterval(() => void this.sweep(), SWEEP_INTERVAL_MS).unref();
   }
@@ -29,8 +28,8 @@ export class Rooms {
   }
 
   private isExpired(updatedAt: number, finished: boolean) {
-    const ttl = this.config.ROOM_TTL_HOURS * 3_600_000;
-    return Date.now() - updatedAt > (finished ? Math.min(ttl, FINISHED_TTL_MS) : ttl);
+    const { roomTtlHours, finishedTtlHours } = this.settings.current;
+    return Date.now() - updatedAt > (finished ? finishedTtlHours : roomTtlHours) * 3_600_000;
   }
 
   /** Bring saved games back after a restart. They return paused, so no timer runs unattended. */
@@ -40,9 +39,14 @@ export class Rooms {
         await this.store.deleteGame(saved.code);
         continue;
       }
-      const env = { now: clock(), rand: Math.random, rtt: () => null };
-      const state = applySystem(saved.state, { t: 'recover', savedAt: saved.updatedAt }, env).state;
-      this.rooms.set(saved.code, new Room(this.io, this.store, { ...saved, state }));
+      try {
+        const env = { now: clock(), rand: random, rtt: () => null };
+        const state = applySystem(saved.state, { t: 'recover', savedAt: saved.updatedAt }, env).state;
+        this.rooms.set(saved.code, new Room(this.io, this.store, { ...saved, state }));
+      } catch (err) {
+        // One unreadable game must not keep every other game, or the server, from coming back.
+        log.error('could not restore game', { code: saved.code, err });
+      }
     }
     if (this.rooms.size) log.info('restored games', { count: this.rooms.size, codes: [...this.rooms.keys()] });
   }
@@ -60,7 +64,7 @@ export class Rooms {
   async create(req: CreateGameRequest): Promise<CreateGameResponse> {
     if (this.rooms.size >= MAX_ROOMS) throw new GameError('busy', 'This server is hosting too many games right now');
     const { pool, titles } = await this.content(req.packIds);
-    const rounds = assembleRounds(req.rules, pool, req.picks, Math.random);
+    const rounds = assembleRounds(req.rules, pool, req.picks, random);
 
     // 160,000 possible codes; retry on the rare collision with a live room.
     let code = randomRoomCode();
@@ -79,7 +83,7 @@ export class Rooms {
 
   async rematch(room: Room, req: CreateGameRequest) {
     const { pool, titles } = await this.content(req.packIds);
-    room.rematch(req.rules, assembleRounds(req.rules, pool, req.picks, Math.random), titles);
+    room.rematch(req.rules, assembleRounds(req.rules, pool, req.picks, random), titles);
     log.info('rematch', { code: room.code });
   }
 

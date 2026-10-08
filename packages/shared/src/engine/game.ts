@@ -14,7 +14,7 @@ import {
   emptyStats, type Avatar, type BoardCategory, type GameEvent, type GameState, type Player, type RoundState,
 } from '../state';
 import type { HostView, PlayerView, PublicView, RoundPublic, RoundSecret, TeamView } from '../views';
-import { activePlayers, fail, GameError, playersOf, ranked, requirePlayer, type Ctx, type Mode } from './core';
+import { activePlayers, fail, playersOf, ranked, requirePlayer, type Ctx, type Mode } from './core';
 import { fastMoney } from './fastMoney';
 import { final } from './final';
 import { trivia } from './trivia';
@@ -100,7 +100,7 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
       // Wagers hide below the top row so the opening clue is never one.
       const slots = board.flatMap((cat, c) => cat.clues.map((_, k) => ({ c, k }))).filter((s) => s.k > 0 || def.cluesPerCategory === 1);
       for (const s of shuffle(slots, rand).slice(0, def.wagers)) board[s.c].clues[s.k].wager = true;
-      return { mode: 'trivia', def, stage: 'intro', board, controlId: null, clue: null };
+      return { mode: 'trivia', def, stage: 'intro', board, controlId: null, roll: null, clue: null };
     }
     if (def.mode === 'final') {
       const [cat] = draw(pool.categories, usedCategories, reserved, picked, 1, 'category', rand);
@@ -147,7 +147,7 @@ function finishGame(g: GameState, ctx: Ctx): void {
   g.pausedAt = null;
   g.finishedAt = ctx.now;
   if (!g.champions) {
-    const teams = teamViews(g);
+    const teams = teamViews(g)?.filter((t) => t.playerIds.length);
     if (teams) {
       const best = Math.max(...teams.map((t) => t.score));
       g.champions = teams.filter((t) => t.score === best).flatMap((t) => t.playerIds);
@@ -226,6 +226,7 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
           if (round) modeOf(round).shift(round, ctx.now - (g.pausedAt ?? ctx.now));
           g.paused = false;
           g.pausedAt = null;
+          if (round) modeOf(round).resume(g, round, ctx);
         }
         ctx.events.push({ type: 'paused', paused: g.paused });
         return;
@@ -256,12 +257,7 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
         return;
       case 'teams.shuffle': {
         if (!g.rules.teams.enabled) fail('no_teams', 'Teams are not enabled for this game');
-        const ids = [...g.order];
-        for (let i = ids.length - 1; i > 0; i--) {
-          const j = Math.floor(ctx.rand() * (i + 1));
-          [ids[i], ids[j]] = [ids[j], ids[i]];
-        }
-        ids.forEach((id, i) => (g.players[id].teamId = i % g.teamNames.length));
+        shuffle(g.order, ctx.rand).forEach((id, i) => (g.players[id].teamId = i % g.teamNames.length));
         return;
       }
       case 'score.adjust':
@@ -279,6 +275,8 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
         g.roundIndex += 1;
         g.phase = 'round';
         g.lastEliminated = [];
+        // A decider only settles the game if nothing is played after it.
+        g.champions = null;
         ctx.events.push({ type: 'round.intro', index: g.roundIndex });
         return;
       case 'undo':
@@ -448,14 +446,19 @@ export function restoreSnapshot(current: GameState, snapshot: GameState, takenAt
     }
   }
   g.order = current.order.filter((id) => g.players[id]);
+  g.lastEliminated = g.lastEliminated.filter((id) => g.players[id]);
+  if (g.champions) g.champions = g.champions.filter((id) => g.players[id]);
   g.lobbyLocked = current.lobbyLocked;
   const round = currentRound(g);
   if (round) {
-    // Timers keep whatever time they had left; an armed buzzer is disarmed.
+    // Timers keep whatever time they had left; open buzzers start afresh.
     modeOf(round).interrupt(round);
     modeOf(round).shift(round, now - (g.paused && g.pausedAt !== null ? g.pausedAt : takenAt));
   }
-  if (g.paused) g.pausedAt = now;
+  // Pausing is not an undoable step, so the game stays as paused or as running as it is now.
+  g.paused = current.paused;
+  g.pausedAt = g.paused ? now : null;
+  if (round && !g.paused) modeOf(round).resume(g, round, { now, events: [] });
   g.seq = current.seq + 1;
   return g;
 }
@@ -500,8 +503,6 @@ export function publicView(g: GameState): PublicView {
     champions: g.phase === 'finished' ? g.champions : null,
     buzzer: {
       arbitration: g.rules.buzzer.arbitration,
-      earlyBuzz: g.rules.buzzer.earlyBuzz,
-      arming: g.rules.buzzer.arming,
       rebuzz: g.rules.buzzer.rebuzz,
     },
   };
@@ -516,8 +517,7 @@ export function playerView(g: GameState, playerId: string): PlayerView {
   const round = currentRound(g);
   const base: PlayerView = {
     id: playerId,
-    buzzer: { state: 'hidden', until: null, ms: null, deltaMs: null, rank: null },
-    canSelect: false,
+    buzzer: { state: 'hidden', ms: null, deltaMs: null, rank: null },
     wager: null,
     fastMoney: null,
     final: null,
@@ -525,5 +525,3 @@ export function playerView(g: GameState, playerId: string): PlayerView {
   if (!round || g.paused || !g.players[playerId] || g.players[playerId].eliminated) return base;
   return { ...base, ...modeOf(round).playerView(g, round, playerId) };
 }
-
-export { GameError };

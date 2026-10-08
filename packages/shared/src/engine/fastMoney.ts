@@ -17,7 +17,7 @@ import { activePlayers, addScore, fail, ranked, setTimer, shiftTime, timerView, 
 const emptyResponse = (): FmResponse => ({ text: '', match: null, points: 0, matchedBy: null });
 
 /** The order in which (turn, question) cells are revealed. */
-export function fmCells(r: FastMoneyRound): { turn: number; q: number }[] {
+function fmCells(r: FastMoneyRound): { turn: number; q: number }[] {
   const cells: { turn: number; q: number }[] = [];
   const turns = r.turns.length;
   const questions = r.surveys.length;
@@ -174,13 +174,12 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
         if (r.revealStep >= revealLimit(r)) fail('reveal_done', 'Everything has been revealed');
         const cell = fmCells(r)[Math.floor(r.revealStep / 2)];
         const group = r.turns[cell.turn];
-        const points = Math.max(0, ...group.map((id) => r.responses[id]?.[cell.q].points ?? 0));
         r.revealStep += 1;
         if (r.revealStep % 2 === 0) {
           for (const id of group) credit(g, r, id, r.responses[id]?.[cell.q].points ?? 0);
-          ctx.events.push({ type: 'fm.reveal', kind: 'points', points });
+          ctx.events.push({ type: 'fm.reveal', kind: 'points', points: Math.max(0, ...group.map((id) => r.responses[id]?.[cell.q].points ?? 0)) });
         } else {
-          ctx.events.push({ type: 'fm.reveal', kind: 'answer', points });
+          ctx.events.push({ type: 'fm.reveal', kind: 'answer' });
         }
         return true;
       }
@@ -227,6 +226,7 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
     r.deadline = shiftTime(r.deadline, delta);
   },
   interrupt() {},
+  resume() {},
 
   playerRemoved(_g, r, playerId) {
     // Turn slots are kept (possibly empty) so the reveal order never shifts.

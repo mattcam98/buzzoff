@@ -1,7 +1,7 @@
 /** Typed wrapper around the HTTP API. */
 import type {
-  ClaimStatus, CreateGameRequest, CreateGameResponse, GameInfo, GameResult, GameRules, JoinRequest, JoinResponse, Media, Pack,
-  PackContent, PackFile, PackSummary, Preset, ServerInfo,
+  AppSettings, AuditEntry, ClaimStatus, CreateGameRequest, CreateGameResponse, GameInfo, GameResult, GameRules, JoinRequest,
+  JoinResponse, Media, Pack, PackContent, PackFile, PackSummary, Preset, ServerInfo, SettingsView,
 } from '@buzzoff/shared';
 import { storage } from './storage';
 
@@ -46,6 +46,14 @@ export const api = {
   info: () => request<ServerInfo>('GET', '/info'),
   login: (password: string) => request<{ token: string }>('POST', '/auth/login', { password }),
   checkAuth: () => request<{ ok: true }>('GET', '/auth/check'),
+  logout: () => request<void>('POST', '/auth/logout'),
+  /** `current` is needed whenever a password is already set. The reply is a fresh session for this browser. */
+  changePassword: (current: string | undefined, next: string) => request<{ token: string }>('POST', '/auth/password', { current, next }),
+  signOutOthers: () => request<{ ended: number }>('POST', '/auth/sessions/revoke'),
+
+  settings: () => request<SettingsView>('GET', '/settings'),
+  saveSettings: (settings: AppSettings) => request<SettingsView>('PUT', '/settings', settings),
+  audit: () => request<AuditEntry[]>('GET', '/audit'),
 
   packs: () => request<PackSummary[]>('GET', '/packs'),
   pack: (id: string) => request<Pack>('GET', `/packs/${id}`),

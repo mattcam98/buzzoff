@@ -293,7 +293,6 @@ html.app-fixed body {
 .bz-btn--primary { --btn-bg: var(--buzz); --btn-edge: var(--buzz-deep); --btn-fg: var(--buzz-ink); }
 .bz-btn--good { --btn-bg: var(--good); --btn-edge: var(--good-deep); --btn-fg: #04220f; }
 .bz-btn--bad { --btn-bg: var(--bad); --btn-edge: var(--bad-deep); --btn-fg: #2a0308; }
-.bz-btn--pink { --btn-bg: var(--pink); --btn-edge: #c22a63; --btn-fg: #2a0314; }
 .bz-btn--ghost {
   --btn-bg: transparent;
   box-shadow: inset 0 0 0 1.5px var(--line-strong);
@@ -508,6 +507,10 @@ html.app-fixed body {
 .bz-timer[data-low='true'] > i {
   background: linear-gradient(90deg, var(--bad), var(--pink));
 }
+/* Standing still while an answer is judged. */
+.bz-timer[data-held] > i {
+  background: var(--ink-400);
+}
 
 /* ---------------------------------------------------------------- toasts & modal */
 
@@ -548,7 +551,7 @@ html.app-fixed body {
   animation: bz-fade 0.15s ease;
 }
 .bz-modal__panel {
-  width: min(100%, var(--modal-width, 520px));
+  width: min(100%, 520px);
   max-height: calc(var(--app-height, 100dvh) - 32px);
   overflow: auto;
   padding: 24px;

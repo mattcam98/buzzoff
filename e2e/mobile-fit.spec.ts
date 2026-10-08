@@ -83,19 +83,25 @@ test('a crowded room: long lists scroll inside themselves, never the page', asyn
   await game.host({ t: 'start' });
   for (const [i, id] of ids.entries()) await game.host({ t: 'score.set', id, score: (i + 1) * 100 });
   await game.host({ t: 'round.begin' });
-  // The opening pick is drawn at random; hand it to someone else so this phone shows the scoreboard.
+  // The roll for the first pick, with sixteen dice to show, fits too.
+  await expect(page.getByRole('heading', { name: 'Tap to roll' })).toBeVisible();
+  await expect(page.locator('.play__rolls li')).toHaveCount(16);
+  await expectFits(page, 'crowd-roll', undefined, SHOTS);
+  // Whoever has the pick, every phone shows the board, to look at and not to press.
   await game.host({ t: 'control.set', id: ids[0] });
-  await expect(page.locator('.play__board li')).toHaveCount(16);
+  await expect(page.getByRole('heading', { name: 'Player 1 is picking' })).toBeVisible();
+  await expect(page.locator('.play__grid').getByRole('button')).toHaveCount(0);
   await expectFits(page, 'crowd-board', undefined, SHOTS);
+
+  await game.host({ t: 'round.end' });
+  await expect(page.getByRole('heading', { name: /You finished 16th/ })).toBeVisible();
+  await expect(page.locator('.play__board li')).toHaveCount(16);
+  await expectFits(page, 'crowd-finished', undefined, SHOTS);
 
   // Your own row stays on screen however far down the table you are.
   const mine = page.locator('.play__board li[data-me]');
   await expect(mine).toBeInViewport();
   await page.locator('.play__board').evaluate((el) => el.scrollTo(0, el.scrollHeight));
   await expect(mine).toBeInViewport();
-
-  await game.host({ t: 'round.end' });
-  await expect(page.getByRole('heading', { name: /You finished 16th/ })).toBeVisible();
-  await expectFits(page, 'crowd-finished', undefined, SHOTS);
   game.close();
 });
