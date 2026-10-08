@@ -21,9 +21,9 @@
   gap: 10px 22px;
   padding: 12px clamp(16px, 4vw, 32px);
   padding-top: max(12px, env(safe-area-inset-top));
-  background: rgb(13 11 34 / 0.8);
+  background: var(--bar-bg);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(14px);
+  backdrop-filter: var(--bar-blur);
 }
 .mg-nav {
   display: flex;
@@ -297,12 +297,14 @@
   gap: 24px;
   padding: clamp(24px, 5vw, 48px);
   border-radius: var(--radius-l);
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--glass-edge);
+  /* The same glass as every card, with the hero's two glows laid over it. */
   background:
     radial-gradient(80% 120% at 100% 0%, rgb(255 196 0 / 0.2), transparent 60%),
     radial-gradient(70% 100% at 0% 100%, rgb(255 77 141 / 0.18), transparent 60%),
-    var(--ink-700);
-  box-shadow: var(--shadow);
+    var(--glass-bg);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
   overflow: hidden;
 }
 .mg-hero .bz-eyebrow {
@@ -476,9 +478,11 @@
   height: 100%;
   padding: 16px 44px 16px 16px;
   border-radius: var(--radius);
-  border: 1.5px solid var(--line-strong);
-  background: rgb(255 255 255 / 0.04);
-  transition: border-color 0.15s ease, background 0.15s ease, transform 0.2s var(--spring);
+  border: 1px solid var(--glass-edge);
+  background: var(--glass-bg);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, transform 0.2s var(--spring);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
 }
 .mg-choice:hover .mg-choice__body {
   border-color: var(--ink-400);
@@ -494,9 +498,11 @@
   background: rgb(255 255 255 / 0.12);
   transition: background 0.15s ease, transform 0.2s var(--spring);
 }
+/* Chosen: the same card, tinted, with its edge doubled into a ring so it reads at a glance. */
 .mg-choice > input:checked + .mg-choice__body {
   border-color: var(--buzz);
-  background: color-mix(in srgb, var(--buzz) 9%, transparent);
+  background: linear-gradient(color-mix(in srgb, var(--buzz) 10%, transparent) 0 0), var(--glass-bg);
+  box-shadow: 0 0 0 1px var(--buzz), var(--glass-shadow);
 }
 .mg-choice > input:checked + .mg-choice__body::after {
   background: var(--buzz) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Cpath d='m6.5 12.5 3 3 6-7' fill='none' stroke='%231a1300' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
@@ -538,9 +544,6 @@
   padding-bottom: 96px;
 }
 
-.mg-fold {
-  box-shadow: none;
-}
 .mg-fold > summary {
   display: flex;
   align-items: center;
@@ -636,7 +639,7 @@
   padding: 14px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: rgb(0 0 0 / 0.2);
+  background: var(--well-bg);
 }
 .mg-round__head {
   display: flex;
@@ -670,7 +673,7 @@
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgb(0 0 0 / 0.2);
+  background: var(--well-bg);
 }
 .mg-picks legend {
   display: flex;
@@ -730,9 +733,9 @@
   bottom: 0;
   z-index: 25;
   padding: 12px clamp(16px, 4vw, 32px) max(12px, env(safe-area-inset-bottom));
-  background: rgb(13 11 34 / 0.88);
+  background: var(--bar-bg);
   border-top: 1px solid var(--line-strong);
-  backdrop-filter: blur(14px);
+  backdrop-filter: var(--bar-blur);
 }
 .mg-dock__inner {
   width: min(100%, 936px);
@@ -831,8 +834,8 @@
   margin: 0 -8px;
   padding: 10px 8px;
   border-radius: var(--radius);
-  background: rgb(13 11 34 / 0.86);
-  backdrop-filter: blur(12px);
+  background: var(--bar-bg);
+  backdrop-filter: var(--bar-blur);
 }
 .mg-savebar > .mg-link {
   margin-right: auto;
@@ -871,7 +874,7 @@
   gap: 6px;
   padding: 5px;
   border-radius: var(--radius);
-  background: rgb(0 0 0 / 0.3);
+  background: var(--well-bg);
 }
 .mg-tabs button {
   flex: 1;
@@ -903,12 +906,8 @@
   color: var(--buzz);
 }
 
-.mg-cat {
-  box-shadow: none;
-}
 .mg-cat[data-open] {
   border-color: var(--line-strong);
-  box-shadow: var(--shadow);
 }
 .mg-cat__head {
   display: flex;
@@ -976,7 +975,7 @@
   padding: 12px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
-  background: rgb(0 0 0 / 0.22);
+  background: var(--well-bg);
 }
 .mg-clue:focus-within {
   border-color: var(--ink-400);
@@ -1092,7 +1091,6 @@
   display: grid;
   gap: 14px;
   padding: 18px;
-  box-shadow: none;
 }
 .mg-survey__head {
   display: flex;
@@ -1298,7 +1296,6 @@
   grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
   gap: 18px clamp(20px, 4vw, 40px);
   padding: clamp(18px, 3vw, 26px);
-  box-shadow: none;
 }
 .mg-set[data-tone='warn'] {
   border-color: color-mix(in srgb, var(--buzz) 45%, transparent);

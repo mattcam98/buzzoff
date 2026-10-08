@@ -109,11 +109,14 @@ class Harness {
       });
     });
   }
-  async join(code: string, name: string) {
+  async join(code: string, name: string, ready = true) {
     const res = await this.api<JoinResponse>('POST', `/games/${code}/join`, { name, avatar: AVATAR });
     if (res.body.status !== 'joined') throw new Error(`could not join: ${JSON.stringify(res.body)}`);
     const { playerId, token } = res.body;
-    return { playerId, token, client: await this.connect('player', code, token) };
+    const client = await this.connect('player', code, token);
+    // The show cannot start until everyone in the room has tapped ready.
+    if (ready) await client.act({ t: 'ready', ready: true });
+    return { playerId, token, client };
   }
 }
 
@@ -141,10 +144,14 @@ describe('a game over the wire', () => {
     const host = await h.connect('host', code, hostKey);
     const tv = await h.connect('display', code);
     const ann = await h.join(code, 'Ann');
-    const bob = await h.join(code, 'Bob');
+    const bob = await h.join(code, 'Bob', false);
     await until(() => tv.pub.players.filter((p) => p.connected).length === 2, 'both players online');
     expect(host.hostView!.audience).toEqual({ displays: 1, spectators: 0 });
 
+    // The show waits for everyone in the room: Bob has not tapped ready.
+    expect(await host.host({ t: 'start' })).toEqual({ ok: false, error: { code: 'not_ready', message: 'Waiting for Bob to tap ready' } });
+    expect(tv.pub.phase).toBe('lobby');
+    await bob.client.act({ t: 'ready', ready: true });
     expect(await host.host({ t: 'start' })).toEqual({ ok: true });
     await host.host({ t: 'round.begin' });
 

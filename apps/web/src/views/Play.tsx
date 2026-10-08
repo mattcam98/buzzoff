@@ -235,7 +235,7 @@ function LobbyPanel({ conn, pub, me }: Ctx) {
   return (
     <>
       <Panel eyebrow={pub.name} title="You’re in!" tone={me.ready ? 'good' : undefined}>
-        <p className="play__extra">Check the big screen for your name. The host starts the show.</p>
+        <p className="play__extra">{me.ready ? 'You’re ready. The host starts the show once everyone is.' : 'Tap ready when you are set: the show starts once everyone has.'}</p>
         <Button variant={me.ready ? 'good' : 'primary'} size="l" block onClick={() => send(conn, { t: 'ready', ready: !me.ready })}>
           {me.ready ? '✓ Ready' : 'I’m ready'}
         </Button>

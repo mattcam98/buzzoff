@@ -26,6 +26,46 @@ describe('lobby', () => {
     expect(s.trivia.stage).toBe('intro');
   });
 
+  it('will not start until every player whose phone is connected has tapped ready', () => {
+    const s = new Sim({ players: [] });
+    const online = (id: string) => (s.state = applySystem(s.state, { t: 'presence', id, connected: true }, { now: s.now, rand: s.rand, rtt: () => null }).state);
+    for (const name of ['Ann', 'Bob', 'Cat']) {
+      s.join(name, false);
+      online(name);
+    }
+    expect(() => s.host({ t: 'start' })).toThrow('Waiting for Ann, Bob, and Cat to tap ready');
+    s.player('Ann', { t: 'ready', ready: true }).player('Bob', { t: 'ready', ready: true });
+    expect(() => s.host({ t: 'start' })).toThrow('Waiting for Cat to tap ready');
+    expect(s.pub.phase).toBe('lobby');
+
+    // Changing your mind counts: un-readying holds the show again.
+    s.player('Cat', { t: 'ready', ready: true }).player('Ann', { t: 'ready', ready: false });
+    expect(() => s.host({ t: 'start' })).toThrow('Waiting for Ann to tap ready');
+    s.player('Ann', { t: 'ready', ready: true });
+    s.host({ t: 'start' });
+    expect(s.pub.phase).toBe('round');
+  });
+
+  it('does not let a phone that has dropped out hold the room up, but needs somebody ready', () => {
+    const s = new Sim({ players: [] });
+    s.join('Ann', false);
+    s.join('Bob', false);
+    // Nobody is connected, so nobody is being waited on; but nobody has said they are ready either.
+    expect(() => s.host({ t: 'start' })).toThrow('Nobody has tapped ready yet');
+    s.player('Ann', { t: 'ready', ready: true });
+    s.host({ t: 'start' });
+    expect(s.pub.phase).toBe('round');
+  });
+
+  it('asks everyone to ready up again for a rematch', () => {
+    const s = new Sim({ players: ['Ann'] }).start();
+    s.host({ t: 'game.end' });
+    s.state = applySystem(s.state, { t: 'presence', id: 'Ann', connected: true }, { now: s.now, rand: s.rand, rtt: () => null }).state;
+    s.state = applySystem(s.state, { t: 'rematch', rules: s.state.rules, rounds: s.state.rounds, packTitles: [] }, { now: s.now, rand: s.rand, rtt: () => null }).state;
+    expect(s.pub.players[0].ready).toBe(false);
+    expect(() => s.host({ t: 'start' })).toThrow('Waiting for Ann to tap ready');
+  });
+
   it('lets players ready up and edit their profile only in the lobby', () => {
     const s = new Sim();
     s.player('ann', { t: 'ready', ready: true }).player('ann', { t: 'profile', name: 'Annie', avatar: { emoji: '🦊', color: '#FF4D8D' } });

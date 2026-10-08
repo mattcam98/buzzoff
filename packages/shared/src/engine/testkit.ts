@@ -85,8 +85,10 @@ export class Sim {
     this.events.push(...out.events);
   }
 
-  join(name: string) {
+  /** Join the lobby and, unless told otherwise, tap ready: the show cannot start without it. */
+  join(name: string, ready = true) {
     this.commit(applySystem(this.state, { t: 'join', id: name, name, avatar: { emoji: '🐝', color: '#FFC400' } }, this.env));
+    if (ready) this.player(name, { t: 'ready', ready: true });
   }
   host(action: HostAction) {
     this.commit(applyHost(this.state, action, this.env));

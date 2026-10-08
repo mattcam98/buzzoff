@@ -114,6 +114,23 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await snap(ann, 'phone-lobby');
   await snap(host, 'host-lobby');
 
+  // The show cannot start while anyone in the room has yet to tap ready: only Ann has.
+  const start = host.getByRole('button', { name: /Start the show/ });
+  await expect(start).toBeDisabled();
+  await expect(host.getByRole('status').filter({ hasText: 'to tap ready' })).toContainText('Waiting for Bob, Cat to tap ready');
+  await host.keyboard.press('Space');
+  await bob.getByRole('button', { name: 'I’m ready' }).click();
+  await expect(host.getByRole('status').filter({ hasText: 'to tap ready' })).toContainText('Waiting for Cat to tap ready');
+  await expect(start).toBeDisabled();
+  await expect(tv.locator('.tv-lobby')).toBeVisible();
+  await cat.getByRole('button', { name: 'I’m ready' }).click();
+  await expect(start).toBeEnabled();
+  await expect(host.getByText('to tap ready')).toHaveCount(0);
+  // Un-readying locks it again until she is back.
+  await cat.getByRole('button', { name: '✓ Ready' }).click();
+  await expect(start).toBeDisabled();
+  await cat.getByRole('button', { name: 'I’m ready' }).click();
+
   // --- round one
   await key(host, 'Space', /Start the show/);
   await expect(tv.locator('.tv-intro h1')).toHaveText('Board One');

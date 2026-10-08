@@ -11,7 +11,7 @@ import type { BuzzAck, HostAction, PlayerAction } from '../actions';
 import type { Category, Survey } from '../content';
 import type { GameMode, GameRules } from '../rules';
 import {
-  emptyStats, type Avatar, type BoardCategory, type GameEvent, type GameState, type Player, type RoundState,
+  canStart, emptyStats, notReady, type Avatar, type BoardCategory, type GameEvent, type GameState, type Player, type RoundState,
 } from '../state';
 import type { HostView, PlayerView, PublicView, RoundPublic, RoundSecret, TeamView } from '../views';
 import { activePlayers, fail, playersOf, ranked, requirePlayer, type Ctx, type Mode } from './core';
@@ -208,6 +208,12 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
       case 'start': {
         if (g.phase !== 'lobby') fail('bad_stage', 'The game has already started');
         if (!g.order.length) fail('no_players', 'Wait for at least one player to join');
+        const waiting = notReady(playersOf(g));
+        if (waiting.length) {
+          const who = waiting.length > 3 ? `${waiting.length} players` : new Intl.ListFormat('en').format(waiting.map((p) => p.name));
+          fail('not_ready', `Waiting for ${who} to tap ready`);
+        }
+        if (!canStart(playersOf(g))) fail('not_ready', 'Nobody has tapped ready yet');
         g.phase = 'round';
         g.roundIndex = 0;
         ctx.events.push({ type: 'game.started' }, { type: 'round.intro', index: 0 });

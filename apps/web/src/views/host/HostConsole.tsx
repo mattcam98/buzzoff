@@ -2,7 +2,7 @@
  * The host's live console: everything needed to run a show from one screen,
  * with the next sensible action always on the space bar.
  */
-import { CUE_NAMES, type CueName, type HostAction, type HostRoomView, type PublicPlayer, type PublicView } from '@buzzoff/shared';
+import { canStart, CUE_NAMES, notReady, type CueName, type HostAction, type HostRoomView, type PublicPlayer, type PublicView } from '@buzzoff/shared';
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
@@ -282,6 +282,7 @@ function LobbyStage({ pub, run }: StageProps) {
   }, []);
   const join = joinAddress(publicUrl);
   const ready = pub.players.filter((p) => p.ready).length;
+  const waiting = notReady(pub.players);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(`${join.url}/join/${pub.code}`);
@@ -307,11 +308,14 @@ function LobbyStage({ pub, run }: StageProps) {
           <li>
             Friends scan the QR code or enter the room code. <button className="hc-link" onClick={copy}>Copy join link</button>
           </li>
-          <li>Start when everyone is in{ready > 0 && ` — ${ready} of ${pub.players.length} have tapped ready`}.</li>
+          <li>
+            Everyone taps <strong>I’m ready</strong> on their phone, then you start the show
+            {pub.players.length > 0 && ` — ${ready} of ${pub.players.length} ready so far`}.
+          </li>
         </ol>
       </div>
       <div className="hc-actions">
-        <Button variant="primary" size="l" hotkey="Space" disabled={!pub.players.length} onClick={() => run({ t: 'start' })}>
+        <Button variant="primary" size="l" hotkey="Space" disabled={!canStart(pub.players)} onClick={() => run({ t: 'start' })}>
           Start the show
         </Button>
         <label className="bz-toggle">
@@ -324,6 +328,18 @@ function LobbyStage({ pub, run }: StageProps) {
           </Button>
         )}
       </div>
+      {pub.players.length > 0 && !canStart(pub.players) && (
+        <p className="hc-note" role="status">
+          {waiting.length ? (
+            <>
+              Waiting for <strong>{waiting.map((p) => p.name).join(', ')}</strong> to tap ready. Someone who is not playing after all? Click them in the
+              player list and remove them.
+            </>
+          ) : (
+            'Nobody has tapped ready yet.'
+          )}
+        </p>
+      )}
       {pub.teams && (
         <ul className="hc-teams">
           {pub.teams.map((t) => (

@@ -80,6 +80,9 @@ test('a crowded room: long lists scroll inside themselves, never the page', asyn
   await page.setViewportSize(PHONE.viewport);
   await page.keyboard.press('Escape');
 
+  // The fifteen never connected, so the show waits only for the one phone that is here.
+  await page.getByRole('button', { name: 'I’m ready' }).click();
+  await expect(page.getByRole('button', { name: '✓ Ready' })).toBeVisible();
   await game.host({ t: 'start' });
   for (const [i, id] of ids.entries()) await game.host({ t: 'score.set', id, score: (i + 1) * 100 });
   await game.host({ t: 'round.begin' });

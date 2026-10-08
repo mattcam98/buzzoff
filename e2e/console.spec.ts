@@ -15,6 +15,8 @@ test('dialogs keep their focus and shortcuts never hijack a focused control', as
   await ann.getByLabel('Your name').fill('Ann');
   await ann.getByRole('button', { name: 'Join game' }).click();
   await expect(host.getByRole('heading', { name: '1 player in the room' })).toBeVisible();
+  await ann.getByRole('button', { name: 'I’m ready' }).click();
+  await expect(host.getByRole('button', { name: /Start the show/ })).toBeEnabled();
 
   // Enter on a focused button presses that button, not "Start the show".
   await host.getByRole('button', { name: 'Copy join link' }).focus();
@@ -28,6 +30,8 @@ test('dialogs keep their focus and shortcuts never hijack a focused control', as
   const dialog = host.getByRole('dialog');
   const score = dialog.getByLabel('Score');
   await score.fill('1');
+  await ann.getByRole('button', { name: '✓ Ready' }).click();
+  await expect(host.locator('.hc-roster').getByText('ready')).toHaveCount(0);
   await ann.getByRole('button', { name: 'I’m ready' }).click();
   await expect(host.locator('.hc-roster').getByText('ready')).toBeVisible();
   await expect(score).toBeFocused();

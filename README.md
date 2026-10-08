@@ -70,7 +70,9 @@ the proxy must pass `Upgrade` requests through.
    *Open TV* button) and make it full screen. Click it once: browsers will not
    play sound until someone has interacted with the page.
 3. **Players** — go to the address on the TV, enter the code (or scan the QR),
-   pick a name and avatar.
+   pick a name and avatar, and tap **I'm ready**. The show can start once
+   everyone whose phone is connected has; a phone that has dropped out does
+   not hold the room up.
 4. **Roll for the first pick.** When the first board begins, every phone shows
    a die. Players tap to roll, the dice land on their phones and on the TV, and
    the highest roll gets the board; tied players roll again on their own. The
@@ -95,6 +97,7 @@ Things that go wrong at a party, and what to do:
 |---|---|
 | Wrong ruling, wrong clue, fat-fingered anything | **Undo** (`U`). The last 40 host steps can be unwound. |
 | The dice roll is taking too long, or you want to skip it | **Space** rolls for everyone who has not. Or click a player and *Give control of the board*. |
+| Start is greyed out | Someone has not tapped ready; the console names them. Remove them from the player list if they are not playing after all. |
 | A buzz is disputed | **Re-do the buzz** discards it and opens the buzzers again for everyone still in. |
 | A clue was bad | **Throw out clue** reverses its scoring and puts it back on the board. |
 | A score needs correcting | `−` / `+` next to the player, or click the player to type a score. |

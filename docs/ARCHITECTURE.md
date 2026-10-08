@@ -192,7 +192,12 @@ sticky routing by room code or a shared room store; the room boundary
 ## Web app (`apps/web`)
 
 A single-page React app with four surfaces that share a design system
-(`styles/base.css`) and a connection layer (`lib/connection.ts`). It is built
+(`styles/base.css`) and a connection layer (`lib/connection.ts`). The design
+system's surfaces are tokens in `base.css`: *glass* for cards and panels
+(`.bz-card`), *tile* for repeated rows, *well* for recessed areas inside a
+card, *bar* for sticky chrome and *scrim* for overlays. Components take their
+background, border, blur and shadow from those rather than defining their
+own, which is what keeps the dashboard, console, phone and TV looking alike. It is built
 as three pieces: the join screen and phone controller load first, and the TV
 and the host's pages each load as their own chunk when opened, so a phone
 never downloads the dashboard, the pack editor or zod. `@buzzoff/shared` is

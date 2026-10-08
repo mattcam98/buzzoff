@@ -34,6 +34,15 @@ export interface Player {
   joinedAt: number;
 }
 
+/**
+ * Who the show is still waiting on in the lobby: players whose phones are connected and who have
+ * not tapped ready. A phone that has dropped out does not hold the room up.
+ */
+export const notReady = <P extends { connected: boolean; ready: boolean }>(players: P[]): P[] => players.filter((p) => p.connected && !p.ready);
+
+/** The show can start once nobody is being waited on and at least one player has tapped ready. */
+export const canStart = (players: { connected: boolean; ready: boolean }[]): boolean => !notReady(players).length && players.some((p) => p.ready);
+
 export interface PlayerStats {
   /** Buzzes the server registered while buzzers were armed (or just after someone won). */
   buzzes: number;

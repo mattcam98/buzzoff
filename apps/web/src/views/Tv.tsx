@@ -215,7 +215,7 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
             ))}
           </ul>
         )}
-        <footer>{pub.lobbyLocked ? 'The room is locked.' : 'The host starts the show when everyone is in.'}</footer>
+        <footer>{pub.lobbyLocked ? 'The room is locked. ' : ''}The show starts once everyone has tapped ready on their phone.</footer>
       </section>
     </main>
   );
