@@ -3,19 +3,18 @@
  * takes the board. A tie is settled by the tied players rolling again, as many
  * times as it takes.
  *
- *   rolling ──everyone in / time──▶ landing ──▶ won ──▶ (the board)
+ *   rolling ──────everyone in─────▶ landing ──▶ won ──▶ (the board)
  *      ▲                               │
  *      └──────────── tied ◀────────────┘  (only the tied players roll again)
  *
- * Every number comes from `ctx.rand` on the server. The pauses between phases
- * are there for the screens: a die takes a moment to tumble and be read.
+ * Every number comes from `ctx.rand` on the server. Rolling has no clock: it
+ * waits for the last player to tap, or for the host to roll for whoever has
+ * not. The pauses between the later phases are there for the screens: a die
+ * takes a moment to tumble and be read.
  */
 import type { DiceRoll, TriviaRound } from '../state';
 import { fail, type Ctx } from './core';
 
-/** How long players have to tap before the server rolls for them. */
-const ROLL_MS = 12_000;
-const REROLL_MS = 8_000;
 /** Time for the last die to stop tumbling before the result is called. */
 const LAND_MS = 1_800;
 const TIE_MS = 2_400;
@@ -27,10 +26,9 @@ const leaders = (roll: DiceRoll) => {
   return roll.contenders.filter((id) => roll.rolls[id] === best);
 };
 
-export function startRoll(r: TriviaRound, contenders: string[], ctx: Ctx, round = 1, out: Record<string, number> = {}): void {
-  const ms = round === 1 ? ROLL_MS : REROLL_MS;
+export function startRoll(r: TriviaRound, contenders: string[], round = 1, out: Record<string, number> = {}): void {
   r.stage = 'roll';
-  r.roll = { round, phase: 'rolling', contenders, rolls: {}, out, winnerId: null, deadline: ctx.now + ms, timerMs: ms };
+  r.roll = { round, phase: 'rolling', contenders, rolls: {}, out, winnerId: null, deadline: null };
 }
 
 function roll(r: DiceRoll, playerId: string, ctx: Ctx): void {
@@ -40,7 +38,6 @@ function roll(r: DiceRoll, playerId: string, ctx: Ctx): void {
   if (waiting(r).length) return;
   r.phase = 'landing';
   r.deadline = ctx.now + LAND_MS;
-  r.timerMs = null;
 }
 
 const rolling = (r: TriviaRound): DiceRoll => (r.roll?.phase === 'rolling' ? r.roll : fail('bad_stage', 'Nobody is rolling right now'));
@@ -52,7 +49,7 @@ export function rollDie(r: TriviaRound, playerId: string, ctx: Ctx): void {
   roll(dice, playerId, ctx);
 }
 
-/** Roll for everyone who has not: the host hurrying things along, or time running out. */
+/** Roll for everyone who has not: the host hurrying things along. */
 export function rollForRest(r: TriviaRound, ctx: Ctx): void {
   const dice = rolling(r);
   for (const id of waiting(dice)) roll(dice, id, ctx);
@@ -69,13 +66,17 @@ export function tickRoll(r: TriviaRound, ctx: Ctx): void {
   if (!dice || dice.deadline === null || ctx.now < dice.deadline) return;
   // Everyone who was rolling may have left the game.
   if (!dice.contenders.length) return endRoll(r);
-  if (dice.phase === 'rolling') return rollForRest(r, ctx);
+  if (dice.phase === 'rolling') {
+    // Only a game saved by a version that timed the roll still carries a deadline here.
+    dice.deadline = null;
+    return;
+  }
   if (dice.phase === 'won') return endRoll(r);
 
   const top = leaders(dice);
   if (dice.phase === 'tied') {
     const beaten = Object.fromEntries(dice.contenders.filter((id) => !top.includes(id)).map((id) => [id, dice.rolls[id]]));
-    return startRoll(r, top, ctx, dice.round + 1, { ...dice.out, ...beaten });
+    return startRoll(r, top, dice.round + 1, { ...dice.out, ...beaten });
   }
   if (top.length > 1) {
     dice.phase = 'tied';

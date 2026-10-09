@@ -9,9 +9,9 @@
  */
 import type { BuzzAck, HostAction, PlayerAction } from '../actions';
 import type { Category, Survey } from '../content';
-import type { GameMode, GameRules } from '../rules';
+import type { GameMode, GameRules, TriviaRoundDef } from '../rules';
 import {
-  canStart, emptyStats, nameKey, notReady, type Avatar, type BoardCategory, type GameEvent, type GameState, type Player, type RoundState,
+  canStart, emptyStats, nameKey, notReady, type Avatar, type BoardCategory, type FinalRound, type GameEvent, type GameState, type Player, type RoundState,
 } from '../state';
 import type { HostView, PlayerView, PublicView, RoundPublic, RoundSecret, TeamView } from '../views';
 import { activePlayers, fail, playersOf, ranked, requirePlayer, type Ctx, type Mode } from './core';
@@ -75,6 +75,33 @@ function draw<T extends { id: string }>(
   return chosen;
 }
 
+/** One column of a board: a pack category cut down to the round's size and priced by its multiplier. */
+function boardCategory(cat: Category, def: TriviaRoundDef): BoardCategory {
+  return {
+    id: cat.id,
+    title: cat.title,
+    blurb: cat.blurb,
+    singleAttempt: cat.singleAttempt ?? false,
+    clues: [...cat.clues]
+      .sort((a, b) => a.value - b.value)
+      .slice(0, def.cluesPerCategory)
+      .map((c) => ({
+        value: c.value * def.valueMultiplier, question: c.question, answer: c.answer, accept: c.accept,
+        notes: c.notes, media: c.media, difficulty: c.difficulty, wager: false, used: false, winnerId: null,
+      })),
+  };
+}
+
+/** The written final asks the hardest clue of its category. */
+function finalQuestion(cat: Category): Pick<FinalRound, 'category' | 'categoryId' | 'clue'> {
+  const hardest = [...cat.clues].sort((a, b) => b.value - a.value)[0];
+  return {
+    category: cat.title,
+    categoryId: cat.id,
+    clue: { question: hardest.question, answer: hardest.answer, accept: hardest.accept, notes: hardest.notes, media: hardest.media },
+  };
+}
+
 /** Turn rules plus a pool of content into ready-to-play rounds. Content is copied in, so later pack edits never affect a game. */
 export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks | undefined, rand: () => number): RoundState[] {
   const usedCategories = new Set<string>();
@@ -85,18 +112,7 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
     const picked = picks?.[i] ?? null;
     if (def.mode === 'trivia') {
       const categories = draw(pool.categories, usedCategories, reserved, picked, def.categories, 'category', rand);
-      const board: BoardCategory[] = categories.map((cat) => ({
-        title: cat.title,
-        blurb: cat.blurb,
-        singleAttempt: cat.singleAttempt ?? false,
-        clues: [...cat.clues]
-          .sort((a, b) => a.value - b.value)
-          .slice(0, def.cluesPerCategory)
-          .map((c) => ({
-            value: c.value * def.valueMultiplier, question: c.question, answer: c.answer, accept: c.accept,
-            notes: c.notes, media: c.media, difficulty: c.difficulty, wager: false, used: false, winnerId: null,
-          })),
-      }));
+      const board = categories.map((cat) => boardCategory(cat, def));
       // Wagers hide below the top row so the opening clue is never one.
       const slots = board.flatMap((cat, c) => cat.clues.map((_, k) => ({ c, k }))).filter((s) => s.k > 0 || def.cluesPerCategory === 1);
       for (const s of shuffle(slots, rand).slice(0, def.wagers)) board[s.c].clues[s.k].wager = true;
@@ -104,10 +120,8 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
     }
     if (def.mode === 'final') {
       const [cat] = draw(pool.categories, usedCategories, reserved, picked, 1, 'category', rand);
-      const hardest = [...cat.clues].sort((a, b) => b.value - a.value)[0];
       return {
-        mode: 'final', def, stage: 'intro', category: cat.title,
-        clue: { question: hardest.question, answer: hardest.answer, accept: hardest.accept, notes: hardest.notes, media: hardest.media },
+        mode: 'final', def, stage: 'intro', ...finalQuestion(cat),
         players: [], wagers: {}, answers: {}, deadline: null, timerMs: null, order: [], shown: 0, results: {},
       };
     }
@@ -119,9 +133,9 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
   });
 }
 
-export function createGame(o: { code: string; rules: GameRules; rounds: RoundState[]; packTitles: string[]; now: number }): GameState {
+export function createGame(o: { code: string; rules: GameRules; rounds: RoundState[]; packTitles: string[]; packIds?: string[]; now: number }): GameState {
   return {
-    v: 1, code: o.code, createdAt: o.now, seq: 0, rules: o.rules, packTitles: o.packTitles,
+    v: 1, code: o.code, createdAt: o.now, seq: 0, rules: o.rules, packTitles: o.packTitles, packIds: o.packIds,
     phase: 'lobby', paused: false, pausedAt: null, lobbyLocked: false, music: true, roundIndex: 0, rounds: o.rounds,
     players: {}, order: [], teamNames: [...o.rules.teams.names], stats: {}, lastEliminated: [], champions: null, finishedAt: null,
   };
@@ -371,7 +385,9 @@ export type SystemAction =
   /** After a server restart: timers cannot be trusted, so the game resumes paused. */
   | { t: 'recover'; savedAt: number }
   /** Play again in the same room with the same players. */
-  | { t: 'rematch'; rules: GameRules; rounds: RoundState[]; packTitles: string[] };
+  | { t: 'rematch'; rules: GameRules; rounds: RoundState[]; packTitles: string[]; packIds?: string[] }
+  /** Swap one category of the round being introduced for another, drawn at random from the game's packs. */
+  | { t: 'reroll'; cat: number; categories: Category[] };
 
 export function applySystem(state: GameState, action: SystemAction, env: Env): Outcome {
   return run(state, env, (g, ctx) => {
@@ -408,10 +424,35 @@ export function applySystem(state: GameState, action: SystemAction, env: Env): O
           g.pausedAt = action.savedAt;
         }
         return;
+      case 'reroll': {
+        if (g.phase !== 'round' || !round || round.stage !== 'intro' || round.mode === 'fastMoney') {
+          fail('bad_stage', 'A category can only be changed while its round is being introduced');
+        }
+        // Nothing already dealt to any round of this game, played or still to come, is dealt again.
+        const inUse = new Set(g.rounds.flatMap((r) => (r.mode === 'trivia' ? r.board.flatMap((c) => [c.id, c.title]) : r.mode === 'final' ? [r.categoryId, r.category] : [])));
+        const spare = action.categories.filter((c) => !inUse.has(c.id) && !inUse.has(c.title));
+        if (!spare.length) fail('content', 'Every category in this game’s packs is already in play');
+        const fresh = spare[Math.floor(ctx.rand() * spare.length)];
+        if (round.mode === 'trivia') {
+          const old = round.board[action.cat] ?? fail('no_category', 'That category is not on this board');
+          const next = boardCategory(fresh, round.def);
+          // A hidden wager stays in the row it was in, so the board has as many as before.
+          old.clues.forEach((clue, k) => {
+            if (clue.wager && next.clues.length) next.clues[Math.min(k, next.clues.length - 1)].wager = true;
+          });
+          round.board[action.cat] = next;
+        } else {
+          if (action.cat !== 0) fail('no_category', 'The final has only one category');
+          Object.assign(round, finalQuestion(fresh));
+        }
+        ctx.events.push({ type: 'category.changed', cat: action.cat });
+        return;
+      }
       case 'rematch':
         g.rules = action.rules;
         g.rounds = action.rounds;
         g.packTitles = action.packTitles;
+        g.packIds = action.packIds;
         g.phase = 'lobby';
         g.paused = false;
         g.pausedAt = null;

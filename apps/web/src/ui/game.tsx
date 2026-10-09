@@ -79,7 +79,7 @@ export function roundBlurb(round: RoundPublic): string {
   return `${who} · survey says…`;
 }
 
-const roundTimer = ({ round }: PublicView) => (round?.mode === 'trivia' ? (round.clue?.timer ?? round.roll?.timer ?? null) : (round?.timer ?? null));
+const roundTimer = ({ round }: PublicView) => (round?.mode === 'trivia' ? (round.clue?.timer ?? null) : (round?.timer ?? null));
 
 /** Ticks through the last five seconds of whatever countdown is running. Renders nothing. */
 export function FinalSecondsTick({ pub, snap }: { pub: PublicView; snap: Snapshot }) {

@@ -85,6 +85,8 @@ export interface BoardClue {
 }
 
 export interface BoardCategory {
+  /** The pack category this was copied from, so that the same one is never dealt twice in a game. */
+  id?: string;
   title: string;
   blurb?: string;
   singleAttempt: boolean;
@@ -125,6 +127,8 @@ export interface ActiveClue {
   openedAt: number | null;
   /** End of the collection window in latency-adjusted mode. */
   windowEndsAt: number | null;
+  /** Until when a buzz is still recorded after the first one of this cycle; null once the buzzers have shut. */
+  graceEndsAt: number | null;
   /** How many attempts had arrived when the winner was decided; null until then. */
   decided: number | null;
   deadline: number | null;
@@ -159,9 +163,8 @@ export interface DiceRoll {
   /** Players beaten in an earlier round, with the roll that put them out. */
   out: Record<string, number>;
   winnerId: string | null;
-  /** While rolling: when the server rolls for anyone who has not. Otherwise: when the next phase begins. */
+  /** When the next phase begins. None while rolling, which waits for the players. */
   deadline: number | null;
-  timerMs: number | null;
 }
 
 export interface TriviaRound {
@@ -223,6 +226,8 @@ export interface FinalRound {
   def: FinalRoundDef;
   stage: 'intro' | 'wager' | 'answering' | 'reveal' | 'done';
   category: string;
+  /** The pack category the question came from. */
+  categoryId?: string;
   clue: { question: string; answer: string; accept: string[]; notes?: string; media?: Media };
   /** Players taking part, fixed when the round begins. */
   players: string[];
@@ -251,6 +256,8 @@ export interface GameState {
   seq: number;
   rules: GameRules;
   packTitles: string[];
+  /** The packs the game draws on, kept so that a category can be swapped for another before its round begins. */
+  packIds?: string[];
   phase: GamePhase;
   paused: boolean;
   pausedAt: number | null;
@@ -277,6 +284,7 @@ export type GameEvent =
   | { type: 'game.started' }
   | { type: 'round.intro'; index: number }
   | { type: 'round.started'; index: number }
+  | { type: 'category.changed'; cat: number }
   | { type: 'clue.selected'; wager: boolean }
   | { type: 'buzz.open' }
   | { type: 'dice.rolled'; playerId: string; value: number }

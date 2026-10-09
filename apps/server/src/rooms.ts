@@ -75,7 +75,7 @@ export class Rooms {
       code = randomRoomCode();
     }
     const hostKey = randomToken(32);
-    const state = createGame({ code, rules: req.rules, rounds, packTitles: titles, now: clock() });
+    const state = createGame({ code, rules: req.rules, rounds, packTitles: titles, packIds: req.packIds, now: clock() });
     const secrets = { hostKeyHash: sha256(hostKey), players: {}, plays: 1, profiles: {} };
     const room = new Room(this.io, this.store, this.results, { code, state, secrets, updatedAt: Date.now() });
     this.rooms.set(code, room);
@@ -86,8 +86,16 @@ export class Rooms {
 
   async rematch(room: Room, req: CreateGameRequest) {
     const { pool, titles } = await this.content(req.packIds);
-    room.rematch(req.rules, assembleRounds(req.rules, pool, req.picks, random), titles);
+    room.rematch(req.rules, assembleRounds(req.rules, pool, req.picks, random), titles, req.packIds);
     log.info('rematch', { code: room.code });
+  }
+
+  /** Swap one category of the round being introduced for another from the game's packs, as they are now. */
+  async reroll(room: Room, cat: number) {
+    const packIds = room.state.packIds;
+    if (!packIds?.length) throw new GameError('content', 'This game was set up before categories could be changed');
+    const { pool } = await this.content(packIds);
+    room.reroll(cat, pool.categories);
   }
 
   async remove(code: string) {

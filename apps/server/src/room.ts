@@ -9,7 +9,7 @@
 import {
   applyBuzz, applyHost, applyPlayer, applySystem, buildResult, findPlayerByName, GameError, HostActionSchema, hostView,
   nextDeadline, PlayerActionSchema, playerView, publicView, restoreSnapshot,
-  type Ack, type Avatar, type Claim, type ClaimStatus, type ClientToServerEvents, type Env, type GameRules, type GameState,
+  type Ack, type Avatar, type Category, type Claim, type ClaimStatus, type ClientToServerEvents, type Env, type GameRules, type GameState,
   type HostAction, type HostRoomView, type JoinResponse, type NetStat, type Outcome, type PlayerAction, type Role,
   type RoundState, type ServerToClientEvents,
 } from '@buzzoff/shared';
@@ -245,10 +245,20 @@ export class Room {
     return out.ack;
   }
 
-  rematch(rules: GameRules, rounds: RoundState[], packTitles: string[]) {
+  rematch(rules: GameRules, rounds: RoundState[], packTitles: string[], packIds: string[]) {
     this.secrets.plays += 1;
     this.history = [];
-    this.commit(applySystem(this.state, { t: 'rematch', rules, rounds, packTitles }, this.env()));
+    this.commit(applySystem(this.state, { t: 'rematch', rules, rounds, packTitles, packIds }, this.env()));
+  }
+
+  /** Change one category of the round being introduced. It can be undone like any other step. */
+  reroll(cat: number, categories: Category[]) {
+    const before = this.state;
+    const at = clock();
+    const out = applySystem(before, { t: 'reroll', cat, categories }, this.env(at));
+    this.history.push({ state: before, at, label: 'category change' });
+    if (this.history.length > HISTORY_LIMIT) this.history.shift();
+    this.commit(out);
   }
 
   // -------------------------------------------------------------- joining

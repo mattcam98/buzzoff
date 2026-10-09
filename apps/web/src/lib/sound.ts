@@ -252,6 +252,7 @@ export function soundFor(event: GameEvent): SoundName | null {
   switch (event.type) {
     case 'player.joined': return 'join';
     case 'round.intro': return 'intro';
+    case 'category.changed': return 'reveal';
     case 'clue.selected': return event.wager ? 'tada' : 'select';
     case 'buzz.open': return 'open';
     case 'dice.rolled': return 'dice';

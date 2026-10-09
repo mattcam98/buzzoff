@@ -113,6 +113,64 @@ describe('round flow', () => {
   });
 });
 
+describe('changing a category before its round begins', () => {
+  const pool = categories(8);
+  const reroll = (s: Sim, cat: number, from = pool) => {
+    const out = applySystem(s.state, { t: 'reroll', cat, categories: from }, { now: s.now, rand: s.rand, rtt: () => null });
+    s.state = out.state;
+    return out.events;
+  };
+  const titles = (s: Sim) => s.trivia.board.map((c) => c.title);
+
+  it('swaps the one category for another the game is not using, and leaves the rest alone', () => {
+    const s = new Sim({ rounds: [{ ...TRIVIA, categories: 3, wagers: 2 }, TRIVIA, FINAL] }).host({ t: 'start' });
+    expect(s.trivia.stage).toBe('intro');
+    const before = s.state.rounds;
+    const wagers = (r: (typeof before)[number]) => (r.mode === 'trivia' ? r.board.flatMap((c) => c.clues).filter((c) => c.wager).length : 0);
+
+    for (let i = 0; i < 12; i++) {
+      const was = titles(s);
+      expect(reroll(s, 1)).toEqual([{ type: 'category.changed', cat: 1 }]);
+      const now = titles(s);
+      expect([now[0], now[2]]).toEqual([was[0], was[2]]);
+      expect(now[1]).not.toBe(was[1]);
+      // Nothing is dealt twice: not on this board, not on the board to come, not in the final.
+      const dealt = s.state.rounds.flatMap((r) => (r.mode === 'trivia' ? r.board.map((c) => c.title) : r.mode === 'final' ? [r.category] : []));
+      expect(new Set(dealt).size).toBe(dealt.length);
+      // The hidden wagers are still there, and the later rounds are as they were.
+      expect(wagers(s.state.rounds[0])).toBe(2);
+      expect(s.state.rounds.slice(1)).toEqual(before.slice(1));
+    }
+    const column = s.state.rounds[0].mode === 'trivia' ? s.state.rounds[0].board[1] : null;
+    expect(column!.clues.map((c) => c.value)).toEqual([100, 200]);
+  });
+
+  it('changes the category of the written final, and its question with it', () => {
+    const s = new Sim({ rounds: [FINAL] }).host({ t: 'start' });
+    const was = s.final.category;
+    reroll(s, 0);
+    expect(s.final.category).not.toBe(was);
+    const round = s.state.rounds[0];
+    const source = pool.find((c) => c.title === s.final.category)!;
+    expect(round.mode === 'final' && round.clue.question).toBe(source.clues.at(-1)!.question);
+    expect(() => reroll(s, 1)).toThrow(/only one category/);
+  });
+
+  it('is refused once the round has begun, for a round with no categories, and when the packs have nothing left', () => {
+    const s = new Sim().host({ t: 'start' });
+    expect(() => reroll(s, 5)).toThrow(/not on this board/);
+    // Only the two categories already on the board to choose from.
+    expect(() => reroll(s, 0, pool.slice(0, 2))).toThrow(/already in play/);
+    s.host({ t: 'round.begin' });
+    expect(() => reroll(s, 0)).toThrow(/while its round is being introduced/);
+
+    const lobby = new Sim();
+    expect(() => reroll(lobby, 0)).toThrow(/while its round is being introduced/);
+    const survey = new Sim({ rounds: [FAST_MONEY] }).host({ t: 'start' });
+    expect(() => reroll(survey, 0)).toThrow(/while its round is being introduced/);
+  });
+});
+
 describe('pause, undo and recovery', () => {
   it('freezes timers while paused, and shuts the buzzers until play resumes', () => {
     const s = new Sim({ buzzer: { answerSec: 10 } }).start().open();

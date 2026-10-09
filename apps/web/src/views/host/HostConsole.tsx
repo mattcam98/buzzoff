@@ -13,6 +13,7 @@ import { storage } from '../../lib/storage';
 import { roundBlurb, Score } from '../../ui/game';
 import { Avatar, Button, cx, Logo, Modal, Notice, toast } from '../../ui/kit';
 import { FastMoneyStage, FinalStage, TriviaStage } from './console/Stages';
+import { usePeek } from './console/peek';
 import '../../styles/game.css';
 import '../../styles/console.css';
 
@@ -301,6 +302,7 @@ function Stage(props: StageProps) {
     return (
       <StageCard eyebrow={`Round ${pub.roundIndex + 1} of ${pub.rounds.length}`} title={round.title}>
         <p>{roundBlurb(round)}. The title card is on the TV — begin when you have introduced the round.</p>
+        <IntroCategories pub={pub} round={round} />
         <div className="hc-actions">
           <Button variant="primary" size="l" hotkey="Space" disabled={pub.paused} onClick={() => run({ t: 'round.begin' })}>
             Begin round
@@ -314,6 +316,60 @@ function Stage(props: StageProps) {
   if (round.mode === 'fastMoney' && secret?.mode === 'fastMoney') return <FastMoneyStage {...props} round={round} secret={secret} />;
   if (round.mode === 'final' && secret?.mode === 'final') return <FinalStage {...props} round={round} secret={secret} />;
   return null;
+}
+
+/**
+ * The categories of the round being introduced. Until the round begins, any one of them can be swapped for
+ * another drawn at random from the game's packs; the rest stay as they are. Holding a title shows its description.
+ */
+function IntroCategories({ pub, round }: { pub: PublicView; round: NonNullable<PublicView['round']> }) {
+  const [busy, setBusy] = useState(false);
+  const { peek, holdable } = usePeek();
+  const cats = round.mode === 'trivia' ? round.board : round.mode === 'final' ? [{ title: round.category, blurb: undefined }] : [];
+  if (!cats.length) return null;
+  const peeked = peek === null ? null : cats[peek];
+  const reroll = async (cat: number) => {
+    setBusy(true);
+    try {
+      await api.reroll(pub.code, cat);
+    } catch (err) {
+      toast(err instanceof ApiFailure ? err.message : 'Could not change the category', 'error');
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <div className="hc-cats">
+      <div className="hc-cats__list">
+        <ul aria-label={cats.length > 1 ? 'Categories' : 'Category'}>
+          {cats.map((cat, i) => (
+            <li key={cat.title}>
+              {cat.blurb ? (
+                <strong {...holdable(i)} aria-description={cat.blurb}>
+                  {cat.title}
+                </strong>
+              ) : (
+                <strong>{cat.title}</strong>
+              )}
+              <Button size="s" variant="ghost" disabled={busy || pub.paused} onClick={() => reroll(i)} aria-label={`Reroll ${cat.title}`}>
+                Reroll
+              </Button>
+            </li>
+          ))}
+        </ul>
+        {peeked?.blurb && (
+          <div className="hc-board__blurb" aria-hidden>
+            <strong>{peeked.title}</strong>
+            {peeked.blurb}
+          </div>
+        )}
+      </div>
+      <p className="hc-note">
+        Not keen on {cats.length > 1 ? 'one' : 'it'}? Reroll swaps {cats.length > 1 ? 'that category' : 'it'} for another from the pack at random{cats.length > 1 && ', and leaves the rest alone'}.
+        {cats.some((cat) => cat.blurb) && ' Hold a title to read its description.'}
+      </p>
+    </div>
+  );
 }
 
 function StageCard({ eyebrow, title, children, tone }: { eyebrow?: string; title?: ReactNode; children?: ReactNode; tone?: 'buzz' }) {

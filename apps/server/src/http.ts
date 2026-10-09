@@ -293,6 +293,10 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
     await rooms.rematch(hostOnly(req), parse(CreateGameSchema, req.body));
     res.json({ ok: true });
   });
+  api.post('/games/:code/reroll', async (req, res) => {
+    await rooms.reroll(hostOnly(req), parse(z.object({ cat: z.number().int().min(0).max(7) }), req.body).cat);
+    res.json({ ok: true });
+  });
   api.delete('/games/:code', async (req, res) => {
     await rooms.remove(hostOnly(req).code);
     res.status(204).end();

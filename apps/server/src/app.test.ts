@@ -642,6 +642,35 @@ describe('content and results', () => {
     expect(res.body.error.message).toMatch(/short by 1 category/);
   });
 
+  it('lets the host swap a category for another before the round begins, and undo it', async () => {
+    h = await new Harness().start();
+    const { code, hostKey } = await h.createGame();
+    const host = await h.connect('host', code, hostKey);
+    await h.join(code, 'Ann');
+    const board = () => (host.pub.round?.mode === 'trivia' ? host.pub.round.board.map((c) => c.title) : []);
+    const key = { 'x-host-key': hostKey };
+    // Not in the lobby, and not by anyone but the host.
+    expect((await h.api('POST', `/games/${code}/reroll`, { cat: 0 }, key)).status).toBe(409);
+    await host.host({ t: 'start' });
+    await until(() => board().length > 0, 'the round intro');
+    const before = board();
+    expect((await h.api('POST', `/games/${code}/reroll`, { cat: 0 })).status).toBe(403);
+    expect((await h.api('POST', `/games/${code}/reroll`, { cat: 99 }, key)).status).toBe(400);
+
+    expect((await h.api('POST', `/games/${code}/reroll`, { cat: 1 }, key)).status).toBe(200);
+    await until(() => board()[1] !== before[1], 'the new category');
+    expect(board().filter((title, i) => i !== 1)).toEqual(before.filter((_, i) => i !== 1));
+    expect(before).not.toContain(board()[1]);
+    expect(host.events.at(-1)).toEqual({ type: 'category.changed', cat: 1 });
+
+    expect(host.hostView!.undo).toBe('category change');
+    await host.host({ t: 'undo' });
+    await until(() => board()[1] === before[1], 'the old category back');
+
+    await host.host({ t: 'round.begin' });
+    expect((await h.api('POST', `/games/${code}/reroll`, { cat: 1 }, key)).status).toBe(409);
+  });
+
   it('records a finished game in the history and supports a rematch', async () => {
     h = await new Harness().start();
     const { code, hostKey } = await h.createGame();

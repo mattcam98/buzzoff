@@ -68,8 +68,10 @@ the proxy must pass `Upgrade` requests through.
 1. **Host** — `/host` on a laptop. Pick a format and a pack, create the game.
    The console opens with the room code.
 2. **TV** — open `/tv/CODE` on the screen everyone can see (the console has an
-   *Open TV* button) and make it full screen. Click it once: browsers will not
-   play sound until someone has interacted with the page. The TV then plays
+   *Open TV* button) and press **Full screen** in its bottom corner, or F. The
+   button hides itself once nobody is at the mouse. Clicking it also turns the
+   sound on: browsers will not play any until someone has interacted with the
+   page. The TV then plays
    BuzzOff's theme between rounds, a quiet pulse while a question is live and
    thinking music during the written final, and falls silent whenever someone
    is answering. **Background music** in the console's sound panel turns it
@@ -78,11 +80,17 @@ the proxy must pass `Upgrade` requests through.
    pick a name and avatar, and tap **I'm ready**. The show can start once
    everyone whose phone is connected has; a phone that has dropped out does
    not hold the room up.
-4. **Roll for the first pick.** When the first board begins, every phone shows
+4. **Introduce the round.** The TV shows the round's title card and its
+   categories. On the console, hold a category's title to read its
+   description, and press **Reroll** beside one the room does not fancy: it is
+   swapped for another from the pack at random and the rest stay put. Undo
+   takes a swap back. Space begins the round.
+5. **Roll for the first pick.** When the first board begins, every phone shows
    a die. Players tap to roll, the dice land on their phones and on the TV, and
    the highest roll gets the board; tied players roll again on their own. The
-   server rolls for anyone who has not tapped after twelve seconds.
-5. **Players call the clue, you select it.** Whoever has the board says a
+   roll is not timed: it waits for everyone, and **Roll for everyone still to
+   roll** on the console (or Space) rolls for anyone who is not going to.
+6. **Players call the clue, you select it.** Whoever has the board says a
    category and a value out loud ("Movies for 300") and you click it on the
    console. Phones show the board and whose pick it is, but only the host can
    put a clue in play. A correct answer takes the board. Buzzers open the
@@ -91,7 +99,7 @@ the proxy must pass `Upgrade` requests through.
    the question disappears from the TV and every phone while you judge the
    answer (you still see it, with the answer). If they are wrong it comes
    back for everyone else, with the timer carrying on where it stopped.
-6. **Run the show from the keyboard.** The next step is always on the space
+7. **Run the show from the keyboard.** The next step is always on the space
    bar: start, begin round, back to the board. It is never anything else, so
    pressing it out of habit cannot repeat whatever you last clicked. `C` and
    `X` rule an answer correct or incorrect, `R` reveals an answer nobody got,
@@ -182,6 +190,10 @@ separate from slow thumbs.
 
 - The winner is the first buzz the server receives. Exact ties (same
   millisecond) go to the one processed first.
+- The first buzz takes the floor at once. For a short **grace period** after
+  it (300 ms unless the rules say otherwise) the other buzzers stay live, so
+  that anyone a split second behind is recorded and ranked with their gap
+  instead of being shut out. A buzz in the grace period never wins.
 - Phones never send a timestamp, so there is nothing for a client to forge.
 - Each player's **ping** is shown separately, on their own phone and on the
   host console. It is the round trip measured *by the server*; a client can

@@ -17,6 +17,12 @@ export const BuzzerRulesSchema = z.object({
   collectionWindowMs: int(50, 500),
   /** Upper bound on how much any one buzz may be adjusted. */
   maxCompensationMs: int(0, 300),
+  /**
+   * After the first buzz, how long the other buzzers stay live, so that a buzz
+   * a split second behind is recorded and ranked instead of being shut out.
+   * It never changes who won. 0 shuts every buzzer the moment someone is in.
+   */
+  graceMs: int(0, 2000).default(300),
   /** The question timer: seconds players have to buzz, counted from the moment the clue goes up. 0 disables it. */
   buzzSec: int(0, 120),
   /** Seconds the buzz winner has to answer. 0 disables the timer. */
@@ -125,6 +131,7 @@ export const DEFAULT_BUZZER: BuzzerRules = {
   arbitration: 'first',
   collectionWindowMs: 150,
   maxCompensationMs: 150,
+  graceMs: 300,
   buzzSec: 30,
   answerSec: 30,
   reopenOnIncorrect: true,

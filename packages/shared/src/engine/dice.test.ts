@@ -24,7 +24,7 @@ describe('rolling for the first pick', () => {
     expect(() => s.player('ann', { t: 'roll' })).toThrow(/already rolled/);
     s.player('bob', { t: 'roll' }).player('cat', { t: 'roll' });
     // The last die gets a moment to land before the result is called.
-    expect(s.trivia.roll).toMatchObject({ phase: 'landing', winnerId: null, timer: null });
+    expect(s.trivia.roll).toMatchObject({ phase: 'landing', winnerId: null });
 
     settle(s);
     expect(s.trivia).toMatchObject({ stage: 'roll', controlId: 'bob', roll: { phase: 'won', winnerId: 'bob' } });
@@ -55,13 +55,22 @@ describe('rolling for the first pick', () => {
     expect(s.trivia).toMatchObject({ controlId: 'ann', roll: { round: 3, phase: 'won', winnerId: 'ann', rolls: { cat: 1, ann: 5 }, out: { bob: 2 } } });
   });
 
-  it('rolls for anyone who does not tap in time, and lets the host hurry it along', () => {
+  it('waits for everyone however long they take, until the host rolls for the rest', () => {
     const s = atTheRoll([1, 6, 3]);
     s.player('ann', { t: 'roll' });
-    s.advance(11_999);
-    expect(s.trivia.roll!.phase).toBe('rolling');
-    s.advance(1);
+    // No clock is running, on the first roll or on a tie-break.
+    expect(nextDeadline(s.state)).toBeNull();
+    s.advance(10 * 60_000);
+    expect(s.trivia.roll).toMatchObject({ phase: 'rolling', rolls: { ann: 1 } });
+    s.host({ t: 'roll.finish' });
     expect(s.trivia.roll).toMatchObject({ phase: 'landing', rolls: { ann: 1, bob: 6, cat: 3 } });
+
+    const tie = atTheRoll([4, 4, 2]);
+    for (const id of ['ann', 'bob', 'cat']) tie.player(id, { t: 'roll' });
+    settle(tie);
+    settle(tie);
+    expect(tie.trivia.roll).toMatchObject({ round: 2, phase: 'rolling', contenders: ['ann', 'bob'] });
+    expect(nextDeadline(tie.state)).toBeNull();
 
     const t = atTheRoll([2, 2, 5]);
     t.host({ t: 'roll.finish' });

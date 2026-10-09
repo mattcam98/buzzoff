@@ -47,7 +47,7 @@ function selectClue(g: GameState, r: TriviaRound, cat: number, idx: number, ctx:
   }
 
   const c: ActiveClue = {
-    cat, idx, value: clue.value, stage: 'reading', cycle: 0, openedAt: null, windowEndsAt: null, decided: null,
+    cat, idx, value: clue.value, stage: 'reading', cycle: 0, openedAt: null, windowEndsAt: null, graceEndsAt: null, decided: null,
     deadline: null, timerMs: null, held: null, attempts: [], answererId: null, excluded: [],
     wager: null, judgments: [], timedOut: false, answerTimeUp: false,
   };
@@ -79,6 +79,7 @@ function openBuzzers(g: GameState, c: ActiveClue, ctx: Pick<Ctx, 'now' | 'events
   c.attempts = [];
   c.decided = null;
   c.windowEndsAt = null;
+  c.graceEndsAt = null;
   c.answererId = null;
   c.answerTimeUp = false;
   if (clock === 'full') {
@@ -110,6 +111,7 @@ function finish(r: TriviaRound, c: ActiveClue, winnerId: string | null, ctx: Ctx
   c.deadline = null;
   c.timerMs = null;
   c.windowEndsAt = null;
+  c.graceEndsAt = null;
   c.answererId = null;
   const clue = r.board[c.cat].clues[c.idx];
   clue.used = true;
@@ -198,7 +200,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     r.stage = 'board';
     // The trailing player opens every board after the first; the first pick of the game is rolled for.
     if (g.roundIndex > 0 && players.some((p) => p.score !== 0)) r.controlId = ranked(players)[players.length - 1].id;
-    else if (players.length > 1) startRoll(r, players.map((p) => p.id), ctx);
+    else if (players.length > 1) startRoll(r, players.map((p) => p.id));
     else r.controlId = players[0]?.id ?? null;
   },
 
@@ -273,12 +275,17 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
 
     if (c.stage !== 'open' && c.stage !== 'answering') return reject('closed');
     if (c.answererId === playerId || c.attempts.some((a) => a.playerId === playerId)) return reject('duplicate');
+    // Once someone has the floor, a buzz only counts for the record, and only while the grace period lasts.
+    if (c.stage === 'answering' && !(c.graceEndsAt && ctx.now < c.graceEndsAt)) return reject('closed');
 
     const ms = round3(ctx.now - c.openedAt!);
     const rttMs = ctx.rtt(playerId);
     const adjustedMs =
       rules.arbitration === 'latencyAdjusted' ? round3(Math.max(0, ms - Math.min((rttMs ?? 0) / 2, rules.maxCompensationMs))) : null;
     c.attempts.push({ playerId, ms, rttMs, adjustedMs, seq: c.attempts.length });
+    // The first buzz starts the grace period in which the others are still taken down. (A game saved before the rule existed has none.)
+    const graceMs = rules.graceMs ?? 0;
+    if (c.attempts.length === 1 && graceMs > 0) c.graceEndsAt = ctx.now + graceMs;
 
     const stats = g.stats[playerId];
     stats.buzzes += 1;
@@ -296,6 +303,8 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     if (r.stage === 'roll') return tickRoll(r, ctx);
     const c = r.clue;
     if (!c) return;
+    // The grace period is over: every phone still showing a live buzzer is told it has shut.
+    if (c.graceEndsAt && ctx.now >= c.graceEndsAt) c.graceEndsAt = null;
     if (c.stage === 'open') {
       const windowDone = c.windowEndsAt !== null && ctx.now >= c.windowEndsAt;
       const timeUp = c.deadline !== null && ctx.now >= c.deadline;
@@ -314,7 +323,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     }
   },
 
-  deadlines: (r) => (r.stage === 'roll' ? [r.roll?.deadline ?? null] : r.clue ? [r.clue.windowEndsAt, r.clue.deadline] : []),
+  deadlines: (r) => (r.stage === 'roll' ? [r.roll?.deadline ?? null] : r.clue ? [r.clue.windowEndsAt, r.clue.deadline, r.clue.graceEndsAt ?? null] : []),
 
   timer: (r) => r.clue,
 
@@ -324,6 +333,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     if (!c) return;
     c.openedAt = shiftTime(c.openedAt, delta);
     c.windowEndsAt = shiftTime(c.windowEndsAt, delta);
+    c.graceEndsAt = shiftTime(c.graceEndsAt ?? null, delta);
     c.deadline = shiftTime(c.deadline, delta);
   },
 
@@ -336,6 +346,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     c.attempts = [];
     c.decided = null;
     c.windowEndsAt = null;
+    c.graceEndsAt = null;
   },
 
   resume(g, r, ctx) {
@@ -352,8 +363,8 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     if (!c) return;
     c.attempts = c.attempts.filter((a) => a.playerId !== playerId);
     if (c.decided !== null) c.decided = Math.min(c.decided, c.attempts.length);
-    // A collection window with nothing left in it would never close.
-    if (!c.attempts.length) c.windowEndsAt = null;
+    // A collection window with nothing left in it would never close, and with no first buzz there is no grace period either.
+    if (!c.attempts.length) c.windowEndsAt = c.graceEndsAt = null;
     // Their turn cannot be completed; throw the clue out. A clue that is already settled stays settled.
     if (c.stage !== 'result' && (c.answererId === playerId || c.wager?.playerId === playerId)) cancelClue(g, r);
   },
@@ -373,7 +384,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
       roll: r.roll
         ? {
             round: r.roll.round, phase: r.roll.phase, contenders: r.roll.contenders, rolls: r.roll.rolls, out: r.roll.out,
-            winnerId: r.roll.winnerId, timer: r.roll.phase === 'rolling' ? timerView(r.roll) : null,
+            winnerId: r.roll.winnerId,
           }
         : null,
       board: r.board.map((cat) => ({
@@ -446,7 +457,8 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     let buzzer: BuzzerView;
     if (c.wager || c.stage === 'result' || c.stage === 'wager' || c.stage === 'reading') buzzer = HIDDEN;
     else if (player.eliminated || c.excluded.includes(playerId)) buzzer = view('out');
-    else if (c.stage === 'answering') buzzer = view(c.answererId === playerId ? 'yours' : 'taken');
+    // During the grace period a player who has not buzzed yet still has a live buzzer, though the floor is taken.
+    else if (c.stage === 'answering') buzzer = view(c.answererId === playerId ? 'yours' : mine || !c.graceEndsAt ? 'taken' : 'open');
     else if (mine) buzzer = view('buzzed');
     else buzzer = view('open');
     return { buzzer, wager };

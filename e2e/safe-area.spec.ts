@@ -113,8 +113,10 @@ for (const [mode, { viewport, insets }] of Object.entries(MODES)) {
     await check(host, 'console, player dialog');
     await host.keyboard.press('Escape');
     await host.getByRole('button', { name: /Start the show/ }).click();
+    await expect(host.locator('.hc-cats li').first()).toBeVisible();
+    await check(host, 'console, round intro');
     await host.getByRole('button', { name: /Begin round/ }).click();
-    // With one player the roll is a formality, and the server makes it for anyone who does not.
+    // With one player there is nobody to roll against, so there may be no die to tap.
     await phone.locator('.play__roll button').first().click({ timeout: 5000 }).catch(() => undefined);
     await expect(host.locator('.hc-board')).toBeVisible({ timeout: 20_000 });
     // The top bar's controls are all there and all a thumb can hit, whatever the width.
@@ -136,6 +138,15 @@ for (const [mode, { viewport, insets }] of Object.entries(MODES)) {
     await check(host, 'console, clue');
     await expect(phone.locator('.play__buzzer')).toBeVisible();
     await check(phone, 'phone, buzzer');
+    // With an answer to rule on, the heading keeps the width of the card: the clock and its buttons go beneath it on a narrow screen.
+    await phone.locator('.play__buzzer').click();
+    const state = host.locator('.hc-clue__state');
+    await expect(state).toContainText('Waiting for your ruling');
+    await expect(state.locator('small')).toHaveText('Question hidden, its timer paused');
+    const [heading, card] = [await state.boundingBox(), await host.locator('.hc-clue').boundingBox()];
+    if (viewport.width <= 640) expect(heading!.width).toBeGreaterThan(card!.width * 0.6);
+    expect(heading!.height).toBeLessThan(90);
+    await check(host, 'console, ruling');
 
     const page = await open();
     for (const [name, path, ready] of [

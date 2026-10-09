@@ -22,7 +22,8 @@ const RULES = {
     { mode: 'fastMoney', title: 'Fast Money', questions: 2, participants: 'top2', turnSec: 45, extraSecPerTurn: 10, blockDuplicates: true, reveal: 'atEnd', stakes: 'decider', pointMultiplier: 10, target: 0, targetBonus: 0 },
   ],
   buzzer: {
-    arbitration: 'first', collectionWindowMs: 150, maxCompensationMs: 150,
+    // A grace period long enough for a second phone to be tapped by a test.
+    arbitration: 'first', collectionWindowMs: 150, maxCompensationMs: 150, graceMs: 1500,
     buzzSec: 30, answerSec: 20, reopenOnIncorrect: true, rebuzz: false, incorrectPenaltyPct: 100, teamLockout: true,
   },
   teams: { enabled: false, names: ['Team Honey', 'Team Sting'] },
@@ -149,6 +150,26 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   // --- round one
   await key(host, 'Space', /Start the show/);
   await expect(tv.locator('.tv-intro h1')).toHaveText('Board One');
+  // Before the round begins the host can read up on a category, and swap one the room does not fancy for another.
+  const cats = host.locator('.hc-cats li');
+  const tvCats = tv.locator('.tv-intro__cats li');
+  await expect(cats).toHaveCount(3);
+  await expect(tvCats).toHaveCount(3);
+  const dealt = await tvCats.allInnerTexts();
+  await cats.nth(0).locator('strong').hover();
+  await host.mouse.down();
+  await expect(host.locator('.hc-cats .hc-board__blurb')).toBeVisible();
+  await snap(host, 'host-intro-blurb');
+  await host.mouse.up();
+  await expect(host.locator('.hc-board__blurb')).toHaveCount(0);
+  await cats.nth(1).getByRole('button', { name: /Reroll/ }).click();
+  await expect(tvCats.nth(1)).not.toHaveText(dealt[1]);
+  expect([await tvCats.nth(0).innerText(), await tvCats.nth(2).innerText()]).toEqual([dealt[0], dealt[2]]);
+  await expect(tvCats).toHaveCount(3);
+  await snap(tv, 'tv-intro-rerolled');
+  // This test's board was chosen by hand, so the swap is taken back: it is a step like any other.
+  await key(host, 'u', /Undo category change/);
+  await expect(tvCats.nth(1)).toHaveText(dealt[1]);
   await snap(tv, 'tv-round-intro');
   await snap(cat, 'phone-round-intro');
   // Nobody has scored, so nobody is behind anybody: players who are level share a place.
@@ -212,9 +233,19 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await snap(cat, 'phone-buzzer-open');
   await buzzer(bob).click();
   await expect(buzzer(bob)).toHaveAttribute('data-state', 'yours');
+  await expect(tv.locator('.tv-answering h2')).toHaveText('Bob');
+  // Cat is a split second behind. Bob keeps the floor, and her buzz is still taken down and ranked behind his.
+  await buzzer(cat).click();
   await expect(buzzer(cat)).toHaveAttribute('data-state', 'taken');
-  await buzzer(cat).click({ force: true }).catch(() => undefined); // a late press changes nothing
+  await expect(cat.locator('.play__readout')).toContainText(/registered at [\d.]+ m?s · \+\d+ ms behind the winner/);
+  const ladder = tv.locator('.bz-ladder li');
+  await expect(ladder).toHaveCount(2);
+  await expect(ladder.nth(0)).toContainText(/Bob.*first/);
+  await expect(ladder.nth(1)).toContainText(/Cat.*\+\d+ ms/);
+  // Once the grace period is over every buzzer is shut: Ann's press changes nothing.
+  await expect(buzzer(ann)).toHaveAttribute('data-state', 'taken');
   await buzzer(ann).click({ force: true }).catch(() => undefined);
+  await expect(ladder).toHaveCount(2);
   await expect(tv.locator('.tv-answering h2')).toHaveText('Bob');
   // Nothing plays while a contestant is on the spot.
   await expect(music).toHaveAttribute('data-music', 'off');
@@ -243,7 +274,8 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   // Pausing shuts the buzzers; resuming opens them again without anyone arming anything.
   await key(host, 'p', /Pause/);
   await expect(cat.getByRole('heading', { name: 'Paused' })).toBeVisible();
-  await expect(host.locator('.hc-clue__state')).toHaveText('Paused — buzzers open again when you resume');
+  await expect(host.locator('.hc-clue__state')).toContainText('Paused');
+  await expect(host.locator('.hc-clue__state small')).toHaveText('Buzzers open again when you resume');
   await key(host, 'p', /Resume/);
   await expect(buzzer(cat)).toHaveAttribute('data-state', 'open');
   await buzzer(cat).click();

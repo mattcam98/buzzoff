@@ -181,7 +181,7 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
 }
 
 /** The roll for the first pick: every player's die, side by side. */
-function RollScene({ pub, snap, players, roll }: SceneProps & { roll: NonNullable<TriviaPublic['roll']> }) {
+function RollScene({ pub, players, roll }: SceneProps & { roll: NonNullable<TriviaPublic['roll']> }) {
   const tied = roll.phase === 'tied' ? rollLeaders(roll) : [];
   const names = (ids: string[]) => ids.map((id) => players[id]?.name).filter(Boolean).join(' & ');
   const winner = roll.winnerId ? players[roll.winnerId] : null;
@@ -197,7 +197,6 @@ function RollScene({ pub, snap, players, roll }: SceneProps & { roll: NonNullabl
         </h2>
         <p>
           {winner ? 'Call your category and points.' : tied.length ? `${names(tied)} roll again.` : 'Tap your phone to roll. Highest roll wins.'}
-          {roll.phase === 'rolling' && <Seconds pub={pub} snap={snap} className="tv-roll__count" />}
         </p>
       </header>
       {/* One row of dice for up to eleven players, two for up to thirty-two (two long rows make for bigger dice than three short ones), then three. */}

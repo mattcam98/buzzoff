@@ -5,7 +5,7 @@ import { nextDeadline } from './game';
 import { categories, Sim, surveys, TRIVIA } from './testkit';
 
 describe('buzzer arbitration', () => {
-  it('awards the first buzz the server receives and records the rest as late', () => {
+  it('awards the first buzz the server receives and records the ones just behind it', () => {
     const s = new Sim().start().open();
     s.advance(327);
     expect(s.buzz('ann')).toEqual({ status: 'registered', ms: 327 });
@@ -66,7 +66,80 @@ describe('buzzer arbitration', () => {
     s.buzz('bob');
     expect(s.you('ann').buzzer).toMatchObject({ state: 'yours', ms: 50, deltaMs: 0, rank: 1 });
     expect(s.you('bob').buzzer).toMatchObject({ state: 'taken', ms: 70, deltaMs: 20, rank: 2 });
+    // Cat has not buzzed: her buzzer stays live for the rest of the grace period, then shuts.
+    expect(s.you('cat').buzzer).toMatchObject({ state: 'open', ms: null, rank: null });
+    s.advance(300);
     expect(s.you('cat').buzzer).toMatchObject({ state: 'taken', ms: null, rank: null });
+  });
+
+  it('keeps the other buzzers live for a grace period after the first buzz, without changing who won', () => {
+    const s = new Sim({ buzzer: { graceMs: 250 } }).start().open();
+    s.advance(400);
+    s.buzz('ann');
+    // Ann has the floor at once; nothing waits for the grace period.
+    expect(s.trivia.clue).toMatchObject({ stage: 'answering', answererId: 'ann' });
+    expect(s.events.at(-1)).toEqual({ type: 'buzz.winner', playerId: 'ann' });
+    expect(nextDeadline(s.state)).toBe(s.now + 250);
+
+    s.advance(87);
+    expect(s.buzz('bob')).toEqual({ status: 'registered', ms: 487 });
+    s.advance(162);
+    expect(s.buzz('cat')).toEqual({ status: 'registered', ms: 649 });
+    expect(s.trivia.clue!.attempts.map((a) => [a.playerId, a.ms, a.deltaMs, a.winner])).toEqual([
+      ['ann', 400, 0, true],
+      ['bob', 487, 87, false],
+      ['cat', 649, 249, false],
+    ]);
+    expect(s.trivia.clue!.answererId).toBe('ann');
+    expect(s.state.stats.ann.buzzWins).toBe(1);
+    expect(s.state.stats.bob.buzzWins).toBe(0);
+  });
+
+  it('shuts the buzzers when the grace period ends, and at once when there is none', () => {
+    const s = new Sim({ buzzer: { graceMs: 250 }, players: ['ann', 'bob', 'cat', 'dan'] }).start().open();
+    s.advance(400);
+    s.buzz('ann');
+    s.advance(100);
+    s.buzz('bob');
+    expect(s.you('dan').buzzer.state).toBe('open');
+    s.advance(150);
+    expect(s.you('dan').buzzer.state).toBe('taken');
+    expect(s.buzz('dan').status).toBe('closed');
+    expect(s.trivia.clue!.attempts.map((a) => a.playerId)).toEqual(['ann', 'bob']);
+    // The answer timer is the only clock left.
+    expect(nextDeadline(s.state)).toBe(s.state.rounds[0].mode === 'trivia' ? s.state.rounds[0].clue!.deadline : null);
+
+    const none = new Sim({ buzzer: { graceMs: 0 } }).start().open();
+    none.advance(400);
+    none.buzz('ann');
+    expect(none.you('bob').buzzer.state).toBe('taken');
+    expect(none.buzz('bob').status).toBe('closed');
+    expect(none.trivia.clue!.attempts).toHaveLength(1);
+  });
+
+  it('starts a fresh grace period when the buzzers reopen for a steal, and stops it while paused', () => {
+    const s = new Sim({ buzzer: { graceMs: 250 } }).start().open();
+    s.advance(400);
+    s.buzz('ann');
+    s.advance(50);
+    s.buzz('bob');
+    s.advance(1000);
+    s.host({ t: 'judge', correct: false });
+    // A new buzz: bob's near miss on the first one does not carry over.
+    expect(s.trivia.clue).toMatchObject({ stage: 'open', attempts: [] });
+    s.advance(300);
+    s.buzz('cat');
+    expect(s.you('bob').buzzer.state).toBe('open');
+    s.host({ t: 'pause', paused: true });
+    s.advance(5000);
+    s.host({ t: 'pause', paused: false });
+    // The 250 ms picks up where it stopped.
+    expect(s.you('bob').buzzer.state).toBe('open');
+    s.advance(100);
+    expect(s.buzz('bob')).toMatchObject({ status: 'registered' });
+    s.advance(150);
+    expect(s.you('ann').buzzer.state).toBe('out');
+    expect(s.trivia.clue!.attempts.map((a) => a.playerId)).toEqual(['cat', 'bob']);
   });
 });
 

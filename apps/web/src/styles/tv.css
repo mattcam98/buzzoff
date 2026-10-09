@@ -89,7 +89,8 @@
   color: var(--buzz);
 }
 .tv-offline,
-.tv-sound {
+.tv-sound,
+.tv-full {
   position: fixed;
   z-index: 70;
   left: 50%;
@@ -116,6 +117,30 @@
   cursor: pointer;
   backdrop-filter: blur(6px);
   animation: bz-rise 0.5s 1s var(--ease-out) both;
+}
+.tv-sound,
+.tv-full {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+}
+/* The other bottom corner. It shares the sound prompt's strip at first, and afterwards only shows while the mouse is moving. */
+.tv-full {
+  left: max(1em, var(--safe-left));
+  bottom: max(0.5em, var(--safe-bottom));
+  transform: none;
+  background: rgb(255 255 255 / 0.14);
+  color: var(--text);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  animation: bz-rise 0.25s var(--ease-out) both;
+}
+.tv-full:hover {
+  background: rgb(255 255 255 / 0.24);
+}
+/* Full screen with nobody at the mouse: the pointer goes too. */
+.tv[data-idle] {
+  cursor: none;
 }
 /* Until the screen has been clicked, everything sits a little higher and the prompt has the bottom edge to itself. */
 .tv:has(> .tv-sound) {
@@ -350,14 +375,6 @@
   font-size: 1.3em;
   color: var(--text-dim);
 }
-.tv-roll__count {
-  min-width: 1.6em;
-  font-size: 1.5em;
-  color: var(--text);
-}
-.tv-roll__count[data-low] {
-  color: var(--bad);
-}
 .tv-roll__players {
   list-style: none;
   margin: 0;
@@ -438,6 +455,13 @@
   font-size: 7.4em;
   font-stretch: 80%;
   line-height: 0.92;
+  /*
+   * The gradient is only painted inside the heading's box, and a line set this tight is shorter than its letters:
+   * without the padding a g or a y loses its tail, and an accented capital its accent. The margins take the
+   * space back out of the gaps above and below, stopping just short of the neighbours.
+   */
+  padding-block: 0.06em 0.1em;
+  margin-block: -0.06em -0.08em;
   background: linear-gradient(180deg, #fff 30%, var(--buzz));
   -webkit-background-clip: text;
   background-clip: text;
@@ -1453,6 +1477,9 @@ video.tv-clue__media {
   font-stretch: 80%;
   line-height: 0.95;
   text-transform: uppercase;
+  /* As for the round intro: room for the gradient to reach an accent above the capitals or a tail below them. */
+  padding-block: 0.06em;
+  margin-block: -0.06em;
   background: linear-gradient(180deg, #fff 20%, var(--buzz));
   -webkit-background-clip: text;
   background-clip: text;

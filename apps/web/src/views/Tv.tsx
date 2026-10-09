@@ -4,12 +4,12 @@
  */
 import { accuracy, normalizeRoomCode, ROOM_CODE_LENGTH, type PlayerStats, type PublicPlayer, type PublicView } from '@buzzoff/shared';
 import QRCode from 'qrcode';
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useLocation } from 'wouter';
 import { api } from '../lib/api';
 import { useConnection, type Snapshot } from '../lib/connection';
 import { fmtMs, fmtPercent, joinAddress, ordinal, placings, playerMap, plural } from '../lib/format';
-import { useGameEvents, useWakeLock } from '../lib/hooks';
+import { useFullscreen, useGameEvents, useHotkeys, useRecentInput, useWakeLock } from '../lib/hooks';
 import { duckMusic, moodFor, setMusic } from '../lib/music';
 import { audioReady, play, soundFor, unlockAudio } from '../lib/sound';
 import { FinalSecondsTick, roundBlurb, Score } from '../ui/game';
@@ -56,7 +56,10 @@ export function Tv({ code }: { code: string }) {
   const [sound, setSound] = useState(audioReady());
   const [confetti, setConfetti] = useState(0);
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
+  const full = useFullscreen();
+  const inUse = useRecentInput();
   useWakeLock();
+  useHotkeys((key) => key === 'f' && full.supported && full.toggle());
 
   useEffect(() => {
     api.info().then((info) => setPublicUrl(info.publicUrl), () => undefined);
@@ -97,7 +100,7 @@ export function Tv({ code }: { code: string }) {
 
   return (
     // A click anywhere turns the sound on, and wakes it again if the browser has since put it to sleep.
-    <div className="bz-stage tv" data-phase={pub.phase} data-music={mood ?? 'off'} onClick={sound ? unlockAudio : enableSound}>
+    <div className="bz-stage tv" data-phase={pub.phase} data-music={mood ?? 'off'} data-idle={(full.on && !inUse) || undefined} onClick={sound ? unlockAudio : enableSound}>
       <TvContent pub={pub} snap={snap} publicUrl={publicUrl} />
       {pub.paused && (
         <div className="tv-overlay" role="status">
@@ -110,6 +113,15 @@ export function Tv({ code }: { code: string }) {
       {snap.status !== 'online' && <div className="tv-offline">Reconnecting…</div>}
       {/* The screen itself takes the click; the button says so, and gives the keyboard something to press. */}
       {!sound && <button className="tv-sound">🔊 Click anywhere to turn sound on</button>}
+      {/* Offered while someone is at the mouse or keyboard, and until the screen has had its first click; then it gets out of the way. */}
+      {full.supported && (inUse || !sound) && (
+        <button className="tv-full" onClick={full.toggle} title="Press F">
+          <svg viewBox="0 0 16 16" width="1em" height="1em" aria-hidden>
+            <path d={full.on ? 'M6 2v4H2M10 2v4h4M14 10h-4v4M2 10h4v4' : 'M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4'} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          {full.on ? 'Exit full screen' : 'Full screen'}
+        </button>
+      )}
       <Confetti burst={confetti} />
     </div>
   );
@@ -234,6 +246,10 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
 function RoundIntro({ pub }: { pub: PublicView }) {
   const round = pub.round!;
   const intro = useFit<HTMLDivElement>();
+  // The categories arrive one after another when the card first comes up; one swapped in later comes at once.
+  const titles = round.mode === 'trivia' ? round.board.map((cat) => cat.title).join('\n') : round.mode === 'final' ? round.category : '';
+  const first = useRef(titles);
+  const swapped = first.current !== titles;
   return (
     <div ref={intro} className="tv-intro">
       <span className="bz-eyebrow">
@@ -244,13 +260,18 @@ function RoundIntro({ pub }: { pub: PublicView }) {
       {round.mode === 'trivia' && (
         <ul className="tv-intro__cats">
           {round.board.map((cat, i) => (
-            <li key={i} style={{ animationDelay: `${500 + i * 160}ms` }}>
+            // Keyed by its title, so a category the host swaps for another flips in the way the first ones did.
+            <li key={cat.title} style={{ animationDelay: `${swapped ? 0 : 500 + i * 160}ms` }}>
               {cat.title}
             </li>
           ))}
         </ul>
       )}
-      {round.mode === 'final' && <div className="tv-intro__cats tv-intro__cats--one">{round.category}</div>}
+      {round.mode === 'final' && (
+        <div key={round.category} className="tv-intro__cats tv-intro__cats--one" style={swapped ? { animationDelay: '0ms' } : undefined}>
+          {round.category}
+        </div>
+      )}
     </div>
   );
 }

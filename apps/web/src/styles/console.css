@@ -191,13 +191,16 @@
 }
 .hc-stage__head {
   display: flex;
+  /* On a phone the clock and its buttons drop to a line of their own instead of squeezing the heading into a sliver. */
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
+  gap: 10px 14px;
 }
 .hc-stage__head > div:first-child {
   display: grid;
   gap: 4px;
+  flex: 1 1 13em;
   min-width: 0;
 }
 .hc-actions {
@@ -335,7 +338,7 @@
   overflow: hidden;
 }
 /* A category with a description: a corner dot says so, and holding the title shows it. */
-.hc-board__col h3[data-peek] {
+.hc [data-peek] {
   position: relative;
   cursor: help;
   user-select: none;
@@ -388,6 +391,65 @@
     opacity: 0;
     transform: translateY(-4px);
   }
+}
+/* The same, for the list of categories on a round's title card: each with a button to swap it for another. */
+.hc-cats {
+  display: grid;
+  gap: 8px;
+}
+.hc-cats__list {
+  position: relative;
+}
+.hc-cats ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17em), 1fr));
+  gap: 6px;
+}
+.hc-cats li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 6px 6px 12px;
+  border-radius: 10px;
+  background: var(--ink-600);
+}
+.hc-cats li strong {
+  min-width: 0;
+  padding: 4px 0;
+  font-size: 0.875rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+/* Here the mark that a title can be held sits after the words, where there is room for it. */
+.hc-cats li strong[data-peek]::after {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  vertical-align: middle;
+}
+.hc-cats li strong[data-peek='open'] {
+  color: var(--buzz);
+}
+.hc-cats li strong[data-peek='open']::after {
+  background: var(--buzz);
+}
+.hc-cats li .bz-btn {
+  flex: none;
+}
+/* Just under the list, over the note there, so the titles stay in view and nothing moves while one is held. */
+.hc-cats .hc-board__blurb {
+  top: calc(100% + 6px);
 }
 .hc-board__col button {
   position: relative;
@@ -442,6 +504,14 @@
   font-family: var(--font-display);
   font-size: 1.25rem;
   font-weight: 800;
+}
+.hc-clue__state small {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-dim);
 }
 .hc-clue[data-stage='open'] .hc-clue__state { color: var(--good); }
 .hc-clue[data-stage='answering'] .hc-clue__state { color: var(--buzz); }

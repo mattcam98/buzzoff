@@ -402,7 +402,7 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
  * The roll for the first pick. Tapping only asks the server to roll; the number is the
  * server's, and the die on screen tumbles onto it when it arrives.
  */
-function RollPanel({ conn, pub, snap, me, players, roll }: Ctx & { roll: NonNullable<TriviaPublic['roll']> }) {
+function RollPanel({ conn, pub, me, players, roll }: Ctx & { roll: NonNullable<TriviaPublic['roll']> }) {
   const [pressed, setPressed] = useState(false);
   useEffect(() => setPressed(false), [roll.round]);
 
@@ -457,7 +457,7 @@ function RollPanel({ conn, pub, snap, me, players, roll }: Ctx & { roll: NonNull
         </button>
       )}
       <p className="play__hint">
-        {hint} {canRoll && <Seconds pub={pub} snap={snap} />}
+        {hint}
       </p>
       <ul className="play__rolls" data-scroll aria-label="Everyone’s rolls">
         {pub.players
@@ -551,7 +551,7 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
             {state === 'yours' && ' · first in'}
           </p>
         ) : state === 'yours' || state === 'taken' ? null : (
-          <p>{state === 'open' && <Seconds pub={pub} snap={snap} />}</p>
+          <p>{state === 'open' && clue.stage === 'open' && <Seconds pub={pub} snap={snap} />}</p>
         )}
       </div>
     </section>

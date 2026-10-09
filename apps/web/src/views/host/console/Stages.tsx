@@ -5,6 +5,7 @@ import { fmtDelta, fmtScore, plural } from '../../../lib/format';
 import { BuzzLadder, Die, rollLeaders, Seconds } from '../../../ui/game';
 import { Avatar, Button, cx, TimerBar } from '../../../ui/kit';
 import type { StageProps } from '../HostConsole';
+import { usePeek } from './peek';
 
 function TimerTools({ pub, snap, run, running }: Pick<StageProps, 'pub' | 'snap' | 'run'> & { running: boolean }) {
   if (!running) return null;
@@ -25,30 +26,14 @@ function TimerTools({ pub, snap, run, running }: Pick<StageProps, 'pub' | 'snap'
 
 /** The clue grid. Holding a category title pops its description out over the grid for as long as it is held. */
 function Board({ round, secret, players, paused, run }: Pick<StageProps, 'players' | 'run'> & { round: TriviaPublic; secret: TriviaSecret; paused: boolean }) {
-  const [peek, setPeek] = useState<number | null>(null);
-  const close = () => setPeek(null);
+  const { peek, holdable } = usePeek();
   const peeked = peek === null ? null : round.board[peek];
   return (
     <div className="hc-board" style={{ gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))` }}>
       {round.board.map((cat, c) => (
         <div key={c} className="hc-board__col">
           {cat.blurb ? (
-            <h3
-              data-peek={peek === c ? 'open' : ''}
-              tabIndex={0}
-              aria-description={cat.blurb}
-              onPointerDown={(e) => {
-                // Captured, so letting go anywhere closes it.
-                e.currentTarget.setPointerCapture(e.pointerId);
-                setPeek(c);
-              }}
-              onPointerUp={close}
-              onPointerCancel={close}
-              onLostPointerCapture={close}
-              onContextMenu={(e) => e.preventDefault()}
-              onFocus={(e) => e.currentTarget.matches(':focus-visible') && setPeek(c)}
-              onBlur={close}
-            >
+            <h3 {...holdable(c)} aria-description={cat.blurb}>
               {cat.title}
             </h3>
           ) : (
@@ -116,7 +101,9 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
 
   const answerer = clue.answererId ? players[clue.answererId] : null;
   const wagerer = clue.wager ? players[clue.wager.playerId] : null;
-  const stageLabel = { wager: 'Taking a wager', reading: 'Paused — buzzers open again when you resume', open: 'Buzzers are open', answering: clue.held ? 'Waiting for your ruling — question hidden, its timer paused' : 'Waiting for your ruling', result: 'Answer revealed' }[clue.stage];
+  const stageLabel = { wager: 'Taking a wager', reading: 'Paused', open: 'Buzzers are open', answering: 'Waiting for your ruling', result: 'Answer revealed' }[clue.stage];
+  // What the headline leaves out, in small print beneath it so that it never has to share a line with the clock.
+  const stageNote = clue.stage === 'reading' ? 'Buzzers open again when you resume' : clue.stage === 'answering' && clue.held ? 'Question hidden, its timer paused' : null;
   const submitWager = (e: FormEvent) => {
     e.preventDefault();
     const amount = Number(wager);
@@ -131,7 +118,10 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
             {clue.category} · {clue.isWager ? `wager${clue.wager?.amount != null ? ` ${fmtScore(clue.wager.amount)}` : ''}` : fmtScore(clue.value)}
             {clue.singleAttempt && ' · one attempt, no steals'}
           </span>
-          <p className="hc-clue__state">{stageLabel}</p>
+          <p className="hc-clue__state">
+            {stageLabel}
+            {stageNote && <small>{stageNote}</small>}
+          </p>
         </div>
         <TimerTools pub={pub} snap={snap} run={run} running={!!clue.timer} />
       </div>
@@ -222,7 +212,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
 }
 
 /** The roll for the first pick. It runs itself; the host can only hurry it or skip it. */
-function RollStage({ pub, snap, players, run, round, roll }: StageProps & { round: TriviaPublic; roll: NonNullable<TriviaPublic['roll']> }) {
+function RollStage({ pub, players, run, round, roll }: StageProps & { round: TriviaPublic; roll: NonNullable<TriviaPublic['roll']> }) {
   const tied = roll.phase === 'tied' ? rollLeaders(roll) : [];
   const winner = roll.winnerId ? players[roll.winnerId] : null;
   const waiting = roll.contenders.filter((id) => roll.rolls[id] === undefined);
@@ -242,11 +232,6 @@ function RollStage({ pub, snap, players, run, round, roll }: StageProps & { roun
           </span>
           <h1>{title}</h1>
         </div>
-        {roll.phase === 'rolling' && (
-          <div className="hc-timer">
-            <Seconds pub={pub} snap={snap} className="hc-timer__count" />
-          </div>
-        )}
       </div>
       <ul className="hc-rolls">
         {pub.players
@@ -265,8 +250,8 @@ function RollStage({ pub, snap, players, run, round, roll }: StageProps & { roun
         </Button>
       </div>
       <p className="hc-note">
-        Players tap their phones; the highest roll picks the first clue and ties roll again by themselves. Anyone who has not rolled when the clock runs out
-        is rolled for. To skip the roll, click a player and give them the board.
+        Players tap their phones; the highest roll picks the first clue and ties roll again by themselves. There is no clock: the roll waits for everyone, and
+        the button above rolls for anyone who is not going to. To skip the roll, click a player and give them the board.
       </p>
     </section>
   );

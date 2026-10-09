@@ -2,13 +2,14 @@ import type { PublicPlayer, PublicView } from '@buzzoff/shared';
 
 const whole = new Intl.NumberFormat('en-US');
 
-export const fmtScore = (n: number) => (n < 0 ? `−${whole.format(-n)}` : whole.format(n));
-export const fmtDelta = (n: number) => (n < 0 ? `−${whole.format(-n)}` : `+${whole.format(n)}`);
+// Math.abs, because a score counting back up from below zero passes through negative zero, which would print as "-0".
+export const fmtScore = (n: number) => (n < 0 ? `−${whole.format(-n)}` : whole.format(Math.abs(n)));
+export const fmtDelta = (n: number) => (n < 0 ? `−${whole.format(-n)}` : `+${whole.format(Math.abs(n))}`);
 
-/** A server-recorded buzz time, e.g. "327 ms" or "1.24 s". */
+/** A server-recorded buzz time, e.g. "327 ms" or "1.243 s". */
 export function fmtMs(ms: number): string {
-  if (ms >= 10_000) return `${(ms / 1000).toFixed(1)} s`;
-  if (ms >= 1000) return `${(ms / 1000).toFixed(2)} s`;
+  // Buzzes are told apart by milliseconds, so a time of several seconds keeps all three decimals.
+  if (ms >= 1000) return `${(ms / 1000).toFixed(3)} s`;
   return `${Math.round(ms)} ms`;
 }
 

@@ -100,6 +100,7 @@ export function RulesEditor({ rules, onChange }: Props) {
               <NumField label="Max adjustment (ms)" value={b.maxCompensationMs} min={0} max={300} onChange={(maxCompensationMs) => setBuzzer({ maxCompensationMs })} help="The most any one buzz can be moved forward." />
             </>
           )}
+          <NumField label="Grace period (ms)" value={b.graceMs} min={0} max={2000} onChange={(graceMs) => setBuzzer({ graceMs })} help="After the first buzz, the other buzzers stay live this long, so a buzz a split second behind is recorded and ranked. It never changes who won. 0 shuts them at once." />
           <NumField label="Question timer (s)" value={b.buzzSec} min={0} max={120} onChange={(buzzSec) => setBuzzer({ buzzSec })} help="Buzzers open as soon as you select a clue, and players have this long to buzz. 0 turns the timer off." />
           <NumField label="Time to answer (s)" value={b.answerSec} min={0} max={120} onChange={(answerSec) => setBuzzer({ answerSec })} help="0 turns the timer off. The host always makes the call." />
           <NumField label="Wrong-answer penalty (%)" value={b.incorrectPenaltyPct} min={0} max={100} onChange={(incorrectPenaltyPct) => setBuzzer({ incorrectPenaltyPct })} help="Share of the clue value deducted. 0 means no penalty." />

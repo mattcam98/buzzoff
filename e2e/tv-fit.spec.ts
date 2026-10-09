@@ -129,6 +129,30 @@ async function measureScene(tv: Page, scene: string, problems: string[]) {
   }
 }
 
+test('the shared screen goes full screen from its button or the F key, and the button gets out of the way', async ({ browser, request, baseURL }) => {
+  const game = await room(request, baseURL!, rules([BOARD]), names(3));
+  const tv = await (await browser.newContext({ viewport: { width: 1280, height: 720 } })).newPage();
+  await tv.goto(`/tv/${game.code}`);
+  const isFull = () => tv.evaluate(() => document.fullscreenElement !== null);
+  const enter = tv.getByRole('button', { name: 'Full screen', exact: true });
+  const leave = tv.getByRole('button', { name: 'Exit full screen' });
+  await expect(enter).toBeVisible();
+  await enter.click();
+  await expect.poll(isFull).toBe(true);
+  await expect(leave).toBeVisible();
+  // That click was the screen's first, so it turned the sound on as well.
+  await expect(tv.getByRole('button', { name: /turn sound on/ })).toHaveCount(0);
+  // With nobody at the mouse the button and the pointer go away, and come back when it moves.
+  await expect(leave).toHaveCount(0, { timeout: 6000 });
+  await expect(tv.locator('.tv')).toHaveAttribute('data-idle', 'true');
+  await tv.mouse.move(300, 300);
+  await expect(leave).toBeVisible();
+  await tv.keyboard.press('f');
+  await expect.poll(isFull).toBe(false);
+  await expect(enter).toBeVisible();
+  game.close();
+});
+
 test('a room of twenty fits the shared screen from the lobby to the finish', async ({ browser, request, baseURL }) => {
   test.setTimeout(180_000);
   const game = await room(request, baseURL!, rules([BOARD, FINAL]), names(20));

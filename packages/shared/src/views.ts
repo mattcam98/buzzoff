@@ -56,7 +56,7 @@ export interface TriviaPublic {
   /** The player whose turn it is to call the next clue. Only the host can put one in play. */
   controlId: string | null;
   /** The dice roll for the first pick, while it is being played. Nothing about it is secret. */
-  roll: (Pick<DiceRoll, 'round' | 'phase' | 'contenders' | 'rolls' | 'out' | 'winnerId'> & { timer: TimerView | null }) | null;
+  roll: Pick<DiceRoll, 'round' | 'phase' | 'contenders' | 'rolls' | 'out' | 'winnerId'> | null;
   board: { title: string; blurb?: string; clues: { value: number; used: boolean; winnerId: string | null }[] }[];
   clue: {
     cat: number;
