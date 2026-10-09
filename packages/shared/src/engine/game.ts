@@ -333,7 +333,7 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
         return;
       }
       default:
-        if (!mode.host(g, round, action, ctx)) fail('bad_stage', 'That is not possible in this round');
+        if (!mode.host(g, round, action, ctx)) fail('bad_stage', 'That’s not possible in this round');
     }
   });
 }
@@ -360,8 +360,8 @@ export function applyPlayer(state: GameState, playerId: string, action: PlayerAc
     const round = currentRound(g);
     if (!round) return fail('bad_stage', 'Nothing to do right now');
     if (g.paused) fail('paused', 'The game is paused');
-    if (player.eliminated) fail('eliminated', 'You have been eliminated');
-    if (!modeOf(round).player(g, round, playerId, action, ctx)) fail('bad_stage', 'That is not possible right now');
+    if (player.eliminated) fail('eliminated', 'You’ve been eliminated');
+    if (!modeOf(round).player(g, round, playerId, action, ctx)) fail('bad_stage', 'That’s not possible right now');
   });
 }
 

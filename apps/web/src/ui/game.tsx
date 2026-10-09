@@ -39,7 +39,7 @@ export function Score({ value, className }: { value: number; className?: string 
 
 /**
  * The buzz order for the current clue. Times are what the server recorded
- * when each buzz reached it — honest about being that, and nothing more.
+ * when each buzz reached it: honest about being that, and nothing more.
  */
 export function BuzzLadder({ attempts, players, adjusted, limit = 6 }: {
   attempts: PublicAttempt[];

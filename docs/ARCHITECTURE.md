@@ -36,7 +36,7 @@ any mode beyond that interface.
 | `final` | wager → answering → reveal (show an answer, host rules, repeat). |
 | `fastMoney` | ready → answering, per turn; then reveal (answer, then points, per cell) → result. |
 
-**Adding a mode** — say, an elimination round:
+**Adding a mode** (say, an elimination round):
 
 1. Add its settings schema to `rules.ts` and its state to `state.ts`.
 2. Implement `Mode` in `engine/elimination.ts`.
@@ -54,9 +54,9 @@ adjustment) and epoch-aligned (clients can render deadlines). The engine keeps
 deadlines in state and reports the next one; the room holds a single timer
 pointed at it. Randomness is an argument too: the room passes a generator
 backed by the operating system's secure source, and every dice roll and
-shuffle is drawn from it on the server. Pausing interrupts anything that depends on continuous time —
+shuffle is drawn from it on the server. Pausing interrupts anything that depends on continuous time:
 open buzzers are shut (the clue's *reading* stage, which exists only while
-paused) — and resuming shifts every stored deadline by the length of the pause
+paused). Resuming shifts every stored deadline by the length of the pause
 and opens them again as a fresh buzz.
 
 ## The room (`apps/server/src/room.ts`)
@@ -179,7 +179,7 @@ A live game is saved as one row (state and credential hashes together, in one
 statement) shortly after each change, with writes chained so an older snapshot
 can never overwrite a newer one, and flushed on shutdown. On boot every saved
 game is restored paused, with buzzers shut and all players marked offline
-until their phones reconnect — which they do on their own, with their stored
+until their phones reconnect, which they do on their own with their stored
 tokens.
 
 A crash can lose at most the last quarter-second of changes. Undo history is

@@ -22,8 +22,8 @@ interface Column {
   value: (e: LeaderboardEntry) => string;
 }
 
-const ms = (value: number | null) => (value === null ? '—' : fmtMs(value));
-const whole = (value: number | null) => (value === null ? '—' : fmtScore(Math.round(value)));
+const ms = (value: number | null) => (value === null ? '–' : fmtMs(value));
+const whole = (value: number | null) => (value === null ? '–' : fmtScore(Math.round(value)));
 
 /** Each way of ranking shows the measure it ranks by first, then two that put it in context. */
 const LENS_VIEW: Record<Lens, { label: string; columns: [Column, Column, Column]; note?: string }> = {
@@ -67,7 +67,7 @@ const LENS_VIEW: Record<Lens, { label: string; columns: [Column, Column, Column]
       { label: 'Buzzes won', value: (e) => String(e.stats.buzzWins) },
       { label: 'Avg buzz', value: (e) => ms(averageBuzzMs(e.stats)) },
     ],
-    note: 'First in is the share of a player’s buzzes that reached the server before anyone else’s. Buzz times include network delay, so they are not reaction times.',
+    note: 'First in is the share of a player’s buzzes that reached the server before anyone else’s. Buzz times include network delay, so they’re not reaction times.',
   },
 };
 
@@ -283,8 +283,8 @@ function SamePerson({ entry, others, tools }: { entry: LeaderboardEntry; others:
     <section className="lb-sheet__part">
       <h3>Same person, counted twice?</h3>
       <p className="lb-note">
-        A phone is recognised from one game to the next, whatever name is typed. A new phone, or a browser that has been cleared, starts a new entry. Fold that entry into this one and
-        its games count here.
+        Players are recognised by their phone, whatever name they type. A new phone or a cleared browser starts a new entry. Merge that entry into this one and its games
+        count here.
       </p>
       {others.length > 0 && (
         <div className="lb-merge">

@@ -36,7 +36,7 @@ const CUES: Record<CueName, [string, string]> = {
 };
 
 const SHORTCUTS: [string, string][] = [
-  ['Space', 'Do the highlighted next step'],
+  ['Space', 'Next step (the highlighted button)'],
   ['C', 'Rule the answer correct'],
   ['X', 'Rule the answer incorrect'],
   ['R', 'Reveal the answer (nobody gets it)'],
@@ -73,7 +73,7 @@ export function HostConsole({ code }: { code: string }) {
     return (
       <Notice title="This isn’t your game">
         <p>
-          This browser does not hold the host key for <strong>{code}</strong>. Open the console on the device that created the game.
+          This browser didn’t create game <strong>{code}</strong>, so it can’t host it. Open the console on the device that did.
         </p>
         <Link className="bz-btn bz-btn--primary" href="/host">
           Host dashboard
@@ -120,8 +120,8 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
 
   if (snap.status === 'rejected') {
     return (
-      <Notice title={snap.reason === 'no_room' ? 'That game has ended' : 'Host key not accepted'}>
-        <p>Games are cleared out after they have sat idle for a while.</p>
+      <Notice title={snap.reason === 'no_room' ? 'That game has ended' : 'This isn’t your game'}>
+        <p>{snap.reason === 'no_room' ? 'Games are cleared after sitting idle for a while.' : 'Open the console on the device that created the game.'}</p>
         <Link className="bz-btn bz-btn--primary" href="/host">
           Host dashboard
         </Link>
@@ -170,14 +170,14 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
           </nav>
         </header>
         {/* Under the controls rather than above them, so it is never behind the status bar and never scrolls away. */}
-        {snap.status !== 'online' && <div className="bz-banner">Connection lost — reconnecting. The game is safe on the server.</div>}
+        {snap.status !== 'online' && <div className="bz-banner">Connection lost. Reconnecting… your game is safe.</div>}
       </div>
 
       <div className="hc-body">
         <main className="hc-main">
           {pub.paused && (
             <div className="hc-paused">
-              <strong>Paused.</strong> Timers are frozen and buzzers are shut until you resume. Scores can still be corrected.
+              <strong>Paused.</strong> Timers and buzzers are off until you resume. You can still fix scores.
               <Button size="s" variant="primary" onClick={() => run({ t: 'pause', paused: false })}>
                 Resume
               </Button>
@@ -191,7 +191,7 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
           {host.claims.map((claim) => (
             <section key={claim.id} className="hc-card hc-claim">
               <p>
-                Someone is asking to rejoin as <strong>{claim.name}</strong>, who is disconnected. Let them take over that seat and score?
+                Someone wants to rejoin as <strong>{claim.name}</strong>, who’s offline. Let them take that seat and its score?
               </p>
               <div>
                 <Button size="s" variant="good" onClick={() => run({ t: 'claim.resolve', claimId: claim.id, approve: true })}>
@@ -242,7 +242,7 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
               </div>
             ))}
           </dl>
-          <p className="hc-note">Shortcuts only ever press a button you can see. They are off while you type in a field.</p>
+          <p className="hc-note">Shortcuts only press buttons you can see, and they’re off while you’re typing.</p>
         </Modal>
       )}
     </div>
@@ -283,7 +283,7 @@ function Stage(props: StageProps) {
       <StageCard eyebrow={`End of round ${pub.roundIndex + 1}`} title="Standings are on screen">
         {pub.eliminatedNow.length > 0 && (
           <p>
-            Eliminated: <strong>{pub.eliminatedNow.map((id) => props.players[id]?.name).join(', ')}</strong>. Restore anyone from the player list if that was wrong.
+            Eliminated: <strong>{pub.eliminatedNow.map((id) => props.players[id]?.name).join(', ')}</strong>. If that’s wrong, bring them back from the player list.
           </p>
         )}
         <div className="hc-actions">
@@ -301,7 +301,11 @@ function Stage(props: StageProps) {
   if (round.stage === 'intro') {
     return (
       <StageCard eyebrow={`Round ${pub.roundIndex + 1} of ${pub.rounds.length}`} title={round.title}>
-        <p>{roundBlurb(round)}. The title card is on the TV — begin when you have introduced the round.</p>
+        <p>
+          {roundBlurb(round)}
+          <br />
+          The title card is on the TV. Begin once you’ve introduced the round.
+        </p>
         <IntroCategories pub={pub} round={round} />
         <div className="hc-actions">
           <Button variant="primary" size="l" hotkey="Space" disabled={pub.paused} onClick={() => run({ t: 'round.begin' })}>
@@ -333,7 +337,7 @@ function IntroCategories({ pub, round }: { pub: PublicView; round: NonNullable<P
     try {
       await api.reroll(pub.code, cat);
     } catch (err) {
-      toast(err instanceof ApiFailure ? err.message : 'Could not change the category', 'error');
+      toast(err instanceof ApiFailure ? err.message : 'Couldn’t change the category', 'error');
     } finally {
       setBusy(false);
     }
@@ -365,7 +369,7 @@ function IntroCategories({ pub, round }: { pub: PublicView; round: NonNullable<P
         )}
       </div>
       <p className="hc-note">
-        Not keen on {cats.length > 1 ? 'one' : 'it'}? Reroll swaps {cats.length > 1 ? 'that category' : 'it'} for another from the pack at random{cats.length > 1 && ', and leaves the rest alone'}.
+        Not keen on {cats.length > 1 ? 'one' : 'it'}? Reroll swaps it for a random category from the pack{cats.length > 1 && ' and leaves the rest alone'}.
         {cats.some((cat) => cat.blurb) && ' Hold a title to read its description.'}
       </p>
     </div>
@@ -412,14 +416,14 @@ function LobbyStage({ pub, run }: StageProps) {
         </div>
         <ol className="hc-lobby__steps">
           <li>
-            Put the lobby on the big screen: <a href={`/tv/${pub.code}`} target="_blank" rel="noreferrer">open the TV view ↗</a> and make it full screen. Click it once to turn sound on.
+            Open <a href={`/tv/${pub.code}`} target="_blank" rel="noreferrer">the TV view ↗</a> on the big screen and make it full screen. Click it once to turn the sound on.
           </li>
           <li>
             Friends scan the QR code or enter the room code. <button className="hc-link" onClick={copy}>Copy join link</button>
           </li>
           <li>
             Everyone taps <strong>I’m ready</strong> on their phone, then you start the show
-            {pub.players.length > 0 && ` — ${ready} of ${pub.players.length} ready so far`}.
+            {pub.players.length > 0 && ` (${ready} of ${pub.players.length} ready so far)`}.
           </li>
         </ol>
       </div>
@@ -448,8 +452,8 @@ function LobbyStage({ pub, run }: StageProps) {
         <p className="hc-note" role="status">
           {waiting.length ? (
             <>
-              Waiting for <strong>{waiting.map((p) => p.name).join(', ')}</strong> to tap ready. Someone who is not playing after all? Click them in the
-              player list and remove them.
+              Waiting for <strong>{waiting.map((p) => p.name).join(', ')}</strong> to tap ready. Someone not playing after all? Click them in the
+              player list to remove them.
             </>
           ) : (
             'Nobody has tapped ready yet.'
@@ -496,16 +500,16 @@ function FinishedStage({ pub, players }: StageProps) {
     try {
       // Same rules and packs; fresh questions are drawn where the pack has spares.
       await api.rematch(pub.code, { packIds: setup.packIds, rules: setup.rules });
-      toast('New game ready — everyone is back in the lobby', 'good');
+      toast('New game ready. Everyone’s back in the lobby.', 'good');
     } catch (err) {
-      toast(err instanceof ApiFailure ? err.message : 'Could not start a new game', 'error');
+      toast(err instanceof ApiFailure ? err.message : 'Couldn’t start a new game', 'error');
     } finally {
       setBusy(false);
     }
   };
   return (
     <StageCard eyebrow="That’s the show" title={champions.length ? `${champions.join(' & ')} ${champions.length > 1 ? 'win' : 'wins'}!` : 'Game over'} tone="buzz">
-      <p>The results are on the big screen and saved to your history. Players stay connected, so another game is one click away.</p>
+      <p>The results are on the TV and saved to History. Everyone’s still connected, so another game is one click away.</p>
       <div className="hc-actions">
         <Button variant="primary" size="l" disabled={busy} onClick={again}>
           Play again
@@ -590,7 +594,7 @@ function Roster({ pub, snap, run, onManage }: StageProps & { onManage: (id: stri
           ))}
         </ul>
       )}
-      <p className="hc-note">Ping is the server-measured round trip to each phone. Click a player to rename, eliminate, give control or remove them.</p>
+      <p className="hc-note">Ping is the round trip from the server to each phone. Click a player to rename, eliminate or remove them, or to give them the board.</p>
     </section>
   );
 }
@@ -639,7 +643,7 @@ function ManagePlayer({ pub, run, player, onClose }: StageProps & { player: Publ
         <div className="hc-manage__row">
           {trivia && (
             <Button variant="ghost" onClick={() => then({ t: 'control.set', id: player.id })}>
-              Give control of the board
+              Give them the board
             </Button>
           )}
           {pub.phase !== 'lobby' && (
@@ -647,7 +651,7 @@ function ManagePlayer({ pub, run, player, onClose }: StageProps & { player: Publ
               {player.eliminated ? 'Bring back into the game' : 'Eliminate'}
             </Button>
           )}
-          <Button variant="bad" onClick={() => confirm(`Remove ${player.name} from the game? Their score is lost.`) && then({ t: 'player.kick', id: player.id })}>
+          <Button variant="bad" onClick={() => confirm(`Remove ${player.name} from the game? Their score will be lost.`) && then({ t: 'player.kick', id: player.id })}>
             Remove from game
           </Button>
         </div>

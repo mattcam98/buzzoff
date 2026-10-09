@@ -2,7 +2,7 @@
   "name": "buzzoff",
   "private": true,
   "version": "1.0.0",
-  "description": "BuzzOff — a self-hosted, real-time multiplayer quiz-show platform",
+  "description": "BuzzOff: a self-hosted, real-time multiplayer quiz-show platform",
   "type": "module",
   "engines": {
     "node": ">=22"

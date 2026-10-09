@@ -13,7 +13,7 @@ const isSafeMediaUrl = (url: string) => /^\/media\/[\w.-]+$/.test(url) || /^http
 
 export const MediaSchema = z.object({
   kind: z.enum(['image', 'audio', 'video']),
-  url: z.string().max(2000).refine(isSafeMediaUrl, 'Media must be an uploaded file or an http(s) URL'),
+  url: z.string().max(2000).refine(isSafeMediaUrl, 'Media must be an uploaded file or a link starting with http:// or https://'),
 });
 
 export const ClueSchema = z.object({

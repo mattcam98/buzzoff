@@ -34,8 +34,8 @@ export interface Snapshot {
 
 const TIMEOUT_MS = 5000;
 const RETRY_REFUSED_MS = 2000;
-const timedOut: Ack<never> = { ok: false, error: { code: 'timeout', message: 'No reply from the server — check your connection' } };
-const offline: Ack<never> = { ok: false, error: { code: 'offline', message: 'Not connected — try again in a moment' } };
+const timedOut: Ack<never> = { ok: false, error: { code: 'timeout', message: 'No reply from the server. Check your connection.' } };
+const offline: Ack<never> = { ok: false, error: { code: 'offline', message: 'Not connected. Try again in a moment.' } };
 
 export class Connection {
   private socket: Socket<ServerToClientEvents, ClientToServerEvents>;

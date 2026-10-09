@@ -30,18 +30,18 @@ const range = (key: keyof typeof SETTINGS_LIMITS) => ({ min: SETTINGS_LIMITS[key
 function device(agent: string): string {
   const browser = /Edg\//.test(agent) ? 'Edge' : /Firefox\//.test(agent) ? 'Firefox' : /Chrome\//.test(agent) ? 'Chrome' : /Safari\//.test(agent) ? 'Safari' : null;
   const system = /iPhone|iPad/.test(agent) ? 'iOS' : /Android/.test(agent) ? 'Android' : /Mac OS X/.test(agent) ? 'macOS' : /Windows/.test(agent) ? 'Windows' : /Linux/.test(agent) ? 'Linux' : null;
-  if (!browser) return 'Unrecognised browser';
+  if (!browser) return 'Unknown browser';
   return system ? `${browser} on ${system}` : browser;
 }
 
 const SETTING_LABEL: Record<keyof AppSettings, string> = {
   publicUrl: 'Players’ address',
   defaultPresetId: 'Default format',
-  roomTtlHours: 'Idle games kept (hours)',
-  finishedTtlHours: 'Finished games kept (hours)',
-  maxUploadMb: 'Largest upload (MB)',
-  sessionDays: 'Stay signed in (days)',
-  publicLeaderboard: 'Leaderboard open to players',
+  roomTtlHours: 'Keep idle games (hours)',
+  finishedTtlHours: 'Keep finished games (hours)',
+  maxUploadMb: 'Largest file (MB)',
+  sessionDays: 'Sign-in lasts (days)',
+  publicLeaderboard: 'Let players see the leaderboard',
 };
 
 /** One line of plain English for an audit entry. */
@@ -155,7 +155,7 @@ function SettingsPage() {
 
   return (
     <div className="mg-settings">
-      <PageHead eyebrow="Server" title="Settings" lead="Changes apply the moment you save them. Nothing here needs a restart or a file edit." />
+      <PageHead eyebrow="Server" title="Settings" lead="Changes apply as soon as you save. No restart needed." />
 
       {!view.server.persistent && (
         <p className="mg-note" role="note">
@@ -183,7 +183,7 @@ function SettingsPage() {
           )}
         </div>
 
-        <Group icon="📍" title="Joining" lead="Where the TV tells people to go. It is also what the QR code in the lobby opens.">
+        <Group icon="📍" title="Joining" lead="The address the TV tells players to visit. The lobby’s QR code opens it too.">
           <label className="bz-field">
             <span>Players’ address</span>
             <input
@@ -201,22 +201,22 @@ function SettingsPage() {
             />
             <small id="address-help" data-bad={!addressOk || undefined}>
               {!addressOk
-                ? 'Enter the address only, starting with http:// or https:// — no path after it.'
+                ? 'Enter the address only, starting with http:// or https://, with nothing after it.'
                 : origin
                   ? `The lobby will say “${origin.replace(/^https?:\/\//, '')}”.`
-                  : 'Empty: the lobby shows whatever address the TV itself was opened with. Fine at home; set it if players reach the server by another name.'}
+                  : 'Left empty, the lobby shows the address the TV was opened with. That’s fine at home. Set it if players reach the server at a different address.'}
             </small>
           </label>
         </Group>
 
-        <Group icon="🎬" title="Games" lead="What a new game starts from, and how long the server holds on to games nobody is touching.">
+        <Group icon="🎬" title="Games" lead="The format new games start with, and how long idle games are kept.">
           <div className="mg-fields">
             <div className="mg-fields__wide">
               <SelectField
                 label="Default format"
                 value={draft.defaultPresetId ?? ''}
                 onChange={(id) => set({ defaultPresetId: id || null })}
-                options={[['', 'Whichever was played last on that device'], ...presets.map((p) => [p.id, p.builtin ? p.name : `${p.name} (yours)`] as const)]}
+                options={[['', 'Whatever was last played on that device'], ...presets.map((p) => [p.id, p.builtin ? p.name : `${p.name} (yours)`] as const)]}
                 help="The format the New game page opens on. Hosts can still pick another."
               />
             </div>
@@ -232,17 +232,17 @@ function SettingsPage() {
               value={draft.finishedTtlHours}
               {...range('finishedTtlHours')}
               onChange={(finishedTtlHours) => set({ finishedTtlHours })}
-              help="How long a finished game stays open for a rematch. Results stay in History regardless."
+              help="How long a finished game stays open for a rematch. Results stay in History either way."
             />
           </div>
         </Group>
 
-        <Group icon="🏆" title="Leaderboard" lead="Every finished game, added up into all-time standings. You can always see them from the Leaderboard page.">
+        <Group icon="🏆" title="Leaderboard" lead="All-time standings from every finished game. You can always see them on the Leaderboard page.">
           <ToggleField
             label="Let players see the leaderboard"
             checked={draft.publicLeaderboard}
             onChange={(publicLeaderboard) => set({ publicLeaderboard })}
-            help="Adds a Leaderboard link to the join screen. Anyone who can open this server’s address can then see players’ names, results and statistics."
+            help="Adds a Leaderboard link to the join screen. Anyone who can open this server can then see players’ names, results and stats."
           />
         </Group>
 
@@ -258,7 +258,7 @@ function SettingsPage() {
           </div>
         </Group>
 
-        <Group icon="⏳" title="Staying signed in" lead="How long a device that has entered the host password is trusted.">
+        <Group icon="⏳" title="Staying signed in" lead="How long a device stays signed in after entering the host password.">
           <div className="mg-fields">
             <NumField
               label="Sign-in lasts (days)"
@@ -288,7 +288,7 @@ function SettingsPage() {
       </Group>
 
       {view.passwordSet && (
-        <Group icon="💻" title="Signed-in devices" lead="Every browser currently trusted as host. Changing the password signs all of them out.">
+        <Group icon="💻" title="Signed-in devices" lead="Every browser signed in as host. Changing the password signs them all out.">
           <Devices
             sessions={view.sessions}
             onSignedOutOthers={async () => {
@@ -330,7 +330,7 @@ function SettingsPage() {
       <Group
         icon="🧱"
         title="Set where the server runs"
-        lead="These stay in the server’s environment because it needs them before it can read anything else, or because they describe the network around it. Changing them means editing .env and restarting."
+        lead="These live in the server’s environment because it needs them at startup. To change them, edit .env and restart."
       >
         <dl className="mg-facts">
           <div>
@@ -398,10 +398,10 @@ function PasswordForm({ passwordSet, onChanged }: { passwordSet: boolean; onChan
       setCurrent('');
       setNext('');
       setAgain('');
-      toast(passwordSet ? 'Password changed. Other devices have been signed out.' : 'Password set. Hosting is now locked to it.', 'good');
+      toast(passwordSet ? 'Password changed. Other devices have been signed out.' : 'Password set. Hosting now needs it.', 'good');
       await onChanged();
     } catch (err) {
-      setError(err instanceof ApiFailure && err.code === 'rate_limited' ? 'Too many attempts — wait a minute and try again.' : fail(err));
+      setError(err instanceof ApiFailure && err.code === 'rate_limited' ? 'Too many attempts. Wait a minute and try again.' : fail(err));
     } finally {
       setBusy(false);
     }
@@ -431,7 +431,7 @@ function PasswordForm({ passwordSet, onChanged }: { passwordSet: boolean; onChan
         <label className="bz-field">
           <span>Type it again</span>
           <input className="bz-input" type="password" value={again} onChange={(e) => setAgain(e.target.value)} autoComplete="new-password" maxLength={200} aria-invalid={mismatch || undefined} />
-          <small data-bad={mismatch || undefined}>{mismatch ? 'The two do not match yet.' : 'Just to catch a slip of the finger.'}</small>
+          <small data-bad={mismatch || undefined}>{mismatch ? 'These don’t match yet.' : 'Just to catch typos.'}</small>
         </label>
       </div>
       {error && (

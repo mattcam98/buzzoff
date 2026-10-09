@@ -61,7 +61,7 @@ export function App() {
 function NotFound() {
   return (
     <Notice title="Nothing here">
-      <p>That page does not exist. Head back to the start to join or host a game.</p>
+      <p>That page doesn’t exist. Head back to the start to join or host a game.</p>
     </Notice>
   );
 }
@@ -74,7 +74,7 @@ class Crash extends Component<{ children: ReactNode }, { failed: boolean }> {
     if (!this.state.failed) return this.props.children;
     return (
       <Notice title="Something went wrong">
-        <p>Reloading usually fixes it. Your place in the game is kept.</p>
+        <p>Reloading usually fixes it, and you’ll keep your seat.</p>
         <Button variant="primary" onClick={() => window.location.reload()}>
           Reload
         </Button>

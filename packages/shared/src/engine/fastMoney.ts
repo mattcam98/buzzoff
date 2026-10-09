@@ -112,12 +112,12 @@ function conclude(g: GameState, r: FastMoneyRound, ctx: Ctx): void {
 
 function answer(r: FastMoneyRound, playerId: string, a: Extract<PlayerAction, { t: 'fm.answer' }>): void {
   if (r.stage !== 'answering') fail('bad_stage', 'Time is up');
-  if (!r.turns[r.turn].includes(playerId)) fail('not_yours', 'It is not your turn');
-  if (r.finished.includes(playerId)) fail('bad_stage', 'You have already locked in your answers');
+  if (!r.turns[r.turn].includes(playerId)) fail('not_yours', 'It’s not your turn');
+  if (r.finished.includes(playerId)) fail('bad_stage', 'You’ve already locked in your answers');
   const survey = r.surveys[a.q] ?? fail('bad_question', 'No such question');
   const response = score(survey, a.text);
   if (response.text && r.def.blockDuplicates && isDuplicate(r, r.turn, a.q, response)) {
-    fail('duplicate', 'Already taken — try another answer!');
+    fail('duplicate', 'Already taken! Try another answer.');
   }
   r.responses[playerId][a.q] = response;
 }
@@ -204,7 +204,7 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
         answer(r, playerId, a);
         return true;
       case 'fm.done':
-        if (r.stage !== 'answering' || !r.turns[r.turn].includes(playerId)) fail('not_yours', 'It is not your turn');
+        if (r.stage !== 'answering' || !r.turns[r.turn].includes(playerId)) fail('not_yours', 'It’s not your turn');
         if (!r.finished.includes(playerId)) r.finished.push(playerId);
         if (r.turns[r.turn].every((id) => r.finished.includes(id))) endTurn(r, ctx);
         return true;

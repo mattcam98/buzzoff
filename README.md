@@ -59,15 +59,15 @@ then `docker compose restart buzzoff`. The password is removed (or goes back to
 `BUZZOFF_ADMIN_PASSWORD` if that is set) and every device is signed out.
 
 **Behind a reverse proxy** (Nginx Proxy Manager, Caddy, Traefik): forward to
-port 3210 and enable WebSocket support. BuzzOff uses WebSockets only — it does
-not fall back to long-polling, because polling adds jitter to buzz timing — so
+port 3210 and enable WebSocket support. BuzzOff uses WebSockets only. It does
+not fall back to long-polling, because polling adds jitter to buzz timing, so
 the proxy must pass `Upgrade` requests through.
 
 ## Play a game
 
-1. **Host** — `/host` on a laptop. Pick a format and a pack, create the game.
+1. **Host:** `/host` on a laptop. Pick a format and a pack, create the game.
    The console opens with the room code.
-2. **TV** — open `/tv/CODE` on the screen everyone can see (the console has an
+2. **TV:** open `/tv/CODE` on the screen everyone can see (the console has an
    *Open TV* button) and press **Full screen** in its bottom corner, or F. The
    button hides itself once nobody is at the mouse. Clicking it also turns the
    sound on: browsers will not play any until someone has interacted with the
@@ -76,7 +76,7 @@ the proxy must pass `Upgrade` requests through.
    thinking music during the written final, and falls silent whenever someone
    is answering. **Background music** in the console's sound panel turns it
    off and on.
-3. **Players** — go to the address on the TV, enter the code (or scan the QR),
+3. **Players:** go to the address on the TV, enter the code (or scan the QR),
    pick a name and avatar, and tap **I'm ready**. The show can start once
    everyone whose phone is connected has; a phone that has dropped out does
    not hold the room up.
@@ -143,7 +143,7 @@ games.
 - **How it is ranked.** By wins, with win rate breaking ties, and players who
   are level share a rank. The other orders are win rate, points, accuracy and
   buzzer. Rates only rank players with enough behind them (3 games, 10 judged
-  answers, 10 buzzes — or as many as the busiest player has, while the league
+  answers, 10 buzzes, or as many as the busiest player has while the league
   is new); everyone else is listed underneath. Points are shown but formats
   score differently, so they say more about how much someone plays than how
   well.
@@ -198,26 +198,26 @@ separate from slow thumbs.
 - Each player's **ping** is shown separately, on their own phone and on the
   host console. It is the round trip measured *by the server*; a client can
   make it look worse by answering slowly but never better.
-- For remote games the host can choose **latency-adjusted** arbitration: buzzes
+- For remote games the host can have buzzes **adjusted for ping**: they
   are collected for a short window (150 ms by default) and ranked after
   subtracting half of each player's measured ping, capped at 150 ms. This
-  narrows the gap between good and bad connections. It is an estimate — pings
-  fluctuate and are not symmetric — and the screens label adjusted times as
+  narrows the gap between good and bad connections. It is an estimate, because pings
+  fluctuate and are not symmetric, and the screens label adjusted times as
   adjusted. On a shared Wi-Fi network, leave it off.
 
 ## Formats and rules
 
-Built-in presets: **The Full Show**, **Classic Trivia**, **Quick Play**,
+Built-in formats: **The Full Show**, **Classic Trivia**, **Quick Play**,
 **Jackpot Finale** and **Survey Night**. Any of them can be customised on the
-New game page and saved as your own preset. The options:
+New game page and saved as your own format. The options:
 
-- **Rounds** — any sequence of *trivia board*, *final* (everyone wagers on one
+- **Rounds:** any sequence of *trivia board*, *final* (everyone wagers on one
   written-answer question) and *Fast Money* (survey questions against the clock).
-- **Buzzers** — they open by themselves when a clue is selected. The rules
+- **Buzzers:** they open by themselves when a clue is selected. The rules
   cover the question timer (30 seconds by default) and the answer timer;
   whether a wrong answer opens them again for steals; whether the same player
   may buzz again; and the penalty as a percentage of the clue.
-- **Fast Money** — who plays (leader, top two, everybody at once), time per
+- **Fast Money:** who plays (leader, top two, everybody at once), time per
   turn, duplicate blocking, reveal between turns or side by side at the end,
   and what is at stake: points added to scores (optionally with a target and
   bonus) or a *decider* in which the higher survey total wins the game outright.

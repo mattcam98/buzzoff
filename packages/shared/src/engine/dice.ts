@@ -44,8 +44,8 @@ const rolling = (r: TriviaRound): DiceRoll => (r.roll?.phase === 'rolling' ? r.r
 
 export function rollDie(r: TriviaRound, playerId: string, ctx: Ctx): void {
   const dice = rolling(r);
-  if (!dice.contenders.includes(playerId)) fail('not_yours', 'You are not in this roll');
-  if (dice.rolls[playerId] !== undefined) fail('duplicate', 'You have already rolled');
+  if (!dice.contenders.includes(playerId)) fail('not_yours', 'You’re not in this roll');
+  if (dice.rolls[playerId] !== undefined) fail('duplicate', 'You’ve already rolled');
   roll(dice, playerId, ctx);
 }
 

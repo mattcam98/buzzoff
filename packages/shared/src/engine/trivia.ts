@@ -43,7 +43,7 @@ function selectClue(g: GameState, r: TriviaRound, cat: number, idx: number, ctx:
 
   const controller = r.controlId ? g.players[r.controlId] : undefined;
   if (clue.wager && (!controller || controller.eliminated)) {
-    fail('no_control', 'This is a wager clue: give a player control of the board first');
+    fail('no_control', 'This is a wager clue. Give a player the board first.');
   }
 
   const c: ActiveClue = {

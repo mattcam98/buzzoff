@@ -138,7 +138,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
       {clue.stage === 'wager' && (
         <form className="hc-wager" onSubmit={submitWager}>
           <p>
-            <strong>{wagerer?.name}</strong> is entering a wager on their phone (up to {fmtScore(clue.wager?.max ?? 0)}). The clue stays hidden until it is locked in. You can enter it for them:
+            <strong>{wagerer?.name}</strong> is entering a wager on their phone (up to {fmtScore(clue.wager?.max ?? 0)}). The clue stays hidden until it’s locked in. You can also enter it for them:
           </p>
           <input className="bz-input" type="number" min={0} max={clue.wager?.max} step={1} value={wager} onChange={(e) => setWager(e.target.value)} placeholder="Wager" aria-label="Wager amount" />
           <Button type="submit" variant="primary" disabled={wager === ''}>
@@ -169,7 +169,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
             </Button>
             {!clue.isWager && (
               <Button variant="ghost" onClick={() => run({ t: 'buzz.reset' })} title="Throw this buzz out and open the buzzers again for everyone still in">
-                Re-do the buzz
+                Redo the buzz
               </Button>
             )}
           </>
@@ -184,7 +184,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
             Reveal answer
           </Button>
         )}
-        <Button variant="ghost" onClick={() => confirm('Throw this clue out? Its scoring is reversed and it goes back on the board.') && run({ t: 'clue.cancel' })}>
+        <Button variant="ghost" onClick={() => confirm('Throw this clue out? Any points are reversed and it goes back on the board.') && run({ t: 'clue.cancel' })}>
           Throw out clue
         </Button>
       </div>
@@ -193,7 +193,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
         <div className="hc-log">
           {clue.attempts.length > 0 && (
             <div>
-              <span className="bz-eyebrow">Buzz order · {pub.buzzer.arbitration === 'latencyAdjusted' ? 'latency-adjusted' : 'as received by the server'}</span>
+              <span className="bz-eyebrow">Buzz order · {pub.buzzer.arbitration === 'latencyAdjusted' ? 'adjusted for ping' : 'as the server received it'}</span>
               <BuzzLadder attempts={clue.attempts} players={players} adjusted={pub.buzzer.arbitration === 'latencyAdjusted'} limit={8} />
             </div>
           )}
@@ -246,12 +246,12 @@ function RollStage({ pub, players, run, round, roll }: StageProps & { round: Tri
       </ul>
       <div className="hc-actions">
         <Button variant="primary" size="l" hotkey="Space" disabled={roll.phase !== 'rolling' || pub.paused} onClick={() => run({ t: 'roll.finish' })}>
-          Roll for everyone still to roll
+          Roll for everyone who hasn’t
         </Button>
       </div>
       <p className="hc-note">
-        Players tap their phones; the highest roll picks the first clue and ties roll again by themselves. There is no clock: the roll waits for everyone, and
-        the button above rolls for anyone who is not going to. To skip the roll, click a player and give them the board.
+        Players tap their phone to roll. The highest roll picks the first clue, and ties roll again automatically. There’s no clock, so use the button above to
+        roll for anyone who’s away. To skip the roll, click a player and give them the board.
       </p>
     </section>
   );
@@ -294,8 +294,8 @@ export function FastMoneyStage({ pub, snap, players, run, round, secret }: Stage
         <p>
           {round.participants === 'all'
             ? 'Everyone answers on their phone at the same time.'
-            : `Read the questions out as they answer on their phone${round.turn > 0 && round.blockDuplicates ? '. Repeats of an earlier answer are rejected with a buzzer' : ''}.`}
-          {round.revealMode === 'afterEachTurn' && moreTurns && ' The next contestant should not see or hear this turn.'}
+            : `Read the questions out as they answer on their phone${round.turn > 0 && round.blockDuplicates ? '. Repeating an earlier answer gets the buzzer' : ''}.`}
+          {round.revealMode === 'afterEachTurn' && moreTurns && ' The next contestant shouldn’t see or hear this turn.'}
         </p>
       )}
 
@@ -344,7 +344,7 @@ export function FastMoneyStage({ pub, snap, players, run, round, secret }: Stage
                   return (
                     <FmRow
                       key={id}
-                      name={players[id]?.name ?? '—'}
+                      name={players[id]?.name ?? '–'}
                       response={response}
                       answers={secret.surveys[q].answers}
                       state={state}
@@ -362,7 +362,7 @@ export function FastMoneyStage({ pub, snap, players, run, round, secret }: Stage
       ) : null}
       {round.stage !== 'ready' && (
         <p className="hc-note">
-          Matches marked “close” were made by typo-tolerant matching — check them before you reveal. You can change any match, or type an answer for a player who said it out loud.
+          A match marked “close” allowed for a typo, so check it before you reveal. You can change any match, or type in an answer a player said out loud.
         </p>
       )}
     </section>
@@ -398,7 +398,7 @@ function FmRow({ name, response, answers, state, next, editable, onMatch, onText
           onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
         />
       ) : (
-        <span className="hc-fm__text">{response.text || '—'}</span>
+        <span className="hc-fm__text">{response.text || '–'}</span>
       )}
       <select className="bz-select" value={response.match ?? ''} disabled={!editable} aria-label={`Survey match for ${name}`} onChange={(e) => onMatch(e.target.value === '' ? null : Number(e.target.value))}>
         <option value="">No match · 0</option>
@@ -409,7 +409,7 @@ function FmRow({ name, response, answers, state, next, editable, onMatch, onText
         ))}
       </select>
       <span className={cx('bz-pill', response.matchedBy === 'fuzzy' && 'bz-pill--buzz', response.matchedBy === 'host' && 'bz-pill--cyan')}>
-        {response.matchedBy === 'fuzzy' ? 'close' : response.matchedBy === 'host' ? 'set by you' : response.matchedBy === 'exact' ? 'exact' : '—'}
+        {response.matchedBy === 'fuzzy' ? 'close' : response.matchedBy === 'host' ? 'set by you' : response.matchedBy === 'exact' ? 'exact' : '–'}
       </span>
       <b className="bz-num">{response.points}</b>
     </div>
@@ -434,7 +434,7 @@ export function FinalStage({ pub, snap, players, run, round, secret }: StageProp
           <p className="hc-clue__state">
             {round.stage === 'wager' && `Wagers: ${round.wagered.length} of ${round.players.length} in`}
             {round.stage === 'answering' && `Answers: ${round.answered.length} of ${round.players.length} in`}
-            {round.stage === 'reveal' && (allDone ? 'Everyone is revealed' : `Revealing — ${round.remaining} to go`)}
+            {round.stage === 'reveal' && (allDone ? 'Every answer is revealed' : `Revealing · ${round.remaining} to go`)}
           </p>
         </div>
         <TimerTools pub={pub} snap={snap} run={run} running={!!round.timer} />
@@ -504,7 +504,7 @@ export function FinalStage({ pub, snap, players, run, round, secret }: StageProp
               <Avatar avatar={p.avatar} size={28} />
               <strong>{p.name}</strong>
               <span>{secret.wagers[id] === undefined ? 'no wager yet' : `wager ${fmtScore(secret.wagers[id])}`}</span>
-              <span className="hc-finalists__answer">{round.stage === 'wager' ? '' : (secret.answers[id] ?? '—')}</span>
+              <span className="hc-finalists__answer">{round.stage === 'wager' ? '' : (secret.answers[id] ?? '–')}</span>
               {reveal?.delta != null && <b className="bz-num">{fmtDelta(reveal.delta)}</b>}
             </li>
           ) : null;

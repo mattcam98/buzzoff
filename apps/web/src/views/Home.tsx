@@ -51,7 +51,7 @@ export function IdentityFields({ name, avatar, onName, onAvatar, nameRef }: {
           autoCapitalize="words"
           enterKeyHint="go"
         />
-        <button type="button" className="home__dice" onClick={() => onAvatar(randomAvatar())} aria-label="Surprise me with a random avatar">
+        <button type="button" className="home__dice" onClick={() => onAvatar(randomAvatar())} aria-label="Pick a random avatar">
           🎲
         </button>
       </div>
@@ -129,7 +129,7 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
           storage.setSeat(code, { playerId: status.playerId, token: status.token });
           navigate(`/play/${code}`);
         } else {
-          setError('The host did not approve that. Pick a different name to join as a new player.');
+          setError('The host didn’t let you in. Try a different name to join as a new player.');
         }
       } catch (err) {
         // A dropped request is not an answer; only the server saying the request is gone ends the wait.
@@ -188,7 +188,7 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
             <i className="bz-spinner" aria-hidden />
             <h2>Waiting for the host</h2>
             <p className="home__hint">
-              <strong>{name.trim()}</strong> is already in this game. The host has been asked to let you take over that seat.
+              <strong>{name.trim()}</strong> is already in this game. We’ve asked the host to let you take that seat.
             </p>
             <Button variant="ghost" onClick={() => setClaim(null)}>
               Cancel

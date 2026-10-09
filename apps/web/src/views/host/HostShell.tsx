@@ -64,7 +64,7 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
         setGate({ state: 'login', info });
       }
     } catch (err) {
-      setGate({ state: 'offline', message: err instanceof ApiFailure ? err.message : 'Could not reach the server' });
+      setGate({ state: 'offline', message: err instanceof ApiFailure ? err.message : 'Couldn’t reach the server. Check your connection.' });
     }
   }, []);
 
@@ -94,7 +94,7 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
             storage.setAdminToken(null);
             admitted = null;
             setGate({ state: 'login', info });
-            return 'Your session has ended — sign in again';
+            return 'You’ve been signed out. Sign in again.';
           }
           return err instanceof Error ? err.message : 'Something went wrong';
         },
@@ -168,7 +168,7 @@ function Login({ onDone }: { onDone: () => void }) {
         🔑
       </span>
       <h1>Host sign-in</h1>
-      <p>Hosting is password-protected on this server. Players never need this.</p>
+      <p>Hosting needs a password on this server. Players never need it.</p>
       <label className="bz-field">
         <span>Host password</span>
         <input className="bz-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" autoFocus />

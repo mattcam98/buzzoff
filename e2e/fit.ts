@@ -1,5 +1,5 @@
 /**
- * "Does this phone screen fit?" — checked by measuring the live page.
+ * "Does this phone screen fit?", checked by measuring the live page.
  *
  * A screen fits when the page itself cannot scroll, the main area has no
  * overflow, every visible control and piece of text is inside the viewport,

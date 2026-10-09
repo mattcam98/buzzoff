@@ -1,6 +1,6 @@
 /**
  * A live game room: the authoritative state plus everything around it that is
- * not game logic — sockets, credentials, undo history, timers, persistence.
+ * not game logic: sockets, credentials, undo history, timers, persistence.
  *
  * Node runs this on one thread, and every change goes through `commit`, so
  * transitions are applied strictly one at a time in arrival order. That is the
@@ -309,7 +309,7 @@ export class Room {
   private openClaim(playerId: string, name: string, profileId?: string): JoinResponse {
     this.pruneClaims();
     const pending = [...this.claims.values()].filter((c) => c.status === 'pending');
-    if (pending.length >= MAX_PENDING_CLAIMS) throw new GameError('busy', 'Too many people are waiting to rejoin — ask the host');
+    if (pending.length >= MAX_PENDING_CLAIMS) throw new GameError('busy', 'Too many people are waiting to rejoin. Ask the host to let them in.');
     const claimSecret = randomToken();
     const claim: ClaimRecord = { id: randomId(), playerId, name, profileId, secretHash: sha256(claimSecret), createdAt: Date.now(), status: 'pending' };
     this.claims.set(claim.id, claim);
@@ -417,7 +417,7 @@ export class Room {
         if (typeof ack !== 'function') return;
         if (!bucket.take()) return ack(limited);
         const parsed = HostEnvelope.safeParse(msg);
-        if (!parsed.success) return ack(failure('invalid', 'That request was not understood'));
+        if (!parsed.success) return ack(failure('invalid', 'Couldn’t understand that request'));
         if (this.seen.has(parsed.data.id)) return ack(OK);
         try {
           this.host(parsed.data.action);
@@ -457,7 +457,7 @@ export class Room {
         if (typeof ack !== 'function') return;
         if (!bucket.take()) return ack(limited);
         const parsed = PlayerEnvelope.safeParse(msg);
-        if (!parsed.success) return ack(failure('invalid', parsed.error.issues[0]?.message ?? 'That request was not understood'));
+        if (!parsed.success) return ack(failure('invalid', parsed.error.issues[0]?.message ?? 'Couldn’t understand that request'));
         if (this.seen.has(parsed.data.id)) return ack(OK);
         try {
           this.player(playerId, parsed.data.action);

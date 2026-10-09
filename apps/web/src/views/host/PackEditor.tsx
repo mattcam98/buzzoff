@@ -353,17 +353,17 @@ function CategoryCard({ category: cat, index, count, open, focus, onFocusDone, r
             <label className="bz-field">
               <span>Category title</span>
               <input ref={title} className="bz-input" value={cat.title} maxLength={60} placeholder="Around the World" onChange={(e) => onChange({ ...cat, title: e.target.value })} />
-              <small>Short titles fit the board best — aim for under 22 characters.</small>
+              <small>Short titles fit the board best. Aim for under 22 characters.</small>
             </label>
             <label className="bz-field">
-              <span>Blurb</span>
+              <span>Description</span>
               <input className="bz-input" value={cat.blurb ?? ''} maxLength={160} placeholder="A one-line teaser (optional)" onChange={(e) => onChange({ ...cat, blurb: e.target.value || undefined })} />
             </label>
             <ToggleField
               label="Single attempt (no steals)"
               checked={!!cat.singleAttempt}
               onChange={(singleAttempt) => onChange({ ...cat, singleAttempt: singleAttempt || undefined })}
-              help="For either/or questions: only the first buzzer may answer."
+              help="For either/or questions. Only the first player to buzz can answer."
             />
           </div>
 

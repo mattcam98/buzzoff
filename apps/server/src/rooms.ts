@@ -71,7 +71,7 @@ export class Rooms {
     // 160,000 possible codes; retry on the rare collision with a live room.
     let code = randomRoomCode();
     for (let attempt = 0; this.rooms.has(code); attempt++) {
-      if (attempt > 50) throw new GameError('busy', 'Could not allocate a room code');
+      if (attempt > 50) throw new GameError('busy', 'Couldn’t find a free room code. Try again.');
       code = randomRoomCode();
     }
     const hostKey = randomToken(32);

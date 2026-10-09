@@ -98,7 +98,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
   const limit =
     (limiter: Limiter): RequestHandler =>
     (req, _res, next) =>
-      next(limiter.allow(req.ip ?? 'unknown') ? undefined : new HttpError(429, 'rate_limited', 'Too many requests — wait a moment and try again'));
+      next(limiter.allow(req.ip ?? 'unknown') ? undefined : new HttpError(429, 'rate_limited', 'Too many requests. Wait a moment and try again.'));
 
   const admin: RequestHandler = (req, _res, next) =>
     next(auth.allows(bearer(req)) ? undefined : new HttpError(401, 'unauthorized', 'Host password required'));
@@ -109,7 +109,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
   };
   const hostOnly = (req: Request): Room => {
     const room = roomOf(req);
-    if (!room.isHost(req.get('x-host-key'))) throw new HttpError(403, 'forbidden', 'That is not your game');
+    if (!room.isHost(req.get('x-host-key'))) throw new HttpError(403, 'forbidden', 'That’s not your game');
     return room;
   };
 
@@ -149,7 +149,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
   api.post('/auth/password', admin, limit(logins), async (req, res) => {
     const { current, next } = parse(ChangePasswordSchema, req.body);
     const token = await auth.setPassword(current, next, caller(req));
-    if (!token) throw new HttpError(403, 'wrong_password', 'That is not the current password');
+    if (!token) throw new HttpError(403, 'wrong_password', 'That’s not the current password');
     res.json({ token });
   });
   api.post('/auth/sessions/revoke', admin, async (req, res) => {
@@ -183,7 +183,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
 
   // ------------------------------------------------------------ packs
 
-  const getPack = async (req: Request): Promise<Pack> => (await store.getPack(String(req.params.id))) ?? notFound('No such pack');
+  const getPack = async (req: Request): Promise<Pack> => (await store.getPack(String(req.params.id))) ?? notFound('That pack no longer exists');
   const packFile = (pack: Pack): PackFile => {
     const { id: _id, createdAt: _c, updatedAt: _u, ...content } = pack;
     return { format: 'buzzoff.pack', version: 1, pack: content };
@@ -222,7 +222,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
     res.json(pack);
   });
   api.delete('/packs/:id', admin, async (req, res) => {
-    if (!(await store.deletePack(String(req.params.id)))) notFound('No such pack');
+    if (!(await store.deletePack(String(req.params.id)))) notFound('That pack no longer exists');
     res.status(204).end();
   });
   api.get('/packs/:id/export', admin, async (req, res) => {
@@ -249,7 +249,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
     res.status(201).json(preset);
   });
   api.delete('/presets/:id', admin, async (req, res) => {
-    if (!(await store.deletePreset(String(req.params.id)))) notFound('No such preset');
+    if (!(await store.deletePreset(String(req.params.id)))) notFound('That format no longer exists');
     res.status(204).end();
   });
 
@@ -327,7 +327,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
   };
   // Open to the host always, and to everyone else when the host has made it public.
   const standings: RequestHandler = (req, _res, next) =>
-    next(settings.current.publicLeaderboard || auth.allows(bearer(req)) ? undefined : new HttpError(403, 'private', 'The leaderboard is not public on this server'));
+    next(settings.current.publicLeaderboard || auth.allows(bearer(req)) ? undefined : new HttpError(403, 'private', 'The leaderboard is private on this server'));
   const identity = z.string().min(1).max(80);
 
   api.get('/leaderboard', standings, async (req, res) => {
@@ -378,14 +378,14 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
       body = { error: { code: 'too_large', message: `Files can be at most ${settings.current.maxUploadMb} MB` } };
     } else if (err instanceof multer.MulterError) {
       status = 400;
-      body = { error: { code: 'invalid', message: 'That upload could not be read' } };
+      body = { error: { code: 'invalid', message: 'Couldn’t read that upload' } };
     } else if (clientError(err) === 404) {
       status = 404;
       body = { error: { code: 'not_found', message: 'Not found' } };
     } else if (clientError(err)) {
       // Raised by Express itself: an unreadable body, an oversized one, a range a file cannot satisfy.
       status = clientError(err)!;
-      body = { error: { code: 'invalid', message: 'That request could not be read' } };
+      body = { error: { code: 'invalid', message: 'Couldn’t read that request' } };
     } else {
       log.error('unhandled request error', { method: req.method, path: req.path, err });
     }

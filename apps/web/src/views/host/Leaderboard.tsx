@@ -47,7 +47,7 @@ function Board() {
   const tools = useMemo<PlayerTools>(
     () => ({
       merge: (from: LeaderboardEntry, into: LeaderboardEntry) => change(api.mergePlayers(from.id, into.id), `${from.name}’s games now count as ${into.name}’s`),
-      separate: (identity: string) => change(api.separatePlayer(identity), 'Separated into its own player'),
+      separate: (identity: string) => change(api.separatePlayer(identity), 'Split into a separate player'),
     }),
     [change],
   );
@@ -86,7 +86,7 @@ function Board() {
             🏆
           </span>
           <h2>No standings yet</h2>
-          <p>The first finished game with two or more players starts the leaderboard. Games played alone are practice and do not count.</p>
+          <p>The first finished game with two or more players starts the leaderboard. Solo games are practice and don’t count.</p>
           <Link href="/host/new" className="bz-btn bz-btn--primary">
             Host a game
           </Link>
@@ -96,7 +96,7 @@ function Board() {
         <>
           {twins.length > 0 && (
             <p className="mg-note" role="note">
-              <strong>More than one player is called {new Intl.ListFormat(undefined, { type: 'disjunction' }).format(twins)}.</strong> If that is one person on a new phone, open either
+              <strong>More than one player is called {new Intl.ListFormat(undefined, { type: 'disjunction' }).format(twins)}.</strong> If that’s one person on a new phone, open either
               entry and merge them.
             </p>
           )}

@@ -134,7 +134,7 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
         )}
         {clue.stage === 'open' && (
           <div className="tv-status tv-status--open">
-            {clue.collecting ? 'Buzz received…' : clue.judgments.length ? 'Steal it — buzz!' : 'Buzz!'}
+            {clue.collecting ? 'Buzz received…' : clue.judgments.length ? 'Steal it! Buzz!' : 'Buzz!'}
             <Seconds pub={pub} snap={snap} className="tv-status__count" />
           </div>
         )}
@@ -150,14 +150,14 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
             </div>
             <div className="tv-ladder">
               <BuzzLadder attempts={clue.attempts} players={players} adjusted={pub.buzzer.arbitration === 'latencyAdjusted'} limit={4} />
-              <small>{pub.buzzer.arbitration === 'latencyAdjusted' ? 'Server-recorded times, adjusted for each player’s ping' : 'Times as recorded by the server'}</small>
+              <small>{pub.buzzer.arbitration === 'latencyAdjusted' ? 'Server times, adjusted for each player’s ping' : 'Times recorded by the server'}</small>
             </div>
           </div>
         )}
         {clue.stage === 'result' && (
           <div className="tv-result">
             <div className="tv-result__answer">
-              <span className="bz-eyebrow">{clue.timedOut ? 'Time’s up — the answer was' : 'Answer'}</span>
+              <span className="bz-eyebrow">{clue.timedOut ? 'Time’s up! The answer was' : 'Answer'}</span>
               <strong data-scale={answerScale(clue.answer ?? '')}>{clue.answer}</strong>
             </div>
             <ul className="tv-result__rulings">
@@ -327,7 +327,7 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
                         <span className="tv-fm__covered">Hidden</span>
                       ) : (
                         <>
-                          <span className="tv-fm__answer" key={cell?.text ?? 'x'} data-long={(cell?.text?.length ?? 0) > long || undefined}>{cell?.text === null ? '' : cell?.text || '—'}</span>
+                          <span className="tv-fm__answer" key={cell?.text ?? 'x'} data-long={(cell?.text?.length ?? 0) > long || undefined}>{cell?.text === null ? '' : cell?.text || '–'}</span>
                           <b className="bz-num" key={`p${cell?.points}`}>{cell?.points ?? ''}</b>
                         </>
                       )}
@@ -337,7 +337,7 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
               )}
               {topAnswer(i) && (
                 <div className="tv-fm__top" style={{ gridColumn: `1 / -1` }}>
-                  No. 1 answer: <strong>{topAnswer(i)!.text}</strong> <b className="bz-num">{topAnswer(i)!.points}</b>
+                  Top answer: <strong>{topAnswer(i)!.text}</strong> <b className="bz-num">{topAnswer(i)!.points}</b>
                 </div>
               )}
             </div>
@@ -416,7 +416,7 @@ function CrowdBoard({ round, players, focusQ }: { round: FastMoneyPublic; player
               <Avatar avatar={p.avatar} size="1.7em" />
               <span>
                 <small>{p.name}</small>
-                {cell.text || '—'}
+                {cell.text || '–'}
               </span>
               {cell.points !== null && <b className="bz-num">{cell.points}</b>}
             </li>

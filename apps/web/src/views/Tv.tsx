@@ -33,7 +33,7 @@ export function TvCodeEntry() {
   };
   return (
     <Notice title="Put a game on this screen">
-      <p>Enter the room code from the host's dashboard.</p>
+      <p>Enter the room code from the host’s dashboard.</p>
       <form onSubmit={go} style={{ display: 'grid', gap: 12, width: 'min(100%, 280px)' }}>
         <input
           className="bz-input"
@@ -85,7 +85,7 @@ export function Tv({ code }: { code: string }) {
     return (
       <Notice title="No game with that code">
         <p>
-          <strong>{code}</strong> is not a live game. Check the code on the host's dashboard.
+          <strong>{code}</strong> isn’t a live game. Check the code on the host’s dashboard.
         </p>
       </Notice>
     );
@@ -335,7 +335,7 @@ function awards(pub: PublicView): Award[] {
   };
   const out: Award[] = [];
   const fastest = best((s) => s.fastestMs, false);
-  if (fastest) out.push({ title: 'Fastest registered buzz', player: fastest.p, detail: fmtMs(fastest.v) });
+  if (fastest) out.push({ title: 'Fastest buzz', player: fastest.p, detail: fmtMs(fastest.v) });
   const sharpest = best((s) => (s.correct + s.incorrect >= 3 ? accuracy(s) : null), true);
   if (sharpest) out.push({ title: 'Sharpest shooter', player: sharpest.p, detail: `${fmtPercent(sharpest.v)} correct` });
   const busiest = best((s) => s.buzzWins || null, true);

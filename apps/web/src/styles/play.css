@@ -2,8 +2,8 @@
  * The phone controller.
  *
  * One fixed screen, never a scrolling page. The shell (`.bz-app`, see base.css)
- * is exactly as tall as the visible viewport — browser bars, safe areas and an
- * open keyboard all accounted for — and is a size container, so the rules
+ * is exactly as tall as the visible viewport (browser bars, safe areas and an
+ * open keyboard all accounted for) and is a size container, so the rules
  * below respond to the space actually available rather than to the device:
  *
  *   regular   plenty of room (most phones, portrait)

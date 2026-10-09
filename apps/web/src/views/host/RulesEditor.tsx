@@ -33,7 +33,7 @@ export function RulesEditor({ rules, onChange }: Props) {
       <label className="bz-field">
         <span>Game name</span>
         <input className="bz-input" value={rules.name} maxLength={60} onChange={(e) => onChange({ ...rules, name: e.target.value })} />
-        <small>Shown on the TV and in your history.</small>
+        <small>Shown on the TV and in History.</small>
       </label>
 
       <section className="mg-rules__group">
@@ -87,11 +87,11 @@ export function RulesEditor({ rules, onChange }: Props) {
             className="mg-fields__double"
             value={b.arbitration}
             onChange={(arbitration) => setBuzzer({ arbitration })}
-            options={[['first', 'First buzz received'], ['latencyAdjusted', 'Latency-adjusted']]}
+            options={[['first', 'First buzz received'], ['latencyAdjusted', 'Adjusted for ping']]}
             help={
               b.arbitration === 'first'
-                ? 'The first buzz to reach the server wins. Best when everyone shares a Wi-Fi.'
-                : 'For remote players: buzzes are collected briefly, then ranked after subtracting half of each player’s measured round trip.'
+                ? 'The first buzz to reach the server wins. Best when everyone’s on the same Wi-Fi.'
+                : 'For remote players. Buzzes are collected for a moment, then ranked after taking off half of each player’s ping.'
             }
           />
           {b.arbitration === 'latencyAdjusted' && (
@@ -100,10 +100,10 @@ export function RulesEditor({ rules, onChange }: Props) {
               <NumField label="Max adjustment (ms)" value={b.maxCompensationMs} min={0} max={300} onChange={(maxCompensationMs) => setBuzzer({ maxCompensationMs })} help="The most any one buzz can be moved forward." />
             </>
           )}
-          <NumField label="Grace period (ms)" value={b.graceMs} min={0} max={2000} onChange={(graceMs) => setBuzzer({ graceMs })} help="After the first buzz, the other buzzers stay live this long, so a buzz a split second behind is recorded and ranked. It never changes who won. 0 shuts them at once." />
+          <NumField label="Grace period (ms)" value={b.graceMs} min={0} max={2000} onChange={(graceMs) => setBuzzer({ graceMs })} help="After the first buzz, the other buzzers stay open this long so near misses are recorded. It never changes who won. 0 closes them at once." />
           <NumField label="Question timer (s)" value={b.buzzSec} min={0} max={120} onChange={(buzzSec) => setBuzzer({ buzzSec })} help="Buzzers open as soon as you select a clue, and players have this long to buzz. 0 turns the timer off." />
           <NumField label="Time to answer (s)" value={b.answerSec} min={0} max={120} onChange={(answerSec) => setBuzzer({ answerSec })} help="0 turns the timer off. The host always makes the call." />
-          <NumField label="Wrong-answer penalty (%)" value={b.incorrectPenaltyPct} min={0} max={100} onChange={(incorrectPenaltyPct) => setBuzzer({ incorrectPenaltyPct })} help="Share of the clue value deducted. 0 means no penalty." />
+          <NumField label="Wrong-answer penalty (%)" value={b.incorrectPenaltyPct} min={0} max={100} onChange={(incorrectPenaltyPct) => setBuzzer({ incorrectPenaltyPct })} help="How much of the clue’s value a wrong answer costs. 0 means no penalty." />
         </div>
         <div className="mg-toggles">
           <ToggleField label="Steals" checked={b.reopenOnIncorrect} onChange={(reopenOnIncorrect) => setBuzzer({ reopenOnIncorrect })} help="After a wrong answer, the buzzers open again for everyone else." />
@@ -121,7 +121,7 @@ export function RulesEditor({ rules, onChange }: Props) {
         </div>
         <div className="mg-toggles">
           <ToggleField label="Late joining" checked={rules.lateJoin} onChange={(lateJoin) => onChange({ ...rules, lateJoin })} help="Let people join after the game has started." />
-          <ToggleField label="Teams" checked={rules.teams.enabled} onChange={(enabled) => onChange({ ...rules, teams: { ...rules.teams, enabled } })} help="Players are split into teams; team scores add up." />
+          <ToggleField label="Teams" checked={rules.teams.enabled} onChange={(enabled) => onChange({ ...rules, teams: { ...rules.teams, enabled } })} help="Split players into teams. Each team’s scores add up." />
         </div>
         {rules.teams.enabled && (
           <div className="mg-teams">
@@ -165,8 +165,8 @@ function TriviaFields({ def, set }: { def: TriviaRoundDef; set: (p: Partial<Triv
       <NumField label="Clues per category" value={def.cluesPerCategory} min={1} max={8} onChange={(cluesPerCategory) => set({ cluesPerCategory })} />
       <NumField label="Value multiplier" value={def.valueMultiplier} min={1} max={20} onChange={(valueMultiplier) => set({ valueMultiplier })} help="2 doubles every clue value." />
       <NumField label="Hidden wagers" value={def.wagers} min={0} max={6} onChange={(wagers) => set({ wagers })} help="Wager clues placed at random on the board." />
-      <NumField label="Wager cap" value={def.wagerCap} min={0} max={1000000} step={100} onChange={(wagerCap) => set({ wagerCap })} help="Players may wager up to their score, or this if they have less." />
-      <NumField label="Eliminate lowest" value={def.eliminateLowest} min={0} max={20} onChange={(eliminateLowest) => set({ eliminateLowest })} help="Knock out this many trailing players when the round ends." />
+      <NumField label="Wager cap" value={def.wagerCap} min={0} max={1000000} step={100} onChange={(wagerCap) => set({ wagerCap })} help="Players can wager up to their score, or up to this if they have less." />
+      <NumField label="Eliminate lowest" value={def.eliminateLowest} min={0} max={20} onChange={(eliminateLowest) => set({ eliminateLowest })} help="Knock out this many of the lowest scorers when the round ends." />
     </>
   );
 }
@@ -183,14 +183,14 @@ function FastMoneyFields({ def, set }: { def: FastMoneyRoundDef; set: (p: Partia
       />
       <NumField label="Time per turn (s)" value={def.turnSec} min={10} max={600} onChange={(turnSec) => set({ turnSec })} />
       {def.participants === 'top2' && (
-        <NumField label="Extra per turn (s)" value={def.extraSecPerTurn} min={0} max={120} onChange={(extraSecPerTurn) => set({ extraSecPerTurn })} help="Added for each later turn: they have to avoid earlier answers." />
+        <NumField label="Extra per turn (s)" value={def.extraSecPerTurn} min={0} max={120} onChange={(extraSecPerTurn) => set({ extraSecPerTurn })} help="Added to each later turn, since they have to avoid earlier answers." />
       )}
       <SelectField
         label="Stakes"
         value={def.stakes}
         onChange={(stakes) => set({ stakes })}
         options={[['decider', 'Decider'], ['points', 'Add to scores']]}
-        help={def.stakes === 'decider' ? 'Board scores only seed the round: the highest survey total wins the game.' : 'Survey points are added to everyone’s score.'}
+        help={def.stakes === 'decider' ? 'Board scores only decide who plays. The highest survey total wins the game.' : 'Survey points are added to everyone’s score.'}
       />
       <SelectField
         label="Reveal"
@@ -218,7 +218,7 @@ function FinalFields({ def, set }: { def: FinalRoundDef; set: (p: Partial<FinalR
     <>
       <NumField label="Time to wager (s)" value={def.wagerSec} min={0} max={300} onChange={(wagerSec) => set({ wagerSec })} help="0 turns the timer off." />
       <NumField label="Time to answer (s)" value={def.answerSec} min={10} max={600} onChange={(answerSec) => set({ answerSec })} />
-      <NumField label="Wager cap" value={def.wagerCap} min={0} max={1000000} step={100} onChange={(wagerCap) => set({ wagerCap })} help="Players may wager up to their score, or this if they have less." />
+      <NumField label="Wager cap" value={def.wagerCap} min={0} max={1000000} step={100} onChange={(wagerCap) => set({ wagerCap })} help="Players can wager up to their score, or up to this if they have less." />
     </>
   );
 }

@@ -15,7 +15,7 @@ export function History() {
   );
 }
 
-const ms = (value: number | null) => (value === null ? '—' : fmtMs(value));
+const ms = (value: number | null) => (value === null ? '–' : fmtMs(value));
 
 function Results() {
   const { fail } = useShell();
@@ -38,7 +38,7 @@ function Results() {
   }, [fail]);
 
   async function remove(result: GameResult) {
-    if (!window.confirm(`Remove “${result.name}” from ${fmtDayTime(result.finishedAt)} from the history? It will stop counting towards the leaderboard too.`)) return;
+    if (!window.confirm(`Remove “${result.name}” (${fmtDayTime(result.finishedAt)}) from History? It’ll stop counting towards the leaderboard too.`)) return;
     try {
       await api.deleteResult(result.id);
       setResults((list) => list?.filter((r) => r.id !== result.id) ?? null);
@@ -65,7 +65,7 @@ function Results() {
             🏆
           </span>
           <h2>No winners yet</h2>
-          <p>Finish a game and it will be remembered here, bragging rights and all.</p>
+          <p>Finish a game and it’ll show up here, bragging rights and all.</p>
           <Link href="/host/new" className="bz-btn bz-btn--primary">
             Host a game
           </Link>
@@ -129,10 +129,10 @@ function ResultCard({ result, onRemove }: { result: GameResult; onRemove: () => 
             <tr>
               <th scope="col">Player</th>
               <th scope="col">Score</th>
-              <th scope="col">Questions won</th>
+              <th scope="col">Clues won</th>
               <th scope="col">Correct</th>
-              <th scope="col">Fastest registered buzz</th>
-              <th scope="col">Average registered buzz</th>
+              <th scope="col">Fastest buzz</th>
+              <th scope="col">Average buzz</th>
               <th scope="col">Survey points</th>
             </tr>
           </thead>
@@ -158,7 +158,7 @@ function ResultCard({ result, onRemove }: { result: GameResult; onRemove: () => 
           </tbody>
         </table>
       </div>
-      <p className="mg-result__foot">Buzz times are the server’s record of when each buzz arrived after the buzzers were armed. They include network delay, so they are not reaction times.</p>
+      <p className="mg-result__foot">Buzz times are measured on the server, from when the buzzers open to when each buzz arrives. They include network delay, so they’re not reaction times.</p>
     </article>
   );
 }

@@ -82,7 +82,7 @@ function Session({ code, token, playerId }: { code: string; token: string | null
     return (
       <Notice title="That game is gone">
         <p>
-          There is no live game with the code <strong>{code}</strong>.
+          There’s no live game with the code <strong>{code}</strong>.
         </p>
         <Button variant="primary" onClick={() => navigate('/')}>
           Join another game
@@ -94,7 +94,7 @@ function Session({ code, token, playerId }: { code: string; token: string | null
     const title = snap.reason === 'kicked' ? 'The host removed you' : snap.reason === 'replaced' ? 'Opened somewhere else' : 'This game has ended';
     return (
       <Notice title={title}>
-        {snap.reason === 'replaced' && <p>Your seat is now open in another tab or on another device.</p>}
+        {snap.reason === 'replaced' && <p>You’re now playing in another tab or on another device.</p>}
         <Button variant="primary" onClick={() => (snap.reason === 'replaced' ? window.location.reload() : navigate('/'))}>
           {snap.reason === 'replaced' ? 'Play here instead' : 'Back to start'}
         </Button>
@@ -244,7 +244,7 @@ function LobbyPanel({ conn, pub, me }: Ctx) {
   return (
     <>
       <Panel eyebrow={pub.name} title="You’re in!" tone={me.ready ? 'good' : undefined}>
-        <p className="play__extra">{me.ready ? 'You’re ready. The host starts the show once everyone is.' : 'Tap ready when you are set: the show starts once everyone has.'}</p>
+        <p className="play__extra">{me.ready ? 'You’re ready. The host starts the show once everyone is.' : 'Tap ready when you’re set. The show starts once everyone’s ready.'}</p>
         <Button variant={me.ready ? 'good' : 'primary'} size="l" block onClick={() => send(conn, { t: 'ready', ready: !me.ready })}>
           {me.ready ? '✓ Ready' : 'I’m ready'}
         </Button>
@@ -319,7 +319,7 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
         <div
           className="play__grid"
           role="group"
-          aria-label={mine ? 'The board. Say the category and the points you want; the host will select it.' : 'The board'}
+          aria-label={mine ? 'The board. Tell the host the category and points you want.' : 'The board'}
           style={{ gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))`, '--rows': Math.max(...round.board.map((c) => c.clues.length)) } as CSSProperties}
         >
           {round.board.map((cat, c) => (
@@ -342,7 +342,7 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
   const mine = me ? clue.judgments.filter((j) => j.playerId === me.id).at(-1) : undefined;
 
   if (clue.stage === 'wager') {
-    if (you?.wager) return <WagerPanel conn={conn} wager={you.wager} title="Wager!" hint={`A hidden wager in ${clue.category}. You answer alone — how much will you risk?`} />;
+    if (you?.wager) return <WagerPanel conn={conn} wager={you.wager} title="Wager!" hint={`A hidden wager in ${clue.category}. You answer alone. How much will you risk?`} />;
     return (
       <Panel eyebrow={clue.category} title="Wager!" tone="buzz">
         <p>{wagerer?.name ?? 'Someone'} found a hidden wager and is deciding how much to risk.</p>
@@ -391,7 +391,7 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
       {clue.stage === 'answering' && clue.attempts.length > 0 && (
         <div className="play__timing">
           <BuzzLadder attempts={clue.attempts} players={players} adjusted={adjusted} limit={3} />
-          <p>{adjusted ? 'Server-recorded, minus half of each player’s ping. Not reaction times.' : 'Server-recorded times. They include network delay, so they are not reaction times.'}</p>
+          <p>{adjusted ? 'Server times, minus half of each player’s ping. Not reaction times.' : 'Server times. They include network delay, so they’re not reaction times.'}</p>
         </div>
       )}
     </div>
@@ -426,7 +426,7 @@ function RollPanel({ conn, pub, me, players, roll }: Ctx & { roll: NonNullable<T
       : [`${winner.name} picks first`, 'Eyes on the board.']
     : tied.length
       ? me && tied.includes(me.id)
-        ? ['A tie — you roll again', 'Get ready.']
+        ? ['A tie! You roll again', 'Get ready.']
         : ['A tie!', `${tied.map((id) => players[id]?.name).filter(Boolean).join(' and ')} roll again.`]
       : canRoll
         ? ['Tap to roll', 'The highest roll picks the first clue.']
@@ -527,7 +527,7 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
           className="play__buzzer"
           data-state={visual}
           disabled={!canPress || pressed}
-          // pointerdown fires on touch, a click only on release — tens of milliseconds later.
+          // pointerdown fires on touch, a click only on release, tens of milliseconds later.
           onPointerDown={(e) => {
             e.preventDefault();
             void press();
@@ -629,7 +629,7 @@ function FastMoneyPanel(ctx: Ctx & { round: FastMoneyPublic }) {
         <Panel eyebrow={round.title} title="You’re up next" tone="buzz">
           <p>
             {round.questions.length} survey questions. Type the most popular answer you can think of for each
-            {round.blockDuplicates && round.turn > 0 ? ' — and no repeating answers already given' : ''}.
+            {round.blockDuplicates && round.turn > 0 ? ', with no repeats of earlier answers' : ''}.
           </p>
           <p className="play__hint play__extra">The clock starts when the host says go.</p>
         </Panel>
@@ -637,8 +637,8 @@ function FastMoneyPanel(ctx: Ctx & { round: FastMoneyPublic }) {
     }
     return (
       <>
-        <Panel eyebrow={round.title} title={round.stage === 'answering' ? `${names || 'Contestants'} ${active.length > 1 ? 'are' : 'is'} answering` : `${names || 'Next contestant'} — get ready`}>
-          {mine?.when === 'before' && <p>You’re after this. No peeking at their answers!</p>}
+        <Panel eyebrow={round.title} title={round.stage === 'answering' ? `${names || 'Contestants'} ${active.length > 1 ? 'are' : 'is'} answering` : `${names || 'Next contestant'}, get ready`}>
+          {mine?.when === 'before' && <p>You’re up after this. No peeking at their answers!</p>}
           <TimerBar timer={round.timer} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} />
         </Panel>
         {!mine && <MiniBoard pub={pub} me={me} />}
@@ -659,7 +659,7 @@ function FastMoneyPanel(ctx: Ctx & { round: FastMoneyPublic }) {
           <ul className="play__cells">
             {myCells.map((cell, i) => (
               <li key={i} data-zero={cell.points === 0 || undefined}>
-                <span>{cell.text === null ? `Question ${i + 1}` : cell.text || '—'}</span>
+                <span>{cell.text === null ? `Question ${i + 1}` : cell.text || '–'}</span>
                 <b className="bz-num">{cell.points ?? ''}</b>
               </li>
             ))}
@@ -669,7 +669,7 @@ function FastMoneyPanel(ctx: Ctx & { round: FastMoneyPublic }) {
           {round.turns.flat().map((id) => (
             <li key={id} data-me={id === me?.id || undefined} data-winner={round.outcome?.winners.includes(id) || undefined}>
               {players[id] && <Avatar avatar={players[id].avatar} size={26} />}
-              <strong>{players[id]?.name ?? '—'}</strong>
+              <strong>{players[id]?.name ?? '–'}</strong>
               <b className="bz-num">{round.totals[id] ?? 0}</b>
             </li>
           ))}
@@ -746,7 +746,7 @@ function FastMoneyInput({ conn, pub, snap, round, mine }: Ctx & { round: FastMon
             <li key={i}>
               <button onClick={() => go(i)}>
                 <small>{question}</small>
-                <span>{answers[i] || '— tap to answer —'}</span>
+                <span>{answers[i] || 'Tap to answer'}</span>
               </button>
             </li>
           ))}
@@ -937,18 +937,18 @@ function FinishedPanel({ pub, me }: Ctx) {
               <dd className="bz-num">{fmtPercent(accuracy(stats))}</dd>
             </div>
             <div>
-              <dt>Fastest registered buzz</dt>
-              <dd className="bz-mono">{stats.fastestMs === null ? '—' : fmtMs(stats.fastestMs)}</dd>
+              <dt>Fastest buzz</dt>
+              <dd className="bz-mono">{stats.fastestMs === null ? '–' : fmtMs(stats.fastestMs)}</dd>
             </div>
             <div>
-              <dt>Average registered buzz</dt>
-              <dd className="bz-mono">{avg === null ? '—' : fmtMs(avg)}</dd>
+              <dt>Average buzz</dt>
+              <dd className="bz-mono">{avg === null ? '–' : fmtMs(avg)}</dd>
             </div>
           </dl>
         )}
       </Panel>
       <MiniBoard pub={pub} me={me} />
-      <p className="play__hint play__extra">Stay on this page — if the host starts another game you’re already in.</p>
+      <p className="play__hint play__extra">Stay on this page. If the host starts another game, you’re already in.</p>
     </>
   );
 }

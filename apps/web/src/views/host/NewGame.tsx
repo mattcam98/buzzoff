@@ -128,7 +128,7 @@ function Setup() {
   let blocker: string | null = null;
   if (!packs.length) blocker = 'There are no question packs yet. Create or import one first.';
   else if (!chosen.length) blocker = 'Pick at least one question pack.';
-  else if (issue) blocker = `Check the rules — ${issue.path.join(' › ')}: ${issue.message}`;
+  else if (issue) blocker = `Check the rules (${issue.path.join(' › ')}): ${issue.message}`;
   else if (have.categories < need.categories) {
     blocker = `These rules need ${plural(need.categories, 'category', 'categories')} but the selected ${chosen.length === 1 ? 'pack has' : 'packs have'} ${have.categories}. Add a pack or shrink a board.`;
   } else if (have.surveys < need.surveys) {
@@ -183,7 +183,7 @@ function Setup() {
   }
 
   async function deletePreset(target: Preset) {
-    if (!window.confirm(`Delete the preset “${target.name}”?`)) return;
+    if (!window.confirm(`Delete the format “${target.name}”?`)) return;
     try {
       await api.deletePreset(target.id);
       const next = presets!.filter((p) => p.id !== target.id);
@@ -228,7 +228,7 @@ function Setup() {
                   </span>
                 </span>
                 {!p.builtin && (
-                  <button type="button" className="mg-tool mg-tool--bad mg-choice__del" aria-label={`Delete preset ${p.name}`} onClick={() => void deletePreset(p)}>
+                  <button type="button" className="mg-tool mg-tool--bad mg-choice__del" aria-label={`Delete format ${p.name}`} onClick={() => void deletePreset(p)}>
                     ✕
                   </button>
                 )}
@@ -254,7 +254,7 @@ function Setup() {
                   <span className="mg-choice__body">
                     <span className="mg-choice__title">{p.title}</span>
                     <span className="mg-choice__text" title={p.description || undefined}>
-                      {p.description || 'No description.'}
+                      {p.description || 'No description yet.'}
                     </span>
                     <span className="mg-chips">
                       <span className="mg-chip">{plural(p.categoryCount, 'category', 'categories')}</span>
@@ -287,7 +287,7 @@ function Setup() {
             <RulesEditor rules={rules} onChange={changeRules} />
             <div className="mg-row">
               <Button variant="ghost" size="s" disabled={!parsed.success} onClick={() => setSaving(true)}>
-                Save as a preset
+                Save as a format
               </Button>
               {customised && preset && (
                 <Button variant="ghost" size="s" onClick={() => choosePreset(preset)}>
@@ -301,8 +301,8 @@ function Setup() {
         <details className="bz-card mg-fold" onToggle={(e) => setPicking(e.currentTarget.open)}>
           <summary>
             <span>
-              <strong>Choose content by hand</strong>
-              <small>{picks.some((p) => p?.length) ? 'Some rounds are hand-picked; the rest are drawn at random.' : 'Every round is drawn at random from the selected packs.'}</small>
+              <strong>Hand-pick the questions</strong>
+              <small>{picks.some((p) => p?.length) ? 'Some rounds are hand-picked. The rest are drawn at random.' : 'Every round is drawn at random from the selected packs.'}</small>
             </span>
           </summary>
           <div className="mg-fold__body">
@@ -397,7 +397,7 @@ function SavePreset({ rules, onClose, onSaved }: { rules: GameRules; onClose: ()
   }
 
   return (
-    <Modal title="Save as a preset" onClose={onClose}>
+    <Modal title="Save as a format" onClose={onClose}>
       <div className="mg-stack">
         <label className="bz-field">
           <span>Name</span>
@@ -418,7 +418,7 @@ function SavePreset({ rules, onClose, onSaved }: { rules: GameRules; onClose: ()
           Cancel
         </Button>
         <Button variant="primary" disabled={!name.trim() || busy} onClick={() => void save()}>
-          Save preset
+          Save format
         </Button>
       </div>
     </Modal>

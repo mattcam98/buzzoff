@@ -57,7 +57,7 @@ function Dashboard() {
   }, [fail]);
 
   async function remove(game: LiveGame) {
-    if (!window.confirm(`End game ${game.code} for everyone? This cannot be undone.`)) return;
+    if (!window.confirm(`End game ${game.code} for everyone? This can’t be undone.`)) return;
     try {
       await api.deleteGame(game.code);
       storage.removeHostedGame(game.code);
@@ -78,7 +78,7 @@ function Dashboard() {
             <br />
             <span>Who’s playing?</span>
           </h1>
-          <p className="mg-hero__lead">Put the room code on the big screen, let everyone join from their phone, and run the show from here.</p>
+          <p className="mg-hero__lead">Put the room code on the TV, let everyone join from their phone, and run the show from here.</p>
           <Link href="/host/new" className="bz-btn bz-btn--primary bz-btn--l">
             Host a game
           </Link>

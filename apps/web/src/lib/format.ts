@@ -19,7 +19,7 @@ export function fmtGap(ms: number): string {
   return `${rounded < 0 ? '−' : '+'}${Math.abs(rounded)} ms`;
 }
 
-export const fmtPercent = (ratio: number | null) => (ratio === null ? '—' : `${Math.round(ratio * 100)}%`);
+export const fmtPercent = (ratio: number | null) => (ratio === null ? '–' : `${Math.round(ratio * 100)}%`);
 
 export const playerMap = (pub: PublicView): Record<string, PublicPlayer> => Object.fromEntries(pub.players.map((p) => [p.id, p]));
 

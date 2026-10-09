@@ -55,7 +55,7 @@ function Library() {
       if (done) toast(done, 'good');
       await reload();
     } catch (err) {
-      setError(failed ? `${failed} — ${fail(err)}` : fail(err));
+      setError(failed ? `${failed}: ${fail(err)}` : fail(err));
     } finally {
       setBusy(false);
     }
@@ -77,9 +77,9 @@ function Library() {
     try {
       parsed = JSON.parse(await file.text());
     } catch {
-      return setError(`“${file.name}” is not a JSON file. Export a pack from BuzzOff to see the expected format.`);
+      return setError(`“${file.name}” isn’t a JSON file. Export a pack from BuzzOff to see what one looks like.`);
     }
-    await run(() => api.importPack(parsed), `Imported “${file.name}”`, `“${file.name}” is not a valid BuzzOff pack`);
+    await run(() => api.importPack(parsed), `Imported “${file.name}”`, `“${file.name}” isn’t a valid BuzzOff pack`);
   }
 
   const duplicate = (pack: PackSummary) =>
@@ -89,13 +89,13 @@ function Library() {
     }, `Duplicated “${pack.title}”`);
 
   const remove = (pack: PackSummary) => {
-    if (!window.confirm(`Delete “${pack.title}”? Games already created from it are not affected.`)) return;
+    if (!window.confirm(`Delete “${pack.title}”? Games already created from it aren’t affected.`)) return;
     void run(() => api.deletePack(pack.id), `Deleted “${pack.title}”`);
   };
 
   return (
     <>
-      <PageHead eyebrow="Content" title="Question packs" lead="A pack is a pool of trivia categories and survey questions. Any format can draw from any pack.">
+      <PageHead eyebrow="Content" title="Question packs" lead="A pack is a set of trivia categories and survey questions. Any format can use any pack.">
         <input
           ref={fileInput}
           type="file"

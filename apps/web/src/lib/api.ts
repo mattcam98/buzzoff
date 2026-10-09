@@ -30,7 +30,7 @@ async function request<T>(method: string, path: string, body?: unknown, headers:
       body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     });
   } catch {
-    throw new ApiFailure(0, 'offline', 'Could not reach the server');
+    throw new ApiFailure(0, 'offline', 'Couldn’t reach the server. Check your connection.');
   }
   if (res.status === 204) return undefined as T;
   const data = await res.json().catch(() => null);
