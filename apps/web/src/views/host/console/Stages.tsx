@@ -23,6 +23,67 @@ function TimerTools({ pub, snap, run, running }: Pick<StageProps, 'pub' | 'snap'
 
 // ---------------------------------------------------------------- trivia
 
+/** The clue grid. Holding a category title pops its description out over the grid for as long as it is held. */
+function Board({ round, secret, players, paused, run }: Pick<StageProps, 'players' | 'run'> & { round: TriviaPublic; secret: TriviaSecret; paused: boolean }) {
+  const [peek, setPeek] = useState<number | null>(null);
+  const close = () => setPeek(null);
+  const peeked = peek === null ? null : round.board[peek];
+  return (
+    <div className="hc-board" style={{ gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))` }}>
+      {round.board.map((cat, c) => (
+        <div key={c} className="hc-board__col">
+          {cat.blurb ? (
+            <h3
+              data-peek={peek === c ? 'open' : ''}
+              tabIndex={0}
+              aria-description={cat.blurb}
+              onPointerDown={(e) => {
+                // Captured, so letting go anywhere closes it.
+                e.currentTarget.setPointerCapture(e.pointerId);
+                setPeek(c);
+              }}
+              onPointerUp={close}
+              onPointerCancel={close}
+              onLostPointerCapture={close}
+              onContextMenu={(e) => e.preventDefault()}
+              onFocus={(e) => e.currentTarget.matches(':focus-visible') && setPeek(c)}
+              onBlur={close}
+            >
+              {cat.title}
+            </h3>
+          ) : (
+            <h3>{cat.title}</h3>
+          )}
+          {cat.clues.map((cl, k) => {
+            const hidden = secret.board[c]?.[k];
+            return (
+              <button
+                key={k}
+                disabled={cl.used || paused}
+                data-used={cl.used || undefined}
+                data-wager={hidden?.wager || undefined}
+                onClick={() => run({ t: 'clue.select', cat: c, idx: k })}
+                aria-label={`${cat.title} for ${cl.value}${cl.used ? ', already played' : ''}`}
+                title={hidden ? `${hidden.question}\n→ ${hidden.answer}` : undefined}
+              >
+                {fmtScore(cl.value)}
+                {cl.used && cl.winnerId && players[cl.winnerId] && <Avatar avatar={players[cl.winnerId].avatar} size={18} className="hc-board__won" />}
+                {hidden?.wager && !cl.used && <i aria-label="Hidden wager">★</i>}
+              </button>
+            );
+          })}
+        </div>
+      ))}
+      {peeked?.blurb && (
+        <div className="hc-board__blurb" aria-hidden>
+          <strong>{peeked.title}</strong>
+          {peeked.blurb}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: TriviaSecret }) {
   const { pub, snap, players, run, round, secret } = props;
   const clue = round.clue;
@@ -44,34 +105,10 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
             End round
           </Button>
         </div>
-        <div className="hc-board" style={{ gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))` }}>
-          {round.board.map((cat, c) => (
-            <div key={c} className="hc-board__col">
-              <h3>{cat.title}</h3>
-              {cat.clues.map((cl, k) => {
-                const hidden = secret.board[c]?.[k];
-                return (
-                  <button
-                    key={k}
-                    disabled={cl.used || pub.paused}
-                    data-used={cl.used || undefined}
-                    data-wager={hidden?.wager || undefined}
-                    onClick={() => run({ t: 'clue.select', cat: c, idx: k })}
-                    aria-label={`${cat.title} for ${cl.value}${cl.used ? ', already played' : ''}`}
-                    title={hidden ? `${hidden.question}\n→ ${hidden.answer}` : undefined}
-                  >
-                    {fmtScore(cl.value)}
-                    {cl.used && cl.winnerId && players[cl.winnerId] && <Avatar avatar={players[cl.winnerId].avatar} size={18} className="hc-board__won" />}
-                    {hidden?.wager && !cl.used && <i aria-label="Hidden wager">★</i>}
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+        <Board round={round} secret={secret} players={players} paused={pub.paused} run={run} />
         <p className="hc-note">
           {picker ? `${picker.name} calls a category and a value; you click it. ` : 'Players call the clue; you click it. '}★ marks a hidden wager (only you
-          can see it). Hover a clue to preview it.
+          can see it). Hover a clue to preview it.{round.board.some((cat) => cat.blurb) && ' Hold a category to read its description.'}
         </p>
       </section>
     );

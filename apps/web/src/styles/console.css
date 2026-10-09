@@ -307,6 +307,7 @@
 }
 
 .hc-board {
+  position: relative;
   display: grid;
   gap: 6px;
 }
@@ -328,6 +329,61 @@
   text-align: center;
   text-transform: uppercase;
   overflow: hidden;
+}
+/* A category with a description: a corner dot says so, and holding the title shows it. */
+.hc-board__col h3[data-peek] {
+  position: relative;
+  cursor: help;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.hc-board__col h3[data-peek]::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+.hc-board__col h3[data-peek='open'] {
+  background: var(--ink-500);
+}
+.hc-board__col h3[data-peek='open']::after {
+  background: var(--buzz);
+}
+/* Laid over the top of the grid, full width, so a narrow column still gets a readable line. */
+.hc-board__blurb {
+  position: absolute;
+  top: calc(3em + 6px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--ink-700);
+  box-shadow: var(--shadow);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  pointer-events: none;
+  animation: hc-blurb-in 0.12s var(--ease-out);
+}
+.hc-board__blurb strong {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--buzz);
+}
+@keyframes hc-blurb-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 .hc-board__col button {
   position: relative;

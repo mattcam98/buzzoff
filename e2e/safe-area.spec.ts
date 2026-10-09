@@ -122,6 +122,12 @@ for (const [mode, { viewport, insets }] of Object.entries(MODES)) {
     }
     await expect(host.locator('.hc-top')).toHaveCSS('flex-wrap', 'nowrap');
     await check(host, 'console, board');
+    // A held category's description lies over the grid without pushing anything off the screen.
+    await host.locator('.hc-board__col h3[data-peek]').first().hover();
+    await host.mouse.down();
+    await expect(host.locator('.hc-board__blurb')).toBeVisible();
+    await check(host, 'console, board, category description');
+    await host.mouse.up();
     await host.locator('.hc-board__col button:not(:disabled)').first().click();
     await expect(host.locator('.hc-clue')).toBeVisible();
     await check(host, 'console, clue');

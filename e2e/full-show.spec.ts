@@ -164,6 +164,13 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await snap(tv, 'tv-board');
   await snap(cat, 'phone-waiting-for-pick');
   await snap(host, 'host-board');
+  // Holding a category title shows its description over the grid; letting go puts it away.
+  await host.locator('.hc-board__col h3[data-peek]').first().hover();
+  await host.mouse.down();
+  await expect(host.locator('.hc-board__blurb')).toBeVisible();
+  await snap(host, 'host-board-blurb');
+  await host.mouse.up();
+  await expect(host.locator('.hc-board__blurb')).toHaveCount(0);
 
   // An ordinary clue: Bob buzzes first and is right.
   const plain = host.locator('.hc-board__col button:not([data-wager]):not(:disabled)').first();
