@@ -16,6 +16,12 @@ import { useFixedViewport } from '../lib/viewport';
 import { Avatar, Button, Logo } from '../ui/kit';
 import '../styles/home.css';
 
+/** What each avatar colour is called out loud; a hex code tells a screen reader's user nothing. */
+const COLOR_NAMES: Record<AvatarData['color'], string> = {
+  '#FFC400': 'Amber', '#FF4D8D': 'Pink', '#3DDCFF': 'Sky blue', '#7CFF6B': 'Green', '#B58CFF': 'Violet',
+  '#FF8A3D': 'Orange', '#4D7CFF': 'Blue', '#FF5C5C': 'Red', '#2EE6A6': 'Mint', '#F2F2F2': 'White',
+};
+
 const pick = <T,>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)];
 const randomAvatar = (): AvatarData => ({ emoji: pick(AVATAR_EMOJI), color: pick(AVATAR_COLORS) });
 
@@ -60,7 +66,7 @@ export function IdentityFields({ name, avatar, onName, onAvatar, nameRef }: {
       {/* Each swatch is a full-size touch target with a smaller dot inside; the row scrolls sideways if it must. */}
       <div className="home__colors" role="radiogroup" aria-label="Colour" data-scroll>
         {AVATAR_COLORS.map((color) => (
-          <button key={color} type="button" role="radio" aria-checked={avatar.color === color} aria-label={color} style={{ '--swatch': color } as React.CSSProperties} onClick={() => onAvatar({ ...avatar, color })} />
+          <button key={color} type="button" role="radio" aria-checked={avatar.color === color} aria-label={COLOR_NAMES[color]} style={{ '--swatch': color } as React.CSSProperties} onClick={() => onAvatar({ ...avatar, color })} />
         ))}
       </div>
     </>
@@ -140,7 +146,7 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
 
   async function join(e: FormEvent) {
     e.preventDefault();
-    unlockAudio();
+    void unlockAudio();
     if (!complete || busy || !name.trim()) return;
     setBusy(true);
     setError(null);

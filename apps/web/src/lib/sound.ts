@@ -11,17 +11,19 @@ export type SoundName =
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 
-/** Browsers only allow audio after a user gesture; call this from a click or tap. */
-export function unlockAudio() {
+/** Browsers only allow audio after a user gesture; call this from a click or tap. Resolves once sound can play. */
+export function unlockAudio(): Promise<void> {
   if (!ctx) {
     const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!Ctor) return;
+    if (!Ctor) return Promise.resolve();
     ctx = new Ctor();
     master = ctx.createGain();
     master.gain.value = 0.5;
     master.connect(ctx.destination);
   }
-  if (ctx.state === 'suspended') void ctx.resume();
+  // Suspended until the first gesture. iOS also stops it ("interrupted") for a phone call or a spell
+  // in the background, and it stays stopped until a later gesture starts it again.
+  return ctx.state === 'running' ? Promise.resolve() : ctx.resume().catch(() => undefined);
 }
 
 export const audioReady = () => ctx?.state === 'running';

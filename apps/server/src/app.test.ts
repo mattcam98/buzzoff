@@ -260,6 +260,46 @@ describe('a game over the wire', () => {
     expect(retry).toEqual(first);
   });
 
+  it('sounds the repeated-answer buzzer for a repeated Fast Money answer and for nothing else', async () => {
+    h = await new Harness().start();
+    // A second roll is refused as a duplicate too, but that is no business of the room's.
+    const board = await h.createGame();
+    const host = await h.connect('host', board.code, board.hostKey);
+    const tv = await h.connect('display', board.code);
+    const ann = await h.join(board.code, 'Ann');
+    await h.join(board.code, 'Bob');
+    await host.host({ t: 'start' });
+    await host.host({ t: 'round.begin' });
+    expect(await ann.client.act({ t: 'roll' })).toEqual({ ok: true });
+    expect(await ann.client.act({ t: 'roll' })).toMatchObject({ ok: false, error: { code: 'duplicate' } });
+    await host.host({ t: 'cue', name: 'tada' });
+    await until(() => tv.events.some((e) => e.type === 'cue'), 'everything sent before the cue');
+    expect(tv.events.map((e) => e.type)).not.toContain('fm.duplicate');
+
+    const survey = await h.createGame({
+      ...RULES,
+      rounds: [{
+        mode: 'fastMoney', title: 'Fast Money', questions: 2, participants: 'top2', turnSec: 60, extraSecPerTurn: 0,
+        blockDuplicates: true, reveal: 'atEnd', stakes: 'points', pointMultiplier: 1, target: 0, targetBonus: 0,
+      }],
+    });
+    const host2 = await h.connect('host', survey.code, survey.hostKey);
+    const tv2 = await h.connect('display', survey.code);
+    const seats = [await h.join(survey.code, 'Cat'), await h.join(survey.code, 'Dan')];
+    await host2.host({ t: 'start' });
+    await host2.host({ t: 'round.begin' });
+    await until(() => tv2.pub.round?.mode === 'fastMoney' && tv2.pub.round.stage === 'ready', 'the first turn');
+    const turns = tv2.pub.round!.mode === 'fastMoney' ? tv2.pub.round!.turns : [];
+    const [first, second] = turns.map(([id]) => seats.find((s) => s.playerId === id)!);
+    await host2.host({ t: 'fm.start' });
+    expect(await first.client.act({ t: 'fm.answer', q: 0, text: 'Zebra' })).toEqual({ ok: true });
+    await first.client.act({ t: 'fm.done' });
+    await host2.host({ t: 'fm.start' });
+    expect(await second.client.act({ t: 'fm.answer', q: 0, text: 'zebras' })).toMatchObject({ ok: false, error: { code: 'duplicate' } });
+    await until(() => tv2.events.some((e) => e.type === 'fm.duplicate'), 'the buzzer');
+    expect(tv2.events.find((e) => e.type === 'fm.duplicate')).toEqual({ type: 'fm.duplicate', playerId: second.playerId });
+  });
+
   it('does not let two people who pick the same name at once share a seat', async () => {
     h = await new Harness().start();
     const { code } = await h.createGame();
@@ -335,6 +375,16 @@ describe('authorisation', () => {
     expect((await h.api('POST', `/games/${code}/join`, { name: '', avatar: AVATAR })).status).toBe(400);
     expect((await h.api('POST', `/games/${code}/join`, { name: 'Zed', avatar: { emoji: '<script>', color: 'red' } })).status).toBe(400);
     expect((await h.api('POST', `/games/${code}/join`, { name: 'ann', avatar: AVATAR })).status).toBe(409);
+  });
+
+  it('tells browsers and proxies never to keep an API answer, and what a page may load', async () => {
+    h = await new Harness().start();
+    for (const path of ['/api/info', '/api/packs', '/api/games/QQQQ', '/api/nowhere']) {
+      expect([path, (await fetch(h.url + path)).headers.get('cache-control')]).toEqual([path, 'no-store']);
+    }
+    const policy = (await fetch(`${h.url}/api/info`)).headers.get('content-security-policy')!;
+    for (const rule of ["default-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", "frame-ancestors 'self'"]) expect(policy).toContain(rule);
+    expect(policy).not.toMatch(/script-src|unsafe-eval/);
   });
 
   it('guards hosting and content behind the admin password when one is set', async () => {

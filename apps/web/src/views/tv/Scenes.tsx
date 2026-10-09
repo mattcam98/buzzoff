@@ -1,9 +1,89 @@
 /** The in-round scenes of the shared screen, one per game mode. */
-import type { FastMoneyPublic, FinalPublic, TriviaPublic } from '@buzzoff/shared';
+import type { FastMoneyPublic, FinalPublic, Media, TriviaPublic } from '@buzzoff/shared';
+import { useEffect, useLayoutEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { fmtDelta, fmtScore } from '../../lib/format';
-import { BuzzLadder, Die, MediaView, rollLeaders, Seconds, textScale } from '../../ui/game';
+import { answerScale, BuzzLadder, Die, MediaView, rollLeaders, Seconds, textScale } from '../../ui/game';
 import { Avatar, cx, TimerBar } from '../../ui/kit';
 import type { SceneProps } from '../Tv';
+
+// ---------------------------------------------------------------- room for everyone
+//
+// A screen has to hold three players or fifty. These say how a list is arranged for the number in
+// it, as custom properties; the stylesheet then sizes its rows or tiles to the space there is.
+
+/** A row for every `across` tiles, but `most` rows at most: past that the rows get longer instead. */
+export const rowsOf = (count: number, across: number, most: number) => Math.min(most, Math.max(1, Math.ceil(count / across)));
+
+/** Tiles in so many rows. */
+export const inRows = (count: number, rows: number) => ({ '--rows': rows, '--per-row': Math.max(1, Math.ceil(count / rows)) }) as CSSProperties;
+
+/** A ranked list: down one column while it is short enough to read at full size (`fit` rows), then across up to four. */
+export function columnsFor(count: number, fit: number): CSSProperties {
+  const columns = rowsOf(count, fit, 4);
+  return { '--columns': columns, '--rows': Math.ceil(count / columns) } as CSSProperties;
+}
+
+// ---------------------------------------------------------------- room for every word
+//
+// Text is as long as whoever wrote the pack made it, the room it gets depends on what else is on the
+// screen, and a TV cannot scroll. Neither is known before it is laid out, so the box is measured.
+
+/** Whether what is in a box is taller than the box. Going by layout alone, so that something still being scaled or slid into place by its entrance animation is measured where it will end up. */
+function overflows(box: HTMLElement) {
+  const inside = [...box.children] as HTMLElement[];
+  if (!inside.length) return false;
+  const style = getComputedStyle(box);
+  const room = box.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+  const top = Math.min(...inside.map((el) => el.offsetTop));
+  const bottom = Math.max(...inside.map((el) => el.offsetTop + el.offsetHeight));
+  return bottom - top > room + 1;
+}
+
+/** Full size if that fits; otherwise `--fit` comes down a step at a time until it does. The stylesheet sizes the type by it. */
+function fit(box: HTMLElement, tiles?: string) {
+  const full = () => (tiles ? [...box.querySelectorAll<HTMLElement>(tiles)] : [box]).some(overflows);
+  box.style.removeProperty('--fit');
+  for (let percent = 96; percent >= 40 && full(); percent -= 4) box.style.setProperty('--fit', String(percent / 100));
+}
+
+/** A ref for a box whose contents must fit it. Given `tiles`, a selector, it is each of those inside the box that must hold its own. */
+export function useFit<T extends HTMLElement>(tiles?: string) {
+  const [box, setBox] = useState<T | null>(null);
+  // Any render may have changed what is in the box.
+  useLayoutEffect(() => {
+    if (box) fit(box, tiles);
+  });
+  // The box changes size with the screen and with what is around it, and text changes size when its font arrives.
+  useEffect(() => {
+    if (!box) return;
+    const again = () => fit(box, tiles);
+    const resized = new ResizeObserver(again);
+    resized.observe(box);
+    document.fonts.addEventListener('loadingdone', again);
+    return () => {
+      resized.disconnect();
+      document.fonts.removeEventListener('loadingdone', again);
+    };
+  }, [box, tiles]);
+  return setBox;
+}
+
+/** The card a question is read from, with its picture or sound. `instead` is shown while there is no question to read. */
+function QuestionCard({ question, media, instead }: { question: string | null; media: Media | null; instead?: ReactNode }) {
+  const card = useFit<HTMLDivElement>();
+  return (
+    <div ref={card} className="tv-clue__body" data-media={media?.kind} data-hidden={question === null || undefined}>
+      {media && <MediaView media={media} className="tv-clue__media" />}
+      {question === null ? (
+        instead
+      ) : (
+        <p className="tv-clue__q" data-scale={textScale(question)}>
+          {question}
+        </p>
+      )}
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------- trivia
 
@@ -37,17 +117,12 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
         <span className="tv-clue__value bz-num">{clue.isWager ? `Wager ${fmtScore(clue.wager?.amount ?? 0)}` : fmtScore(clue.value)}</span>
       </header>
 
-      <div className="tv-clue__body" data-media={clue.media?.kind} data-hidden={clue.question === null || undefined}>
-        {clue.media && <MediaView media={clue.media} className="tv-clue__media" />}
-        {clue.question === null ? (
-          // Nobody reads on while an answer is judged; the question comes back if the buzzers reopen.
-          <p className="tv-clue__hidden">Question hidden while {answerer?.name ?? 'the answer'} {answerer ? 'answers' : 'is judged'}</p>
-        ) : (
-          <p className="tv-clue__q" data-scale={textScale(clue.question)}>
-            {clue.question}
-          </p>
-        )}
-      </div>
+      <QuestionCard
+        question={clue.question}
+        media={clue.media}
+        // Nobody reads on while an answer is judged; the question comes back if the buzzers reopen.
+        instead={<p className="tv-clue__hidden">Question hidden while {answerer?.name ?? 'the answer'} {answerer ? 'answers' : 'is judged'}</p>}
+      />
 
       <TimerBar timer={clue.timer} held={clue.held} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} className="tv-clue__timer" />
 
@@ -83,7 +158,7 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
           <div className="tv-result">
             <div className="tv-result__answer">
               <span className="bz-eyebrow">{clue.timedOut ? 'Time’s up — the answer was' : 'Answer'}</span>
-              <strong>{clue.answer}</strong>
+              <strong data-scale={answerScale(clue.answer ?? '')}>{clue.answer}</strong>
             </div>
             <ul className="tv-result__rulings">
               {clue.judgments.map((j, i) => {
@@ -125,7 +200,12 @@ function RollScene({ pub, snap, players, roll }: SceneProps & { roll: NonNullabl
           {roll.phase === 'rolling' && <Seconds pub={pub} snap={snap} className="tv-roll__count" />}
         </p>
       </header>
-      <ul className="tv-roll__players" data-count={shown.length > 8 ? 'many' : shown.length > 4 ? 'some' : 'few'}>
+      {/* One row of dice for up to eleven players, two for up to thirty-two (two long rows make for bigger dice than three short ones), then three. */}
+      <ul
+        className="tv-roll__players"
+        data-count={shown.length > 8 ? 'many' : shown.length > 4 ? 'some' : 'few'}
+        style={inRows(shown.length, shown.length <= 11 ? 1 : shown.length <= 32 ? 2 : 3)}
+      >
         {shown.map((p) => {
           const inIt = roll.contenders.includes(p.id);
           return (
@@ -144,12 +224,17 @@ function RollScene({ pub, snap, players, roll }: SceneProps & { roll: NonNullabl
 function Board({ round, players }: { round: TriviaPublic; players: SceneProps['players'] }) {
   const picker = round.controlId ? players[round.controlId] : null;
   const rows = Math.max(...round.board.map((c) => c.clues.length));
+  // The widest value on the board, in characters: every tile sets its number small enough for that one.
+  const digits = Math.max(...round.board.flatMap((c) => c.clues.map((cl) => fmtScore(cl.value).length)));
+  // And the longest word in any title: every heading is set small enough for that one to stay in one piece.
+  const letters = Math.max(...round.board.flatMap((c) => c.title.split(/\s+/).map((word) => word.length)));
+  const grid = { '--digits': digits, '--letters': letters, gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))`, gridTemplateRows: `auto repeat(${rows}, minmax(0, 1fr))` } as CSSProperties;
   return (
     <div className="tv-board-wrap">
-      <div className="tv-board" style={{ gridTemplateColumns: `repeat(${round.board.length}, 1fr)`, gridTemplateRows: `auto repeat(${rows}, 1fr)` }}>
+      <div className="tv-board" style={grid}>
         {round.board.map((cat, c) => (
           <div key={`h${c}`} className="tv-board__cat" style={{ gridColumn: c + 1, animationDelay: `${c * 70}ms` }}>
-            {cat.title}
+            <span>{cat.title}</span>
           </div>
         ))}
         {round.board.flatMap((cat, c) =>
@@ -179,6 +264,13 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
   const active = round.turns[round.turn] ?? [];
   const winners = round.outcome?.winners ?? [];
   const focusQ = round.focus?.q ?? (round.stage === 'result' ? null : 0);
+  // Once it is over, each question has the survey's top answer on a line of its own underneath.
+  const topAnswer = (q: number) => (round.stage === 'result' || round.stage === 'done' ? round.topAnswers[q] : null);
+  // The questions share the height of the board between them; a line for a top answer takes only what it needs.
+  const rows = ['auto', ...round.questions.map((_, q) => (topAnswer(q) ? 'minmax(0, 1fr) auto' : 'minmax(0, 1fr)'))].join(' ');
+  const board = useFit<HTMLDivElement>('.tv-fm__q, .tv-fm__cell');
+  // An answer too long for one line of its tile is set in two smaller ones.
+  const long = contestants.length > 1 ? 20 : 32;
 
   const banner =
     round.stage === 'ready' ? (crowd ? 'Phones at the ready…' : `${players[active[0]]?.name ?? 'Next contestant'}, you’re up`) :
@@ -207,7 +299,7 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
       {crowd ? (
         <CrowdBoard round={round} players={players} focusQ={focusQ} />
       ) : (
-        <div className="tv-fm__board" style={{ gridTemplateColumns: `minmax(0, 1.5fr) repeat(${contestants.length}, minmax(0, 1fr))` }}>
+        <div ref={board} className="tv-fm__board" style={{ gridTemplateColumns: `minmax(0, 1.5fr) repeat(${contestants.length}, minmax(0, 1fr))`, gridTemplateRows: rows }}>
           <div className="tv-fm__corner" />
           {contestants.map((id) => {
             const p = players[id];
@@ -223,7 +315,7 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
             <div key={i} className="tv-fm__row" data-focus={round.focus?.q === i || undefined}>
               <div className="tv-fm__q">
                 <span className="bz-num">{i + 1}</span>
-                {round.stage === 'ready' && round.turn === 0 ? <i>Question {i + 1}</i> : q}
+                {round.stage === 'ready' && round.turn === 0 ? <i>Question {i + 1}</i> : <span>{q}</span>}
               </div>
               {round.turns.map((group, turn) =>
                 group.map((id) => {
@@ -236,7 +328,7 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
                         <span className="tv-fm__covered">Hidden</span>
                       ) : (
                         <>
-                          <span className="tv-fm__answer" key={cell?.text ?? 'x'}>{cell?.text === null ? '' : cell?.text || '—'}</span>
+                          <span className="tv-fm__answer" key={cell?.text ?? 'x'} data-long={(cell?.text?.length ?? 0) > long || undefined}>{cell?.text === null ? '' : cell?.text || '—'}</span>
                           <b className="bz-num" key={`p${cell?.points}`}>{cell?.points ?? ''}</b>
                         </>
                       )}
@@ -244,9 +336,9 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
                   );
                 }),
               )}
-              {(round.stage === 'result' || round.stage === 'done') && round.topAnswers[i] && (
+              {topAnswer(i) && (
                 <div className="tv-fm__top" style={{ gridColumn: `1 / -1` }}>
-                  No. 1 answer: <strong>{round.topAnswers[i]!.text}</strong> <b className="bz-num">{round.topAnswers[i]!.points}</b>
+                  No. 1 answer: <strong>{topAnswer(i)!.text}</strong> <b className="bz-num">{topAnswer(i)!.points}</b>
                 </div>
               )}
             </div>
@@ -273,9 +365,11 @@ export function FastMoneyScene({ pub, snap, players, round }: SceneProps & { rou
 /** Everybody-plays layout: one question at a time, with every player's answer underneath. */
 function CrowdBoard({ round, players, focusQ }: { round: FastMoneyPublic; players: SceneProps['players']; focusQ: number | null }) {
   const ids = round.turns.flat();
+  // Everyone in the room has a tile on these lists, brought down in size until the last of them is on the screen.
+  const tiles = useFit<HTMLUListElement>();
   if (round.stage === 'ready' || round.stage === 'answering') {
     return (
-      <ul className="tv-crowd__progress">
+      <ul ref={tiles} className="tv-crowd__progress">
         {ids.map((id) => {
           const p = players[id];
           const prog = round.progress[id];
@@ -293,7 +387,7 @@ function CrowdBoard({ round, players, focusQ }: { round: FastMoneyPublic; player
   if (focusQ === null) {
     const ranked = [...ids].sort((a, b) => (round.totals[b] ?? 0) - (round.totals[a] ?? 0));
     return (
-      <ol className="tv-crowd__totals">
+      <ol className="tv-crowd__totals" style={columnsFor(ranked.length, 6)}>
         {ranked.map((id) => {
           const p = players[id];
           return p ? (
@@ -313,7 +407,7 @@ function CrowdBoard({ round, players, focusQ }: { round: FastMoneyPublic; player
         <span className="bz-num">{focusQ + 1}</span>
         {round.questions[focusQ]}
       </p>
-      <ul className="tv-crowd__answers">
+      <ul ref={tiles} className="tv-crowd__answers">
         {ids.map((id, i) => {
           const p = players[id];
           const cell = round.cells[id]?.[focusQ];
@@ -340,6 +434,7 @@ export function FinalScene({ pub, snap, players, round }: SceneProps & { round: 
   const current = round.reveals.at(-1);
   const currentPlayer = current ? players[current.playerId] : null;
   const waitingOn = round.stage === 'wager' ? round.wagered : round.answered;
+  const judged = round.reveals.filter((r) => r.correct !== null && (round.answer || r !== current));
 
   return (
     <div className="tv-final" data-stage={round.stage}>
@@ -354,12 +449,7 @@ export function FinalScene({ pub, snap, players, round }: SceneProps & { round: 
           <p>You know the category. How confident are you?</p>
         </div>
       ) : (
-        <div className="tv-clue__body" data-media={round.media?.kind}>
-          {round.media && <MediaView media={round.media} className="tv-clue__media" />}
-          <p className="tv-clue__q" data-scale={textScale(round.question ?? '')}>
-            {round.question}
-          </p>
-        </div>
+        <QuestionCard question={round.question ?? ''} media={round.media} />
       )}
 
       <TimerBar timer={round.timer} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} className="tv-clue__timer" />
@@ -367,7 +457,8 @@ export function FinalScene({ pub, snap, players, round }: SceneProps & { round: 
       {(round.stage === 'wager' || round.stage === 'answering') && (
         <div className="tv-final__waiting">
           <Seconds pub={pub} snap={snap} className="tv-status__count" />
-          <ul>
+          {/* Five names to a row, on four rows at most. */}
+          <ul style={inRows(round.players.length, rowsOf(round.players.length, 5, 4))}>
             {round.players.map((id) => {
               const p = players[id];
               return p ? (
@@ -387,14 +478,14 @@ export function FinalScene({ pub, snap, players, round }: SceneProps & { round: 
           {round.answer ? (
             <div className="tv-result__answer bz-pop">
               <span className="bz-eyebrow">Correct answer</span>
-              <strong>{round.answer}</strong>
+              <strong data-scale={answerScale(round.answer)}>{round.answer}</strong>
             </div>
           ) : current && currentPlayer ? (
             <div className="tv-final__card" key={current.playerId} data-correct={current.correct ?? undefined}>
               <Avatar avatar={currentPlayer.avatar} size="4.4em" />
               <div>
                 <span className="bz-eyebrow">{currentPlayer.name} wrote</span>
-                <strong>{current.answer || 'Nothing at all'}</strong>
+                <strong data-scale={answerScale(current.answer ?? '')}>{current.answer || 'Nothing at all'}</strong>
               </div>
               {current.correct !== null && (
                 <div className="tv-final__verdict">
@@ -407,7 +498,9 @@ export function FinalScene({ pub, snap, players, round }: SceneProps & { round: 
             <p className="tv-final__ready">Pens down. Let’s see what you wrote.</p>
           )}
           <ul className="tv-final__done">
-            {round.reveals.filter((r) => r.correct !== null && (round.answer || r !== current)).map((r) => {
+            {/* The latest fifteen verdicts stay up. In a bigger room the earliest make way: their scores are on the podiums below. */}
+            {judged.length > 15 && <li data-more>+{judged.length - 15} earlier</li>}
+            {judged.slice(-15).map((r) => {
               const p = players[r.playerId];
               return p ? (
                 <li key={r.playerId} data-correct={r.correct}>

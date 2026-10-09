@@ -7,8 +7,7 @@ import {
 import { Link } from 'wouter';
 import { useCountdown } from '../lib/hooks';
 
-const cx = (...parts: (string | false | null | undefined)[]) => parts.filter(Boolean).join(' ');
-export { cx };
+export const cx = (...parts: (string | false | null | undefined)[]) => parts.filter(Boolean).join(' ');
 
 /** Without a `size` the logo takes its size from the surrounding CSS. */
 export function Logo({ size, to }: { size?: number; to?: string }) {
@@ -233,7 +232,8 @@ export function Confetti({ burst }: { burst: number }) {
         g.restore();
       }
       if (++frame < 260) raf = requestAnimationFrame(draw);
-      else g.clearRect(0, 0, w, h);
+      // Over: empty the canvas and give its full-screen bitmap back, rather than hold it for the rest of the night.
+      else canvas.width = canvas.height = 0;
     });
     return () => cancelAnimationFrame(raf);
   }, [burst]);

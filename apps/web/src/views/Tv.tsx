@@ -8,13 +8,13 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useLocation } from 'wouter';
 import { api } from '../lib/api';
 import { useConnection, type Snapshot } from '../lib/connection';
-import { byScore, fmtMs, fmtPercent, joinAddress, ordinal, playerMap, plural } from '../lib/format';
+import { fmtMs, fmtPercent, joinAddress, ordinal, placings, playerMap, plural } from '../lib/format';
 import { useGameEvents, useWakeLock } from '../lib/hooks';
 import { duckMusic, moodFor, setMusic } from '../lib/music';
 import { audioReady, play, soundFor, unlockAudio } from '../lib/sound';
 import { FinalSecondsTick, roundBlurb, Score } from '../ui/game';
 import { Avatar, Button, Confetti, cx, Logo, Notice } from '../ui/kit';
-import { FastMoneyScene, FinalScene, TriviaScene } from './tv/Scenes';
+import { columnsFor, FastMoneyScene, FinalScene, inRows, rowsOf, TriviaScene, useFit } from './tv/Scenes';
 import '../styles/game.css';
 import '../styles/tv.css';
 
@@ -91,13 +91,13 @@ export function Tv({ code }: { code: string }) {
   if (!pub) return <Notice title="Tuning in…" busy />;
 
   const enableSound = () => {
-    unlockAudio();
+    void unlockAudio().then(() => play('join'));
     setSound(true);
-    play('join');
   };
 
   return (
-    <div className="bz-stage tv" data-phase={pub.phase} data-music={mood ?? 'off'} onClick={sound ? undefined : enableSound}>
+    // A click anywhere turns the sound on, and wakes it again if the browser has since put it to sleep.
+    <div className="bz-stage tv" data-phase={pub.phase} data-music={mood ?? 'off'} onClick={sound ? unlockAudio : enableSound}>
       <TvContent pub={pub} snap={snap} publicUrl={publicUrl} />
       {pub.paused && (
         <div className="tv-overlay" role="status">
@@ -108,11 +108,8 @@ export function Tv({ code }: { code: string }) {
         </div>
       )}
       {snap.status !== 'online' && <div className="tv-offline">Reconnecting…</div>}
-      {!sound && (
-        <button className="tv-sound" onClick={enableSound}>
-          🔊 Click anywhere to turn sound on
-        </button>
-      )}
+      {/* The screen itself takes the click; the button says so, and gives the keyboard something to press. */}
+      {!sound && <button className="tv-sound">🔊 Click anywhere to turn sound on</button>}
       <Confetti burst={confetti} />
     </div>
   );
@@ -171,6 +168,7 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
     QRCode.toDataURL(link, { margin: 1, width: 640, color: { dark: '#0d0b22', light: '#ffffff' } }).then(setQr, () => setQr(null));
   }, [link]);
   const ready = pub.players.filter((p) => p.ready).length;
+  const list = useFit<HTMLUListElement>();
 
   return (
     <main className="tv-lobby">
@@ -213,7 +211,8 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
             <p>Waiting for the first contestant…</p>
           </div>
         ) : (
-          <ul className="tv-lobby__players" data-many={pub.players.length > 10 || undefined} data-few={pub.players.length <= 6 || undefined}>
+          // Bigger for a few, smaller for many, and smaller again (useFit) for as long as the whole room is not on the screen.
+          <ul ref={list} className="tv-lobby__players" data-many={pub.players.length > 10 || undefined} data-few={pub.players.length <= 6 || undefined}>
             {pub.players.map((p) => (
               <li key={p.id} data-offline={!p.connected || undefined}>
                 <Avatar avatar={p.avatar} size="3.4em" dim={!p.connected} />
@@ -234,8 +233,9 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
 
 function RoundIntro({ pub }: { pub: PublicView }) {
   const round = pub.round!;
+  const intro = useFit<HTMLDivElement>();
   return (
-    <div className="tv-intro">
+    <div ref={intro} className="tv-intro">
       <span className="bz-eyebrow">
         Round {pub.roundIndex + 1} of {pub.rounds.length}
       </span>
@@ -256,15 +256,15 @@ function RoundIntro({ pub }: { pub: PublicView }) {
 }
 
 function Standings({ pub }: SceneProps) {
-  const ranked = byScore(pub.players);
-  const top = Math.max(1, ...ranked.map((p) => Math.abs(p.score)));
+  const table = placings(pub.players, pub.champions);
+  const top = Math.max(1, ...table.map(({ player }) => Math.abs(player.score)));
   const next = pub.rounds[pub.roundIndex + 1];
   return (
     <div className="tv-standings">
-      <ol>
-        {ranked.map((p, i) => (
-          <li key={p.id} data-out={p.eliminated || undefined} style={{ animationDelay: `${(ranked.length - i) * 110}ms` }}>
-            <span className="tv-standings__rank bz-num">{i + 1}</span>
+      <ol style={columnsFor(table.length, 8)}>
+        {table.map(({ player: p, place }, i) => (
+          <li key={p.id} data-lead={place === 1 || undefined} data-out={p.eliminated || undefined} style={{ animationDelay: `${(table.length - i) * 110}ms` }}>
+            <span className="tv-standings__rank bz-num">{place}</span>
             <Avatar avatar={p.avatar} size="2.6em" dim={p.eliminated} />
             <strong>{p.name}</strong>
             {pub.eliminatedNow.includes(p.id) && <span className="bz-pill bz-pill--bad">Eliminated</span>}
@@ -326,9 +326,7 @@ function awards(pub: PublicView): Award[] {
 
 function Finale({ pub }: SceneProps) {
   const champions = pub.players.filter((p) => pub.champions?.includes(p.id));
-  const ranked = byScore(pub.players);
-  // A decider can crown someone who is not top of the scoreboard, so champions lead the list.
-  const order = [...champions, ...ranked.filter((p) => !champions.includes(p))];
+  const rest = placings(pub.players, pub.champions).filter(({ player }) => !champions.includes(player));
   const team = pub.teams?.find((t) => champions.length > 0 && champions.every((p) => p.teamId === t.id));
 
   return (
@@ -336,7 +334,8 @@ function Finale({ pub }: SceneProps) {
       <Logo />
       <span className="bz-eyebrow">{pub.name}</span>
       <h1>{champions.length === 0 ? 'That’s the show' : champions.length > 1 && !team ? 'It’s a tie!' : 'Champion'}</h1>
-      <div className="tv-finale__champs">
+      {/* One champion has the stage alone. A tie or a winning team shares it, six to a row. */}
+      <div className="tv-finale__champs" style={inRows(champions.length, rowsOf(champions.length, 6, 3))}>
         {champions.map((p) => (
           <div key={p.id} className="tv-finale__champ">
             <span className="tv-finale__crown" aria-hidden>
@@ -350,9 +349,9 @@ function Finale({ pub }: SceneProps) {
       </div>
       {team && <p className="tv-finale__team">{team.name} take it</p>}
       <ol className="tv-finale__rest">
-        {order.slice(champions.length, champions.length + 7).map((p, i) => (
+        {rest.slice(0, 7).map(({ player: p, place }) => (
           <li key={p.id}>
-            <span className="bz-num">{ordinal(i + champions.length + 1)}</span>
+            <span className="bz-num">{ordinal(place)}</span>
             <Avatar avatar={p.avatar} size="2em" />
             <strong>{p.name}</strong>
             <Score value={p.score} />
@@ -388,7 +387,8 @@ function Podiums({ pub, players }: SceneProps) {
   const lastJudged = clue?.judgments.at(-1);
 
   return (
-    <footer className="tv-podiums" data-count={list.length > 8 ? 'many' : list.length > 5 ? 'some' : 'few'}>
+    // A dozen stand side by side; a bigger room goes onto a second row, and then a third.
+    <footer className="tv-podiums" data-count={list.length > 8 ? 'many' : list.length > 5 ? 'some' : 'few'} style={inRows(list.length, rowsOf(list.length, 12, 3))}>
       {list.map((p) => {
         const out = p.eliminated || (clue?.excluded.includes(p.id) && clue.stage !== 'result');
         const flash = clue?.stage === 'result' || clue?.stage === 'open' ? lastJudged && lastJudged.playerId === p.id && lastJudged : null;

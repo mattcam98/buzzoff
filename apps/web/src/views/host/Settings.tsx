@@ -10,7 +10,7 @@ import {
 } from '@buzzoff/shared';
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { api, ApiFailure } from '../../lib/api';
-import { fmtDay, plural } from '../../lib/format';
+import { fmtDay, fmtDayTime, plural } from '../../lib/format';
 import { storage } from '../../lib/storage';
 import { Button, cx, toast } from '../../ui/kit';
 import { NumField, SelectField, ToggleField } from './fields';
@@ -25,7 +25,6 @@ export function Settings() {
 }
 
 const range = (key: keyof typeof SETTINGS_LIMITS) => ({ min: SETTINGS_LIMITS[key].min, max: SETTINGS_LIMITS[key].max });
-const when = (ts: number) => new Date(ts).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
 /** "Chrome on Windows" from a user-agent string: enough to tell your own devices apart. */
 function device(agent: string): string {
@@ -317,7 +316,7 @@ function SettingsPage() {
               <tbody>
                 {log.map((entry) => (
                   <tr key={entry.id} data-bad={entry.action === 'login.failed' || undefined}>
-                    <td>{when(entry.at)}</td>
+                    <td>{fmtDayTime(entry.at)}</td>
                     <td>{describe(entry, presets)}</td>
                     <td className="bz-mono">{entry.ip === 'server' ? 'the server' : entry.ip}</td>
                   </tr>
@@ -490,7 +489,7 @@ function Devices({ sessions, onSignedOutOthers, onSignedOut }: { sessions: Admin
               {s.current && <span className="bz-pill bz-pill--good">This device</span>}
             </span>
             <small>
-              <span className="bz-mono">{s.ip}</span> · signed in {when(s.createdAt)} · until {fmtDay(s.expiresAt)}
+              <span className="bz-mono">{s.ip}</span> · signed in {fmtDayTime(s.createdAt)} · until {fmtDay(s.expiresAt)}
             </small>
           </li>
         ))}

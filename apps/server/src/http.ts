@@ -82,7 +82,8 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
       // Question media may be hot-linked from anywhere; scripts only ever come from this server.
       'Content-Security-Policy':
         "default-src 'self'; img-src 'self' data: blob: http: https:; media-src 'self' blob: http: https:; " +
-        "style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'self'",
+        "style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' ws: wss:; " +
+        "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'",
     });
     next();
   });
@@ -114,6 +115,11 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
 
   const api = express.Router();
   api.use(limit(general));
+  // Every answer here is about right now, and much of it is for the host's eyes only.
+  api.use((_req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    next();
+  });
 
   api.get('/health', (_req, res) => {
     res.json({ ok: true });
@@ -342,7 +348,10 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
   const index = path.join(config.WEB_DIR, 'index.html');
   if (existsSync(index)) {
     app.use(express.static(config.WEB_DIR, { index: false, setHeaders: (res, file) => {
+      // Build output is named after its contents and never changes. The icons and the manifest
+      // keep their names from one build to the next, so they are held for an hour at most.
       if (file.includes(`${path.sep}assets${path.sep}`)) res.set('Cache-Control', 'public, max-age=31536000, immutable');
+      else if (!file.endsWith('.html')) res.set('Cache-Control', 'public, max-age=3600');
     } }));
     app.get(/^(?!\/(api|assets|media|socket\.io)\/).*/, (_req, res) => {
       res.set('Cache-Control', 'no-cache').sendFile(index);

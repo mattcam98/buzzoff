@@ -252,6 +252,10 @@
 .hc-timer__count[data-low] {
   color: var(--bad);
 }
+/* "+10 s": in proportional figures the plus runs into the one. */
+.hc-timer .bz-btn {
+  font-variant-numeric: tabular-nums;
+}
 
 .hc-lobby {
   display: grid;

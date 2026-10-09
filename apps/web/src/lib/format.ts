@@ -25,6 +25,18 @@ export const playerMap = (pub: PublicView): Record<string, PublicPlayer> => Obje
 /** Players by score, highest first, keeping join order between equals. */
 export const byScore = (players: PublicPlayer[]) => [...players].sort((a, b) => b.score - a.score);
 
+/**
+ * The scoreboard with places on it. Equals share a place, as in 1, 2, 2, 4: nobody is "third of
+ * three" for having joined last. Once a game is over its champions come first, whatever the
+ * scores say, because a decider can crown someone who is not top of the board.
+ */
+export function placings(players: PublicPlayer[], champions: string[] | null): { player: PublicPlayer; place: number }[] {
+  const won = (p: PublicPlayer) => !!champions?.includes(p.id);
+  const level = (a: PublicPlayer, b: PublicPlayer) => won(a) === won(b) && (won(a) || a.score === b.score);
+  const table = byScore(players).sort((a, b) => Number(won(b)) - Number(won(a)));
+  return table.map((player) => ({ player, place: 1 + table.findIndex((p) => level(p, player)) }));
+}
+
 export const ordinal = (n: number) => {
   const tail = n % 100;
   const suffix = tail >= 11 && tail <= 13 ? 'th' : (['th', 'st', 'nd', 'rd'][n % 10] ?? 'th');
@@ -34,6 +46,7 @@ export const ordinal = (n: number) => {
 export const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 export const fmtDay = (ts: number) => new Date(ts).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+export const fmtDayTime = (ts: number) => new Date(ts).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
 /** Where players should go to join, shown on the lobby screen. */
 export function joinAddress(publicUrl: string | null): { url: string; label: string } {

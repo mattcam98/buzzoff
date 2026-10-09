@@ -106,6 +106,9 @@ export function Seconds({ pub, snap, className }: { pub: PublicView; snap: Snaps
 /** Pick a type size for a question so long clues still fit the screen. */
 export const textScale = (text: string) => (text.length > 220 ? 'xs' : text.length > 140 ? 's' : text.length > 70 ? 'm' : 'l');
 
+/** The same for an answer on the shared screen. It is set larger than a question and in a narrower card, so it steps down sooner. */
+export const answerScale = (text: string) => (text.length > 200 ? 'xs' : text.length > 110 ? 's' : text.length > 50 ? 'm' : 'l');
+
 export function MediaView({ media, className }: { media: Media; className?: string }) {
   if (media.kind === 'image') return <img className={cx('bz-media', className)} src={media.url} alt="" />;
   if (media.kind === 'audio') {

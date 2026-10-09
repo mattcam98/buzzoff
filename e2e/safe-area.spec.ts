@@ -4,6 +4,9 @@
  * tappable may sit in those parts of the screen, and no pinned bar may cover another.
  */
 import { expect, test, type Browser, type Page } from '@playwright/test';
+import { closePagesAfterEachTest } from './tidy';
+
+closePagesAfterEachTest();
 
 interface Insets {
   top: number;

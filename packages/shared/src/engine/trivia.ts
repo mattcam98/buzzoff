@@ -159,10 +159,14 @@ function judge(g: GameState, r: TriviaRound, correct: boolean, ctx: Ctx): void {
   else finish(r, c, null, ctx);
 }
 
-/** Throw the clue out: undo its scoring and put it back on the board. */
+/** Throw the clue out: undo its scoring, forget its rulings and put it back on the board. */
 function cancelClue(g: GameState, r: TriviaRound): void {
   const c = activeClue(r);
-  for (const j of c.judgments) addScore(g, j.playerId, -j.delta);
+  for (const j of c.judgments) {
+    addScore(g, j.playerId, -j.delta);
+    const stats = g.stats[j.playerId];
+    if (stats) stats[j.correct ? 'correct' : 'incorrect'] -= 1;
+  }
   const clue = r.board[c.cat].clues[c.idx];
   clue.used = false;
   clue.winnerId = null;

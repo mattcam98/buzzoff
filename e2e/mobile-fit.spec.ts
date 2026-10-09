@@ -5,6 +5,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { io } from 'socket.io-client';
 import { expectFits, expectFitsWithKeyboard } from './fit';
+import { closePagesAfterEachTest } from './tidy';
+
+closePagesAfterEachTest();
 
 const SHOTS = 'e2e/.artifacts/fit';
 const PHONE = { viewport: { width: 393, height: 659 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true };

@@ -3,7 +3,7 @@ import type { PackSummary } from '@buzzoff/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { api } from '../../lib/api';
-import { plural } from '../../lib/format';
+import { fmtDay, plural } from '../../lib/format';
 import { Button, toast } from '../../ui/kit';
 import { HostShell, PageHead, useShell } from './HostShell';
 
@@ -27,8 +27,6 @@ function download(name: string, data: unknown) {
   a.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-
-const edited = (ts: number) => new Date(ts).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 
 function Library() {
   const { fail } = useShell();
@@ -153,7 +151,7 @@ function Library() {
                   <span className="mg-chip">{plural(pack.surveyCount, 'survey')}</span>
                 </span>
                 <small>
-                  {pack.author ? `By ${pack.author} · ` : ''}edited {edited(pack.updatedAt)}
+                  {pack.author ? `By ${pack.author} · ` : ''}edited {fmtDay(pack.updatedAt)}
                 </small>
               </Link>
               <div className="mg-pack__actions">

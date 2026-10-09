@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } 
 import { Link, useLocation } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
 import { useConnection, type Snapshot } from '../../lib/connection';
-import { byScore, fmtScore, joinAddress, playerMap, plural } from '../../lib/format';
+import { byScore, fmtScore, joinAddress, placings, playerMap, plural } from '../../lib/format';
 import { useHotkeys } from '../../lib/hooks';
 import { storage } from '../../lib/storage';
 import { roundBlurb, Score } from '../../ui/game';
@@ -43,6 +43,11 @@ const SHORTCUTS: [string, string][] = [
   ['P', 'Pause or resume'],
   ['?', 'Show this list'],
 ];
+
+/** Clicked with the mouse, a switch lets go of the keyboard, so Space is still "next step" and not a second flip. */
+const letGo = (input: HTMLInputElement) => {
+  if (!input.matches(':focus-visible')) input.blur();
+};
 
 /** Symbols that stand in for a button's words in the top bar on a phone. */
 const ICONS = {
@@ -104,6 +109,11 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
       // letting go of that button's focus keeps the same key press from also pressing it.
       if (focused !== target) focused?.blur();
       target.click();
+    } else if (key === ' ') {
+      // With no step to take, Space does nothing at all. Left to the browser it would scroll the page, or
+      // press whichever button the mouse clicked last a second time: another nudge to a score, another undo.
+      e.preventDefault();
+      focused?.closest('button')?.blur();
     }
   }, !help && !managing);
 
@@ -201,8 +211,7 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
                 checked={pub.music}
                 onChange={(e) => {
                   void run({ t: 'music', on: e.target.checked });
-                  // Clicked with the mouse, the switch lets go of the keyboard, so Space is still "next step".
-                  if (!e.target.matches(':focus-visible')) e.target.blur();
+                  letGo(e.target);
                 }}
               />
               Background music
@@ -363,7 +372,14 @@ function LobbyStage({ pub, run }: StageProps) {
           Start the show
         </Button>
         <label className="bz-toggle">
-          <input type="checkbox" checked={pub.lobbyLocked} onChange={(e) => run({ t: 'lobby.lock', locked: e.target.checked })} />
+          <input
+            type="checkbox"
+            checked={pub.lobbyLocked}
+            onChange={(e) => {
+              void run({ t: 'lobby.lock', locked: e.target.checked });
+              letGo(e.target);
+            }}
+          />
           Lock the room
         </label>
         {pub.teams && (
@@ -446,9 +462,9 @@ function FinishedStage({ pub, players }: StageProps) {
         </Link>
       </div>
       <ol className="hc-final">
-        {byScore(pub.players).map((p, i) => (
+        {placings(pub.players, pub.champions).map(({ player: p, place }) => (
           <li key={p.id}>
-            <span className="bz-num">{i + 1}</span>
+            <span className="bz-num">{place}</span>
             <Avatar avatar={p.avatar} size={30} />
             <strong>{p.name}</strong>
             {pub.champions?.includes(p.id) && <span className="bz-pill bz-pill--buzz">Champion</span>}

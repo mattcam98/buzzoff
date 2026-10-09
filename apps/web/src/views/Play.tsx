@@ -13,7 +13,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEven
 import { Redirect, useLocation } from 'wouter';
 import type { Connection, Snapshot } from '../lib/connection';
 import { useConnection } from '../lib/connection';
-import { byScore, fmtDelta, fmtGap, fmtMs, fmtPercent, fmtScore, ordinal, playerMap } from '../lib/format';
+import { fmtDelta, fmtGap, fmtMs, fmtPercent, fmtScore, ordinal, placings, playerMap } from '../lib/format';
 import { useGameEvents, useWakeLock } from '../lib/hooks';
 import { useFixedViewport } from '../lib/viewport';
 import { haptic, play, unlockAudio } from '../lib/sound';
@@ -127,9 +127,11 @@ function Session({ code, token, playerId }: { code: string; token: string | null
 
 // ---------------------------------------------------------------- chrome
 
+/** Where this player stands, sharing a place with anyone level with them. */
+const placeOf = (pub: PublicView, me: PublicPlayer) => placings(pub.players, pub.champions).find((s) => s.player.id === me.id)!.place;
+
 function Header({ pub, me, snap }: Ctx) {
   const net = me ? snap.net[me.id] : null;
-  const rank = me ? byScore(pub.players).findIndex((p) => p.id === me.id) + 1 : 0;
   if (!me) {
     return (
       <header className="play__head">
@@ -147,7 +149,7 @@ function Header({ pub, me, snap }: Ctx) {
       <div className="play__id">
         <strong>{me.name}</strong>
         <span>
-          {me.eliminated ? 'Eliminated' : pub.phase === 'lobby' ? pub.code : `${ordinal(rank)} of ${pub.players.length}`}
+          {me.eliminated ? 'Eliminated' : pub.phase === 'lobby' ? pub.code : `${ordinal(placeOf(pub, me))} of ${pub.players.length}`}
           {pub.teams && me.teamId !== null && ` · ${pub.teams[me.teamId]?.name}`}
         </span>
       </div>
@@ -163,10 +165,17 @@ function Header({ pub, me, snap }: Ctx) {
 }
 
 function Panel({ eyebrow, title, children, tone }: { eyebrow?: string; title?: ReactNode; children?: ReactNode; tone?: 'good' | 'bad' | 'buzz' }) {
+  // A heading is usually a few words, but it can be an answer of a few hundred characters. Like a
+  // long clue, that steps down in size first and scrolls inside the panel only if it still must.
+  const scale = typeof title === 'string' ? textScale(title) : 'l';
   return (
     <section className="play__panel bz-rise" data-tone={tone}>
       {eyebrow && <span className="bz-eyebrow">{eyebrow}</span>}
-      {title && <h1>{title}</h1>}
+      {title && (
+        <h1 data-scale={scale} data-scroll={scale !== 'l' || undefined}>
+          {title}
+        </h1>
+      )}
       {children}
     </section>
   );
@@ -178,12 +187,12 @@ function Panel({ eyebrow, title, children, tone }: { eyebrow?: string; title?: R
  * pinned in view either way.
  */
 function MiniBoard({ pub, me }: { pub: PublicView; me: PublicPlayer | null }) {
-  const ranked = byScore(pub.players);
+  const table = placings(pub.players, pub.champions);
   return (
-    <ol className="play__board" data-scroll data-many={ranked.length > 6 || undefined} aria-label="Scores">
-      {ranked.map((p, i) => (
+    <ol className="play__board" data-scroll data-many={table.length > 6 || undefined} aria-label="Scores">
+      {table.map(({ player: p, place }) => (
         <li key={p.id} data-me={p.id === me?.id || undefined} data-out={p.eliminated || undefined}>
-          <span className="bz-num">{i + 1}</span>
+          <span className="bz-num">{place}</span>
           <Avatar avatar={p.avatar} size={26} dim={!p.connected || p.eliminated} />
           <strong>{p.name}</strong>
           <span className="bz-num">{fmtScore(p.score)}</span>
@@ -371,9 +380,10 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
           </Panel>
         ) : clue.isWager ? (
           <Panel eyebrow="Wager clue" title={answerer?.id === me?.id ? 'Answer out loud' : `${answerer?.name ?? 'Someone'} is answering`} tone={answerer?.id === me?.id ? 'buzz' : undefined} />
-        ) : you ? (
+        ) : you && you.buzzer.state !== 'hidden' ? (
           <Buzzer {...ctx} you={you} round={round} />
         ) : (
+          // Spectators, and players with nothing to buzz for because they are out of the game, watch.
           <Panel title={answerer ? `${answerer.name} buzzed first` : clue.stage === 'open' ? 'Buzzers are open' : 'Buzzers locked'} />
         )}
       </div>
@@ -430,7 +440,8 @@ function RollPanel({ conn, pub, snap, me, players, roll }: Ctx & { roll: NonNull
     <section className="play__panel play__roll bz-rise" data-tone={winner?.id === me?.id && winner ? 'good' : canRoll ? 'buzz' : undefined}>
       <span className="bz-eyebrow">{roll.round === 1 ? 'Who picks first?' : `Tie-break ${roll.round - 1}`}</span>
       <h1 aria-live="polite">{title}</h1>
-      {me && (
+      {/* Someone who joined after the roll began has no die in it, only everybody else's to watch. */}
+      {(inIt || mine !== null) && (
         <button
           className="play__dice"
           data-ready={canRoll && !pressed ? true : undefined}
@@ -571,7 +582,10 @@ function WagerPanel({ conn, wager, title, hint }: { conn: Connection; wager: Non
   return (
     <section className="play__panel play__wagerpanel bz-rise" data-tone="buzz">
       <span className="bz-eyebrow">{title}</span>
-      <p className="play__extra">{hint}</p>
+      {/* The hint names the category, which can run to sixty characters: on the smallest screens it gives way before the controls do. */}
+      <p className="play__extra" data-scroll>
+        {hint}
+      </p>
       <div className="play__amount">
         <button type="button" onClick={() => setAmount(amount - step)} disabled={amount <= wager.min} aria-label={`Wager ${step} less`}>
           −
@@ -802,10 +816,26 @@ function FastMoneyInput({ conn, pub, snap, round, mine }: Ctx & { round: FastMon
 
 // ---------------------------------------------------------------- final
 
+/** How long after the last keystroke a written answer is sent, so a pause in typing is enough to save it. */
+const AUTOSAVE_MS = 400;
+
 function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round: FinalPublic }) {
   const [text, setText] = useState(you?.final?.answer ?? '');
-  const [saved, setSaved] = useState(!!you?.final?.answer);
+  // What the server is known to hold.
+  const [kept, setKept] = useState(you?.final?.answer ?? '');
   const myReveal = me ? round.reveals.find((r) => r.playerId === me.id) : undefined;
+  const answering = round.stage === 'answering' && !!you?.final?.canAnswer;
+  const draft = text.trim();
+  const inSync = draft === kept;
+  const saved = inSync && !!draft;
+
+  // An answer is saved as it is written: whatever is in the box when the clock stops is what counts,
+  // whether or not anyone remembered to press Save.
+  useEffect(() => {
+    if (!answering || inSync) return;
+    const timer = window.setTimeout(() => void conn.act({ t: 'final.answer', text: draft }).then((ack) => ack.ok && setKept(draft)), AUTOSAVE_MS);
+    return () => window.clearTimeout(timer);
+  }, [answering, draft, inSync, conn]);
 
   if (round.stage === 'wager') {
     if (you?.wager) return <WagerPanel conn={conn} wager={you.wager} title={round.title} hint={`The category is “${round.category}”. Everyone wagers before seeing the question.`} />;
@@ -817,10 +847,10 @@ function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round:
     );
   }
 
-  if (round.stage === 'answering' && you?.final?.canAnswer) {
+  if (answering) {
     const save = async (e: FormEvent) => {
       e.preventDefault();
-      if (await send(conn, { t: 'final.answer', text })) setSaved(true);
+      if (draft && (await send(conn, { t: 'final.answer', text: draft }))) setKept(draft);
     };
     return (
       <form className="play__panel play__fm" onSubmit={save}>
@@ -836,10 +866,7 @@ function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round:
           <input
             className="bz-input play__fminput"
             value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-              setSaved(false);
-            }}
+            onChange={(e) => setText(e.target.value)}
             maxLength={120}
             placeholder="Write your answer"
             aria-label="Your answer"
@@ -847,12 +874,14 @@ function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round:
             autoComplete="off"
             enterKeyHint="done"
           />
-          <Button type="submit" variant={saved ? 'good' : 'primary'} disabled={!text.trim()}>
+          <Button type="submit" variant={saved ? 'good' : 'primary'} disabled={!draft}>
             {saved ? '✓ Saved' : 'Save answer'}
           </Button>
         </div>
         <div className="play__fmfoot">
-          <p className="play__hint">{saved ? 'Saved. You can change it until time runs out.' : 'Save it before the clock runs out.'}</p>
+          <p className="play__hint">
+            {saved ? 'Saved. You can change it until time runs out.' : draft ? 'Your answer is saved as you type.' : 'Write your answer before the clock runs out.'}
+          </p>
         </div>
       </form>
     );
@@ -874,7 +903,7 @@ function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round:
         {myReveal && myReveal.correct !== null ? (
           <Panel eyebrow="You wrote" title={myReveal.answer || 'Nothing'} tone={myReveal.correct ? 'good' : 'bad'}>
             <p className="play__delta bz-num">{fmtDelta(myReveal.delta ?? 0)}</p>
-            {round.answer && <p>Answer: {round.answer}</p>}
+            {round.answer && <p data-scroll>Answer: {round.answer}</p>}
           </Panel>
         ) : (
           <Panel eyebrow={round.answer ? 'Answer' : 'The reveal'} title={round.answer ?? (current ? `${players[current.playerId]?.name ?? 'Someone'} wrote “${current.answer || 'nothing'}”` : 'Pens down')}>
@@ -890,13 +919,12 @@ function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round:
 
 function FinishedPanel({ pub, me }: Ctx) {
   const champion = me ? pub.champions?.includes(me.id) : false;
-  const rank = me ? byScore(pub.players).findIndex((p) => p.id === me.id) + 1 : 0;
   const stats = me ? pub.stats?.[me.id] : undefined;
   const avg = stats ? averageBuzzMs(stats) : null;
   const names = pub.players.filter((p) => pub.champions?.includes(p.id)).map((p) => p.name);
   return (
     <>
-      <Panel eyebrow={pub.name} title={champion ? '👑 You won!' : me ? `You finished ${ordinal(rank)}` : `${names.join(' & ') || 'Nobody'} won`} tone={champion ? 'buzz' : undefined}>
+      <Panel eyebrow={pub.name} title={champion ? '👑 You won!' : me ? `You finished ${ordinal(placeOf(pub, me))}` : `${names.join(' & ') || 'Nobody'} won`} tone={champion ? 'buzz' : undefined}>
         {!champion && me && names.length > 0 && <p className="play__roomy">{names.join(' & ')} took the crown.</p>}
         {stats && (
           <dl className="play__stats">

@@ -27,7 +27,7 @@ function singular(word: string): string {
 export function normalizeAnswer(input: string): string {
   const cleaned = input
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/&/g, ' and ')
     .replace(/['’`]/g, '')

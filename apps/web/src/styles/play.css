@@ -157,6 +157,10 @@ html.kb-open .play__main {
   text-wrap: balance;
   overflow-wrap: anywhere;
 }
+/* A heading that is somebody’s answer can run to a few hundred characters; like a long clue, it steps down in size. */
+.play__panel h1[data-scale='m'] { font-size: clamp(1.125rem, 2.4cqh + 1.6cqw, 1.5rem); }
+.play__panel h1[data-scale='s'] { font-size: clamp(1rem, 2cqh + 1cqw, 1.1875rem); }
+.play__panel h1[data-scale='xs'] { font-size: clamp(0.875rem, 1.6cqh + 0.8cqw, 1rem); line-height: 1.2; }
 .play__panel p {
   color: var(--text-dim);
 }
@@ -275,6 +279,8 @@ html.kb-open .play__main {
   flex: 1;
   min-height: 0;
   display: grid;
+  /* As wide as the screen and no wider: a long category title is cut short, it does not widen the page. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: var(--gap);
 }
@@ -952,7 +958,7 @@ html.kb-open .play__extra {
     column-gap: 16px;
   }
   .play__clue {
-    max-height: none;
+    max-height: 100%;
     align-self: center;
   }
   .play__center {

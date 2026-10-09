@@ -3,7 +3,7 @@ import { accuracy, averageBuzzMs, type GameResult } from '@buzzoff/shared';
 import { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import { api } from '../../lib/api';
-import { fmtMs, fmtPercent, fmtScore } from '../../lib/format';
+import { fmtDayTime, fmtMs, fmtPercent, fmtScore } from '../../lib/format';
 import { Avatar, Button, toast } from '../../ui/kit';
 import { HostShell, PageHead, useShell } from './HostShell';
 
@@ -15,7 +15,6 @@ export function History() {
   );
 }
 
-const when = (ts: number) => new Date(ts).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 const ms = (value: number | null) => (value === null ? '—' : fmtMs(value));
 
 function Results() {
@@ -39,7 +38,7 @@ function Results() {
   }, [fail]);
 
   async function remove(result: GameResult) {
-    if (!window.confirm(`Remove “${result.name}” from ${when(result.finishedAt)} from the history? It will stop counting towards the leaderboard too.`)) return;
+    if (!window.confirm(`Remove “${result.name}” from ${fmtDayTime(result.finishedAt)} from the history? It will stop counting towards the leaderboard too.`)) return;
     try {
       await api.deleteResult(result.id);
       setResults((list) => list?.filter((r) => r.id !== result.id) ?? null);
@@ -89,7 +88,7 @@ function ResultCard({ result, onRemove }: { result: GameResult; onRemove: () => 
       <header className="mg-result__head">
         <div>
           <p className="bz-eyebrow">
-            {when(result.finishedAt)} · room {result.code}
+            {fmtDayTime(result.finishedAt)} · room {result.code}
           </p>
           <h2>{result.name}</h2>
           <p className="mg-muted">{result.packTitles.join(', ')}</p>

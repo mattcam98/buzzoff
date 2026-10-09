@@ -233,7 +233,7 @@ export class Room {
       this.commit(applyPlayer(this.state, playerId, action, this.env()));
     } catch (err) {
       // The room hears the "already said" buzzer even though the answer was rejected.
-      if (err instanceof GameError && err.code === 'duplicate') this.io.to(this.channel).emit('event', { type: 'fm.duplicate', playerId });
+      if (action.t === 'fm.answer' && err instanceof GameError && err.code === 'duplicate') this.io.to(this.channel).emit('event', { type: 'fm.duplicate', playerId });
       throw err;
     }
   }

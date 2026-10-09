@@ -166,7 +166,7 @@ interface Part {
   notes: Note[];
 }
 
-export interface Song {
+interface Song {
   bpm: number;
   /** Where the off-beat eighth falls within a beat: 0.5 is straight, two thirds is a shuffle. */
   offbeat: number;
@@ -187,7 +187,7 @@ const CoverG = 'G4+A4+C5+E5';
 /** Two off-beat stabs in a bar, the way a horn section answers a melody. */
 const comp = (first: string, second = first) => `-:3 ${first} -:2 ${second} -`;
 
-export const SONGS = {
+const SONGS = {
   /**
    * The BuzzOff theme: a sixteen-bar shuffle in C, the key the fanfares and
    * stings are already in. Eight bars of tune over a walking bass, then an
@@ -370,7 +370,7 @@ interface Scheduled {
 }
 
 /** A song's notes in the order they sound, timed in seconds. */
-export function timeline(song: Song): { events: Scheduled[]; length: number } {
+function timeline(song: Song): { events: Scheduled[]; length: number } {
   const beat = 60 / song.bpm;
   const timeOf = (step: number) => (Math.floor(step / 2) + (step % 2 ? song.offbeat : 0)) * beat;
   const events = Object.entries(song.parts)
@@ -380,7 +380,7 @@ export function timeline(song: Song): { events: Scheduled[]; length: number } {
 }
 
 /** Sound one event of a song at an absolute time. */
-export function sound(c: BaseAudioContext, outs: Record<string, AudioNode>, song: Song, event: Scheduled, t: number) {
+function sound(c: BaseAudioContext, outs: Record<string, AudioNode>, song: Song, event: Scheduled, t: number) {
   const part = song.parts[event.part];
   for (const freq of event.freqs) (VOICES[part.voice] as Voice)(c, outs[event.part], t, event.dur, freq, part.gain);
 }

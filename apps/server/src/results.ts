@@ -11,6 +11,7 @@ const LINKS_KEY = 'player_links';
 
 export class Results {
   private board: Promise<Leaderboard> | null = null;
+  private changes: Promise<void> = Promise.resolve();
 
   private constructor(
     private store: Store,
@@ -27,18 +28,27 @@ export class Results {
     return new Results(store, links);
   }
 
+  /**
+   * Make one change once the changes asked for before it are done, and forget the standings they
+   * were worked out from. The store answers each request in its own time, so without the queue a
+   * game whose ending is undone straight away could have its result removed before it was saved.
+   */
+  private change(work: () => Promise<void>): Promise<void> {
+    const done = this.changes.then(work).then(() => void (this.board = null));
+    this.changes = done.catch(() => undefined);
+    return done;
+  }
+
   list(limit: number): Promise<GameResult[]> {
     return this.store.listResults(limit);
   }
 
-  async save(result: GameResult) {
-    await this.store.saveResult(result);
-    this.board = null;
+  save(result: GameResult) {
+    return this.change(() => this.store.saveResult(result));
   }
 
-  async remove(id: string) {
-    await this.store.deleteResult(id);
-    this.board = null;
+  remove(id: string) {
+    return this.change(() => this.store.deleteResult(id));
   }
 
   leaderboard(): Promise<Leaderboard> {
@@ -52,18 +62,19 @@ export class Results {
   private async relink(links: PlayerLinks) {
     await this.store.setSetting(LINKS_KEY, JSON.stringify(links));
     this.links = links;
-    this.board = null;
   }
 
   /** Count everything `from` has played as `into`'s. Both are ids of entries on the leaderboard. */
-  async merge(from: string, into: string) {
-    const problem = mergeProblem(await this.store.listResults(), this.links, from, into);
-    if (problem) throw new GameError('cannot_merge', problem);
-    await this.relink({ ...this.links, [from]: into });
+  merge(from: string, into: string) {
+    return this.change(async () => {
+      const problem = mergeProblem(await this.store.listResults(), this.links, from, into);
+      if (problem) throw new GameError('cannot_merge', problem);
+      await this.relink({ ...this.links, [from]: into });
+    });
   }
 
   /** Make an identity its own player again, whether the host merged it or its name matched on its own. */
-  async separate(id: string) {
-    await this.relink({ ...this.links, [id]: id });
+  separate(id: string) {
+    return this.change(() => this.relink({ ...this.links, [id]: id }));
   }
 }

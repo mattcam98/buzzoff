@@ -4,6 +4,9 @@
  */
 import { spawn, type ChildProcess } from 'node:child_process';
 import { expect, test } from '@playwright/test';
+import { closePagesAfterEachTest } from './tidy';
+
+closePagesAfterEachTest();
 
 const PORT = 3221;
 const BASE = `http://localhost:${PORT}`;

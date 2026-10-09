@@ -201,7 +201,10 @@ no second record to drift from the first. Removing a result, or undoing the
 end of a game, changes the standings because it changes their only input.
 `results.ts` on the server is the one door results go through, which lets it
 keep the computed standings in memory until the next result is saved or
-removed instead of reading the whole history for every request.
+removed instead of reading the whole history for every request. It also makes
+those changes one at a time, in the order they were asked for: the database
+answers each request in its own time, and a game whose ending is undone at
+once must not have its result removed before it has been saved.
 
 **Recognising players.** There are no accounts. `POST /games/:code/join`
 gives a phone a random key in an `HttpOnly` cookie the first time it joins
@@ -276,6 +279,11 @@ device widths: *short*, *tight* (keyboard open or landscape) and *wide*
 `data-scroll`. `e2e/fit.ts` measures every phone screen at nine viewport
 sizes and three keyboard heights and fails on page scroll, overflow, clipped
 or overlapping elements, anything off screen, or touch targets under 28px.
+Text is written by whoever made the pack, so the same holds for the longest
+of it: a category title is cut short with an ellipsis, a clue steps down in
+size and then scrolls inside its card, and an answer does the same inside its
+panel. `e2e/long-text.spec.ts` plays a game in which every string is as long
+as its schema allows.
 
 **Screen edges.** `index.html` asks for the whole screen (`viewport-fit=cover`,
 and a translucent status bar once BuzzOff is on the Home Screen), so on an
@@ -297,10 +305,54 @@ game and room code, and the controls as 40px buttons whose words give way to
 symbols (the words stay as the accessible names). Shortcut hints are hidden
 where there is no keyboard or mouse (`any-hover: none`).
 
+**Shared screen layout.** The TV is sized in em from one viewport-derived font
+size, so a scene looks the same on a laptop, a television and a 4K display.
+What changes from one night to the next is how many people are in the room
+and how much there is to read, and a TV cannot scroll.
+
+Every list of players has to hold three or fifty. `views/tv/Scenes.tsx`
+decides how a list is arranged for the number in it (`rowsOf`, `inRows`,
+`columnsFor`: the podiums go onto a second and a third row, the standings
+into columns) and hands that to the stylesheet as custom
+properties. The stylesheet then sizes rows and tiles from the space the list
+is given, in container units: never bigger than full size, and never so big
+that one is cut off. A board is sized the same way, for up to eight
+categories of eight clues: a value from its tile, a heading from the width of
+its column, so that the longest word in it stays in one piece.
+
+Text is as long as whoever wrote the pack made it (a question may run to 600
+characters), and how tall it comes out is not known until it is laid out. An
+answer steps down in size by its length (`answerScale`), so the card it is on
+stays much the same height. A question is measured: `useFit` turns `--fit`
+down on its card, a step at a time, until the question is no taller than the
+room the card has, and the stylesheet sizes the type by it, keeping the
+lines as wide as they were so that there are fewer of them. The round intro,
+the lists that show the whole room (the lobby, a survey everybody answers)
+and the Fast Money board, where each question and answer has to be inside
+its own tile, are fitted the same way. It measures by
+layout, not by what is painted, so an entrance animation does not throw it,
+and it runs again whenever the box changes size or a font arrives.
+
+The page itself is one grid column exactly as wide as the screen, so nothing
+inside can push it wider. `e2e/tv-fit.spec.ts` plays a show with twenty
+players, and another with the longest questions and answers a pack may hold,
+and fails if anything is off the screen, clipped by its own box, outside the
+tile drawn around it or run into its neighbour, at three display sizes. Held
+upright, as a spectator's phone holds it, the same page scrolls and nothing
+is fitted to a height.
+
 The buzzer listens for `pointerdown`, which fires when a finger touches the
-glass, rather than `click`, which fires when it lifts. Host keyboard shortcuts
-work by clicking the on-screen button that carries the key, so a shortcut can
-never do something the visible controls would not allow.
+glass, rather than `click`, which fires when it lifts. The written final is
+sent as it is typed (after a pause of 400 ms, or at once with Save), so an
+answer does not depend on anyone remembering to save it. Only what is typed
+in the last 400 ms before the clock stops can be missed.
+
+Host keyboard shortcuts work by clicking the on-screen button that carries the
+key, so a shortcut can never do something the visible controls would not
+allow. Space is the next step and nothing else: it never presses the button
+that happens to hold the focus (left to the browser, it would press whichever
+one the mouse clicked last a second time), and with no step to take it does
+nothing. Enter still presses a focused button, as it does everywhere.
 
 ## Tests
 
@@ -308,8 +360,12 @@ never do something the visible controls would not allow.
 |---|---|
 | Leaderboard unit tests (`packages/shared`) | Totals, what counts as a game and as a win, recognising players by profile and by name, shared phones, host merges and their limits, ranking with ties and minimum samples |
 | Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, the dice roll for the first pick, automatic opening, the hidden question and its held timer, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching and reveal order, the final, answer secrecy |
-| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch; the leaderboard across games, a returning phone under a new name, merging and separating players, who may see it |
-| Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; every phone screen measured for fit across phone sizes, orientations and keyboard heights; every page checked against an iPhone's status bar, notch and home indicator |
+| Web unit tests (`apps/web`) | Places on a scoreboard: equals sharing one, champions ahead of the scores |
+| Store contract tests (`apps/server`) | What both stores promise: packs, presets, games with their credentials, results in order, settings, sessions, the audit log and its limit, text a database cannot hold |
+| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; response headers; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch; results saved and removed in order; the leaderboard across games, a returning phone under a new name, merging and separating players, who may see it |
+| Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; the space bar on the host console; every phone screen measured for fit across phone sizes, orientations and keyboard heights, with ordinary content and with the longest a pack may hold; every page checked against an iPhone's status bar, notch and home indicator; the shared screen measured with twenty players, a survey table, a winning team and the longest questions and answers a pack may hold, at three display sizes |
 
-The server tests use the in-memory store. The Postgres store is exercised by
-running the Compose stack.
+The server integration tests use the in-memory store. The store contract tests
+run against it too, and against a real Postgres as well when
+`TEST_DATABASE_URL` names one (the top of `apps/server/src/store/store.test.ts`
+says how).

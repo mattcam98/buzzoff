@@ -92,9 +92,10 @@ the proxy must pass `Upgrade` requests through.
    answer (you still see it, with the answer). If they are wrong it comes
    back for everyone else, with the timer carrying on where it stopped.
 6. **Run the show from the keyboard.** The next step is always on the space
-   bar: start, begin round, back to the board. `C` and `X` rule an
-   answer correct or incorrect, `R` reveals an answer nobody got, `U` undoes
-   the last step, `P` pauses, `?` lists the shortcuts.
+   bar: start, begin round, back to the board. It is never anything else, so
+   pressing it out of habit cannot repeat whatever you last clicked. `C` and
+   `X` rule an answer correct or incorrect, `R` reveals an answer nobody got,
+   `U` undoes the last step, `P` pauses, `?` lists the shortcuts.
 
 Things that go wrong at a party, and what to do:
 
@@ -106,6 +107,7 @@ Things that go wrong at a party, and what to do:
 | A buzz is disputed | **Re-do the buzz** discards it and opens the buzzers again for everyone still in. |
 | A clue was bad | **Throw out clue** reverses its scoring and puts it back on the board. |
 | A score needs correcting | `−` / `+` next to the player, or click the player to type a score. |
+| Someone forgot to save their final answer | Nothing to do. Answers are saved as they are typed, within half a second, so what they had written when the clock stopped is what counts. |
 | A phone dies or a browser closes | Reopening the page puts them straight back in their seat. |
 | Someone switches to a different phone | They join again under the same name; you get a prompt to let them take over the seat. |
 | The server restarts mid-game | The game comes back **paused** with scores and seats intact. Resume when ready. |
@@ -215,8 +217,10 @@ New game page and saved as your own preset. The options:
 questions with no rules attached, so the same pack works for any format; the
 New game page tells you whether the packs you picked have enough content.
 Clues can carry an image, audio or video (uploaded or by URL), accepted
-alternative answers and private host notes. Packs export to and import from a
-single JSON file (`*.buzzoff.json`).
+alternative answers and private host notes. A clue may run to 600 characters
+and its answer to 300: the TV sets a long one in smaller type so that all of
+it is on the screen, and a phone lets it scroll inside its card. Packs export
+to and import from a single JSON file (`*.buzzoff.json`).
 
 Typed Fast Money answers are matched against the survey after normalising case,
 accents, punctuation, filler words and plurals, then allowing a small typo, then
@@ -236,7 +240,13 @@ npm run typecheck
 
 Without `DATABASE_URL` the server keeps everything in memory, which is what
 development and the tests use. `npm run test:e2e` needs Playwright's browser
-once: `npx playwright install chromium`.
+once: `npx playwright install chromium`. To run the store tests against a real
+Postgres as well as the in-memory one, give them a throwaway database server:
+
+```sh
+docker run --rm -d -e POSTGRES_PASSWORD=test -p 127.0.0.1:55439:5432 postgres:17-alpine
+TEST_DATABASE_URL=postgres://postgres:test@127.0.0.1:55439/postgres npm test
+```
 
 ```
 packages/shared   types, validated contracts, and the game engine (pure functions)

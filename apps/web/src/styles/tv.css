@@ -9,6 +9,8 @@
   min-height: 0;
   overflow: hidden;
   display: grid;
+  /* One column exactly as wide as the screen: nothing inside, however much of it there is, can push the page wider. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 1em;
   /* A TV has no notch, but this screen is also opened on tablets and phones, sometimes from the Home Screen. */
@@ -68,6 +70,7 @@
 .tv-main {
   min-height: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   animation: bz-fade 0.4s ease both;
 }
 
@@ -103,10 +106,10 @@
   color: #fff;
 }
 .tv-sound {
-  /* Tucked into the corner so it never sits on top of the contestants. */
+  /* In the corner, on a strip of its own (below), so it never sits on top of a contestant's score. */
   left: auto;
   right: max(1em, var(--safe-right));
-  bottom: max(0.6em, var(--safe-bottom));
+  bottom: max(0.5em, var(--safe-bottom));
   transform: none;
   background: rgb(255 255 255 / 0.14);
   color: var(--text);
@@ -114,12 +117,18 @@
   backdrop-filter: blur(6px);
   animation: bz-rise 0.5s 1s var(--ease-out) both;
 }
+/* Until the screen has been clicked, everything sits a little higher and the prompt has the bottom edge to itself. */
+.tv:has(> .tv-sound) {
+  padding-bottom: calc(max(0.5em, var(--safe-bottom)) + 2.4em);
+}
 
 /* ---------------------------------------------------------------- lobby */
 
 .tv-lobby {
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  /* One row as tall as the screen and no taller: the list of players is fitted to what that leaves it. */
+  grid-template-rows: minmax(0, 1fr);
   gap: 1.4em;
   min-height: 0;
 }
@@ -259,16 +268,15 @@
   grid-template-columns: repeat(auto-fill, minmax(7.5em, 1fr));
   align-content: start;
   gap: 1em 0.6em;
-  overflow: hidden;
-  /* The "Ready" pill sits above its player; room for it inside the clip, without moving the list. */
-  padding-top: 0.3em;
-  margin-top: -0.3em;
+  /* The size for this many players, brought down (--fit, from useFit in Scenes.tsx) for as long as the list is taller than its place. */
+  --size: 1em;
+  font-size: calc(var(--size) * var(--fit, 1));
 }
 .tv-lobby__players[data-many] {
-  font-size: 0.74em;
+  --size: 0.74em;
 }
 .tv-lobby__players[data-few] {
-  font-size: 1.4em;
+  --size: 1.4em;
   grid-template-columns: repeat(auto-fill, minmax(6.4em, 1fr));
 }
 .tv-lobby__players li {
@@ -360,10 +368,21 @@
   align-content: center;
   gap: 1em;
   overflow: hidden;
+  /* The tiles are sized from the room the list is given, so it must not be sized from them. */
+  container-type: size;
 }
 .tv-roll__players[data-count='few'] { font-size: 1.5em; }
 .tv-roll__players[data-count='many'] { font-size: 0.72em; }
 .tv-roll__players li {
+  /*
+   * A tile is 8.4 times as wide as its type and 12 times as tall. It is the size set for this many
+   * players unless that is too big for every row, and every tile in a row, to be on the screen.
+   */
+  font-size: min(
+    1em,
+    calc((100cqw - (var(--per-row) - 1) * 1em) / (var(--per-row) * 8.4)),
+    calc((100cqh - 0.4em - (var(--rows) - 1) * 1em) / (var(--rows) * 12))
+  );
   display: grid;
   justify-items: center;
   align-content: start;
@@ -401,6 +420,9 @@
 /* ---------------------------------------------------------------- round intro */
 
 .tv-intro {
+  /* No taller than the screen leaves it. A long title over a long list of categories is brought down in size (--fit) until all of it is there. */
+  min-height: 0;
+  font-size: calc(1em * var(--fit, 1));
   display: grid;
   place-content: center;
   justify-items: center;
@@ -484,15 +506,24 @@
   line-height: 1.05;
   text-align: center;
   text-wrap: balance;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   animation: bz-flip-in 0.5s var(--ease-out) both;
+  /* The title is sized from the width of its heading (below). */
+  container-type: inline-size;
+}
+.tv-board__cat span {
+  /* Full size unless the longest word on the board is wider than a column: then smaller, rather than broken in two. */
+  font-size: min(1em, calc(100cqw / (var(--letters) * 0.66)));
 }
 .tv-board__cell {
   position: relative;
   display: grid;
   place-items: center;
   min-height: 0;
+  /* The number is sized from the tile, so the tile must not be sized from the number. */
+  container-type: size;
   border-radius: 0.7em;
   background: linear-gradient(180deg, #2c2470, #1e1850);
   border: 1px solid rgb(255 255 255 / 0.08);
@@ -500,7 +531,9 @@
   animation: bz-pop 0.45s var(--spring) both;
 }
 .tv-board__cell .bz-num {
-  font-size: 2.5em;
+  /* Full size on an ordinary board. On one with eight rows, or with values in the millions, as large as the tile has room for. */
+  font-size: min(2.5em, 80cqh, calc(88cqw / (var(--digits) * 0.6)));
+  line-height: 1;
   color: var(--buzz);
   text-shadow: 0 0.06em 0 rgb(0 0 0 / 0.35);
 }
@@ -596,7 +629,10 @@ video.tv-clue__media {
   width: 100%;
 }
 .tv-clue__q {
-  max-width: 24em;
+  /* The size for its length (--size), brought down (--fit) for as long as the card is too short for it. */
+  font-size: calc(var(--size) * var(--fit, 1));
+  /* As wide as at full size, so smaller type runs to longer lines and there are fewer of them. */
+  max-width: calc(24em / var(--fit, 1));
   font-family: var(--font-display);
   font-weight: 700;
   font-stretch: 90%;
@@ -604,14 +640,15 @@ video.tv-clue__media {
   letter-spacing: -0.015em;
   text-align: center;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
-.tv-clue__q[data-scale='l'] { font-size: 3.5em; }
-.tv-clue__q[data-scale='m'] { font-size: 2.8em; }
-.tv-clue__q[data-scale='s'] { font-size: 2.15em; }
-.tv-clue__q[data-scale='xs'] { font-size: 1.7em; }
+.tv-clue__q[data-scale='l'] { --size: 3.5em; }
+.tv-clue__q[data-scale='m'] { --size: 2.8em; }
+.tv-clue__q[data-scale='s'] { --size: 2.15em; }
+.tv-clue__q[data-scale='xs'] { --size: 1.7em; }
 .tv-clue__body[data-media='image'] .tv-clue__q,
 .tv-clue__body[data-media='video'] .tv-clue__q {
-  font-size: 2em;
+  --size: 2em;
 }
 .tv-clue__hidden {
   font-size: 1.5em;
@@ -748,6 +785,21 @@ video.tv-clue__media {
   line-height: 1.05;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+/* A long answer steps down in size (answerScale), so that the card is much the same height whatever is on it and the question keeps its place above. */
+.tv-result__answer strong[data-scale='m'],
+.tv-final__card strong[data-scale='m'] {
+  font-size: 1.7em;
+}
+.tv-result__answer strong[data-scale='s'],
+.tv-final__card strong[data-scale='s'] {
+  font-size: 1.3em;
+  line-height: 1.1;
+}
+.tv-result__answer strong[data-scale='xs'] {
+  font-size: 1.1em;
+  line-height: 1.15;
 }
 .tv-result__rulings,
 .tv-final__done {
@@ -778,7 +830,8 @@ video.tv-clue__media {
   background: color-mix(in srgb, var(--bad) 28%, transparent);
   color: #ffd1d6;
 }
-.tv-result__rulings li[data-nobody] {
+.tv-result__rulings li[data-nobody],
+.tv-final__done li[data-more] {
   padding-left: 0.9em;
   background: rgb(255 255 255 / 0.08);
   color: var(--text-dim);
@@ -822,6 +875,8 @@ video.tv-clue__media {
 .tv-standings {
   min-height: 0;
   display: grid;
+  /* As wide as the screen and no wider, however much the list would like to spread out. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 0.8em;
   justify-items: center;
@@ -830,12 +885,24 @@ video.tv-clue__media {
   list-style: none;
   margin: 0;
   padding: 0;
-  width: min(100%, 46em);
+  width: min(100%, calc(var(--columns) * 46em));
   display: grid;
+  /* Ranked down one column, then the next. */
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--rows), auto);
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
   align-content: center;
-  gap: 0.5em;
+  gap: 0.5em 1em;
+  /* The rows are sized from the height the list is given, so it must not be sized from them. */
+  container-type: size;
 }
-.tv-standings li {
+/* The ranked rows only: the team totals underneath are a list as well. */
+.tv-standings ol li {
+  /*
+   * A row is 3.8 times as tall as its type. Full size if that many rows fit in the height there is
+   * (less the gaps between them); otherwise as large as lets every row be seen.
+   */
+  font-size: min(1em, calc((100cqh - (var(--rows) - 1) * 0.5em) / (var(--rows) * 3.8)));
   position: relative;
   display: grid;
   grid-template-columns: 2em auto minmax(0, 1fr) auto auto;
@@ -848,11 +915,11 @@ video.tv-clue__media {
   isolation: isolate;
   animation: bz-rise 0.5s var(--ease-out) both;
 }
-.tv-standings li:first-child {
+.tv-standings ol li[data-lead] {
   background: rgb(255 196 0 / 0.14);
   box-shadow: inset 0 0 0 2px var(--buzz);
 }
-.tv-standings li[data-out] strong {
+.tv-standings ol li[data-out] strong {
   text-decoration: line-through;
   color: var(--text-faint);
 }
@@ -861,10 +928,10 @@ video.tv-clue__media {
   font-size: 1.5em;
   color: var(--text-faint);
 }
-.tv-standings li:first-child .tv-standings__rank {
+.tv-standings ol li[data-lead] .tv-standings__rank {
   color: var(--buzz);
 }
-.tv-standings li strong {
+.tv-standings ol li strong {
   font-size: 1.35em;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -889,10 +956,13 @@ video.tv-clue__media {
   margin: 0;
   padding: 0;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.8em;
 }
 .tv-standings__teams li {
   display: flex;
+  align-items: center;
   gap: 0.6em;
   padding: 0.35em 1em;
   background: var(--ink-600);
@@ -961,10 +1031,9 @@ video.tv-clue__media {
 .tv-fm__board {
   min-height: 0;
   display: grid;
-  grid-auto-rows: minmax(0, 1fr);
-  grid-template-rows: auto;
   gap: 0.45em 0.6em;
-  align-content: stretch;
+  /* Everything on the board is sized in em. With many questions or long ones, --fit comes down (useFit in Scenes.tsx) until each is inside its tile. */
+  font-size: calc(1em * var(--fit, 1));
 }
 .tv-fm__row {
   display: contents;
@@ -1051,6 +1120,16 @@ video.tv-clue__media {
   text-overflow: ellipsis;
   white-space: nowrap;
   animation: bz-flip-in 0.45s var(--ease-out) both;
+}
+/* Too long for one line: two lines of smaller type, which are no taller, and an ellipsis only after those. */
+.tv-fm__answer[data-long] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 0.85em;
+  line-height: 1.05;
 }
 .tv-fm__cell b {
   display: grid;
@@ -1141,6 +1220,11 @@ video.tv-clue__media {
   align-content: center;
   gap: 0.5em;
 }
+/* Full size while everyone fits. In a bigger room --fit comes down (useFit in Scenes.tsx) until the whole room is on the screen. */
+.tv-crowd__answers,
+.tv-crowd__progress {
+  font-size: calc(1em * var(--fit, 1));
+}
 .tv-crowd__answers li {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -1152,16 +1236,19 @@ video.tv-clue__media {
   animation: bz-flip-in 0.45s var(--ease-out) both;
 }
 .tv-crowd__answers span {
-  display: grid;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.1em;
   text-transform: uppercase;
+  /* One line, and an ellipsis where an answer is cut short: cut off cleanly, it would read as the whole answer. */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .tv-crowd__answers small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-family: var(--font-body);
   font-size: 0.55em;
   font-weight: 600;
@@ -1196,9 +1283,17 @@ video.tv-clue__media {
   background: color-mix(in srgb, var(--good) 20%, transparent);
   color: var(--good);
 }
+/* Ranked down one column, then the next, like the standings between rounds. */
 .tv-crowd__totals {
-  grid-template-columns: minmax(0, 30em);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--rows), auto);
+  grid-template-columns: repeat(var(--columns), minmax(0, 30em));
   justify-content: center;
+  container-type: size;
+}
+.tv-crowd__totals li {
+  /* A row is 3.7 times as tall as its type: full size while that many rows fit the height there is, smaller once they do not. */
+  font-size: min(1em, calc((100cqh - (var(--rows) - 1) * 0.5em) / (var(--rows) * 3.7)));
 }
 .tv-crowd__totals b {
   font-size: 1.6em;
@@ -1240,17 +1335,21 @@ video.tv-clue__media {
   color: var(--bad);
 }
 .tv-final__waiting ul {
+  min-width: 0;
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(var(--per-row), minmax(0, max-content));
   justify-content: center;
   gap: 0.6em;
+  /* Six names fit across at full size. With more on a row the type shrinks, and a name too long for its place is cut short. */
+  font-size: min(1em, calc(6em / var(--per-row)));
 }
 .tv-final__waiting li {
+  min-width: 0;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto minmax(0, 1fr);
   grid-template-rows: auto auto;
   column-gap: 0.6em;
   align-items: center;
@@ -1261,6 +1360,11 @@ video.tv-clue__media {
 }
 .tv-final__waiting li .bz-avatar {
   grid-row: 1 / 3;
+}
+.tv-final__waiting li strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .tv-final__waiting li span {
   font-size: 0.7em;
@@ -1356,14 +1460,27 @@ video.tv-clue__media {
   animation: bz-slam 0.7s var(--ease-out) both;
 }
 .tv-finale__champs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5em;
+  justify-self: stretch;
+  min-width: 0;
   min-height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  /* The champions are sized from the room they are given, so it must not be sized from them. */
+  container-type: size;
 }
 .tv-finale__champ {
+  /*
+   * A champion takes an equal share of the row. That share has to be 21 times as wide as the type
+   * for a long name to fit under the avatar, and 20 times as tall for everything to stand in it:
+   * full size alone or in a tie of two or three, smaller when a big tie or a whole team shares the stage.
+   */
+  font-size: min(1em, calc(100cqw / (var(--per-row) * 21)), calc(100cqh / (var(--rows) * 20)));
   position: relative;
+  width: calc(100cqw / var(--per-row));
+  max-width: 30em;
+  padding: 0 1.25em;
   display: grid;
   justify-items: center;
   gap: 0.15em;
@@ -1380,10 +1497,12 @@ video.tv-clue__media {
   animation: bz-rise 0.6s 1s var(--spring) both;
 }
 .tv-finale__champ strong {
+  max-width: 100%;
   font-family: var(--font-display);
   font-size: 2.6em;
   font-weight: 800;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 .tv-finale__champ .bz-num {
   font-size: 1.9em;
@@ -1445,16 +1564,18 @@ video.tv-clue__media {
 
 /* ---------------------------------------------------------------- podiums */
 
+/* Up to a dozen stand side by side; a bigger room goes onto more rows rather than off the edge of the screen. */
 .tv-podiums {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(var(--per-row), minmax(0, 12.5em));
   justify-content: center;
   gap: 0.6em;
 }
 .tv-podiums[data-count='some'] { font-size: 0.82em; }
-.tv-podiums[data-count='many'] { font-size: 0.62em; }
+/* The screen is never less than 74em wide, whatever its shape: past a dozen to a row, the type shrinks so that many still fit. */
+.tv-podiums[data-count='many'] { font-size: min(0.62em, calc(74em / (var(--per-row) * 10))); }
 .tv-podium {
   position: relative;
-  flex: 0 1 12.5em;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -1535,8 +1656,33 @@ video.tv-clue__media {
   .tv-lobby {
     grid-template-columns: 1fr;
   }
+  /* The page scrolls here, so nothing is fitted to a height: lists are full size and as long as they need to be. */
+  .tv-standings ol,
+  .tv-crowd__totals {
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-template-columns: minmax(0, 1fr);
+    container-type: normal;
+  }
+  .tv-roll__players,
+  .tv-finale__champs {
+    container-type: normal;
+  }
+  .tv-standings ol li,
+  .tv-crowd__totals li,
+  .tv-roll__players li,
+  .tv-finale__champ {
+    font-size: 1em;
+  }
+  .tv-finale__champ {
+    width: auto;
+  }
+  .tv-final__waiting ul {
+    grid-template-columns: repeat(auto-fit, minmax(11em, 1fr));
+    font-size: 1em;
+  }
   .tv-podiums {
-    flex-wrap: wrap;
+    grid-template-columns: repeat(auto-fit, minmax(11em, 1fr));
   }
   .tv-answering,
   .tv-result {

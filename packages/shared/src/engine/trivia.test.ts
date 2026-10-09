@@ -377,9 +377,12 @@ describe('judging and scoring', () => {
     expect(s.state.stats.ann.buzzWins).toBe(0);
     s.buzz('bob');
     s.host({ t: 'judge', correct: false });
+    expect(s.state.stats.bob.incorrect).toBe(1);
     s.host({ t: 'clue.cancel' });
     expect(s.score('bob')).toBe(0);
     expect(s.trivia.board[0].clues[1].used).toBe(false);
+    // A ruling on a clue that was thrown out does not count against anyone's record either.
+    expect(s.state.stats.bob).toMatchObject({ correct: 0, incorrect: 0 });
   });
 
   it('finishes the round when the board is cleared', () => {

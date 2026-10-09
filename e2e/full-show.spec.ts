@@ -5,6 +5,9 @@
  */
 import { expect, test, type Browser, type Page } from '@playwright/test';
 import { expectFits, expectFitsWithKeyboard } from './fit';
+import { closePagesAfterEachTest } from './tidy';
+
+closePagesAfterEachTest();
 
 const SHOTS = 'e2e/.artifacts/shots';
 /** Set FIT_SHOTS=1 to also save every phone screen at every size to e2e/.artifacts/fit. */
@@ -148,6 +151,8 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await expect(tv.locator('.tv-intro h1')).toHaveText('Board One');
   await snap(tv, 'tv-round-intro');
   await snap(cat, 'phone-round-intro');
+  // Nobody has scored, so nobody is behind anybody: players who are level share a place.
+  for (const phone of [ann, bob, cat]) await expect(phone.locator('.play__id span')).toHaveText('1st of 3');
   await key(host, 'Space', /Begin round/);
 
   // The first pick is rolled for. Cat taps her die; the number the server rolled lands on her phone and on the TV.
@@ -299,6 +304,10 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   host.once('dialog', (d) => d.accept());
   await host.getByRole('button', { name: 'End round' }).click();
   await expect(tv.locator('.tv-standings li')).toHaveCount(3);
+  // Bob leads; Ann and Cat are level on nothing, so both are second.
+  await expect(tv.locator('.tv-standings__rank')).toHaveText(['1', '2', '2']);
+  await expect(tv.locator('.tv-standings li[data-lead] strong')).toHaveText(['Bob']);
+  await expect(cat.locator('.play__id span')).toHaveText('2nd of 3');
   await snap(tv, 'tv-standings');
   await snap(cat, 'phone-standings');
 
@@ -312,11 +321,15 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
     await p.getByRole('button', { name: /Lock in/ }).click();
   }
   await expect(tv.locator('.tv-final .tv-clue__q')).toBeVisible();
-  for (const [p, text] of [[ann, 'my best guess'], [bob, 'something else'], [cat, '']] as const) {
-    if (!text) continue;
-    await p.getByLabel('Your answer').fill(text);
-    await p.getByRole('button', { name: 'Save answer' }).click();
-  }
+  // Ann only types. An answer is saved as it is written, so one nobody remembered to save still counts.
+  await ann.getByLabel('Your answer').fill('my best guess');
+  await expect(ann.getByRole('button', { name: '✓ Saved' })).toBeVisible();
+  await expect(host.locator('.hc-finalists')).toContainText('my best guess');
+  // Bob saves his from the keyboard; Cat writes nothing at all.
+  await bob.getByLabel('Your answer').fill('something else');
+  await bob.getByLabel('Your answer').press('Enter');
+  await expect(bob.getByRole('button', { name: '✓ Saved' })).toBeVisible();
+  await expect(host.locator('.hc-clue__state')).toHaveText('Answers: 2 of 3 in');
   await snap(tv, 'tv-final-answering');
   // The written final has its own thinking music.
   await expect(music).toHaveAttribute('data-music', 'think');
