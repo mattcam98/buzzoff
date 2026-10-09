@@ -11,7 +11,8 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 1em;
-  padding: var(--pad);
+  /* A TV has no notch, but this screen is also opened on tablets and phones, sometimes from the Home Screen. */
+  padding: max(var(--pad), var(--safe-top)) max(var(--pad), var(--safe-right)) max(var(--pad), var(--safe-bottom)) max(var(--pad), var(--safe-left));
   font-size: calc(min(1vw, 1.78vh) * 1.3);
   cursor: default;
 }
@@ -97,15 +98,15 @@
   font-weight: 700;
 }
 .tv-offline {
-  top: 0.8em;
+  top: max(0.8em, var(--safe-top));
   background: var(--bad-deep);
   color: #fff;
 }
 .tv-sound {
   /* Tucked into the corner so it never sits on top of the contestants. */
   left: auto;
-  right: 1em;
-  bottom: 0.6em;
+  right: max(1em, var(--safe-right));
+  bottom: max(0.6em, var(--safe-bottom));
   transform: none;
   background: rgb(255 255 255 / 0.14);
   color: var(--text);

@@ -4,7 +4,7 @@
  * the host is known to be allowed in.
  */
 import type { ServerInfo } from '@buzzoff/shared';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
 import { storage } from '../../lib/storage';
@@ -70,6 +70,20 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
 
   useEffect(() => void check(), [check]);
 
+  // Anything that sticks below the header (a save bar) needs to know how tall it is. That depends on
+  // the screen: one row or two, and how much the status bar takes when installed on a phone.
+  const page = useRef<HTMLDivElement>(null);
+  const top = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const header = top.current;
+    if (!header) return;
+    const measure = () => page.current?.style.setProperty('--mg-top-height', `${header.offsetHeight}px`);
+    measure();
+    const watcher = new ResizeObserver(measure);
+    watcher.observe(header);
+    return () => watcher.disconnect();
+  }, []);
+
   const info = gate.state === 'ready' || gate.state === 'login' ? gate.info : null;
   const shell = useMemo<Shell | null>(
     () =>
@@ -90,8 +104,8 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
   );
 
   return (
-    <div className="bz-stage mg">
-      <header className="mg-top">
+    <div ref={page} className="bz-stage mg">
+      <header ref={top} className="mg-top">
         <Logo size={24} to="/host" />
         <nav className="mg-nav" aria-label="Host pages">
           {NAV.map((item) => (

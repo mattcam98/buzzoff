@@ -152,7 +152,9 @@ they scroll inside their own area with your row pinned in view.
 
 Adding BuzzOff to the Home Screen (Share → *Add to Home Screen*) opens it as a
 full-screen app with no browser bars at all, which gives the buzzer the most
-room. On iPhone the buzzer gives a light haptic tick where Safari allows it;
+room. Every page, the host's console and dashboard included, keeps its bars and
+buttons clear of the status bar, the Dynamic Island and the home indicator, in
+either orientation. On iPhone the buzzer gives a light haptic tick where Safari allows it;
 Android phones vibrate.
 
 ## Buzz timing: what the numbers mean

@@ -277,6 +277,26 @@ device widths: *short*, *tight* (keyboard open or landscape) and *wide*
 sizes and three keyboard heights and fails on page scroll, overflow, clipped
 or overlapping elements, anything off screen, or touch targets under 28px.
 
+**Screen edges.** `index.html` asks for the whole screen (`viewport-fit=cover`,
+and a translucent status bar once BuzzOff is on the Home Screen), so on an
+iPhone the page starts under the clock and the Dynamic Island and ends under
+the home indicator. The four insets are read once, as `--safe-top`,
+`--safe-right`, `--safe-bottom` and `--safe-left` in `base.css`, and every
+stylesheet uses those names. The rule: whatever is pinned to an edge pads
+itself by the inset. The sticky bars (`.hc-bar`, `.mg-top`, the phone's
+header) take the top one, the New game dock and toasts the bottom one, page
+bodies the sides, and dialogs all four. A bar that sticks *below* the header
+cannot know the header's height from CSS, because it depends on the inset and
+on whether the navigation wrapped, so `HostShell` measures it and publishes
+`--mg-top-height`. `e2e/safe-area.spec.ts` opens every page with an iPhone's
+insets, upright and sideways, and fails if anything readable or tappable is in
+a reserved part of the screen or one pinned bar covers another.
+
+On a phone the host console's top bar is a single row: the logo's mark, the
+game and room code, and the controls as 40px buttons whose words give way to
+symbols (the words stay as the accessible names). Shortcut hints are hidden
+where there is no keyboard or mouse (`any-hover: none`).
+
 The buzzer listens for `pointerdown`, which fires when a finger touches the
 glass, rather than `click`, which fires when it lifts. Host keyboard shortcuts
 work by clicking the on-screen button that carries the key, so a shortcut can
@@ -289,7 +309,7 @@ never do something the visible controls would not allow.
 | Leaderboard unit tests (`packages/shared`) | Totals, what counts as a game and as a win, recognising players by profile and by name, shared phones, host merges and their limits, ranking with ties and minimum samples |
 | Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, the dice roll for the first pick, automatic opening, the hidden question and its held timer, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching and reveal order, the final, answer secrecy |
 | Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch; the leaderboard across games, a returning phone under a new name, merging and separating players, who may see it |
-| Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; every phone screen measured for fit across phone sizes, orientations and keyboard heights |
+| Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; every phone screen measured for fit across phone sizes, orientations and keyboard heights; every page checked against an iPhone's status bar, notch and home indicator |
 
 The server tests use the in-memory store. The Postgres store is exercised by
 running the Compose stack.

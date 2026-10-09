@@ -18,7 +18,7 @@
 .play {
   --head-avatar: 40px;
   --gap: clamp(8px, 1.7cqh, 14px);
-  --pad-x: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+  --pad-x: max(16px, var(--safe-left), var(--safe-right));
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: max(8px, env(safe-area-inset-top)) var(--pad-x) 8px;
+  padding: max(8px, var(--safe-top)) var(--pad-x) 8px;
   background: var(--bar-bg);
   backdrop-filter: var(--bar-blur);
   border-bottom: 1px solid var(--line);
@@ -93,7 +93,7 @@
 
 .play > .bz-banner {
   flex: none;
-  padding-top: max(8px, env(safe-area-inset-top));
+  padding-top: max(8px, var(--safe-top));
 }
 .play > .bz-banner + .play__head {
   padding-top: 8px;
@@ -112,7 +112,7 @@
   gap: var(--gap);
   width: min(100%, 540px);
   margin: 0 auto;
-  padding: var(--gap) var(--pad-x) max(12px, env(safe-area-inset-bottom));
+  padding: var(--gap) var(--pad-x) max(12px, var(--safe-bottom));
   /* A last resort for sizes smaller than any real phone; the layouts below are built not to need it. */
   overflow: hidden auto;
   overscroll-behavior: none;

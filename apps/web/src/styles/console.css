@@ -5,19 +5,28 @@
   display: flex;
   flex-direction: column;
 }
-.hc-top {
+/*
+ * The bar across the top. It stays put while the page scrolls underneath, and keeps its controls
+ * below the status bar and clear of the notch: on a phone added to the Home Screen the page
+ * starts at the very top of the glass.
+ */
+.hc-bar {
   position: sticky;
   top: 0;
   z-index: 20;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 10px 20px;
+  padding-top: var(--safe-top);
   background: var(--bar-bg);
   backdrop-filter: var(--bar-blur);
   border-bottom: 1px solid var(--line);
 }
+.hc-top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px max(20px, var(--safe-right)) 10px max(20px, var(--safe-left));
+}
 .hc-top .bz-logo {
+  flex: none;
   font-size: 22px;
 }
 .hc-top__game {
@@ -29,11 +38,14 @@
 .hc-top__game strong {
   font-family: var(--font-display);
   font-size: 1.0625rem;
+}
+.hc-top__game strong,
+.hc-top__game > span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.hc-top__game span {
+.hc-top__game > span {
   font-size: 0.8125rem;
   color: var(--text-dim);
 }
@@ -42,6 +54,7 @@
   letter-spacing: 0.1em;
 }
 .hc-top__actions {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -49,6 +62,23 @@
 .hc-top__undo {
   font-weight: 500;
   color: var(--text-dim);
+}
+/* Shown in place of a button's words where there is no room for them. */
+.hc-top__icon {
+  display: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* A phone or tablet with no keyboard has no use for the list of shortcuts. */
+@media (any-hover: none) {
+  .hc-top__keys {
+    display: none;
+  }
 }
 
 .hc-body {
@@ -59,7 +89,7 @@
   gap: 18px;
   width: min(100%, 1360px);
   margin: 0 auto;
-  padding: 18px 20px 40px;
+  padding: 18px max(20px, var(--safe-right)) max(40px, calc(var(--safe-bottom) + 20px)) max(20px, var(--safe-left));
 }
 .hc-main,
 .hc-side {
@@ -69,7 +99,7 @@
 }
 .hc-side {
   position: sticky;
-  top: 74px;
+  top: calc(var(--safe-top) + 74px);
 }
 
 .hc-card {
@@ -729,15 +759,14 @@
 @media (max-width: 960px) {
   .hc-body {
     grid-template-columns: minmax(0, 1fr);
-    padding: 12px;
+    padding: 12px max(12px, var(--safe-right)) max(16px, calc(var(--safe-bottom) + 12px)) max(12px, var(--safe-left));
   }
   .hc-side {
     position: static;
   }
   .hc-top {
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 12px;
+    gap: 12px;
+    padding: 8px max(12px, var(--safe-right)) 8px max(12px, var(--safe-left));
   }
   .hc-top__undo {
     display: none;
@@ -760,5 +789,94 @@
   }
   .hc-finalists__answer {
     grid-column: 1 / -1;
+  }
+}
+
+/*
+ * A phone held upright. The bar is one row: the logo's mark, the game, and the controls as
+ * thumb-sized buttons with a symbol each. Everything it could do before, it still does.
+ */
+@media (max-width: 640px) {
+  .hc-top {
+    gap: 10px;
+  }
+  .hc-top .bz-logo {
+    /* The mark alone, with a tap area the size of the buttons beside it. */
+    min-width: 32px;
+    min-height: 40px;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .hc-top .bz-logo > span,
+  .hc-top__wide {
+    display: none;
+  }
+  .hc-top__actions {
+    gap: 6px;
+  }
+  .hc-top__actions .bz-btn {
+    min-width: 40px;
+    min-height: 40px;
+    padding-inline: 0.7em;
+  }
+  .hc-top__icon {
+    display: block;
+  }
+  /* Still the button's name to a screen reader; the symbol stands in for it on screen. */
+  .hc-top__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* The running order is one line that scrolls sideways, however many rounds there are. */
+  .hc-rundown {
+    flex-wrap: nowrap;
+    margin-inline: -12px;
+    padding-inline: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .hc-rundown::-webkit-scrollbar {
+    display: none;
+  }
+  .hc-rundown li {
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .hc-body,
+  .hc-main,
+  .hc-side {
+    gap: 10px;
+  }
+  .hc-card {
+    gap: 12px;
+    padding: 14px;
+  }
+  .hc-lobby {
+    gap: 12px;
+  }
+  .hc-lobby__code {
+    padding: 10px 16px 12px;
+  }
+  .hc-lobby__code b {
+    font-size: 2.75rem;
+  }
+  .hc-lobby__steps {
+    gap: 6px;
+    font-size: 0.875rem;
+  }
+  /* The step everyone is waiting on gets the full width of the card. */
+  .hc-actions > .bz-btn--l {
+    flex: 1 1 100%;
+    min-height: 52px;
+  }
+  .hc-roster__score button {
+    width: 36px;
+    height: 36px;
   }
 }

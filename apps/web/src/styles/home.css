@@ -6,10 +6,10 @@
  */
 
 .home {
-  --pad-x: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+  --pad-x: max(16px, var(--safe-left), var(--safe-right));
   align-items: center;
   gap: clamp(8px, 2.2cqh, 22px);
-  padding: max(14px, env(safe-area-inset-top)) var(--pad-x) max(12px, env(safe-area-inset-bottom));
+  padding: max(14px, var(--safe-top)) var(--pad-x) max(12px, var(--safe-bottom));
 }
 html.kb-open .home {
   padding-bottom: 8px;

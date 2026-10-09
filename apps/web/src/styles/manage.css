@@ -19,8 +19,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px 22px;
-  padding: 12px clamp(16px, 4vw, 32px);
-  padding-top: max(12px, env(safe-area-inset-top));
+  padding: max(12px, var(--safe-top)) max(clamp(16px, 4vw, 32px), var(--safe-right)) 12px max(clamp(16px, 4vw, 32px), var(--safe-left));
   background: var(--bar-bg);
   border-bottom: 1px solid var(--line);
   backdrop-filter: var(--bar-blur);
@@ -47,6 +46,12 @@
   color: var(--text);
 }
 @media (max-width: 560px) {
+  /* Two short rows: the logo and New game, then the pages. */
+  .mg-top {
+    gap: 4px 12px;
+    padding-top: max(10px, var(--safe-top));
+    padding-bottom: 6px;
+  }
   .mg-top__new {
     margin-left: auto;
   }
@@ -69,7 +74,7 @@
     white-space: nowrap;
   }
 }
-@media (min-width: 400px) and (max-width: 560px) {
+@media (min-width: 430px) and (max-width: 560px) {
   .mg-nav a {
     padding-inline: 10px;
     font-size: 0.9375rem;
@@ -81,7 +86,8 @@
   --page-inner: 936px;
   width: min(100%, 1000px);
   margin: 0 auto;
-  padding: clamp(22px, 4vw, 44px) clamp(16px, 4vw, 32px) 72px;
+  padding: clamp(22px, 4vw, 44px) max(clamp(16px, 4vw, 32px), var(--safe-right)) max(72px, calc(var(--safe-bottom) + 40px))
+    max(clamp(16px, 4vw, 32px), var(--safe-left));
   display: grid;
   gap: clamp(22px, 3vw, 32px);
   align-content: start;
@@ -803,7 +809,7 @@
   right: 0;
   bottom: 0;
   z-index: 25;
-  padding: 12px clamp(16px, 4vw, 32px) max(12px, env(safe-area-inset-bottom));
+  padding: 12px max(clamp(16px, 4vw, 32px), var(--safe-right)) max(12px, var(--safe-bottom)) max(clamp(16px, 4vw, 32px), var(--safe-left));
   background: var(--bar-bg);
   border-top: 1px solid var(--line-strong);
   backdrop-filter: var(--bar-blur);
@@ -896,7 +902,8 @@
 }
 .mg-savebar {
   position: sticky;
-  top: 61px;
+  /* Directly under the page header, however tall that is on this screen (HostShell measures it). */
+  top: var(--mg-top-height, 61px);
   z-index: 20;
   display: flex;
   flex-wrap: wrap;
@@ -914,12 +921,6 @@
 .mg-savebar__error {
   flex-basis: 100%;
 }
-@media (max-width: 560px) {
-  .mg-savebar {
-    top: 104px;
-  }
-}
-
 .mg-meta {
   display: grid;
   grid-template-columns: 2fr 1fr;

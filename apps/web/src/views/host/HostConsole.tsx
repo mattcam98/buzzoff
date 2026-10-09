@@ -3,7 +3,7 @@
  * with the next sensible action always on the space bar.
  */
 import { canStart, CUE_NAMES, notReady, type CueName, type HostAction, type HostRoomView, type PublicPlayer, type PublicView } from '@buzzoff/shared';
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
 import { useConnection, type Snapshot } from '../../lib/connection';
@@ -43,6 +43,23 @@ const SHORTCUTS: [string, string][] = [
   ['P', 'Pause or resume'],
   ['?', 'Show this list'],
 ];
+
+/** Symbols that stand in for a button's words in the top bar on a phone. */
+const ICONS = {
+  undo: 'M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3',
+  pause: 'M8 5v14M16 5v14',
+  resume: 'M7 4.5v15l12-7.5z',
+};
+function TopLabel({ icon, children }: { icon: keyof typeof ICONS; children: ReactNode }) {
+  return (
+    <>
+      <svg className="hc-top__icon" viewBox="0 0 24 24" aria-hidden>
+        <path d={ICONS[icon]} />
+      </svg>
+      <span className="hc-top__label">{children}</span>
+    </>
+  );
+}
 
 export function HostConsole({ code }: { code: string }) {
   const hostKey = useMemo(() => storage.hostKey(code), [code]);
@@ -109,33 +126,41 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
 
   return (
     <div className="bz-stage hc">
-      {snap.status !== 'online' && <div className="bz-banner">Connection lost — reconnecting. The game is safe on the server.</div>}
-      <header className="hc-top">
-        <Logo to="/host" />
-        <div className="hc-top__game">
-          <strong>{pub.name}</strong>
-          <span>
-            Room <b>{pub.code}</b> · {plural(host.audience.displays, 'screen')}
-            {host.audience.spectators > 0 && ` · ${plural(host.audience.spectators, 'spectator')}`}
-          </span>
-        </div>
-        <nav className="hc-top__actions">
-          <a className="bz-btn bz-btn--s bz-btn--ghost" href={`/tv/${pub.code}`} target="_blank" rel="noreferrer">
-            Open TV ↗
-          </a>
-          <Button size="s" variant="ghost" hotkey="U" disabled={!host.undo} onClick={() => run({ t: 'undo' })} title={host.undo ? `Undo: ${host.undo}` : 'Nothing to undo'}>
-            Undo{host.undo && <span className="hc-top__undo"> {host.undo}</span>}
-          </Button>
-          {pub.phase !== 'finished' && pub.phase !== 'lobby' && (
-            <Button size="s" variant={pub.paused ? 'primary' : 'ghost'} hotkey="P" onClick={() => run({ t: 'pause', paused: !pub.paused })}>
-              {pub.paused ? 'Resume' : 'Pause'}
+      <div className="hc-bar">
+        <header className="hc-top">
+          <Logo to="/host" />
+          <div className="hc-top__game">
+            <strong>{pub.name}</strong>
+            <span>
+              <span className="hc-top__wide">Room </span>
+              <b>{pub.code}</b> · {plural(host.audience.displays, 'screen')}
+              {host.audience.spectators > 0 && ` · ${plural(host.audience.spectators, 'spectator')}`}
+            </span>
+          </div>
+          <nav className="hc-top__actions" aria-label="Game controls">
+            <a className="bz-btn bz-btn--s bz-btn--ghost" href={`/tv/${pub.code}`} target="_blank" rel="noreferrer">
+              <span>
+                <span className="hc-top__wide">Open </span>TV ↗
+              </span>
+            </a>
+            <Button size="s" variant="ghost" hotkey="U" disabled={!host.undo} onClick={() => run({ t: 'undo' })} title={host.undo ? `Undo: ${host.undo}` : 'Nothing to undo'}>
+              <TopLabel icon="undo">
+                Undo{host.undo && <span className="hc-top__undo"> {host.undo}</span>}
+              </TopLabel>
             </Button>
-          )}
-          <Button size="s" variant="ghost" icon onClick={() => setHelp(true)} aria-label="Keyboard shortcuts">
-            ?
-          </Button>
-        </nav>
-      </header>
+            {pub.phase !== 'finished' && pub.phase !== 'lobby' && (
+              <Button size="s" variant={pub.paused ? 'primary' : 'ghost'} hotkey="P" onClick={() => run({ t: 'pause', paused: !pub.paused })}>
+                <TopLabel icon={pub.paused ? 'resume' : 'pause'}>{pub.paused ? 'Resume' : 'Pause'}</TopLabel>
+              </Button>
+            )}
+            <Button size="s" variant="ghost" icon className="hc-top__keys" onClick={() => setHelp(true)} aria-label="Keyboard shortcuts">
+              ?
+            </Button>
+          </nav>
+        </header>
+        {/* Under the controls rather than above them, so it is never behind the status bar and never scrolls away. */}
+        {snap.status !== 'online' && <div className="bz-banner">Connection lost — reconnecting. The game is safe on the server.</div>}
+      </div>
 
       <div className="hc-body">
         <main className="hc-main">
@@ -205,8 +230,15 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
 /** Where we are in the running order. */
 function Rundown({ pub }: { pub: PublicView }) {
   const at = pub.phase === 'lobby' ? -1 : pub.phase === 'finished' ? pub.rounds.length : pub.roundIndex;
+  const list = useRef<HTMLOListElement>(null);
+  // On a phone the list is one line that scrolls sideways: keep the current step in view as the show moves on.
+  useEffect(() => {
+    const row = list.current;
+    const now = row?.querySelector<HTMLElement>('[data-state="now"]');
+    if (row && now) row.scrollTo({ left: now.offsetLeft - (row.clientWidth - now.offsetWidth) / 2 });
+  }, [at]);
   return (
-    <ol className="hc-rundown" aria-label="Running order">
+    <ol ref={list} className="hc-rundown" aria-label="Running order">
       <li data-state={at === -1 ? 'now' : 'done'}>Lobby</li>
       {pub.rounds.map((r, i) => (
         <li key={i} data-state={i === at ? 'now' : i < at ? 'done' : 'next'}>
