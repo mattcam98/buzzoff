@@ -144,6 +144,8 @@ export interface PublicView {
   paused: boolean;
   pausedAt: number | null;
   lobbyLocked: boolean;
+  /** Whether the shared screen plays background music. */
+  music: boolean;
   lateJoin: boolean;
   players: PublicPlayer[];
   teams: TeamView[] | null;

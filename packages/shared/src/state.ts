@@ -255,6 +255,8 @@ export interface GameState {
   paused: boolean;
   pausedAt: number | null;
   lobbyLocked: boolean;
+  /** Background music on the shared screen. A game saved before this existed has no value, which counts as on. */
+  music?: boolean;
   roundIndex: number;
   rounds: RoundState[];
   players: Record<string, Player>;

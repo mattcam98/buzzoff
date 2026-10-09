@@ -26,6 +26,9 @@ export function unlockAudio() {
 
 export const audioReady = () => ctx?.state === 'running';
 
+/** The shared context and output, for the music, which keeps its own time on the same clock. */
+export const audioGraph = () => (ctx && master ? { ctx, out: master } : null);
+
 interface Tone {
   freq: number;
   /** Glide to this frequency over the note. */

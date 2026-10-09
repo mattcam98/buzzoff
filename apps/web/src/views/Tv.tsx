@@ -10,6 +10,7 @@ import { api } from '../lib/api';
 import { useConnection, type Snapshot } from '../lib/connection';
 import { byScore, fmtMs, fmtPercent, joinAddress, ordinal, playerMap, plural } from '../lib/format';
 import { useGameEvents, useWakeLock } from '../lib/hooks';
+import { duckMusic, moodFor, setMusic } from '../lib/music';
 import { audioReady, play, soundFor, unlockAudio } from '../lib/sound';
 import { FinalSecondsTick, roundBlurb, Score } from '../ui/game';
 import { Avatar, Button, Confetti, cx, Logo, Notice } from '../ui/kit';
@@ -63,12 +64,20 @@ export function Tv({ code }: { code: string }) {
 
   useGameEvents(conn, (event) => {
     const name = soundFor(event);
-    if (name) play(name);
+    if (name) {
+      play(name);
+      duckMusic(name);
+    }
     const celebrate = event.type === 'game.finished' || (event.type === 'fm.result' && event.won) || (event.type === 'cue' && event.name === 'confetti');
     if (celebrate) setConfetti((n) => n + 1);
   });
 
   const { pub } = snap;
+  // The music follows the game, and stops with the screen.
+  const mood = sound && pub && snap.status !== 'rejected' && snap.status !== 'ended' ? moodFor(pub) : null;
+  useEffect(() => setMusic(mood), [mood]);
+  useEffect(() => () => setMusic(null), []);
+
   if (snap.status === 'rejected') {
     return (
       <Notice title="No game with that code">
@@ -88,7 +97,7 @@ export function Tv({ code }: { code: string }) {
   };
 
   return (
-    <div className="bz-stage tv" data-phase={pub.phase} onClick={sound ? undefined : enableSound}>
+    <div className="bz-stage tv" data-phase={pub.phase} data-music={mood ?? 'off'} onClick={sound ? undefined : enableSound}>
       <TvContent pub={pub} snap={snap} publicUrl={publicUrl} />
       {pub.paused && (
         <div className="tv-overlay" role="status">

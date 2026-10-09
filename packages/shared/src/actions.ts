@@ -38,6 +38,7 @@ export const HostActionSchema = z.discriminatedUnion('t', [
   act('timer.extend', { sec: z.number().int().min(1).max(300) }),
   act('timer.stop'),
   act('cue', { name: z.enum(CUE_NAMES) }),
+  act('music', { on: z.boolean() }),
   // contestants
   act('player.kick', { id }),
   act('player.rename', { id, name: NameSchema }),

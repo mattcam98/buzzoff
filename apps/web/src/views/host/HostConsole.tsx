@@ -195,6 +195,18 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
           <Roster {...props} onManage={setManaging} />
           <section className="hc-card">
             <h2 className="bz-eyebrow">Sound &amp; effects on the TV</h2>
+            <label className="bz-toggle" title="The theme between rounds, a quiet pulse while a question is live, and silence while someone answers.">
+              <input
+                type="checkbox"
+                checked={pub.music}
+                onChange={(e) => {
+                  void run({ t: 'music', on: e.target.checked });
+                  // Clicked with the mouse, the switch lets go of the keyboard, so Space is still "next step".
+                  if (!e.target.matches(':focus-visible')) e.target.blur();
+                }}
+              />
+              Background music
+            </label>
             <div className="hc-cues">
               {CUE_NAMES.map((name) => (
                 <button key={name} onClick={() => run({ t: 'cue', name })} title={CUES[name][1]} aria-label={CUES[name][1]}>

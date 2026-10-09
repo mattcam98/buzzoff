@@ -102,6 +102,18 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await tv.goto(`/tv/${code}`);
   await expect(tv.getByLabel(`Room code ${code.split('').join(' ')}`)).toBeVisible();
   await snap(tv, 'tv-lobby-empty');
+  // One click turns the sound on, and the theme plays in the lobby until the host switches the music off.
+  const music = tv.locator('.tv');
+  await expect(music).toHaveAttribute('data-music', 'off');
+  await tv.getByRole('button', { name: /turn sound on/ }).click();
+  await expect(music).toHaveAttribute('data-music', 'theme');
+  const musicSwitch = host.getByLabel('Background music');
+  await musicSwitch.click();
+  await expect(musicSwitch).not.toBeChecked();
+  await expect(music).toHaveAttribute('data-music', 'off');
+  await musicSwitch.click();
+  await expect(musicSwitch).toBeChecked();
+  await expect(music).toHaveAttribute('data-music', 'theme');
 
   // --- three friends join on their phones
   const ann = await joinAs(browser, code, 'Ann');
@@ -164,6 +176,8 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await snap(tv, 'tv-board');
   await snap(cat, 'phone-waiting-for-pick');
   await snap(host, 'host-board');
+  // Choosing a clue is talked over, so the theme drops to its backing.
+  await expect(music).toHaveAttribute('data-music', 'bed');
   // Holding a category title shows its description over the grid; letting go puts it away.
   await host.locator('.hc-board__col h3[data-peek]').first().hover();
   await host.mouse.down();
@@ -179,6 +193,7 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   // Selecting the clue is all it takes: buzzers are open, with thirty seconds on the clock.
   await expect(buzzer(bob)).toHaveAttribute('data-state', 'open');
   await expect(host.locator('.hc-clue__state')).toHaveText('Buzzers are open');
+  await expect(music).toHaveAttribute('data-music', 'tension');
   await expect(host.getByRole('button', { name: /Arm buzzers|Disarm buzzers/ })).toHaveCount(0);
   const clock = host.locator('.hc-timer__count');
   expect(Number(await clock.innerText())).toBeGreaterThan(27);
@@ -196,6 +211,8 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await buzzer(cat).click({ force: true }).catch(() => undefined); // a late press changes nothing
   await buzzer(ann).click({ force: true }).catch(() => undefined);
   await expect(tv.locator('.tv-answering h2')).toHaveText('Bob');
+  // Nothing plays while a contestant is on the spot.
+  await expect(music).toHaveAttribute('data-music', 'off');
   await expect(bob.locator('.play__readout')).toContainText(/registered at [\d.]+ m?s/);
   // While Bob's answer is judged the question is off the TV and every phone; the host still has it.
   await expect(tv.locator('.tv-clue__hidden')).toHaveText('Question hidden while Bob answers');
@@ -301,6 +318,8 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
     await p.getByRole('button', { name: 'Save answer' }).click();
   }
   await snap(tv, 'tv-final-answering');
+  // The written final has its own thinking music.
+  await expect(music).toHaveAttribute('data-music', 'think');
   await snap(ann, 'phone-final-answer');
   await expectFitsWithKeyboard(ann, 'phone-final-answer', '.play__fminput', ['.play__entry .bz-btn', '.play__fmq', '.play__fmclock'], FIT_SHOTS);
   await key(host, 'Space', /Pens down/);

@@ -182,6 +182,19 @@ describe('pause, undo and recovery', () => {
     expect(t.pub).toMatchObject({ paused: false, pausedAt: null });
   });
 
+  it('lets the host turn the background music off, and an undo leaves that choice alone', () => {
+    const s = new Sim().start().open();
+    expect(s.pub.music).toBe(true);
+    const snapshot = s.state;
+    s.host({ t: 'music', on: false });
+    expect(s.pub.music).toBe(false);
+    s.state = restoreSnapshot(s.state, snapshot, s.now, s.now);
+    expect(s.pub.music).toBe(false);
+    // A game saved before the setting existed has music.
+    s.state = { ...s.state, music: undefined };
+    expect(s.pub.music).toBe(true);
+  });
+
   it('comes back from a restart paused, with buzzers shut and everyone offline', () => {
     const s = new Sim().start().open();
     s.state = applySystem(s.state, { t: 'presence', id: 'ann', connected: true }, { now: s.now, rand: s.rand, rtt: () => null }).state;

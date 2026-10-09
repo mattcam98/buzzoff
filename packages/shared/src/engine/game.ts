@@ -122,7 +122,7 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
 export function createGame(o: { code: string; rules: GameRules; rounds: RoundState[]; packTitles: string[]; now: number }): GameState {
   return {
     v: 1, code: o.code, createdAt: o.now, seq: 0, rules: o.rules, packTitles: o.packTitles,
-    phase: 'lobby', paused: false, pausedAt: null, lobbyLocked: false, roundIndex: 0, rounds: o.rounds,
+    phase: 'lobby', paused: false, pausedAt: null, lobbyLocked: false, music: true, roundIndex: 0, rounds: o.rounds,
     players: {}, order: [], teamNames: [...o.rules.teams.names], stats: {}, lastEliminated: [], champions: null, finishedAt: null,
   };
 }
@@ -237,6 +237,9 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
       }
       case 'cue':
         ctx.events.push({ type: 'cue', name: action.name });
+        return;
+      case 'music':
+        g.music = action.on;
         return;
       case 'player.kick':
         removePlayer(g, action.id);
@@ -453,6 +456,7 @@ export function restoreSnapshot(current: GameState, snapshot: GameState, takenAt
   g.lastEliminated = g.lastEliminated.filter((id) => g.players[id]);
   if (g.champions) g.champions = g.champions.filter((id) => g.players[id]);
   g.lobbyLocked = current.lobbyLocked;
+  g.music = current.music;
   const round = currentRound(g);
   if (round) {
     // Timers keep whatever time they had left; open buzzers start afresh.
@@ -496,6 +500,7 @@ export function publicView(g: GameState): PublicView {
     paused: g.paused,
     pausedAt: g.pausedAt,
     lobbyLocked: g.lobbyLocked,
+    music: g.music !== false,
     lateJoin: g.rules.lateJoin,
     players: playersOf(g).map(({ joinedAt: _joinedAt, ...p }) => p),
     teams: teamViews(g),

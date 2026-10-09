@@ -69,7 +69,11 @@ the proxy must pass `Upgrade` requests through.
    The console opens with the room code.
 2. **TV** — open `/tv/CODE` on the screen everyone can see (the console has an
    *Open TV* button) and make it full screen. Click it once: browsers will not
-   play sound until someone has interacted with the page.
+   play sound until someone has interacted with the page. The TV then plays
+   BuzzOff's theme between rounds, a quiet pulse while a question is live and
+   thinking music during the written final, and falls silent whenever someone
+   is answering. **Background music** in the console's sound panel turns it
+   off and on.
 3. **Players** — go to the address on the TV, enter the code (or scan the QR),
    pick a name and avatar, and tap **I'm ready**. The show can start once
    everyone whose phone is connected has; a phone that has dropped out does
@@ -248,7 +252,7 @@ state machine, the security model, and how to add a game mode.
 ## Third-party material
 
 No code, artwork or audio from any other project or show is included. Sounds
-are synthesised in the browser. Fonts (Bricolage Grotesque, Figtree, JetBrains
+and music are synthesised in the browser, and the tunes are BuzzOff's own. Fonts (Bricolage Grotesque, Figtree, JetBrains
 Mono) are bundled under the SIL Open Font License. Runtime dependencies are
 permissively licensed: React, Express, Socket.IO, pg, zod, multer, compression and qrcode
 under MIT, wouter under the Unlicense. The survey numbers in the starter pack
