@@ -233,9 +233,9 @@
             "id": "cat-05-4",
             "value": 400,
             "difficulty": 4,
-            "question": "What is the name of the passive-aggressive artificial intelligence that runs the test chambers in the game \"Portal\"?",
-            "answer": "GLaDOS",
-            "accept": ["Glados", "Genetic Lifeform and Disk Operating System"]
+            "question": "In \"Grand Theft Auto V\", which fictional city, modelled on Los Angeles, do Michael, Franklin and Trevor call home?",
+            "answer": "Los Santos",
+            "accept": []
           },
           {
             "id": "cat-05-5",
@@ -250,8 +250,8 @@
       },
       {
         "id": "cat-06",
-        "title": "Extremely Online",
-        "blurb": "Internet and tech history for the chronically logged in.",
+        "title": "Plugged In",
+        "blurb": "Tech and internet history, from the first website to the phone in your pocket.",
         "clues": [
           {
             "id": "cat-06-1",
@@ -290,9 +290,9 @@
             "id": "cat-06-5",
             "value": 500,
             "difficulty": 5,
-            "question": "What was the name of the US Defense Department-funded network, first switched on in 1969, that became a forerunner of the internet?",
-            "answer": "ARPANET",
-            "accept": ["ARPA Net", "The ARPANET", "Advanced Research Projects Agency Network"]
+            "question": "Which Finnish student released the first version of the Linux kernel in 1991?",
+            "answer": "Linus Torvalds",
+            "accept": ["Torvalds", "Linus"]
           }
         ]
       },
@@ -353,7 +353,7 @@
             "id": "cat-08-1",
             "value": 100,
             "difficulty": 1,
-            "question": "In soccer, how many players does each team have on the pitch at kick-off, including the goalkeeper?",
+            "question": "In football, how many players does each team have on the pitch at kick-off, including the goalkeeper?",
             "answer": "11",
             "accept": ["Eleven"]
           },
@@ -520,17 +520,17 @@
             "id": "cat-11-4",
             "value": 400,
             "difficulty": 4,
-            "question": "In the American version of \"The Office\", what is the name of the paper company the characters work for?",
-            "answer": "Dunder Mifflin",
-            "accept": ["Dunder Mifflin Paper Company", "Dunder-Mifflin"]
+            "question": "Which Spanish series follows a gang in red overalls and Salvador Dalí masks as they rob the Royal Mint?",
+            "answer": "Money Heist",
+            "accept": ["La casa de papel", "The House of Paper"]
           },
           {
             "id": "cat-11-5",
             "value": 500,
             "difficulty": 5,
-            "question": "In the series \"Twin Peaks\", which homecoming queen's murder does FBI agent Dale Cooper come to town to investigate?",
-            "answer": "Laura Palmer",
-            "accept": ["Laura"]
+            "question": "Which German series is set in the small town of Winden, where children go missing and time travel is to blame?",
+            "answer": "Dark",
+            "accept": []
           }
         ]
       },
@@ -703,7 +703,7 @@
       },
       {
         "id": "sv-02",
-        "question": "Name something you'd find in a kitchen junk drawer.",
+        "question": "Name something you'd find in the kitchen drawer where odds and ends go.",
         "answers": [
           { "text": "Batteries", "points": 28, "aliases": ["battery", "dead batteries", "old batteries", "aa batteries"] },
           { "text": "Pens", "points": 20, "aliases": ["pen", "pencils", "pens and pencils", "markers", "biros"] },
@@ -722,7 +722,7 @@
           { "text": "Pepperoni", "points": 36, "aliases": ["peperoni", "salami", "pepperonis"] },
           { "text": "Mushrooms", "points": 18, "aliases": ["mushroom", "shrooms"] },
           { "text": "Extra cheese", "points": 12, "aliases": ["cheese", "mozzarella", "more cheese"] },
-          { "text": "Sausage", "points": 10, "aliases": ["italian sausage", "sausages", "meatballs"] },
+          { "text": "Ham", "points": 10, "aliases": ["prosciutto", "cooked ham", "ham and mushroom"] },
           { "text": "Pineapple", "points": 9, "aliases": ["hawaiian", "ham and pineapple", "pineapples"] },
           { "text": "Onions", "points": 6, "aliases": ["onion", "red onion", "red onions"] },
           { "text": "Olives", "points": 5, "aliases": ["olive", "black olives", "green olives"] },
@@ -802,9 +802,9 @@
         "question": "Name a snack people buy at the cinema.",
         "answers": [
           { "text": "Popcorn", "points": 45, "aliases": ["pop corn", "buttered popcorn", "sweet popcorn", "salted popcorn"] },
-          { "text": "Candy", "points": 18, "aliases": ["sweets", "chocolate", "pick and mix", "lollies", "gummies", "m&ms"] },
+          { "text": "Sweets", "points": 18, "aliases": ["candy", "chocolate", "pick and mix", "lollies", "gummies", "m&ms"] },
           { "text": "Nachos", "points": 10, "aliases": ["nachos and cheese", "tortilla chips", "nacho"] },
-          { "text": "Soda", "points": 9, "aliases": ["soft drink", "fizzy drink", "coke", "pop", "slushie", "drink"] },
+          { "text": "Fizzy drink", "points": 9, "aliases": ["soft drink", "soda", "coke", "pop", "slushie", "drink"] },
           { "text": "Hot dog", "points": 6, "aliases": ["hot dogs", "hotdog", "hotdogs"] },
           { "text": "Pretzels", "points": 5, "aliases": ["pretzel", "soft pretzel", "pretzel bites"] },
           { "text": "Ice cream", "points": 4, "aliases": ["icecream", "ice cream tub", "choc ice", "ben and jerry's"] }
@@ -845,7 +845,7 @@
           { "text": "Washing the dishes", "points": 28, "aliases": ["dishes", "washing up", "doing the dishes", "unloading the dishwasher", "dishwasher"] },
           { "text": "Cleaning the bathroom", "points": 24, "aliases": ["cleaning the toilet", "toilet", "bathroom", "scrubbing the toilet", "cleaning the shower"] },
           { "text": "Laundry", "points": 15, "aliases": ["washing clothes", "folding laundry", "folding clothes", "doing the washing", "washing"] },
-          { "text": "Taking out the trash", "points": 11, "aliases": ["trash", "bins", "taking the bins out", "rubbish", "garbage", "taking out the rubbish"] },
+          { "text": "Taking out the bins", "points": 11, "aliases": ["bins", "taking the bins out", "rubbish", "taking out the rubbish", "trash", "garbage", "taking out the trash"] },
           { "text": "Vacuuming", "points": 8, "aliases": ["hoovering", "vacuum", "hoover", "mopping", "sweeping"] },
           { "text": "Ironing", "points": 6, "aliases": ["iron", "ironing clothes", "ironing shirts"] },
           { "text": "Dusting", "points": 4, "aliases": ["dust", "polishing", "wiping surfaces"] },

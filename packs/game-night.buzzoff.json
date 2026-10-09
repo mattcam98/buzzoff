@@ -1,0 +1,628 @@
+{
+  "format": "buzzoff.pack",
+  "version": 1,
+  "pack": {
+    "title": "BuzzOff Game Night",
+    "description": "A full show with a console-gaming streak: PlayStation, famous characters and legendary weapons, alongside China, languages, royals and film twists. Ten board categories, a Video Games category for Final Trivia and five Fast Money surveys. Survey numbers are illustrative, not from a real poll.",
+    "author": "BuzzOff",
+    "categories": [
+      {
+        "id": "gn-01",
+        "title": "Made in China",
+        "blurb": "China: its culture, language and history.",
+        "clues": [
+          {
+            "id": "gn-01-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which enormous Chinese structure is often wrongly claimed to be visible from space?",
+            "answer": "The Great Wall of China",
+            "accept": ["Great Wall of China", "The Great Wall", "Great Wall"]
+          },
+          {
+            "id": "gn-01-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is the capital of China, home to the Forbidden City?",
+            "answer": "Beijing",
+            "accept": ["Peking"]
+          },
+          {
+            "id": "gn-01-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which valuable Chinese product, described as \"white gold\", travelled west along an ancient trading network named after it?",
+            "answer": "Silk",
+            "accept": [],
+            "notes": "The Silk Road."
+          },
+          {
+            "id": "gn-01-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the Chinese name for the characters used to write the Chinese language?",
+            "answer": "Hanzi",
+            "accept": ["Han characters", "汉字", "漢字"],
+            "notes": "Pronounced roughly \"hahn-dzuh\". Kanji is the Japanese reading of the same word; host's call."
+          },
+          {
+            "id": "gn-01-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which dynasty, the last to rule imperial China, fell in 1912?",
+            "answer": "The Qing dynasty",
+            "accept": ["Qing", "Qing dynasty", "Ching", "Manchu", "Manchu dynasty"],
+            "notes": "Said \"ching\". Its last emperor, Puyi, abdicated as a child."
+          }
+        ]
+      },
+      {
+        "id": "gn-02",
+        "title": "PlayStation Generation",
+        "blurb": "Three decades of Sony's consoles and the games that sold them.",
+        "clues": [
+          {
+            "id": "gn-02-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which four shapes mark the face buttons on a PlayStation controller?",
+            "answer": "Triangle, circle, cross and square",
+            "accept": ["Triangle, circle, X and square", "Cross, circle, square and triangle"],
+            "notes": "All four are needed, in any order. X is fine for cross."
+          },
+          {
+            "id": "gn-02-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is the PlayStation 5's controller called, the successor to the DualShock?",
+            "answer": "The DualSense",
+            "accept": ["DualSense", "Dual Sense"]
+          },
+          {
+            "id": "gn-02-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which racing series, billed as \"The Real Driving Simulator\", has been exclusive to PlayStation since 1997?",
+            "answer": "Gran Turismo",
+            "accept": ["GT", "Gran Turismo 7"]
+          },
+          {
+            "id": "gn-02-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which PlayStation 2 quiz series came with its own set of big red buzzers?",
+            "answer": "Buzz!",
+            "accept": ["Buzz", "Buzz! The Music Quiz", "Buzz! The Big Quiz"],
+            "notes": "Made in Brighton by Relentless Software. No relation."
+          },
+          {
+            "id": "gn-02-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "In which year did the original PlayStation first go on sale, in Japan?",
+            "answer": "1994",
+            "accept": [],
+            "notes": "3 December 1994. It reached Europe in September 1995."
+          }
+        ]
+      },
+      {
+        "id": "gn-03",
+        "title": "AI",
+        "blurb": "Every answer contains the letters A-I in a row.",
+        "clues": [
+          {
+            "id": "gn-03-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which short form of Japanese poetry traditionally follows a five-seven-five syllable pattern?",
+            "answer": "Haiku",
+            "accept": ["A haiku"]
+          },
+          {
+            "id": "gn-03-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What do you call a depiction of a person that concentrates on their face and head?",
+            "answer": "A portrait",
+            "accept": ["Portrait", "Portraiture"]
+          },
+          {
+            "id": "gn-03-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which compound gives chilli peppers their heat?",
+            "answer": "Capsaicin",
+            "accept": ["Capsaicine"]
+          },
+          {
+            "id": "gn-03-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which dark-purple berry is often promoted as a superfood because of its antioxidants?",
+            "answer": "Açaí",
+            "accept": ["Acai", "Acai berry", "Açaí berry"],
+            "notes": "Pronounced \"ah-sah-EE\"."
+          },
+          {
+            "id": "gn-03-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which geographical term describes a narrow waterway linking two larger bodies of water?",
+            "answer": "A strait",
+            "accept": ["Strait", "Straits"],
+            "notes": "\"Channel\" fits the definition but has no A-I."
+          }
+        ]
+      },
+      {
+        "id": "gn-04",
+        "title": "It's a Date",
+        "blurb": "Holidays and the days they fall on.",
+        "clues": [
+          {
+            "id": "gn-04-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which annual celebration of romantic love falls on 14 February?",
+            "answer": "Valentine's Day",
+            "accept": ["Valentines Day", "St Valentine's Day", "Saint Valentine's Day", "Valentine's"]
+          },
+          {
+            "id": "gn-04-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which saint's day is celebrated by the Irish, and plenty of others, on 17 March?",
+            "answer": "St Patrick's Day",
+            "accept": ["Saint Patrick's Day", "St Patrick", "Saint Patrick", "St Paddy's Day", "Paddy's Day"]
+          },
+          {
+            "id": "gn-04-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "On which date do the French celebrate their national day, known abroad as Bastille Day?",
+            "answer": "14 July",
+            "accept": ["July 14", "14th of July", "July 14th", "Le quatorze juillet", "Quatorze juillet"]
+          },
+          {
+            "id": "gn-04-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "On which date do most European countries celebrate Labour Day, or International Workers' Day?",
+            "answer": "1 May",
+            "accept": ["May 1", "1st of May", "May 1st", "First of May", "May Day"]
+          },
+          {
+            "id": "gn-04-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "On which date does the European Union mark Europe Day, the anniversary of the Schuman Declaration?",
+            "answer": "9 May",
+            "accept": ["May 9", "9th of May", "May 9th"],
+            "notes": "The Schuman Declaration of 9 May 1950 proposed pooling French and German coal and steel."
+          }
+        ]
+      },
+      {
+        "id": "gn-05",
+        "title": "Sorry Not Sorry",
+        "blurb": "Name the language. Every word here means \"sorry\".",
+        "clues": [
+          {
+            "id": "gn-05-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In which language does \"désolé\" mean \"sorry\"?",
+            "answer": "French",
+            "accept": [],
+            "notes": "Say it \"day-zo-LAY\"."
+          },
+          {
+            "id": "gn-05-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In which language does \"lo siento\" mean \"sorry\"?",
+            "answer": "Spanish",
+            "accept": ["Castilian"],
+            "notes": "Say it \"lo see-EN-toh\"."
+          },
+          {
+            "id": "gn-05-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "In which language does \"Entschuldigung\" mean \"sorry\"?",
+            "answer": "German",
+            "accept": [],
+            "notes": "Say it \"ent-SHOOL-dee-goong\"."
+          },
+          {
+            "id": "gn-05-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "In which language does \"gomen nasai\" mean \"sorry\"?",
+            "answer": "Japanese",
+            "accept": [],
+            "notes": "Say it \"go-men nah-sigh\"."
+          },
+          {
+            "id": "gn-05-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "In which language does \"przepraszam\" mean \"sorry\"?",
+            "answer": "Polish",
+            "accept": [],
+            "notes": "Say it \"psheh-PRAH-shahm\"."
+          }
+        ]
+      },
+      {
+        "id": "gn-06",
+        "title": "Player Select",
+        "blurb": "Name the video game character from the description.",
+        "clues": [
+          {
+            "id": "gn-06-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which speedy blue hedgehog is Sega's mascot?",
+            "answer": "Sonic the Hedgehog",
+            "accept": ["Sonic"]
+          },
+          {
+            "id": "gn-06-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which yellow arcade character is chased around a maze by ghosts called Blinky, Pinky, Inky and Clyde?",
+            "answer": "Pac-Man",
+            "accept": ["Pacman", "Pac Man"]
+          },
+          {
+            "id": "gn-06-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which British archaeologist and adventurer is the heroine of the \"Tomb Raider\" series?",
+            "answer": "Lara Croft",
+            "accept": ["Lara"]
+          },
+          {
+            "id": "gn-06-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which green-armoured supersoldier, rarely seen without his helmet, is the hero of the \"Halo\" series?",
+            "answer": "Master Chief",
+            "accept": ["The Master Chief", "John-117", "John 117"]
+          },
+          {
+            "id": "gn-06-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which gravel-voiced soldier infiltrates Shadow Moses Island in 1998's \"Metal Gear Solid\"?",
+            "answer": "Solid Snake",
+            "accept": ["Snake"],
+            "notes": "Plain \"Snake\" is fine."
+          }
+        ]
+      },
+      {
+        "id": "gn-07",
+        "title": "Keeping It in the Family",
+        "blurb": "Genetics, royal families and people who married their cousins.",
+        "clues": [
+          {
+            "id": "gn-07-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which molecule carries the genetic information responsible for inherited characteristics?",
+            "answer": "DNA",
+            "accept": ["Deoxyribonucleic acid"]
+          },
+          {
+            "id": "gn-07-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which evolutionary process is commonly summed up by the phrase \"survival of the fittest\"?",
+            "answer": "Natural selection",
+            "accept": ["Evolution by natural selection"],
+            "notes": "\"Evolution\" alone is the host's call."
+          },
+          {
+            "id": "gn-07-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which Habsburg monarch, famous for his severe hereditary health problems, was the dynasty's last king of Spain?",
+            "answer": "Charles II of Spain",
+            "accept": ["Charles II", "Carlos II", "Charles the Second", "Charles the Bewitched"],
+            "notes": "He died without an heir in 1700, which set off the War of the Spanish Succession."
+          },
+          {
+            "id": "gn-07-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which pioneering naturalist developed the theory of natural selection and married his first cousin?",
+            "answer": "Charles Darwin",
+            "accept": ["Darwin"],
+            "notes": "He married Emma Wedgwood in 1839."
+          },
+          {
+            "id": "gn-07-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which inherited blood-clotting disorder did Queen Victoria pass on to several of Europe's royal families?",
+            "answer": "Haemophilia",
+            "accept": ["Hemophilia", "Haemophilia B", "The royal disease"],
+            "notes": "It reached the royal houses of Spain, Germany and Russia through her children and grandchildren."
+          }
+        ]
+      },
+      {
+        "id": "gn-08",
+        "title": "Loadout",
+        "blurb": "Every answer is a weapon or an item from a famous console game.",
+        "clues": [
+          {
+            "id": "gn-08-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In \"Mario Kart\", which spiky item chases down whoever is in first place?",
+            "answer": "The Blue Shell",
+            "accept": ["Blue Shell", "Spiny Shell", "Blue Spiny Shell"]
+          },
+          {
+            "id": "gn-08-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which legendary blade, also called the Blade of Evil's Bane, rests in a stone pedestal in \"The Legend of Zelda\" games?",
+            "answer": "The Master Sword",
+            "accept": ["Master Sword"]
+          },
+          {
+            "id": "gn-08-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which concealed, spring-loaded weapon, worn on the forearm, is the trademark of the killers in \"Assassin's Creed\"?",
+            "answer": "The Hidden Blade",
+            "accept": ["Hidden Blade", "Hidden blades", "Wrist blade"]
+          },
+          {
+            "id": "gn-08-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which frost-charged axe flies back to its owner's hand when called in 2018's \"God of War\"?",
+            "answer": "The Leviathan Axe",
+            "accept": ["Leviathan Axe", "Leviathan"]
+          },
+          {
+            "id": "gn-08-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What is the name of the enormous broadsword carried by Cloud Strife in \"Final Fantasy VII\"?",
+            "answer": "The Buster Sword",
+            "accept": ["Buster Sword"]
+          }
+        ]
+      },
+      {
+        "id": "gn-09",
+        "title": "Spoiler Alert",
+        "blurb": "Famous twists and endings. Look away now.",
+        "clues": [
+          {
+            "id": "gn-09-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In \"The Empire Strikes Back\", who tells Luke Skywalker that he is his father?",
+            "answer": "Darth Vader",
+            "accept": ["Vader", "Anakin Skywalker"]
+          },
+          {
+            "id": "gn-09-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In \"The Sixth Sense\", what does Bruce Willis's character turn out to have been all along?",
+            "answer": "Dead",
+            "accept": ["A ghost", "Dead the whole time", "A dead person"]
+          },
+          {
+            "id": "gn-09-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "In \"Harry Potter and the Half-Blood Prince\", which teacher kills Albus Dumbledore?",
+            "answer": "Severus Snape",
+            "accept": ["Snape", "Professor Snape"]
+          },
+          {
+            "id": "gn-09-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "In Agatha Christie's \"Murder on the Orient Express\", who turns out to have killed the victim?",
+            "answer": "All of the suspects",
+            "accept": ["All of them", "Everyone", "Everybody", "All twelve", "They all did it"],
+            "notes": "Twelve of the passengers stab him in turn."
+          },
+          {
+            "id": "gn-09-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "In \"The Usual Suspects\", which character, played by Kevin Spacey, is revealed to be the crime lord Keyser Söze?",
+            "answer": "Verbal Kint",
+            "accept": ["Verbal", "Roger Kint", "Roger \"Verbal\" Kint"]
+          }
+        ]
+      },
+      {
+        "id": "gn-10",
+        "title": "Famous Balds",
+        "blurb": "Well-known people without much on top.",
+        "clues": [
+          {
+            "id": "gn-10-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which bald billionaire is best known for founding Amazon?",
+            "answer": "Jeff Bezos",
+            "accept": ["Bezos"]
+          },
+          {
+            "id": "gn-10-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which former WWE champion turned Hollywood actor is also behind Teremana Tequila?",
+            "answer": "Dwayne \"The Rock\" Johnson",
+            "accept": ["The Rock", "Dwayne Johnson", "Dwayne The Rock Johnson"]
+          },
+          {
+            "id": "gn-10-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which bald musician goes by the nickname \"Mr. Worldwide\"?",
+            "answer": "Pitbull",
+            "accept": ["Armando Pérez", "Armando Perez", "Mr. 305"]
+          },
+          {
+            "id": "gn-10-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which bald Frenchman scored twice in the 1998 World Cup final and later coached Real Madrid to three Champions League titles in a row?",
+            "answer": "Zinedine Zidane",
+            "accept": ["Zidane", "Zizou"]
+          },
+          {
+            "id": "gn-10-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which bald Italian referee, known for his piercing stare, took charge of the 2002 World Cup final?",
+            "answer": "Pierluigi Collina",
+            "accept": ["Collina"]
+          }
+        ]
+      },
+      {
+        "id": "gn-11",
+        "title": "Video Games",
+        "blurb": "Consoles and the games played on them. Pick it for Final Trivia and the last clue is asked.",
+        "clues": [
+          {
+            "id": "gn-11-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which block-building game, all about mining and crafting, is the best-selling video game of all time?",
+            "answer": "Minecraft",
+            "accept": []
+          },
+          {
+            "id": "gn-11-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In which battle royale game do players jump into each match from the Battle Bus?",
+            "answer": "Fortnite",
+            "accept": ["Fortnite Battle Royale"]
+          },
+          {
+            "id": "gn-11-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which football series was renamed \"EA Sports FC\" in 2023?",
+            "answer": "FIFA",
+            "accept": ["FIFA Football", "EA Sports FIFA"],
+            "notes": "\"FIFA 23\" was the last under the old name."
+          },
+          {
+            "id": "gn-11-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which Polish studio developed both \"The Witcher 3: Wild Hunt\" and \"Cyberpunk 2077\"?",
+            "answer": "CD Projekt Red",
+            "accept": ["CD Projekt", "CDPR", "CD Project Red"]
+          },
+          {
+            "id": "gn-11-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which game, released in 2004, is the best-selling game on the PlayStation 2?",
+            "answer": "Grand Theft Auto: San Andreas",
+            "accept": ["GTA: San Andreas", "GTA San Andreas", "Grand Theft Auto San Andreas", "San Andreas"],
+            "notes": "It sold more than 17 million copies on the console. \"Grand Theft Auto\" alone is not enough."
+          }
+        ]
+      }
+    ],
+    "surveys": [
+      {
+        "id": "gn-sv-1",
+        "question": "Name a games console.",
+        "answers": [
+          { "text": "PlayStation", "points": 38, "aliases": ["ps5", "ps4", "ps2", "ps1", "playstation 5", "playstation 4", "playstation 2", "sony playstation"] },
+          { "text": "Xbox", "points": 22, "aliases": ["xbox 360", "xbox one", "xbox series x", "microsoft xbox"] },
+          { "text": "Nintendo Switch", "points": 18, "aliases": ["switch", "switch 2", "nintendo switch 2"] },
+          { "text": "Wii", "points": 8, "aliases": ["nintendo wii", "wii u"] },
+          { "text": "Game Boy", "points": 5, "aliases": ["gameboy", "game boy advance", "game boy color"] },
+          { "text": "Nintendo 64", "points": 3, "aliases": ["n64"] },
+          { "text": "Sega Mega Drive", "points": 3, "aliases": ["mega drive", "megadrive", "sega genesis", "sega"] },
+          { "text": "Nintendo DS", "points": 3, "aliases": ["ds", "3ds", "nintendo 3ds"] }
+        ]
+      },
+      {
+        "id": "gn-sv-2",
+        "question": "How many days a week do you shower?",
+        "answers": [
+          { "text": "7 days", "points": 30, "aliases": ["7", "seven days", "every day", "everyday", "daily", "all of them"] },
+          { "text": "5 days", "points": 18, "aliases": ["5", "five days"] },
+          { "text": "6 days", "points": 14, "aliases": ["6", "six days"] },
+          { "text": "4 days", "points": 13, "aliases": ["4", "four days"] },
+          { "text": "3 days", "points": 12, "aliases": ["3", "three days"] },
+          { "text": "2 days", "points": 6, "aliases": ["2", "two days"] },
+          { "text": "1 day", "points": 4, "aliases": ["1", "one day", "once"] },
+          { "text": "0 days", "points": 2, "aliases": ["0", "zero days", "none", "never"] }
+        ]
+      },
+      {
+        "id": "gn-sv-3",
+        "question": "What is a normal price for a cup of coffee, to the nearest euro?",
+        "answers": [
+          { "text": "€3", "points": 30, "aliases": ["3 euros", "three euros", "3 euro", "3.00"] },
+          { "text": "€2", "points": 24, "aliases": ["2 euros", "two euros", "2 euro", "2.00"] },
+          { "text": "€4", "points": 20, "aliases": ["4 euros", "four euros", "4 euro", "4.00"] },
+          { "text": "€1", "points": 10, "aliases": ["1 euro", "one euro", "a euro", "1.00"] },
+          { "text": "€5", "points": 10, "aliases": ["5 euros", "five euros", "5 euro", "5.00"] },
+          { "text": "€6", "points": 4, "aliases": ["6 euros", "six euros", "6 euro", "6.00"] },
+          { "text": "€7", "points": 2, "aliases": ["7 euros", "seven euros", "7 euro", "7.00"] }
+        ]
+      },
+      {
+        "id": "gn-sv-4",
+        "question": "Who is the best character in Mario Party?",
+        "answers": [
+          { "text": "Yoshi", "points": 26, "aliases": [] },
+          { "text": "Luigi", "points": 14, "aliases": [] },
+          { "text": "Waluigi", "points": 12, "aliases": [] },
+          { "text": "Mario", "points": 10, "aliases": ["super mario"] },
+          { "text": "Peach", "points": 8, "aliases": ["princess peach"] },
+          { "text": "Toad", "points": 8, "aliases": ["toadette"] },
+          { "text": "Daisy", "points": 6, "aliases": ["princess daisy"] },
+          { "text": "Wario", "points": 5, "aliases": [] },
+          { "text": "Donkey Kong", "points": 4, "aliases": ["dk", "d.k."] },
+          { "text": "Monty Mole", "points": 3, "aliases": ["monty", "mole"] },
+          { "text": "Bowser", "points": 2, "aliases": ["bowser jr", "bowser junior"] }
+        ]
+      },
+      {
+        "id": "gn-sv-5",
+        "question": "Which video game are you best at?",
+        "answers": [
+          { "text": "EA Sports FC", "points": 22, "aliases": ["fifa", "ea fc", "fc", "fc 25", "fc 26", "ea sports fifa"] },
+          { "text": "Mario Kart", "points": 16, "aliases": ["mario kart 8", "mario kart world", "mariokart"] },
+          { "text": "Call of Duty", "points": 12, "aliases": ["cod", "warzone", "black ops"] },
+          { "text": "Fortnite", "points": 12, "aliases": ["fortnite battle royale"] },
+          { "text": "Minecraft", "points": 10, "aliases": ["mc"] },
+          { "text": "Grand Theft Auto", "points": 7, "aliases": ["gta", "gta v", "gta 5", "gta online"] },
+          { "text": "Tetris", "points": 6, "aliases": [] },
+          { "text": "Super Smash Bros.", "points": 4, "aliases": ["smash", "smash bros", "smash ultimate", "super smash bros ultimate"] },
+          { "text": "Rocket League", "points": 4, "aliases": ["rl"] },
+          { "text": "Gran Turismo", "points": 3, "aliases": ["gt", "gt7", "gran turismo 7"] },
+          { "text": "Pokémon", "points": 2, "aliases": ["pokemon go"] },
+          { "text": "Just Dance", "points": 2, "aliases": [] }
+        ]
+      }
+    ]
+  }
+}

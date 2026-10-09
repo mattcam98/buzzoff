@@ -2,25 +2,25 @@
   "format": "buzzoff.pack",
   "version": 1,
   "pack": {
-    "title": "Mogul Money",
-    "description": "A full show adapted from an episode of Ludwig's Mogul Money: ten board categories, a Baseball category for Final Trivia and the five Fast Money surveys. Questions are paraphrased. Dubbin and a few other clues are about the show and its host. Only the top survey answer comes from the episode; the other answers and all survey numbers are illustrative.",
-    "author": "Adapted from Mogul Money",
+    "title": "BuzzOff Pick & Mix",
+    "description": "A full show of general knowledge with a European accent: ten board categories, a Football category for Final Trivia and five Fast Money surveys. Distances are in kilometres. Survey numbers are illustrative, not from a real poll.",
+    "author": "BuzzOff",
     "categories": [
       {
-        "id": "mm-01",
+        "id": "pm-01",
         "title": "Names the Same",
         "blurb": "Two people, one first name. Tell us the name they share.",
         "clues": [
           {
-            "id": "mm-01-1",
+            "id": "pm-01-1",
             "value": 100,
             "difficulty": 1,
-            "question": "What first name is shared by the streamers Kjellberg, known as PewDiePie, and Lengyel, known as xQc?",
-            "answer": "Felix",
-            "accept": ["Félix"]
+            "question": "What first name is shared by the footballer Messi and the singer Richie?",
+            "answer": "Lionel",
+            "accept": []
           },
           {
-            "id": "mm-01-2",
+            "id": "pm-01-2",
             "value": 200,
             "difficulty": 2,
             "question": "What first name does the \"Twilight\" actor Lautner share with his wife, who is also a Lautner?",
@@ -29,7 +29,7 @@
             "notes": "Taylor Lautner married Taylor Dome in 2022 and she took his surname."
           },
           {
-            "id": "mm-01-3",
+            "id": "pm-01-3",
             "value": 300,
             "difficulty": 3,
             "question": "What first name connects the actors Rogen and Green?",
@@ -37,30 +37,30 @@
             "accept": []
           },
           {
-            "id": "mm-01-4",
+            "id": "pm-01-4",
             "value": 400,
             "difficulty": 4,
-            "question": "What first name connects the comedian Poehler and the singer Winehouse?",
+            "question": "What first name connects the actress Adams and the singer Winehouse?",
             "answer": "Amy",
             "accept": []
           },
           {
-            "id": "mm-01-5",
+            "id": "pm-01-5",
             "value": 500,
             "difficulty": 5,
-            "question": "What first name connects the comedian Lopez and the singer Michael?",
+            "question": "What first name connects the \"Star Wars\" creator Lucas and the Manchester United legend Best?",
             "answer": "George",
             "accept": []
           }
         ]
       },
       {
-        "id": "mm-02",
+        "id": "pm-02",
         "title": "Exploring Bodies",
         "blurb": "Human anatomy, from the bones outwards.",
         "clues": [
           {
-            "id": "mm-02-1",
+            "id": "pm-02-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which bone is the longest and largest in the human body?",
@@ -68,7 +68,7 @@
             "accept": ["Femur", "Thigh bone", "Thighbone"]
           },
           {
-            "id": "mm-02-2",
+            "id": "pm-02-2",
             "value": 200,
             "difficulty": 2,
             "question": "What is the largest organ of the human body?",
@@ -76,7 +76,7 @@
             "accept": ["Skin"]
           },
           {
-            "id": "mm-02-3",
+            "id": "pm-02-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which organ stores bile and releases it to help with digestion?",
@@ -85,7 +85,7 @@
             "notes": "The liver makes bile; the gallbladder only stores and releases it."
           },
           {
-            "id": "mm-02-4",
+            "id": "pm-02-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which part of the brain handles higher-level processes such as reasoning, memory and sensory information?",
@@ -94,7 +94,7 @@
             "notes": "\"Cerebrum\" is close but is the larger structure; the cortex is its outer layer. Host's call."
           },
           {
-            "id": "mm-02-5",
+            "id": "pm-02-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which body system controls the production and regulation of hormones?",
@@ -104,64 +104,64 @@
         ]
       },
       {
-        "id": "mm-03",
+        "id": "pm-03",
         "title": "Tip2Tip",
-        "blurb": "Estimate a distance in miles. Each clue says how close you need to be.",
+        "blurb": "Estimate a distance in kilometres. Each clue says how close you need to be.",
         "clues": [
           {
-            "id": "mm-03-1",
+            "id": "pm-03-1",
             "value": 100,
             "difficulty": 1,
-            "question": "To the nearest 500 miles, how wide is the United States from east to west?",
-            "answer": "About 2,800 miles (accept 3,000)",
-            "accept": ["3,000 miles", "2,800 miles", "2,500 miles"],
-            "notes": "The show's figure is 2,800 miles, which rounds to 3,000. Give 2,500 at your discretion."
+            "question": "To the nearest 500 kilometres, how far is it in a straight line from London to Rome?",
+            "answer": "About 1,430 km (accept 1,500)",
+            "accept": ["1,500 km", "1,430 km", "1,400 km"],
+            "notes": "About 1,430 km as the crow flies, which rounds to 1,500."
           },
           {
-            "id": "mm-03-2",
+            "id": "pm-03-2",
             "value": 200,
             "difficulty": 2,
-            "question": "To the nearest 500 miles, how far does China extend from north to south?",
-            "answer": "About 3,400 miles (accept 3,500)",
-            "accept": ["3,500 miles", "3,400 miles"],
-            "notes": "The show's figure is 3,400 miles, which rounds to 3,500."
+            "question": "To the nearest 500 kilometres, how far does China extend from north to south?",
+            "answer": "About 5,500 km",
+            "accept": ["5,500 km", "5,500 kilometres"],
+            "notes": "Roughly 5,500 km from north to south and 5,200 km from east to west."
           },
           {
-            "id": "mm-03-3",
+            "id": "pm-03-3",
             "value": 300,
             "difficulty": 3,
-            "question": "To the nearest 10 miles, how wide is Chile at its narrowest point from east to west?",
-            "answer": "About 9.6 miles (accept 10)",
-            "accept": ["10 miles", "9.6 miles"],
-            "notes": "This is the show's figure. Other sources measure the narrowest point differently and give a larger number, so judge generously."
+            "question": "To the nearest 10 kilometres, how wide is the English Channel at its narrowest point?",
+            "answer": "About 33 km (accept 30)",
+            "accept": ["30 km", "33 km", "34 km"],
+            "notes": "The Strait of Dover is about 33 km across, from the South Foreland near Dover to Cap Gris-Nez near Calais. Give 40 at your discretion."
           },
           {
-            "id": "mm-03-4",
+            "id": "pm-03-4",
             "value": 400,
             "difficulty": 4,
-            "question": "To the nearest 500 miles, how far does Russia extend from east to west?",
-            "answer": "About 5,600 miles (accept 5,500)",
-            "accept": ["5,500 miles", "5,600 miles", "6,000 miles"],
-            "notes": "The show's figure is 5,600 miles, which rounds to 5,500. Give 6,000 at your discretion."
+            "question": "To the nearest 1,000 kilometres, how far does Russia extend from east to west?",
+            "answer": "About 9,000 km",
+            "accept": ["9,000 km", "9,000 kilometres"],
+            "notes": "About 9,000 km, across eleven time zones."
           },
           {
-            "id": "mm-03-5",
+            "id": "pm-03-5",
             "value": 500,
             "difficulty": 5,
-            "question": "To the nearest 1,000 miles, what is the distance over the Earth's surface from the North Pole to the South Pole?",
-            "answer": "About 12,430 miles (accept 12,000)",
-            "accept": ["12,000 miles", "12,430 miles", "12,500 miles"],
-            "notes": "Half of the Earth's circumference through the poles."
+            "question": "To the nearest 1,000 kilometres, what is the distance over the Earth's surface from the North Pole to the South Pole?",
+            "answer": "About 20,000 km",
+            "accept": ["20,000 km", "20,004 km", "20,000 kilometres"],
+            "notes": "Half of the Earth's circumference through the poles. The metre was first defined so that the distance from the pole to the equator came to 10,000 km."
           }
         ]
       },
       {
-        "id": "mm-04",
+        "id": "pm-04",
         "title": "Few-Wheeled Vehicles",
         "blurb": "Things you ride or drive on three wheels or fewer.",
         "clues": [
           {
-            "id": "mm-04-1",
+            "id": "pm-04-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which single-wheeled vehicle is associated with circus performers and acrobats?",
@@ -169,7 +169,7 @@
             "accept": ["Unicycle"]
           },
           {
-            "id": "mm-04-2",
+            "id": "pm-04-2",
             "value": 200,
             "difficulty": 2,
             "question": "Which famous Italian scooter brand made its debut in 1946?",
@@ -178,7 +178,7 @@
             "notes": "Made by Piaggio. \"Vespa\" is Italian for wasp."
           },
           {
-            "id": "mm-04-3",
+            "id": "pm-04-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which three-wheeled motorised taxi is a common sight in Southeast Asia?",
@@ -186,7 +186,7 @@
             "accept": ["Tuk tuk", "Tuktuk", "Auto rickshaw", "Autorickshaw"]
           },
           {
-            "id": "mm-04-4",
+            "id": "pm-04-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which self-balancing, two-wheeled personal transporter was invented by Dean Kamen?",
@@ -194,80 +194,79 @@
             "accept": ["Segway", "Segway PT", "Segway HT"]
           },
           {
-            "id": "mm-04-5",
+            "id": "pm-04-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which three-wheeled vehicle went on sale in 2014 with a starting price of about $19,999?",
-            "answer": "The Polaris Slingshot",
-            "accept": ["Polaris Slingshot", "Slingshot"]
+            "question": "Which three-wheeled Italian delivery van, built by Piaggio since 1948, takes its name from the Italian word for bee?",
+            "answer": "The Piaggio Ape",
+            "accept": ["Piaggio Ape", "Ape", "Apé", "Ape car"],
+            "notes": "Said \"AH-peh\"."
           }
         ]
       },
       {
-        "id": "mm-05",
-        "title": "League of Legends",
-        "blurb": "Champions, monsters and items from Summoner's Rift.",
+        "id": "pm-05",
+        "title": "PlayStation Legends",
+        "blurb": "Heroes from three decades of Sony's consoles.",
         "clues": [
           {
-            "id": "mm-05-1",
+            "id": "pm-05-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which champion, a star of the series \"Arcane\", is known for her long blue twin braids?",
-            "answer": "Jinx",
-            "accept": ["Powder"],
-            "notes": "Powder is her name as a child in Arcane."
+            "question": "Which orange marsupial, PlayStation's unofficial mascot in the 1990s, spins through crates and collects Wumpa fruit?",
+            "answer": "Crash Bandicoot",
+            "accept": ["Crash"]
           },
           {
-            "id": "mm-05-2",
+            "id": "pm-05-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which scarecrow champion, sometimes played as a support, shares a name with Ludwig's alter ego \"the Fiddler\"?",
-            "answer": "Fiddlesticks",
-            "accept": ["Fiddle", "Fiddle sticks"],
-            "notes": "Show-specific: the Fiddler is a running bit of Ludwig's."
+            "question": "Which wisecracking treasure hunter is the hero of the \"Uncharted\" series?",
+            "answer": "Nathan Drake",
+            "accept": ["Drake", "Nate Drake", "Nate"]
           },
           {
-            "id": "mm-05-3",
+            "id": "pm-05-3",
             "value": 300,
             "difficulty": 3,
-            "question": "On which map are standard games of League of Legends played?",
-            "answer": "Summoner's Rift",
-            "accept": ["Summoners Rift", "The Rift"]
+            "question": "Which Spartan warrior, known as the Ghost of Sparta, is the hero of the \"God of War\" series?",
+            "answer": "Kratos",
+            "accept": []
           },
           {
-            "id": "mm-05-4",
+            "id": "pm-05-4",
             "value": 400,
             "difficulty": 4,
-            "question": "What is the proper name of the jungle monster that players usually just call \"Red Buff\"?",
-            "answer": "Red Brambleback",
-            "accept": ["Brambleback", "The Red Brambleback"]
+            "question": "Which flame-haired hunter takes on robot dinosaurs with a bow in \"Horizon Zero Dawn\"?",
+            "answer": "Aloy",
+            "accept": [],
+            "notes": "Said \"AY-loy\"."
           },
           {
-            "id": "mm-05-5",
+            "id": "pm-05-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which item builds up stacks over time and, once fully stacked, grants its owner a level?",
-            "answer": "Rod of Ages",
-            "accept": ["RoA", "Rod of Age"]
+            "question": "In the \"Ratchet & Clank\" series, Clank is a robot. What species is Ratchet?",
+            "answer": "A Lombax",
+            "accept": ["Lombax"]
           }
         ]
       },
       {
-        "id": "mm-06",
+        "id": "pm-06",
         "title": "Not an Alloy",
         "blurb": "Every answer is a metal, and a pure one.",
         "clues": [
           {
-            "id": "mm-06-1",
+            "id": "pm-06-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which abundant metal is commonly found in kitchen utensils and kitchen foil?",
             "answer": "Aluminium",
-            "accept": ["Aluminum", "Iron"],
-            "notes": "The show also accepted iron after a dispute over whether \"abundant\" meant in the Earth's crust or in the whole planet."
+            "accept": ["Aluminum"]
           },
           {
-            "id": "mm-06-2",
+            "id": "pm-06-2",
             "value": 200,
             "difficulty": 2,
             "question": "Which shiny precious metal is traditionally used for fine tableware?",
@@ -275,7 +274,7 @@
             "accept": []
           },
           {
-            "id": "mm-06-3",
+            "id": "pm-06-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which metal is a liquid at ordinary room temperature?",
@@ -283,7 +282,7 @@
             "accept": ["Quicksilver"]
           },
           {
-            "id": "mm-06-4",
+            "id": "pm-06-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which metal in a cheap gold-coloured ring can turn the skin underneath it green?",
@@ -291,89 +290,89 @@
             "accept": []
           },
           {
-            "id": "mm-06-5",
+            "id": "pm-06-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which highly corrosion-resistant metal of the platinum group has been called the most valuable precious metal?",
             "answer": "Rhodium",
             "accept": [],
-            "notes": "Its price moves a lot, so \"most valuable\" is as the show described it rather than a fixed fact."
+            "notes": "Its price swings wildly, so \"most valuable\" is true in some years and not in others."
           }
         ]
       },
       {
-        "id": "mm-07",
-        "title": "Dubbin",
-        "blurb": "Show-specific: trivia about Mogul Money's host, Ludwig.",
+        "id": "pm-07",
+        "title": "Douze Points",
+        "blurb": "The Eurovision Song Contest, from 1956 to today.",
         "clues": [
           {
-            "id": "mm-07-1",
+            "id": "pm-07-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which two contestants on this episode of Mogul Money are Ludwig's prospective groomsmen?",
-            "answer": "Connor and Michael",
-            "accept": ["Michael and Connor"],
-            "notes": "Only makes sense to people who know the episode's line-up."
+            "question": "At the Eurovision Song Contest, what is the highest score a national jury can give to a single song?",
+            "answer": "12 points",
+            "accept": ["12", "Twelve", "Twelve points", "Douze points"]
           },
           {
-            "id": "mm-07-2",
+            "id": "pm-07-2",
             "value": 200,
             "difficulty": 2,
-            "question": "What is the medical name for Ludwig's sunken-chest condition?",
-            "answer": "Pectus excavatum",
-            "accept": ["Funnel chest"]
+            "question": "Which Italian rock band won Eurovision in 2021 with \"Zitti e buoni\"?",
+            "answer": "Måneskin",
+            "accept": ["Maneskin"],
+            "notes": "Said \"MOH-neh-skin\". It is Danish for moonlight."
           },
           {
-            "id": "mm-07-3",
+            "id": "pm-07-3",
             "value": 300,
             "difficulty": 3,
-            "question": "Which Smash Bros. video was the first of Ludwig's uploads to reach one million views?",
-            "answer": "Top 10 Salty Ice Climber Moments",
-            "accept": ["Salty Ice Climber Moments", "Top 10 Salty Ice Climbers Moments"]
+            "question": "Which Finnish heavy-metal band won Eurovision in 2006, dressed as monsters, with \"Hard Rock Hallelujah\"?",
+            "answer": "Lordi",
+            "accept": []
           },
           {
-            "id": "mm-07-4",
+            "id": "pm-07-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which multiplayer game on the PSP frustrated Ludwig so much that he damaged his control stick?",
-            "answer": "Star Wars Battlefront: Renegade Squadron",
-            "accept": ["Renegade Squadron", "Battlefront Renegade Squadron"],
-            "notes": "\"Star Wars Battlefront\" alone is the host's call."
+            "question": "Which Canadian singer won Eurovision for Switzerland in 1988?",
+            "answer": "Céline Dion",
+            "accept": ["Celine Dion", "Dion"],
+            "notes": "With \"Ne partez pas sans moi\", by a single point."
           },
           {
-            "id": "mm-07-5",
+            "id": "pm-07-5",
             "value": 500,
             "difficulty": 5,
-            "question": "At which charity Smash tournament did Ludwig beat ChillinDude's Mario?",
-            "answer": "Smash the Record",
-            "accept": []
+            "question": "In which Swiss city was the very first Eurovision Song Contest held, in 1956?",
+            "answer": "Lugano",
+            "accept": [],
+            "notes": "Seven countries took part and the hosts won, with Lys Assia."
           }
         ]
       },
       {
-        "id": "mm-08",
+        "id": "pm-08",
         "title": "Real Creamers",
         "blurb": "Milk, cream and the things made from them.",
         "clues": [
           {
-            "id": "mm-08-1",
+            "id": "pm-08-1",
             "value": 100,
             "difficulty": 1,
-            "question": "What do you get by churning heavy cream?",
+            "question": "What do you get by churning cream?",
             "answer": "Butter",
             "accept": []
           },
           {
-            "id": "mm-08-2",
+            "id": "pm-08-2",
             "value": 200,
             "difficulty": 2,
-            "question": "What is Ludwig's favourite flavour of ice cream?",
-            "answer": "Cookie dough",
-            "accept": ["Double Dough", "Chocolate chip cookie dough"],
-            "notes": "Show-specific. The show also accepted Double Dough."
+            "question": "Which Italian word names a denser, slower-churned style of ice cream?",
+            "answer": "Gelato",
+            "accept": []
           },
           {
-            "id": "mm-08-3",
+            "id": "pm-08-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which sugar found in milk is digested with the help of the enzyme lactase?",
@@ -381,7 +380,7 @@
             "accept": []
           },
           {
-            "id": "mm-08-4",
+            "id": "pm-08-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which heat treatment makes raw milk safer to drink by reducing harmful microorganisms?",
@@ -390,22 +389,23 @@
             "notes": "Named after Louis Pasteur."
           },
           {
-            "id": "mm-08-5",
+            "id": "pm-08-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which month is recognised as National Dairy Month in the United States?",
-            "answer": "June",
-            "accept": []
+            "question": "Which French blue cheese, made from sheep's milk, must be matured in the natural caves of Mont Combalou?",
+            "answer": "Roquefort",
+            "accept": [],
+            "notes": "The caves lie under the village of Roquefort-sur-Soulzon in the Aveyron."
           }
         ]
       },
       {
-        "id": "mm-09",
+        "id": "pm-09",
         "title": "Hypothetically Speaking",
         "blurb": "Every answer is a theory or a theorem.",
         "clues": [
           {
-            "id": "mm-09-1",
+            "id": "pm-09-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which theorem relates the sides of a right-angled triangle with the formula a² + b² = c²?",
@@ -413,15 +413,16 @@
             "accept": ["Pythagoras' theorem", "Pythagoras's theorem", "Pythagoras theorem", "Pythagorean theorem", "Pythagoras"]
           },
           {
-            "id": "mm-09-2",
+            "id": "pm-09-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which scientific theory, associated with Charles Darwin, explains how species change over generations?",
-            "answer": "The theory of evolution",
-            "accept": ["Evolution", "Natural selection", "Evolution by natural selection"]
+            "question": "Which scientific theory explains how the Earth's continents sit on huge slabs of crust that slowly move?",
+            "answer": "Plate tectonics",
+            "accept": ["Tectonics", "Plate tectonic theory", "Continental drift"],
+            "notes": "Continental drift was Alfred Wegener's earlier idea; plate tectonics is the theory that explained it."
           },
           {
-            "id": "mm-09-3",
+            "id": "pm-09-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which cosmological theory describes the universe expanding from an early hot, dense state?",
@@ -429,7 +430,7 @@
             "accept": ["Big Bang", "The Big Bang"]
           },
           {
-            "id": "mm-09-4",
+            "id": "pm-09-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which theory developed by Albert Einstein changed our understanding of space, time and gravity?",
@@ -438,7 +439,7 @@
             "notes": "\"Special relativity\" alone leaves out gravity. Host's call."
           },
           {
-            "id": "mm-09-5",
+            "id": "pm-09-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which field of mathematics studies strategic decisions made by rational participants?",
@@ -448,12 +449,12 @@
         ]
       },
       {
-        "id": "mm-10",
+        "id": "pm-10",
         "title": "Boggle",
         "blurb": "Find the word. Answers grow by two letters a clue: 2, 4, 6, 8, then 10.",
         "clues": [
           {
-            "id": "mm-10-1",
+            "id": "pm-10-1",
             "value": 100,
             "difficulty": 1,
             "question": "Give a two-letter word meaning to move or travel.",
@@ -461,16 +462,16 @@
             "accept": []
           },
           {
-            "id": "mm-10-2",
+            "id": "pm-10-2",
             "value": 200,
             "difficulty": 2,
             "question": "Give a four-letter word for something uninteresting or lacking excitement.",
             "answer": "DULL",
             "accept": ["Drab", "Blah", "Tame"],
-            "notes": "The show's answer is DULL. Other four-letter words that fit are the host's call."
+            "notes": "The intended answer is DULL. Other four-letter words that fit are the host's call."
           },
           {
-            "id": "mm-10-3",
+            "id": "pm-10-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which six-letter word means a financial plan of expected income and spending?",
@@ -478,7 +479,7 @@
             "accept": []
           },
           {
-            "id": "mm-10-4",
+            "id": "pm-10-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which eight-letter word means exaggerated or assertive masculine pride?",
@@ -486,7 +487,7 @@
             "accept": []
           },
           {
-            "id": "mm-10-5",
+            "id": "pm-10-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which ten-letter word names a decorative light fitting that hangs from the ceiling?",
@@ -496,61 +497,59 @@
         ]
       },
       {
-        "id": "mm-11",
-        "title": "Baseball",
-        "blurb": "The show's Final Trivia category. Pick it for Final Trivia and the last clue is asked.",
+        "id": "pm-11",
+        "title": "Football",
+        "blurb": "The European game. Pick it for Final Trivia and the last clue is asked.",
         "clues": [
           {
-            "id": "mm-11-1",
+            "id": "pm-11-1",
             "value": 100,
             "difficulty": 1,
-            "question": "How many strikes does it take to strike a batter out?",
-            "answer": "Three",
-            "accept": ["3"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which two Spanish clubs meet in the match known as El Clásico?",
+            "answer": "Real Madrid and Barcelona",
+            "accept": ["Barcelona and Real Madrid", "Real Madrid and Barça", "Real and Barça", "Madrid and Barcelona"],
+            "notes": "Both are needed."
           },
           {
-            "id": "mm-11-2",
+            "id": "pm-11-2",
             "value": 200,
             "difficulty": 2,
-            "question": "How many players does a baseball team have on the field when it is defending?",
-            "answer": "Nine",
-            "accept": ["9"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which Argentine scored the \"Hand of God\" goal against England at the 1986 World Cup?",
+            "answer": "Diego Maradona",
+            "accept": ["Maradona"]
           },
           {
-            "id": "mm-11-3",
+            "id": "pm-11-3",
             "value": 300,
             "difficulty": 3,
-            "question": "What is a home run called when it is hit with the bases loaded?",
-            "answer": "A grand slam",
-            "accept": ["Grand slam"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which country shocked the continent by winning Euro 2004, beating the hosts Portugal in the final?",
+            "answer": "Greece",
+            "accept": [],
+            "notes": "1–0, with a header from Angelos Charisteas."
           },
           {
-            "id": "mm-11-4",
+            "id": "pm-11-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which New York Yankees slugger was nicknamed \"the Sultan of Swat\"?",
-            "answer": "Babe Ruth",
-            "accept": ["George Herman Ruth", "Ruth", "The Babe"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which English club went the whole 2003–04 Premier League season unbeaten and became known as \"the Invincibles\"?",
+            "answer": "Arsenal",
+            "accept": []
           },
           {
-            "id": "mm-11-5",
+            "id": "pm-11-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which team did the Los Angeles Dodgers beat in Game 7 of the 2025 World Series?",
-            "answer": "The Toronto Blue Jays",
-            "accept": ["Toronto Blue Jays", "Blue Jays", "Toronto", "Jays"],
-            "notes": "The show's Final Trivia question."
+            "question": "In the 2005 Champions League final in Istanbul, which club led Liverpool 3–0 at half-time and still lost?",
+            "answer": "AC Milan",
+            "accept": ["Milan", "A.C. Milan"],
+            "notes": "Liverpool scored three in six minutes and won on penalties. Inter is not correct."
           }
         ]
       }
     ],
     "surveys": [
       {
-        "id": "mm-sv-1",
+        "id": "pm-sv-1",
         "question": "Name a flavour of ice cream.",
         "answers": [
           { "text": "Vanilla", "points": 30, "aliases": ["vanilla bean", "french vanilla", "plain"] },
@@ -564,21 +563,21 @@
         ]
       },
       {
-        "id": "mm-sv-2",
+        "id": "pm-sv-2",
         "question": "What percentage would you tip for good service?",
         "answers": [
-          { "text": "20%", "points": 46, "aliases": ["20 percent", "20 per cent", "twenty percent", "twenty per cent"] },
-          { "text": "15%", "points": 22, "aliases": ["15 percent", "15 per cent", "fifteen", "fifteen percent", "fifteen per cent"] },
-          { "text": "25%", "points": 12, "aliases": ["25 percent", "25 per cent", "twenty five", "twenty five percent", "twenty-five"] },
-          { "text": "10%", "points": 9, "aliases": ["10 percent", "10 per cent", "ten percent", "ten per cent"] },
-          { "text": "18%", "points": 6, "aliases": ["18 percent", "18 per cent", "eighteen", "eighteen percent"] },
-          { "text": "30%", "points": 3, "aliases": ["30 percent", "30 per cent", "thirty percent", "thirty per cent"] },
-          { "text": "Nothing", "points": 2, "aliases": ["0%", "0 percent", "zero percent", "none", "no tip", "i don't tip"] }
+          { "text": "10%", "points": 40, "aliases": ["10 percent", "10 per cent", "ten percent", "ten per cent"] },
+          { "text": "15%", "points": 18, "aliases": ["15 percent", "15 per cent", "fifteen percent", "fifteen per cent", "fifteen"] },
+          { "text": "5%", "points": 12, "aliases": ["5 percent", "5 per cent", "five percent", "five per cent"] },
+          { "text": "Round up the bill", "points": 10, "aliases": ["round up", "rounding up", "round it up", "keep the change", "the change"] },
+          { "text": "20%", "points": 10, "aliases": ["20 percent", "20 per cent", "twenty percent", "twenty per cent"] },
+          { "text": "Nothing", "points": 7, "aliases": ["0%", "0 percent", "zero percent", "none", "no tip", "i don't tip"] },
+          { "text": "25%", "points": 3, "aliases": ["25 percent", "25 per cent", "twenty five percent", "twenty five per cent", "twenty five"] }
         ]
       },
       {
-        "id": "mm-sv-3",
-        "question": "How many times a day do you use the bathroom?",
+        "id": "pm-sv-3",
+        "question": "How many times a day do you go to the toilet?",
         "answers": [
           { "text": "4 times", "points": 27, "aliases": ["4", "four times", "4x"] },
           { "text": "5 times", "points": 24, "aliases": ["5", "five times", "5x"] },
@@ -591,7 +590,7 @@
         ]
       },
       {
-        "id": "mm-sv-4",
+        "id": "pm-sv-4",
         "question": "Name something a person might get caught in.",
         "answers": [
           { "text": "A lie", "points": 38, "aliases": ["lie", "lying", "a web of lies", "fib"] },
@@ -604,7 +603,7 @@
         ]
       },
       {
-        "id": "mm-sv-5",
+        "id": "pm-sv-5",
         "question": "Name something a doctor might remove from somebody.",
         "answers": [
           { "text": "A tooth", "points": 26, "aliases": ["tooth", "teeth", "wisdom tooth", "wisdom teeth"] },

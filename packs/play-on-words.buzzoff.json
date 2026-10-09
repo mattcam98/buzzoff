@@ -2,25 +2,25 @@
   "format": "buzzoff.pack",
   "version": 1,
   "pack": {
-    "title": "Mogul Money: Episode 1",
-    "description": "A full show adapted from the first episode of Ludwig's Mogul Money: ten board categories, a Geography category for Final Trivia (with the two tiebreakers) and the five Fast Money surveys. Questions are paraphrased. The emote category was visual on the show and is described in words here. Survey answers and numbers are illustrative, not the show's.",
-    "author": "Adapted from Mogul Money",
+    "title": "BuzzOff Play on Words",
+    "description": "A full show that leans on wordplay: hidden words, letter banks and Before and After, mixed with science, Pokémon and a Geography category for Final Trivia. Ten board categories and five Fast Money surveys. Survey numbers are illustrative, not from a real poll.",
+    "author": "BuzzOff",
     "categories": [
       {
-        "id": "m1-01",
+        "id": "pw-01",
         "title": "Live Broadcast",
         "blurb": "Every answer contains the word \"live\".",
         "clues": [
           {
-            "id": "m1-01-1",
+            "id": "pw-01-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which popular subreddit shares clips, drama and news about livestreamers?",
-            "answer": "LivestreamFail",
-            "accept": ["r/LivestreamFail", "Livestream Fail", "Livestream Fails", "LSF"]
+            "question": "Which English football club plays its home matches at Anfield?",
+            "answer": "Liverpool",
+            "accept": ["Liverpool FC", "Liverpool F.C."]
           },
           {
-            "id": "m1-01-2",
+            "id": "pw-01-2",
             "value": 200,
             "difficulty": 2,
             "question": "What is the collective term for farm animals raised for meat, milk, eggs or other products?",
@@ -28,16 +28,15 @@
             "accept": ["Live stock"]
           },
           {
-            "id": "m1-01-3",
+            "id": "pw-01-3",
             "value": 300,
             "difficulty": 3,
-            "question": "Which American sketch-comedy show was Elon Musk hosting when the price of Dogecoin fell sharply?",
-            "answer": "Saturday Night Live",
-            "accept": ["SNL"],
-            "notes": "Musk hosted on 8 May 2021."
+            "question": "Which Charles Dickens orphan dares to ask for more gruel in the workhouse?",
+            "answer": "Oliver Twist",
+            "accept": ["Oliver"]
           },
           {
-            "id": "m1-01-4",
+            "id": "pw-01-4",
             "value": 400,
             "difficulty": 4,
             "question": "What is the term for filmmaking with real actors and filmed footage rather than animation?",
@@ -45,7 +44,7 @@
             "accept": ["Live-action"]
           },
           {
-            "id": "m1-01-5",
+            "id": "pw-01-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which 1985 charity concert raised money for famine relief in Ethiopia and drew an enormous global television audience?",
@@ -55,12 +54,12 @@
         ]
       },
       {
-        "id": "m1-02",
+        "id": "pw-02",
         "title": "L Nerd",
         "blurb": "A mixed bag for anyone who has ever been called one.",
         "clues": [
           {
-            "id": "m1-02-1",
+            "id": "pw-02-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which anime features the detective L as the main opponent of its protagonist?",
@@ -68,7 +67,7 @@
             "accept": ["Deathnote"]
           },
           {
-            "id": "m1-02-2",
+            "id": "pw-02-2",
             "value": 200,
             "difficulty": 2,
             "question": "Which streetwear brand is famous for its red rectangular box logo?",
@@ -76,101 +75,96 @@
             "accept": []
           },
           {
-            "id": "m1-02-3",
+            "id": "pw-02-3",
             "value": 300,
             "difficulty": 3,
-            "question": "What kind of baskets were originally used as basketball hoops?",
-            "answer": "Peach baskets",
-            "accept": ["Peach basket", "Peach"]
+            "question": "In \"The Hitchhiker's Guide to the Galaxy\", which number is the answer to life, the universe and everything?",
+            "answer": "42",
+            "accept": ["Forty-two"]
           },
           {
-            "id": "m1-02-4",
+            "id": "pw-02-4",
             "value": 400,
             "difficulty": 4,
-            "question": "What are the four major kinds of school band or ensemble?",
-            "answer": "Jazz, marching, orchestra and concert",
-            "accept": ["Jazz band, marching band, orchestra and concert band"],
-            "notes": "Only jazz, marching and orchestral were clearly said on the show. \"Concert\" is our best guess at the fourth, so judge generously."
+            "question": "Which Swiss mathematician gives his name to the number e, roughly 2.718?",
+            "answer": "Leonhard Euler",
+            "accept": ["Euler"],
+            "notes": "Said \"OY-ler\"."
           },
           {
-            "id": "m1-02-5",
+            "id": "pw-02-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which old slang word meaning foolish or crazy has been given as the origin of the word \"nerd\"?",
-            "answer": "Nert",
-            "accept": ["Nerts"],
-            "notes": "The show's answer. The origin of \"nerd\" is uncertain and this is one of several theories."
+            "question": "Which children's author put the word \"nerd\" into print for the first time, in his 1950 book \"If I Ran the Zoo\"?",
+            "answer": "Dr. Seuss",
+            "accept": ["Dr Seuss", "Seuss", "Theodor Seuss Geisel", "Theodor Geisel"],
+            "notes": "The earliest known appearance of the word in print, as the name of one of the zoo's creatures."
           }
         ]
       },
       {
-        "id": "m1-03",
-        "title": "Twitch Meta",
-        "blurb": "Twitch, metas and the occasional Metta.",
+        "id": "pw-03",
+        "title": "Going Meta",
+        "blurb": "Every answer contains the letters M-E-T-A in a row.",
         "clues": [
           {
-            "id": "m1-03-1",
+            "id": "pw-03-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which Twitch subscription benefit, introduced in 2016, became a popular way for streamers to ask viewers for a free sub?",
-            "answer": "Twitch Prime",
-            "accept": ["Prime Gaming", "Prime sub", "Twitch Prime sub", "Amazon Prime"],
-            "notes": "Renamed Prime Gaming in 2020."
+            "question": "Which heavy-metal band, fronted by James Hetfield, had a worldwide hit with \"Enter Sandman\" in 1991?",
+            "answer": "Metallica",
+            "accept": []
           },
           {
-            "id": "m1-03-2",
+            "id": "pw-03-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which NBA player went into the stands and confronted a spectator during the 2004 brawl between the Pacers and the Pistons?",
-            "answer": "Ron Artest",
-            "accept": ["Artest", "Metta World Peace", "Metta Sandiford-Artest"],
-            "notes": "The pun in the category: he later changed his name to Metta World Peace."
+            "question": "What is the name for the transformation of a caterpillar into a butterfly?",
+            "answer": "Metamorphosis",
+            "accept": []
           },
           {
-            "id": "m1-03-3",
+            "id": "pw-03-3",
             "value": 300,
             "difficulty": 3,
-            "question": "In 2021 Twitch created a new category in response to which controversial streaming meta, involving swimwear and inflatable pools?",
-            "answer": "Hot tub streams",
-            "accept": ["Hot tub meta", "Hot tubs", "Hot tub streaming", "Hot tub"],
-            "notes": "Not from the episode: it replaces a joke clue about Ludwig getting three named streamers banned. The category is \"Pools, Hot Tubs, and Beaches\"."
+            "question": "Which figure of speech describes one thing as if it were another, as in \"time is a thief\"?",
+            "answer": "A metaphor",
+            "accept": ["Metaphor"],
+            "notes": "Not a simile, which uses \"like\" or \"as\"."
           },
           {
-            "id": "m1-03-4",
+            "id": "pw-03-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which two hugely successful video games are both mainstays on Twitch and among the best-selling games of all time?",
-            "answer": "Minecraft and Grand Theft Auto V",
-            "accept": ["Minecraft and GTA V", "Minecraft and GTA 5", "GTA V and Minecraft", "Grand Theft Auto 5 and Minecraft"],
-            "notes": "Both are needed."
+            "question": "What is the name for the chemical processes by which the body turns food and drink into energy?",
+            "answer": "Metabolism",
+            "accept": ["The metabolism"]
           },
           {
-            "id": "m1-03-5",
+            "id": "pw-03-5",
             "value": 500,
             "difficulty": 5,
-            "question": "What does the prefix \"meta-\" mean?",
-            "answer": "Beyond or about",
-            "accept": ["Beyond", "About", "After", "About itself", "Self-referential"],
-            "notes": "From the Greek for \"after\" or \"beyond\"."
+            "question": "Which five long bones of the foot, linking the ankle to the toes, became famous when David Beckham broke one before the 2002 World Cup?",
+            "answer": "The metatarsals",
+            "accept": ["Metatarsals", "Metatarsal", "Metatarsal bones"]
           }
         ]
       },
       {
-        "id": "m1-04",
-        "title": "Subathon",
+        "id": "pw-04",
+        "title": "Super Subs",
         "blurb": "Every answer contains \"sub\".",
         "clues": [
           {
-            "id": "m1-04-1",
+            "id": "pw-04-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which sandwich chain has more locations in the United States than any other restaurant chain?",
+            "question": "Which sandwich chain is known for its footlongs, made to order in front of you?",
             "answer": "Subway",
-            "accept": [],
-            "notes": "The show put it at more than 24,000 US locations at the time."
+            "accept": []
           },
           {
-            "id": "m1-04-2",
+            "id": "pw-04-2",
             "value": 200,
             "difficulty": 2,
             "question": "What type of vessel is at the centre of the story in \"The Hunt for Red October\"?",
@@ -178,24 +172,23 @@
             "accept": ["Submarine", "Sub", "Nuclear submarine"]
           },
           {
-            "id": "m1-04-3",
+            "id": "pw-04-3",
             "value": 300,
             "difficulty": 3,
-            "question": "Which Key & Peele sketch, set in a classroom, is one of Comedy Central's most-watched videos on YouTube?",
-            "answer": "Substitute Teacher",
-            "accept": ["The Substitute Teacher", "Substitute"],
-            "notes": "The one with \"A-A-ron\"."
+            "question": "In football, what is a player called who comes off the bench to replace a teammate?",
+            "answer": "A substitute",
+            "accept": ["Substitute", "Sub", "Substitution"]
           },
           {
-            "id": "m1-04-4",
+            "id": "pw-04-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which Pokémon move spends a quarter of the user's maximum HP to create a decoy that takes hits for it?",
-            "answer": "Substitute",
-            "accept": ["Sub"]
+            "question": "Which ice-wielding ninja in blue is one of the original fighters in \"Mortal Kombat\"?",
+            "answer": "Sub-Zero",
+            "accept": ["Sub Zero", "Subzero"]
           },
           {
-            "id": "m1-04-5",
+            "id": "pw-04-5",
             "value": 500,
             "difficulty": 5,
             "question": "What word describes hidden messaging meant to influence someone without their being consciously aware of it?",
@@ -205,28 +198,28 @@
         ]
       },
       {
-        "id": "m1-05",
+        "id": "pw-05",
         "title": "Words in Streaming",
         "blurb": "Every answer can be spelled with letters from the word \"streaming\".",
         "clues": [
           {
-            "id": "m1-05-1",
+            "id": "pw-05-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which digital game distribution platform did Valve launch in 2003?",
+            "question": "What is water called once it has boiled into a gas?",
             "answer": "Steam",
             "accept": []
           },
           {
-            "id": "m1-05-2",
+            "id": "pw-05-2",
             "value": 200,
             "difficulty": 2,
-            "question": "What are the playable characters in Riot Games' \"Valorant\" called?",
-            "answer": "Agents",
-            "accept": ["Agent"]
+            "question": "Which striped big cat is the largest in the world?",
+            "answer": "A tiger",
+            "accept": ["Tiger", "Tigers"]
           },
           {
-            "id": "m1-05-3",
+            "id": "pw-05-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which noodle dish was the first of its kind to be eaten in outer space?",
@@ -235,31 +228,31 @@
             "notes": "Nissin's \"Space Ram\" flew on the Space Shuttle Discovery in 2005."
           },
           {
-            "id": "m1-05-4",
+            "id": "pw-05-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which star-shaped Pokémon has a red core at its centre that is said to send out mysterious signals?",
-            "answer": "Starmie",
+            "question": "Which Baltic capital is the largest city in Latvia?",
+            "answer": "Riga",
             "accept": [],
-            "notes": "Staryu has the same core but is not spelled with letters from \"streaming\"."
+            "notes": "Vilnius and Tallinn are the other Baltic capitals, and neither can be spelled from \"streaming\"."
           },
           {
-            "id": "m1-05-5",
+            "id": "pw-05-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Greek letter became slang for a supposedly independent, lone-wolf type of man?",
+            "question": "Which Greek letter, written Σ as a capital, is used in mathematics to mean a sum?",
             "answer": "Sigma",
-            "accept": ["Sigma male"]
+            "accept": []
           }
         ]
       },
       {
-        "id": "m1-06",
+        "id": "pw-06",
         "title": "Before and After",
         "blurb": "Two answers that overlap, joined into one phrase.",
         "clues": [
           {
-            "id": "m1-06-1",
+            "id": "pw-06-1",
             "value": 100,
             "difficulty": 1,
             "question": "Combine the Pikachu-themed Game Boy game with the road Dorothy follows in \"The Wizard of Oz\".",
@@ -267,46 +260,46 @@
             "accept": ["Pokemon Yellow Brick Road"]
           },
           {
-            "id": "m1-06-2",
+            "id": "pw-06-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Combine the free-subscription perk on Twitch with the title of Britain's head of government.",
-            "answer": "Twitch Prime Minister",
+            "question": "Combine Amazon's paid membership for fast delivery and streaming with the title of Britain's head of government.",
+            "answer": "Amazon Prime Minister",
             "accept": []
           },
           {
-            "id": "m1-06-3",
+            "id": "pw-06-3",
             "value": 300,
             "difficulty": 3,
-            "question": "Combine the Nintendo-themed area of Universal Studios Japan with Blizzard's famous MMORPG.",
-            "answer": "Super Nintendo World of Warcraft",
-            "accept": []
+            "question": "Combine the motor-racing championship of Hamilton and Verstappen with the boy band that launched Harry Styles.",
+            "answer": "Formula One Direction",
+            "accept": ["Formula 1 Direction", "F1 Direction"]
           },
           {
-            "id": "m1-06-4",
+            "id": "pw-06-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Combine Riot Games' popular MOBA with the adventure game show featuring a talking stone head named Olmec.",
-            "answer": "League of Legends of the Hidden Temple",
+            "question": "Combine the 1990 Super Nintendo game that introduced Yoshi with football's biggest international tournament.",
+            "answer": "Super Mario World Cup",
             "accept": []
           },
           {
-            "id": "m1-06-5",
+            "id": "pw-06-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Combine a slang term for a streamer who reacts to other creators' content with a British Olympic tennis champion.",
-            "answer": "React Andy Murray",
-            "accept": []
+            "question": "Combine the French title of Victor Hugo's novel about a hunchbacked bell-ringer with the French capital's biggest football club.",
+            "answer": "Notre-Dame de Paris Saint-Germain",
+            "accept": ["Notre Dame de Paris Saint Germain", "Notre-Dame de Paris SG"]
           }
         ]
       },
       {
-        "id": "m1-07",
-        "title": "Cum in Me",
+        "id": "pw-07",
+        "title": "Cum Laude",
         "blurb": "A word game: every answer contains the letters C-U-M in a row.",
         "clues": [
           {
-            "id": "m1-07-1",
+            "id": "pw-07-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which Jewish religious practice traditionally involves the removal of the foreskin?",
@@ -315,7 +308,7 @@
             "notes": "Brit milah is the Hebrew name, but it does not contain C-U-M. Host's call."
           },
           {
-            "id": "m1-07-2",
+            "id": "pw-07-2",
             "value": 200,
             "difficulty": 2,
             "question": "What is the mathematical term for the distance around a circle?",
@@ -323,7 +316,7 @@
             "accept": []
           },
           {
-            "id": "m1-07-3",
+            "id": "pw-07-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which verb means to give in to pressure, temptation or a stronger force?",
@@ -331,7 +324,7 @@
             "accept": ["To succumb"]
           },
           {
-            "id": "m1-07-4",
+            "id": "pw-07-4",
             "value": 400,
             "difficulty": 4,
             "question": "What is the term for the person currently holding an official position, particularly in politics?",
@@ -339,7 +332,7 @@
             "accept": ["The incumbent"]
           },
           {
-            "id": "m1-07-5",
+            "id": "pw-07-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which word means a small or limited amount of something?",
@@ -349,12 +342,12 @@
         ]
       },
       {
-        "id": "m1-08",
-        "title": "React Andy",
+        "id": "pw-08",
+        "title": "Chain Reaction",
         "blurb": "General science: chemistry, physics and reactions.",
         "clues": [
           {
-            "id": "m1-08-1",
+            "id": "pw-08-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which chemical element has the atomic number 1?",
@@ -362,7 +355,7 @@
             "accept": ["H"]
           },
           {
-            "id": "m1-08-2",
+            "id": "pw-08-2",
             "value": 200,
             "difficulty": 2,
             "question": "What is often described as the fourth state of matter, alongside solids, liquids and gases?",
@@ -370,25 +363,25 @@
             "accept": []
           },
           {
-            "id": "m1-08-3",
+            "id": "pw-08-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which kind of chemical bond commonly forms when electrons are transferred between a metal and a non-metal?",
             "answer": "An ionic bond",
             "accept": ["Ionic bond", "Ionic", "Ionic bonding"],
-            "notes": "Not covalent: covalent bonds share electrons. The show's contestant got this one wrong."
+            "notes": "Not covalent: covalent bonds share electrons."
           },
           {
-            "id": "m1-08-4",
+            "id": "pw-08-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which two elements are named as the essential components of organic compounds?",
+            "question": "Which two elements are found in almost every organic compound?",
             "answer": "Carbon and hydrogen",
             "accept": ["Hydrogen and carbon"],
-            "notes": "The show's wording. Strictly, a few carbon compounds counted as organic contain no hydrogen."
+            "notes": "A few carbon compounds counted as organic contain no hydrogen."
           },
           {
-            "id": "m1-08-5",
+            "id": "pw-08-5",
             "value": 500,
             "difficulty": 5,
             "question": "How many noble gases are there in the modern periodic table?",
@@ -399,12 +392,12 @@
         ]
       },
       {
-        "id": "m1-09",
+        "id": "pw-09",
         "title": "Ring Ring",
         "blurb": "Rings of every kind.",
         "clues": [
           {
-            "id": "m1-09-1",
+            "id": "pw-09-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which planet, the sixth from the Sun, is famous for its spectacular ring system?",
@@ -412,7 +405,7 @@
             "accept": []
           },
           {
-            "id": "m1-09-2",
+            "id": "pw-09-2",
             "value": 200,
             "difficulty": 2,
             "question": "In mycology, which kind of fungus can have a ring, called an annulus, around its stalk?",
@@ -420,16 +413,15 @@
             "accept": ["Mushroom", "Mushrooms", "Toadstool"]
           },
           {
-            "id": "m1-09-3",
+            "id": "pw-09-3",
             "value": 300,
             "difficulty": 3,
-            "question": "What was the Ring video-doorbell company called when it appeared on \"Shark Tank\"?",
-            "answer": "DoorBot",
-            "accept": ["Door Bot"],
-            "notes": "The sharks passed in 2013. Amazon bought Ring in 2018."
+            "question": "In \"The Lord of the Rings\", in the fires of which volcano was the One Ring forged?",
+            "answer": "Mount Doom",
+            "accept": ["Mt Doom", "Orodruin", "Amon Amarth"]
           },
           {
-            "id": "m1-09-4",
+            "id": "pw-09-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which Swedish pop group released a debut album called \"Ring Ring\"?",
@@ -437,7 +429,7 @@
             "accept": []
           },
           {
-            "id": "m1-09-5",
+            "id": "pw-09-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which island country has a circular national highway known as the Ring Road, or Route 1?",
@@ -447,113 +439,109 @@
         ]
       },
       {
-        "id": "m1-10",
-        "title": "Who's That Pogemon",
-        "blurb": "Name the Twitch emote from its description.",
+        "id": "pw-10",
+        "title": "Who's That Pokémon?",
+        "blurb": "Name the Pokémon from its description.",
         "clues": [
           {
-            "id": "m1-10-1",
+            "id": "pw-10-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which emote shows a stretched, extra-wide Pepe-style frog with a contented smile?",
-            "answer": "widepeepoHappy",
-            "accept": ["Wide Peepo Happy", "widepeepo", "peepoHappy"],
-            "notes": "A silhouette on the show. Add the emote image in the pack editor to play it that way."
+            "question": "Which yellow Electric-type mouse rides on Ash's shoulder and refuses to go inside a Poké Ball?",
+            "answer": "Pikachu",
+            "accept": []
           },
           {
-            "id": "m1-10-2",
+            "id": "pw-10-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which emote shows Pepe the frog laughing and pointing at something?",
-            "answer": "pepePoint",
-            "accept": ["Pepe Point", "pepeLaugh"],
-            "notes": "A silhouette on the show. pepeLaugh is close but has no pointing; host's call."
+            "question": "Which round, pink Pokémon sings its opponents to sleep and then draws on their faces?",
+            "answer": "Jigglypuff",
+            "accept": ["Jiggly Puff", "Pummeluff", "Rondoudou"],
+            "notes": "Pummeluff in German, Rondoudou in French."
           },
           {
-            "id": "m1-10-3",
+            "id": "pw-10-3",
             "value": 300,
             "difficulty": 3,
-            "question": "Which emote, its name written in capitals, shows a frog in reflective sunglasses?",
-            "answer": "WICKED",
-            "accept": [],
-            "notes": "A silhouette on the show."
+            "question": "Which enormous Pokémon spends its life asleep, often blocking the road until someone plays a flute to wake it?",
+            "answer": "Snorlax",
+            "accept": ["Relaxo", "Ronflex"],
+            "notes": "Relaxo in German, Ronflex in French."
           },
           {
-            "id": "m1-10-4",
+            "id": "pw-10-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which emote does chat spam when it wants to know whether anybody is moderating?",
-            "answer": "modCheck",
-            "accept": ["Mod Check"],
-            "notes": "A silhouette on the show. Described here by how it is used, since the picture is hard to put into words."
+            "question": "Which Psychic-type Pokémon was created in a laboratory from the DNA of the mythical Mew?",
+            "answer": "Mewtwo",
+            "accept": ["Mew Two", "Mewtu"],
+            "notes": "Mewtu in German."
           },
           {
-            "id": "m1-10-5",
+            "id": "pw-10-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Canadian rapper is shown striking a pointing pose in a popular Twitch emote named after him?",
-            "answer": "Drake",
-            "accept": ["Aubrey Graham", "Drizzy"],
-            "notes": "A silhouette on the show. Nobody got it."
+            "question": "Which Water-type Pokémon does Eevee evolve into when it is given a Water Stone?",
+            "answer": "Vaporeon",
+            "accept": ["Aquana", "Aquali"],
+            "notes": "Aquana in German, Aquali in French."
           }
         ]
       },
       {
-        "id": "m1-11",
+        "id": "pw-11",
         "title": "Geography",
-        "blurb": "The show's Final Trivia category. Pick it for Final Trivia and the last clue is asked.",
+        "blurb": "The world and where things are. Pick it for Final Trivia and the last clue is asked.",
         "clues": [
           {
-            "id": "m1-11-1",
+            "id": "pw-11-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which is the largest continent by area?",
             "answer": "Asia",
-            "accept": [],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "accept": []
           },
           {
-            "id": "m1-11-2",
+            "id": "pw-11-2",
             "value": 200,
             "difficulty": 2,
-            "question": "What is the capital city of Australia?",
-            "answer": "Canberra",
-            "accept": [],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which is the smallest country in the world, entirely surrounded by the city of Rome?",
+            "answer": "Vatican City",
+            "accept": ["The Vatican", "Vatican", "Holy See"]
           },
           {
-            "id": "m1-11-3",
+            "id": "pw-11-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which inventor, born in Edinburgh in Scotland and closely associated with teaching the deaf, is credited with inventing the telephone?",
             "answer": "Alexander Graham Bell",
-            "accept": ["Bell", "Graham Bell", "Alexander Bell"],
-            "notes": "The show's second tiebreaker, reworded to lead with his birthplace so it sits in this category."
+            "accept": ["Bell", "Graham Bell", "Alexander Bell"]
           },
           {
-            "id": "m1-11-4",
+            "id": "pw-11-4",
             "value": 400,
             "difficulty": 4,
             "question": "In which German city was the composer Ludwig van Beethoven born?",
             "answer": "Bonn",
             "accept": ["Bonn, Germany"],
-            "notes": "The show's first tiebreaker. Nobody got it, and the host did not reveal the answer."
+            "notes": "His birthplace in the Bonngasse is now a museum."
           },
           {
-            "id": "m1-11-5",
+            "id": "pw-11-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which two countries share the longest international land border in the world?",
             "answer": "Canada and the United States",
             "accept": ["The United States and Canada", "USA and Canada", "Canada and USA", "Canada and America", "US and Canada"],
-            "notes": "The show's Final Trivia question. All three contestants first went for Russia and China."
+            "notes": "Russia and China is the tempting wrong answer. The border is about 8,900 km long, counting Alaska."
           }
         ]
       }
     ],
     "surveys": [
       {
-        "id": "m1-sv-1",
+        "id": "pw-sv-1",
         "question": "Complete the phrase: \"Heart ___.\"",
         "answers": [
           { "text": "Attack", "points": 26, "aliases": ["heart attack", "attacks"] },
@@ -569,40 +557,40 @@
         ]
       },
       {
-        "id": "m1-sv-2",
+        "id": "pw-sv-2",
         "question": "Name a word that rhymes with \"team\".",
         "answers": [
-          { "text": "Stream", "points": 22, "aliases": ["streams", "livestream"] },
-          { "text": "Dream", "points": 20, "aliases": ["dreams"] },
-          { "text": "Cream", "points": 16, "aliases": ["ice cream"] },
-          { "text": "Steam", "points": 12, "aliases": ["esteem"] },
+          { "text": "Dream", "points": 24, "aliases": ["dreams"] },
+          { "text": "Cream", "points": 18, "aliases": ["ice cream"] },
+          { "text": "Steam", "points": 14, "aliases": ["esteem"] },
+          { "text": "Stream", "points": 12, "aliases": ["streams", "livestream"] },
           { "text": "Beam", "points": 9, "aliases": ["beams"] },
+          { "text": "Scream", "points": 8, "aliases": ["screams"] },
           { "text": "Seam", "points": 7, "aliases": ["seem", "seams", "seems"] },
-          { "text": "Meme", "points": 6, "aliases": ["memes"] },
-          { "text": "Scream", "points": 5, "aliases": ["screams"] },
-          { "text": "Gleam", "points": 2, "aliases": ["gleams"] }
+          { "text": "Meme", "points": 4, "aliases": ["memes"] },
+          { "text": "Gleam", "points": 4, "aliases": ["gleams"] }
         ]
       },
       {
-        "id": "m1-sv-3",
-        "question": "Name a playable character from the original Super Smash Bros.",
+        "id": "pw-sv-3",
+        "question": "Name a famous video game character.",
         "answers": [
-          { "text": "Mario", "points": 22, "aliases": ["super mario"] },
-          { "text": "Pikachu", "points": 16, "aliases": ["pika"] },
-          { "text": "Kirby", "points": 14, "aliases": [] },
-          { "text": "Link", "points": 11, "aliases": ["zelda"] },
-          { "text": "Fox", "points": 8, "aliases": ["fox mccloud", "star fox", "starfox"] },
-          { "text": "Donkey Kong", "points": 7, "aliases": ["dk", "d.k."] },
-          { "text": "Samus", "points": 5, "aliases": ["samus aran", "metroid"] },
-          { "text": "Luigi", "points": 4, "aliases": [] },
-          { "text": "Yoshi", "points": 4, "aliases": [] },
-          { "text": "Captain Falcon", "points": 3, "aliases": ["falcon", "c falcon", "cpt falcon"] },
-          { "text": "Ness", "points": 3, "aliases": [] },
-          { "text": "Jigglypuff", "points": 2, "aliases": ["jiggly puff", "puff", "jiggs"] }
+          { "text": "Mario", "points": 34, "aliases": ["super mario"] },
+          { "text": "Sonic", "points": 16, "aliases": ["sonic the hedgehog"] },
+          { "text": "Pikachu", "points": 10, "aliases": ["pika"] },
+          { "text": "Luigi", "points": 8, "aliases": [] },
+          { "text": "Link", "points": 7, "aliases": ["zelda"] },
+          { "text": "Lara Croft", "points": 6, "aliases": ["lara", "tomb raider"] },
+          { "text": "Pac-Man", "points": 6, "aliases": ["pacman"] },
+          { "text": "Donkey Kong", "points": 4, "aliases": ["dk", "d.k."] },
+          { "text": "Crash Bandicoot", "points": 3, "aliases": ["crash"] },
+          { "text": "Kratos", "points": 2, "aliases": ["god of war"] },
+          { "text": "Master Chief", "points": 2, "aliases": ["halo", "masterchief"] },
+          { "text": "Steve", "points": 2, "aliases": ["minecraft steve", "steve from minecraft"] }
         ]
       },
       {
-        "id": "m1-sv-4",
+        "id": "pw-sv-4",
         "question": "Name an animal commonly seen at a zoo.",
         "answers": [
           { "text": "Lion", "points": 24, "aliases": ["lions", "lioness"] },
@@ -618,19 +606,20 @@
         ]
       },
       {
-        "id": "m1-sv-5",
-        "question": "Name a popular Twitch dancing emote.",
+        "id": "pw-sv-5",
+        "question": "Name a dance everybody knows.",
         "answers": [
-          { "text": "pepeD", "points": 20, "aliases": ["pepe d", "pepe dance"] },
-          { "text": "catJAM", "points": 18, "aliases": ["cat jam", "catjamming"] },
-          { "text": "forsenPls", "points": 12, "aliases": ["forsen pls", "forsen"] },
-          { "text": "blobDance", "points": 11, "aliases": ["blob dance", "blob"] },
-          { "text": "PepePls", "points": 9, "aliases": ["pepe pls"] },
-          { "text": "SourPls", "points": 8, "aliases": ["sour pls"] },
-          { "text": "pepeJAM", "points": 6, "aliases": ["pepe jam"] },
-          { "text": "PartyParrot", "points": 6, "aliases": ["party parrot", "rareparrot", "rare parrot", "parrot"] },
-          { "text": "ricardoFlick", "points": 5, "aliases": ["ricardo flick", "ricardo", "ricardo milos"] },
-          { "text": "AlienPls", "points": 4, "aliases": ["alien pls", "alien dance", "alienpls3"] }
+          { "text": "Macarena", "points": 24, "aliases": ["the macarena"] },
+          { "text": "Waltz", "points": 14, "aliases": ["the waltz", "viennese waltz"] },
+          { "text": "Moonwalk", "points": 12, "aliases": ["the moonwalk", "moon walk"] },
+          { "text": "Conga", "points": 10, "aliases": ["the conga", "conga line"] },
+          { "text": "YMCA", "points": 10, "aliases": ["y.m.c.a.", "the ymca"] },
+          { "text": "Tango", "points": 9, "aliases": ["the tango", "argentine tango"] },
+          { "text": "Salsa", "points": 7, "aliases": ["salsa dancing"] },
+          { "text": "Twist", "points": 5, "aliases": ["the twist"] },
+          { "text": "Floss", "points": 4, "aliases": ["the floss", "flossing"] },
+          { "text": "Gangnam Style", "points": 3, "aliases": ["gangnam"] },
+          { "text": "Robot", "points": 2, "aliases": ["the robot"] }
         ]
       }
     ]

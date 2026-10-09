@@ -2,34 +2,34 @@
   "format": "buzzoff.pack",
   "version": 1,
   "pack": {
-    "title": "Mogul Money: TikTokers",
-    "description": "A full show adapted from the Mogul Money episode with Wardrobe, Katie B and Joe Bart: ten board categories, a TikTok category for Final Trivia and the five Fast Money surveys. Questions are paraphrased. A few answers are US-specific or were only true when the episode was recorded; the host notes say which. Survey numbers are the show's where revealed and illustrative otherwise.",
-    "author": "Adapted from Mogul Money",
+    "title": "BuzzOff Old School",
+    "description": "A full show with a nostalgic streak: school subjects, old formats, classic mobile games and the Olympics. Ten board categories, a pop-music category for Final Trivia and five Fast Money surveys. Survey numbers are illustrative, not from a real poll.",
+    "author": "BuzzOff",
     "categories": [
       {
-        "id": "m4-01",
-        "title": "UNC",
+        "id": "os-01",
+        "title": "The 100 Club",
         "blurb": "People who made it to 100, or very nearly.",
         "clues": [
           {
-            "id": "m4-01-1",
+            "id": "os-01-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which late comedian and entertainer, who lived to 100, had Burbank Airport named after him from 2003 to 2017?",
-            "answer": "Bob Hope",
-            "accept": ["Hope"]
+            "question": "Which husband of Queen Elizabeth II died in 2021, two months short of his 100th birthday?",
+            "answer": "Prince Philip",
+            "accept": ["Philip", "The Duke of Edinburgh", "Duke of Edinburgh"]
           },
           {
-            "id": "m4-01-2",
+            "id": "os-01-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which 39th president of the United States became the longest-lived president in American history, reaching the age of 100?",
-            "answer": "Jimmy Carter",
-            "accept": ["Carter", "James Carter", "James Earl Carter"],
-            "notes": "He died in December 2024. A Red Bull Boost on the show: the contestant said Bill Clinton."
+            "question": "Which British broadcaster and naturalist, the voice of \"Planet Earth\", turned 100 in May 2026?",
+            "answer": "Sir David Attenborough",
+            "accept": ["David Attenborough", "Attenborough"],
+            "notes": "Born on 8 May 1926."
           },
           {
-            "id": "m4-01-3",
+            "id": "os-01-3",
             "value": 300,
             "difficulty": 3,
             "question": "To how many years of age did Jeanne Calment, the person with the longest verified human lifespan, live?",
@@ -38,32 +38,31 @@
             "notes": "122 years and 164 days. She died in France in 1997."
           },
           {
-            "id": "m4-01-4",
+            "id": "os-01-4",
             "value": 400,
             "difficulty": 4,
-            "question": "When this episode was recorded, how many of the world's ten oldest living people were men?",
+            "question": "Of the ten oldest people whose ages have ever been verified, how many were men?",
             "answer": "Zero",
             "accept": ["0", "None"],
-            "notes": "The show's figure at the time of recording. The list changes often, but it is rarely anything else."
+            "notes": "The oldest man on record, Jiroemon Kimura of Japan, reached 116 and does not make the top ten."
           },
           {
-            "id": "m4-01-5",
+            "id": "os-01-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which American actress and comedian died just weeks before her 100th birthday?",
-            "answer": "Betty White",
-            "accept": [],
-            "notes": "She died on 31 December 2021, 17 days short of 100."
+            "question": "Which Hollywood star of \"Spartacus\", the father of Michael, died in 2020 at the age of 103?",
+            "answer": "Kirk Douglas",
+            "accept": ["Douglas"]
           }
         ]
       },
       {
-        "id": "m4-02",
+        "id": "os-02",
         "title": "Mobile App Classics",
         "blurb": "Name the classic mobile game from its description.",
         "clues": [
           {
-            "id": "m4-02-1",
+            "id": "os-02-1",
             "value": 100,
             "difficulty": 1,
             "question": "In which mobile game do you launch furious birds from a slingshot to knock down structures?",
@@ -71,7 +70,7 @@
             "accept": []
           },
           {
-            "id": "m4-02-2",
+            "id": "os-02-2",
             "value": 200,
             "difficulty": 2,
             "question": "In which mobile game do you guide a small four-legged alien upwards by bouncing between platforms drawn on graph paper?",
@@ -79,7 +78,7 @@
             "accept": []
           },
           {
-            "id": "m4-02-3",
+            "id": "os-02-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which popular mobile game has players slice fruit by swiping across the screen?",
@@ -87,7 +86,7 @@
             "accept": []
           },
           {
-            "id": "m4-02-4",
+            "id": "os-02-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which endless-running mobile game has you sprinting through dangerous ancient ruins while dodging obstacles?",
@@ -95,10 +94,10 @@
             "accept": ["Temple Run 2"]
           },
           {
-            "id": "m4-02-5",
+            "id": "os-02-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which mobile strategy game of collectible cards and real-time battles had a revival when the streamer Jynxzi picked it up again?",
+            "question": "Which mobile game from the Finnish studio Supercell has players battling in real time with decks of collectible cards?",
             "answer": "Clash Royale",
             "accept": [],
             "notes": "Not Clash of Clans, which has no cards."
@@ -106,12 +105,12 @@
         ]
       },
       {
-        "id": "m4-03",
+        "id": "os-03",
         "title": "Quick Maffs",
         "blurb": "Sums you can do in your head. Probably.",
         "clues": [
           {
-            "id": "m4-03-1",
+            "id": "os-03-1",
             "value": 100,
             "difficulty": 1,
             "question": "You order 12 boxes of doughnuts with 12 doughnuts in each box. How many doughnuts do you get?",
@@ -119,15 +118,15 @@
             "accept": ["A gross"]
           },
           {
-            "id": "m4-03-2",
+            "id": "os-03-2",
             "value": 200,
             "difficulty": 2,
-            "question": "How much is a 20% tip on an $80 restaurant bill?",
-            "answer": "$16",
-            "accept": ["16", "16 dollars"]
+            "question": "A pair of trainers priced at €80 is reduced by 25%. How much do you save?",
+            "answer": "€20",
+            "accept": ["20", "20 euros", "20 euro"]
           },
           {
-            "id": "m4-03-3",
+            "id": "os-03-3",
             "value": 300,
             "difficulty": 3,
             "question": "What is the mean of 10, 20 and 60?",
@@ -135,7 +134,7 @@
             "accept": []
           },
           {
-            "id": "m4-03-4",
+            "id": "os-03-4",
             "value": 400,
             "difficulty": 4,
             "question": "What do the three interior angles of a triangle on a flat plane add up to?",
@@ -143,23 +142,23 @@
             "accept": ["180", "180°"]
           },
           {
-            "id": "m4-03-5",
+            "id": "os-03-5",
             "value": 500,
             "difficulty": 5,
-            "question": "A livestream starts with 50 viewers and doubles its audience every hour. How many viewers does it have after three hours?",
+            "question": "A video has 50 views and its total doubles every hour. How many views does it have after three hours?",
             "answer": "400",
-            "accept": ["400 viewers"],
+            "accept": ["400 views"],
             "notes": "50, then 100, 200, 400."
           }
         ]
       },
       {
-        "id": "m4-04",
-        "title": "Words in Streamer Games",
-        "blurb": "Every answer can be spelled with letters from \"streamer games\".",
+        "id": "os-04",
+        "title": "Words in Smarter Games",
+        "blurb": "Every answer can be spelled with letters from \"smarter games\".",
         "clues": [
           {
-            "id": "m4-04-1",
+            "id": "os-04-1",
             "value": 100,
             "difficulty": 1,
             "question": "What is the base unit of length in the metric system?",
@@ -167,7 +166,7 @@
             "accept": ["Meter", "Metres", "Meters"]
           },
           {
-            "id": "m4-04-2",
+            "id": "os-04-2",
             "value": 200,
             "difficulty": 2,
             "question": "What thick, oily substance is formed from the fat released when meat cooks?",
@@ -175,7 +174,7 @@
             "accept": []
           },
           {
-            "id": "m4-04-3",
+            "id": "os-04-3",
             "value": 300,
             "difficulty": 3,
             "question": "What is molten rock called while it is still beneath the Earth's surface?",
@@ -184,7 +183,7 @@
             "notes": "Not lava, which is what it becomes once it reaches the surface."
           },
           {
-            "id": "m4-04-4",
+            "id": "os-04-4",
             "value": 400,
             "difficulty": 4,
             "question": "What do you call the combining of two or more companies into one organisation?",
@@ -192,7 +191,7 @@
             "accept": ["Merger", "Merge"]
           },
           {
-            "id": "m4-04-5",
+            "id": "os-04-5",
             "value": 500,
             "difficulty": 5,
             "question": "What is a mature reproductive cell, such as a sperm or an egg, that carries half the usual genetic information?",
@@ -202,29 +201,29 @@
         ]
       },
       {
-        "id": "m4-05",
+        "id": "os-05",
         "title": "Go for Gold",
-        "blurb": "The Olympic Games, past and upcoming.",
+        "blurb": "The Olympic Games, ancient and modern.",
         "clues": [
           {
-            "id": "m4-05-1",
+            "id": "os-05-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which US city will host the 2028 Summer Olympic Games?",
-            "answer": "Los Angeles",
-            "accept": ["LA", "L.A."]
+            "question": "Which European capital hosted the 2024 Summer Olympic Games?",
+            "answer": "Paris",
+            "accept": []
           },
           {
-            "id": "m4-05-2",
+            "id": "os-05-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which American swimmer has won more Olympic medals than anyone else in history?",
+            "question": "Which swimmer has won more Olympic medals than anyone else in history?",
             "answer": "Michael Phelps",
             "accept": ["Phelps"],
             "notes": "28 medals, 23 of them gold."
           },
           {
-            "id": "m4-05-3",
+            "id": "os-05-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which Olympic endurance event is associated with the ancient Greek messenger Pheidippides?",
@@ -232,48 +231,47 @@
             "accept": ["Marathon"]
           },
           {
-            "id": "m4-05-4",
+            "id": "os-05-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which American figure skater won two gold medals at the 2026 Winter Olympics, in the women's singles and the team event?",
-            "answer": "Alysa Liu",
-            "accept": ["Liu"],
-            "notes": "Reworded from the show's clue, whose exact claim was unclear in the captions."
+            "question": "Which two places in northern Italy shared the hosting of the 2026 Winter Olympics?",
+            "answer": "Milan and Cortina d'Ampezzo",
+            "accept": ["Milan and Cortina", "Cortina and Milan", "Milano Cortina", "Milano and Cortina"],
+            "notes": "Both are needed."
           },
           {
-            "id": "m4-05-5",
+            "id": "os-05-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Name one of the two sports making their Olympic debut at the 2028 Los Angeles Games.",
-            "answer": "Flag football or squash",
-            "accept": ["Flag football", "Squash"],
-            "notes": "Either one is enough. Cricket, lacrosse and baseball/softball are returning, not debuting."
+            "question": "Which French baron founded the modern Olympic Games, first held in Athens in 1896?",
+            "answer": "Pierre de Coubertin",
+            "accept": ["De Coubertin", "Coubertin", "Baron de Coubertin"]
           }
         ]
       },
       {
-        "id": "m4-06",
-        "title": "High School Trivia",
-        "blurb": "Things you were taught once, in an American classroom.",
+        "id": "os-06",
+        "title": "Back to School",
+        "blurb": "Things you were taught once and have mostly forgotten.",
         "clues": [
           {
-            "id": "m4-06-1",
+            "id": "os-06-1",
             "value": 100,
             "difficulty": 1,
-            "question": "Which cell organelle is commonly called the powerhouse of the cell?",
-            "answer": "The mitochondrion",
-            "accept": ["Mitochondrion", "Mitochondria", "The mitochondria"]
+            "question": "What is the chemical formula for water?",
+            "answer": "H2O",
+            "accept": ["H₂O", "H two O"]
           },
           {
-            "id": "m4-06-2",
+            "id": "os-06-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which 1925 novel by F. Scott Fitzgerald features Jay Gatsby and Daisy Buchanan?",
-            "answer": "The Great Gatsby",
-            "accept": ["Great Gatsby", "Gatsby"]
+            "question": "Which Shakespeare play is about the children of the feuding Montague and Capulet families?",
+            "answer": "Romeo and Juliet",
+            "accept": []
           },
           {
-            "id": "m4-06-3",
+            "id": "os-06-3",
             "value": 300,
             "difficulty": 3,
             "question": "The assassination of Archduke Franz Ferdinand of Austria in 1914 helped to trigger which major conflict?",
@@ -281,16 +279,15 @@
             "accept": ["The First World War", "First World War", "WWI", "WW1", "World War One", "The Great War"]
           },
           {
-            "id": "m4-06-4",
+            "id": "os-06-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which landmark 1973 decision of the US Supreme Court recognised a constitutional right to abortion?",
-            "answer": "Roe v. Wade",
-            "accept": ["Roe vs Wade", "Roe versus Wade", "Roe v Wade", "Roe"],
-            "notes": "Overturned by the Supreme Court in 2022."
+            "question": "Which 1957 treaty, named after the city where it was signed, created the European Economic Community?",
+            "answer": "The Treaty of Rome",
+            "accept": ["Treaty of Rome", "Rome Treaty", "Rome"]
           },
           {
-            "id": "m4-06-5",
+            "id": "os-06-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which trigonometric function is worked out by dividing the side opposite an angle in a right-angled triangle by the hypotenuse?",
@@ -301,21 +298,21 @@
         ]
       },
       {
-        "id": "m4-07",
+        "id": "os-07",
         "title": "Boomer Media",
         "blurb": "Formats your parents had to rewind, flip over or blow into.",
         "clues": [
           {
-            "id": "m4-07-1",
+            "id": "os-07-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which large, flat music discs reproduce recorded sound from a spiral groove?",
             "answer": "Vinyl records",
             "accept": ["Vinyl", "Records", "LPs", "Vinyl record", "Gramophone records"],
-            "notes": "The show's host insisted on \"vinyl records\" and marked plain \"vinyl\" wrong. Your call."
+            "notes": "Plain \"vinyl\" is fine."
           },
           {
-            "id": "m4-07-2",
+            "id": "os-07-2",
             "value": 200,
             "difficulty": 2,
             "question": "Which portable magnetic-tape audio format was played on devices such as the Sony Walkman?",
@@ -323,7 +320,7 @@
             "accept": ["Cassette", "Cassettes", "Compact cassette", "Tapes", "Audio cassette"]
           },
           {
-            "id": "m4-07-3",
+            "id": "os-07-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which high-definition optical disc format arrived in 2006 as the successor to DVD?",
@@ -332,7 +329,7 @@
             "notes": "HD DVD also launched in 2006 but lost the format war; host's call."
           },
           {
-            "id": "m4-07-4",
+            "id": "os-07-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which Nintendo console kept using ROM cartridges while its competitors were moving to CDs?",
@@ -340,7 +337,7 @@
             "accept": ["Nintendo 64", "N64"]
           },
           {
-            "id": "m4-07-5",
+            "id": "os-07-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which home video recording format beat Betamax and dominated the 1980s and 1990s?",
@@ -350,62 +347,62 @@
         ]
       },
       {
-        "id": "m4-08",
+        "id": "os-08",
         "title": "Coming of Age",
-        "blurb": "Every answer is an age, by American rules.",
+        "blurb": "Every answer is an age.",
         "clues": [
           {
-            "id": "m4-08-1",
+            "id": "os-08-1",
             "value": 100,
             "difficulty": 1,
-            "question": "At what age can someone generally enlist in the US military without a parent's permission?",
+            "question": "At what age can you vote in national elections in most European countries?",
             "answer": "18",
             "accept": ["Eighteen"],
-            "notes": "17 with parental consent."
+            "notes": "It is 16 in Austria and Malta, and 17 in Greece."
           },
           {
-            "id": "m4-08-2",
+            "id": "os-08-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Under US federal law, what is the usual minimum age for a non-agricultural job outside school hours?",
-            "answer": "14",
-            "accept": ["Fourteen"]
+            "question": "How old do you have to be to be called an octogenarian?",
+            "answer": "80",
+            "accept": ["Eighty", "In your eighties", "80 to 89"]
           },
           {
-            "id": "m4-08-3",
+            "id": "os-08-3",
             "value": 300,
             "difficulty": 3,
-            "question": "What is the minimum age to rent a car in the United States?",
-            "answer": "20 or 21",
-            "accept": ["20", "21", "Twenty", "Twenty-one"],
-            "notes": "The show accepted 20 or 21 and marked 25 wrong. It varies by company and state, and under-25s usually pay a surcharge, so judge as you see fit."
+            "question": "At what age did Jimi Hendrix, Kurt Cobain and Amy Winehouse all die, giving a notorious \"club\" its name?",
+            "answer": "27",
+            "accept": ["Twenty-seven"]
           },
           {
-            "id": "m4-08-4",
+            "id": "os-08-4",
             "value": 400,
             "difficulty": 4,
-            "question": "What is the minimum age to create a Twitch account?",
-            "answer": "13",
-            "accept": ["Thirteen"],
-            "notes": "Under-18s need a parent or guardian's agreement."
+            "question": "From what age can you legally buy beer and wine in Germany?",
+            "answer": "16",
+            "accept": ["Sixteen"],
+            "notes": "Spirits have to wait until 18."
           },
           {
-            "id": "m4-08-5",
+            "id": "os-08-5",
             "value": 500,
             "difficulty": 5,
-            "question": "At what age do most Americans first become eligible for Medicare?",
-            "answer": "65",
-            "accept": ["Sixty-five"]
+            "question": "How old was Wolfgang Amadeus Mozart when he died in Vienna in 1791?",
+            "answer": "35",
+            "accept": ["Thirty-five"],
+            "notes": "Born in Salzburg in January 1756."
           }
         ]
       },
       {
-        "id": "m4-09",
-        "title": "Tik Tok",
-        "blurb": "Time and how we measure it. Nothing to do with the app.",
+        "id": "os-09",
+        "title": "Tick Tock",
+        "blurb": "Time and how we measure it.",
         "clues": [
           {
-            "id": "m4-09-1",
+            "id": "os-09-1",
             "value": 100,
             "difficulty": 1,
             "question": "How often does a leap year usually come round in the Gregorian calendar?",
@@ -414,7 +411,7 @@
             "notes": "\"Usually\" because century years must divide by 400: 1900 was not one, 2000 was."
           },
           {
-            "id": "m4-09-2",
+            "id": "os-09-2",
             "value": 200,
             "difficulty": 2,
             "question": "Which British term means a period of two weeks?",
@@ -422,7 +419,7 @@
             "accept": ["Fortnight"]
           },
           {
-            "id": "m4-09-3",
+            "id": "os-09-3",
             "value": 300,
             "difficulty": 3,
             "question": "How many minutes are there in an ordinary 365-day year?",
@@ -431,7 +428,7 @@
             "notes": "As sung in \"Seasons of Love\" from the musical \"Rent\"."
           },
           {
-            "id": "m4-09-4",
+            "id": "os-09-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which word means a period of 1,000 years?",
@@ -439,7 +436,7 @@
             "accept": ["Millennium", "Millenium", "Millennia"]
           },
           {
-            "id": "m4-09-5",
+            "id": "os-09-5",
             "value": 500,
             "difficulty": 5,
             "question": "What is the term for the time it takes half of the atoms in a radioactive sample to decay?",
@@ -449,12 +446,12 @@
         ]
       },
       {
-        "id": "m4-10",
+        "id": "os-10",
         "title": "Palindromes",
         "blurb": "Every answer reads the same forwards and backwards.",
         "clues": [
           {
-            "id": "m4-10-1",
+            "id": "os-10-1",
             "value": 100,
             "difficulty": 1,
             "question": "Which three-letter word describes music that is popular with mainstream audiences?",
@@ -462,16 +459,15 @@
             "accept": []
           },
           {
-            "id": "m4-10-2",
+            "id": "os-10-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which three-letter word completes the classic playground comeback \"Your ___\"?",
-            "answer": "Mom",
-            "accept": ["Mum", "Dad"],
-            "notes": "The show's answer is Mom. Mum and Dad are palindromes too."
+            "question": "Which three-letter word names the organ you see with?",
+            "answer": "Eye",
+            "accept": []
           },
           {
-            "id": "m4-10-3",
+            "id": "os-10-3",
             "value": 300,
             "difficulty": 3,
             "question": "Which five-letter word means a stage in a video game, or a degree of achievement?",
@@ -479,7 +475,7 @@
             "accept": []
           },
           {
-            "id": "m4-10-4",
+            "id": "os-10-4",
             "value": 400,
             "difficulty": 4,
             "question": "Which 2020 Christopher Nolan film, starring John David Washington and Robert Pattinson, has a palindrome for a title?",
@@ -487,7 +483,7 @@
             "accept": []
           },
           {
-            "id": "m4-10-5",
+            "id": "os-10-5",
             "value": 500,
             "difficulty": 5,
             "question": "Which language, whose name is a palindrome, is spoken mainly in the Indian state of Kerala?",
@@ -497,61 +493,56 @@
         ]
       },
       {
-        "id": "m4-11",
-        "title": "TikTok",
-        "blurb": "The show's Final Trivia category, about the app. Pick it for Final Trivia and the last clue is asked.",
+        "id": "os-11",
+        "title": "Top of the Pops",
+        "blurb": "European pop and rock. Pick it for Final Trivia and the last clue is asked.",
         "clues": [
           {
-            "id": "m4-11-1",
+            "id": "os-11-1",
             "value": 100,
             "difficulty": 1,
-            "question": "What is the name of TikTok's main personalised feed, often shortened to FYP?",
-            "answer": "The For You page",
-            "accept": ["For You page", "For You", "For You feed"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which British singer named her albums \"19\", \"21\", \"25\" and \"30\" after her age?",
+            "answer": "Adele",
+            "accept": ["Adele Adkins"]
           },
           {
-            "id": "m4-11-2",
+            "id": "os-11-2",
             "value": 200,
             "difficulty": 2,
-            "question": "Which Chinese technology company created TikTok?",
-            "answer": "ByteDance",
-            "accept": ["Byte Dance"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which Irish rock band is fronted by Bono?",
+            "answer": "U2",
+            "accept": []
           },
           {
-            "id": "m4-11-3",
+            "id": "os-11-3",
             "value": 300,
             "difficulty": 3,
-            "question": "Which lip-syncing app was merged into TikTok in 2018?",
-            "answer": "Musical.ly",
-            "accept": ["Musically", "Musical ly"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which French electronic duo, rarely seen without their robot helmets, had a worldwide hit with \"Get Lucky\" in 2013?",
+            "answer": "Daft Punk",
+            "accept": []
           },
           {
-            "id": "m4-11-4",
+            "id": "os-11-4",
             "value": 400,
             "difficulty": 4,
-            "question": "Which Senegalese-born Italian creator became TikTok's most-followed person with his silent, deadpan reactions to life-hack videos?",
-            "answer": "Khaby Lame",
-            "accept": ["Khaby", "Khabane Lame"],
-            "notes": "Not from the episode: added so the category can also fill a board."
+            "question": "Which German band, famous for fire-filled stadium shows, released the single \"Du hast\" in 1997?",
+            "answer": "Rammstein",
+            "accept": []
           },
           {
-            "id": "m4-11-5",
+            "id": "os-11-5",
             "value": 500,
             "difficulty": 5,
-            "question": "When this episode of Mogul Money was recorded, how many TikTok accounts had more than 100 million followers?",
-            "answer": "Three",
-            "accept": ["3"],
-            "notes": "The show's Final Trivia question. Its three were Khaby Lame, Charli D'Amelio and MrBeast. The count may have changed since."
+            "question": "Which Greek composer won an Oscar for his electronic score for the 1981 film \"Chariots of Fire\"?",
+            "answer": "Vangelis",
+            "accept": ["Evangelos Papathanassiou", "Vangelis Papathanassiou"]
           }
         ]
       }
     ],
     "surveys": [
       {
-        "id": "m4-sv-1",
+        "id": "os-sv-1",
         "question": "About how many steps do you walk a day, to the nearest thousand?",
         "answers": [
           { "text": "5,000", "points": 22, "aliases": ["5k", "five thousand", "5000 steps", "5 thousand"] },
@@ -567,24 +558,26 @@
         ]
       },
       {
-        "id": "m4-sv-2",
+        "id": "os-sv-2",
         "question": "Name a famous Olympic athlete.",
         "answers": [
-          { "text": "Michael Phelps", "points": 39, "aliases": ["phelps"] },
-          { "text": "Usain Bolt", "points": 32, "aliases": ["bolt", "usain"] },
-          { "text": "Simone Biles", "points": 14, "aliases": ["biles", "simone"] },
-          { "text": "Jesse Owens", "points": 4, "aliases": ["owens"] },
-          { "text": "Carl Lewis", "points": 3, "aliases": [] },
-          { "text": "Katie Ledecky", "points": 3, "aliases": ["ledecky"] },
-          { "text": "Shaun White", "points": 2, "aliases": ["sean white"] },
-          { "text": "Muhammad Ali", "points": 2, "aliases": ["ali", "cassius clay", "mohammed ali"] }
+          { "text": "Usain Bolt", "points": 38, "aliases": ["bolt", "usain"] },
+          { "text": "Michael Phelps", "points": 24, "aliases": ["phelps"] },
+          { "text": "Simone Biles", "points": 12, "aliases": ["biles", "simone"] },
+          { "text": "Mo Farah", "points": 6, "aliases": ["farah", "mohamed farah", "sir mo farah"] },
+          { "text": "Jesse Owens", "points": 5, "aliases": ["owens"] },
+          { "text": "Carl Lewis", "points": 4, "aliases": [] },
+          { "text": "Nadia Comăneci", "points": 4, "aliases": ["comaneci", "nadia"] },
+          { "text": "Muhammad Ali", "points": 3, "aliases": ["ali", "cassius clay", "mohammed ali"] },
+          { "text": "Armand Duplantis", "points": 2, "aliases": ["duplantis", "mondo duplantis", "mondo"] },
+          { "text": "Chris Hoy", "points": 2, "aliases": ["hoy", "sir chris hoy"] }
         ]
       },
       {
-        "id": "m4-sv-3",
+        "id": "os-sv-3",
         "question": "Besides feet, name something that runs.",
         "answers": [
-          { "text": "Refrigerator", "points": 30, "aliases": ["fridge", "freezer", "a fridge"] },
+          { "text": "Fridge", "points": 30, "aliases": ["refrigerator", "freezer", "a fridge"] },
           { "text": "Car", "points": 25, "aliases": ["a car", "vehicle", "truck", "automobile"] },
           { "text": "Water", "points": 12, "aliases": ["tap", "faucet", "running water", "a tap", "bath"] },
           { "text": "Nose", "points": 10, "aliases": ["runny nose", "your nose", "a nose"] },
@@ -597,7 +590,7 @@
         ]
       },
       {
-        "id": "m4-sv-4",
+        "id": "os-sv-4",
         "question": "Rate McDonald's on a scale of one to five.",
         "answers": [
           { "text": "3", "points": 38, "aliases": ["three", "3 out of 5", "3/5", "3 stars"] },
@@ -608,19 +601,19 @@
         ]
       },
       {
-        "id": "m4-sv-5",
-        "question": "Name something you can buy for one dollar.",
+        "id": "os-sv-5",
+        "question": "Name something you can buy for one euro.",
         "answers": [
-          { "text": "A pack of gum", "points": 30, "aliases": ["gum", "chewing gum", "pack of gum", "bubble gum", "bubblegum"] },
-          { "text": "A candy bar", "points": 22, "aliases": ["candy", "chocolate", "chocolate bar", "sweets", "a piece of candy"] },
+          { "text": "Chewing gum", "points": 26, "aliases": ["gum", "a pack of gum", "pack of gum", "bubble gum", "bubblegum"] },
+          { "text": "A chocolate bar", "points": 22, "aliases": ["chocolate", "chocolate bar", "sweets", "candy", "a bag of sweets"] },
           { "text": "Nothing", "points": 16, "aliases": ["nothing anymore", "not much", "nothing these days"] },
-          { "text": "A soda", "points": 10, "aliases": ["soda", "can of soda", "coke", "a can of coke", "pop", "soft drink", "arizona iced tea"] },
-          { "text": "A bottle of water", "points": 6, "aliases": ["water", "bottled water", "water bottle"] },
-          { "text": "A lottery ticket", "points": 5, "aliases": ["lottery ticket", "scratch card", "scratch off", "lotto ticket"] },
-          { "text": "A bag of chips", "points": 4, "aliases": ["chips", "crisps", "bag of chips"] },
-          { "text": "A lollipop", "points": 2, "aliases": ["lollipop", "lolly", "sucker"] },
-          { "text": "A song", "points": 2, "aliases": ["song", "an app", "a song on itunes"] },
-          { "text": "A pencil", "points": 2, "aliases": ["pencil", "pen", "a pen", "eraser"] }
+          { "text": "A bottle of water", "points": 10, "aliases": ["water", "bottled water", "water bottle"] },
+          { "text": "A can of drink", "points": 8, "aliases": ["can of coke", "a can of coke", "coke", "soft drink", "fizzy drink", "a can"] },
+          { "text": "A scratch card", "points": 6, "aliases": ["scratch card", "scratchcard", "lottery ticket", "a lottery ticket", "lotto ticket"] },
+          { "text": "A bag of crisps", "points": 5, "aliases": ["crisps", "chips", "bag of crisps"] },
+          { "text": "A lollipop", "points": 3, "aliases": ["lollipop", "lolly"] },
+          { "text": "A bread roll", "points": 2, "aliases": ["bread", "a roll", "a baguette", "baguette", "a croissant"] },
+          { "text": "A pen", "points": 2, "aliases": ["pen", "pencil", "a pencil", "eraser"] }
         ]
       }
     ]
