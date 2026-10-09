@@ -10,7 +10,7 @@
  * answering or an answer is being revealed.
  */
 import type { PublicView } from '@buzzoff/shared';
-import { audioGraph, type SoundName } from './sound';
+import { audioGraph, LONG_SOUNDS, type SoundName } from './sound';
 
 export type Mood = 'theme' | 'bed' | 'think' | 'tension';
 
@@ -475,16 +475,16 @@ export function setMusic(next: Mood | null) {
   pump();
 }
 
-/** Sound effects long enough to be worth making room for, in seconds. */
-const STINGS: Partial<Record<SoundName, number>> = { intro: 1.4, fanfare: 2.2, applause: 2.6, drumroll: 2.9, airhorn: 1.5, sad: 2.3, tada: 1.3, suspense: 2.6 };
+/** How much of the music is left under a fanfare or one of the host's sound effects: enough to know it is still there. */
+const DUCKED = 0.12;
 
-/** Pull the music back while a fanfare or one of the host's sound effects plays over it. */
+/** Pull the music right back for as long as a fanfare or one of the host's sound effects lasts. */
 export function duckMusic(effect: SoundName) {
   const graph = audioGraph();
-  const seconds = STINGS[effect];
+  const seconds = LONG_SOUNDS[effect];
   if (!graph || !musicBus || !seconds) return;
   const now = graph.ctx.currentTime;
   musicBus.gain.cancelScheduledValues(now);
-  musicBus.gain.setTargetAtTime(MUSIC_LEVEL * 0.25, now, 0.04);
-  musicBus.gain.setTargetAtTime(MUSIC_LEVEL, now + seconds, 0.35);
+  musicBus.gain.setTargetAtTime(MUSIC_LEVEL * DUCKED, now, 0.03);
+  musicBus.gain.setTargetAtTime(MUSIC_LEVEL, now + seconds, 0.3);
 }

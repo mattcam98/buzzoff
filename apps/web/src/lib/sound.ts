@@ -39,6 +39,10 @@ interface Tone {
   dur: number;
   type?: OscillatorType;
   gain?: number;
+  /** Seconds to reach full level. */
+  attack?: number;
+  /** Hold at full level and let go at the end, like a blown note. Without it a note dies away from the start, like a struck one. */
+  hold?: boolean;
 }
 
 function tone(c: AudioContext, out: AudioNode, t0: number, n: Tone) {
@@ -49,23 +53,21 @@ function tone(c: AudioContext, out: AudioNode, t0: number, n: Tone) {
   osc.frequency.setValueAtTime(n.freq, start);
   if (n.to) osc.frequency.exponentialRampToValueAtTime(n.to, start + n.dur);
   const peak = n.gain ?? 0.3;
+  const attack = n.attack ?? 0.012;
   env.gain.setValueAtTime(0.0001, start);
-  env.gain.exponentialRampToValueAtTime(peak, start + 0.012);
+  env.gain.exponentialRampToValueAtTime(peak, start + attack);
+  if (n.hold) env.gain.setValueAtTime(peak, Math.max(start + attack, start + n.dur - Math.min(0.2, n.dur / 3)));
   env.gain.exponentialRampToValueAtTime(0.0001, start + n.dur);
   osc.connect(env).connect(out);
   osc.start(start);
   osc.stop(start + n.dur + 0.05);
 }
 
-function noise(c: AudioContext, out: AudioNode, t0: number, o: { at?: number; dur: number; gain?: number; from: number; to?: number; q?: number; pulse?: number }) {
+function noise(c: AudioContext, out: AudioNode, t0: number, o: { at?: number; dur: number; gain?: number; from: number; to?: number; q?: number }) {
   const start = t0 + (o.at ?? 0);
   const buffer = c.createBuffer(1, Math.ceil(c.sampleRate * o.dur), c.sampleRate);
   const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) {
-    // An optional tremolo turns hiss into a drum roll or the patter of applause.
-    const pulse = o.pulse ? 0.55 + 0.45 * Math.sign(Math.sin((i / c.sampleRate) * Math.PI * 2 * o.pulse)) : 1;
-    data[i] = (Math.random() * 2 - 1) * pulse;
-  }
+  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
   const src = c.createBufferSource();
   src.buffer = buffer;
   const filter = c.createBiquadFilter();
@@ -81,6 +83,36 @@ function noise(c: AudioContext, out: AudioNode, t0: number, o: { at?: number; du
   env.gain.exponentialRampToValueAtTime(0.0001, start + o.dur);
   src.connect(filter).connect(env).connect(out);
   src.start(start);
+}
+
+type Hit = [at: number, level: number];
+
+/**
+ * Noise made of separate hits, each a burst that dies away in `decay` seconds.
+ * A few hundred scattered ones are a crowd clapping, a quick even stream is a
+ * drum roll, and one long one is a cymbal.
+ */
+function bursts(c: AudioContext, out: AudioNode, t0: number, o: { hits: Hit[]; decay: number; from: number; q?: number; gain: number }) {
+  const rate = c.sampleRate;
+  const tail = Math.ceil(rate * o.decay * 7);
+  const length = Math.ceil(rate * Math.max(...o.hits.map(([at]) => at))) + tail;
+  const buffer = c.createBuffer(1, length, rate);
+  const data = buffer.getChannelData(0);
+  for (const [at, level] of o.hits) {
+    const first = Math.floor(at * rate);
+    for (let i = 0; i < tail; i++) data[first + i] += level * Math.exp(-i / (rate * o.decay));
+  }
+  for (let i = 0; i < length; i++) data[i] *= Math.random() * 2 - 1;
+  const src = c.createBufferSource();
+  src.buffer = buffer;
+  const filter = c.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = o.from;
+  filter.Q.value = o.q ?? 0.8;
+  const level = c.createGain();
+  level.gain.value = o.gain;
+  src.connect(filter).connect(level).connect(out);
+  src.start(t0);
 }
 
 const chord = (freqs: number[], o: Omit<Tone, 'freq'>): Tone[] => freqs.map((freq) => ({ freq, ...o }));
@@ -126,34 +158,56 @@ const RECIPES: Record<SoundName, Recipe> = {
   ]),
   tick: tones([{ freq: 1000, dur: 0.04, type: 'square', gain: 0.06 }]),
   lock: tones(run([440, 587], 0.07, { dur: 0.12, type: 'triangle', gain: 0.2 })),
-  // host-triggered cues
+  // Host-triggered cues. They play over the music, which is in C, so the tuned ones keep to that key.
   applause: (c, out, t) => {
-    noise(c, out, t, { dur: 2.6, from: 2200, q: 0.4, gain: 0.2, pulse: 17 });
-    noise(c, out, t, { dur: 2.6, from: 900, q: 0.5, gain: 0.12, pulse: 11 });
+    // A crowd is a few hundred separate claps: it erupts, then thins out as the room settles.
+    const hits: Hit[] = [];
+    for (let i = 0; i < 520; i++) {
+      const when = Math.random() ** 1.35;
+      hits.push([when * 3.2, (0.4 + 0.6 * Math.random()) * Math.min(1, (1 - when) * 2.5)]);
+    }
+    bursts(c, out, t, { hits, decay: 0.009, from: 1300, q: 0.9, gain: 0.21 });
+    bursts(c, out, t, { hits, decay: 0.006, from: 2900, q: 0.7, gain: 0.125 });
   },
   drumroll: (c, out, t) => {
-    noise(c, out, t, { dur: 2.2, from: 240, to: 420, q: 1.2, gain: 0.5, pulse: 26 });
-    tone(c, out, t, { freq: 90, at: 2.2, dur: 0.5, type: 'triangle', gain: 0.4 });
-    noise(c, out, t, { at: 2.2, dur: 0.7, from: 6000, q: 0.3, gain: 0.25 });
+    // Sticks on a snare, a touch uneven, growing louder all the way into the hit.
+    const roll = 2.2;
+    const hits: Hit[] = [];
+    for (let at = 0; at < roll; at += 0.033 + Math.random() * 0.006) hits.push([at, (0.3 + 0.7 * (at / roll) ** 1.5) * (0.8 + 0.2 * Math.random())]);
+    bursts(c, out, t, { hits, decay: 0.014, from: 240, q: 1.2, gain: 0.9 });
+    bursts(c, out, t, { hits, decay: 0.02, from: 3400, q: 0.5, gain: 0.3 });
+    tone(c, out, t, { freq: 110, to: 55, at: roll, dur: 0.5, type: 'triangle', gain: 0.4 });
+    bursts(c, out, t, { hits: [[roll, 1]], decay: 0.3, from: 6500, q: 0.3, gain: 0.5 });
   },
+  // Two short blasts and a long one that sags as the air runs out.
   airhorn: tones([
-    ...chord([466, 554, 698], { dur: 0.22, type: 'sawtooth', gain: 0.14 }),
-    ...chord([466, 554, 698], { at: 0.28, dur: 0.22, type: 'sawtooth', gain: 0.14 }),
-    ...chord([466, 554, 698], { at: 0.56, dur: 0.9, type: 'sawtooth', gain: 0.14 }),
+    ...chord([392, 494, 587], { dur: 0.17, type: 'sawtooth', gain: 0.11, hold: true }),
+    ...chord([392, 494, 587], { at: 0.24, dur: 0.17, type: 'sawtooth', gain: 0.11, hold: true }),
+    ...[392, 494, 587].map((freq): Tone => ({ freq, to: freq * 0.94, at: 0.48, dur: 0.95, type: 'sawtooth', gain: 0.11, hold: true })),
   ]),
-  sad: tones([
-    { freq: 311, to: 293, dur: 0.38, type: 'sawtooth', gain: 0.14 },
-    { freq: 293, to: 277, at: 0.4, dur: 0.38, type: 'sawtooth', gain: 0.14 },
-    { freq: 277, to: 261, at: 0.8, dur: 0.38, type: 'sawtooth', gain: 0.14 },
-    { freq: 261, to: 196, at: 1.2, dur: 1.1, type: 'sawtooth', gain: 0.16 },
-  ]),
-  tada: tones([...chord([523, 659, 784], { dur: 0.16, type: 'triangle', gain: 0.16 }), ...chord([587, 740, 880, 1175], { at: 0.2, dur: 1.1, type: 'triangle', gain: 0.16 })]),
+  // Wah, wah, wah, waaah: each note leans downhill and the last one slides off the stage.
+  sad: tones(
+    ([[311, 293, 0, 0.36], [293, 277, 0.4, 0.36], [277, 261, 0.8, 0.36], [261, 196, 1.2, 1.2]] as const).flatMap(([freq, to, at, dur]): Tone[] => [
+      { freq, to, at, dur, type: 'sawtooth', gain: 0.12, hold: true, attack: 0.04 },
+      { freq: freq / 2, to: to / 2, at, dur, type: 'triangle', gain: 0.1, hold: true, attack: 0.04 },
+    ]),
+  ),
+  // "Ta" on the G chord, "da" on the C chord above it.
+  tada: tones([...chord([392, 494, 587], { dur: 0.15, type: 'triangle', gain: 0.12, hold: true }), ...chord([523, 659, 784, 1047], { at: 0.19, dur: 1.2, type: 'triangle', gain: 0.09, hold: true })]),
+  // A low, uneasy drone that holds while a higher note creeps up over it.
   suspense: tones([
-    { freq: 110, dur: 2.6, type: 'sawtooth', gain: 0.1 },
-    { freq: 116.5, dur: 2.6, type: 'sawtooth', gain: 0.1 },
-    { freq: 220, to: 233, dur: 2.6, type: 'triangle', gain: 0.08 },
+    { freq: 110, dur: 2.8, type: 'sawtooth', gain: 0.07, hold: true, attack: 0.08 },
+    { freq: 116.5, dur: 2.8, type: 'sawtooth', gain: 0.07, hold: true, attack: 0.08 },
+    { freq: 220, to: 233, dur: 2.8, type: 'triangle', gain: 0.07, hold: true, attack: 0.08 },
+    { freq: 440, to: 466, dur: 2.8, type: 'triangle', gain: 0.1, hold: true, attack: 2.3 },
   ]),
-  confetti: tones(run([784, 988, 1175, 1568], 0.06, { dur: 0.3, type: 'triangle', gain: 0.18 })),
+  // A sparkle running up the G chord, each note left to ring.
+  confetti: tones(run([784, 988, 1175, 1568, 1976, 2349, 3136], 0.05, { dur: 0.7, type: 'triangle', gain: 0.13 })),
+};
+
+/** How many seconds the longer sounds last, so that the music can make room for exactly that long. */
+export const LONG_SOUNDS: Partial<Record<SoundName, number>> = {
+  intro: 1.4, fanfare: 2.2, applause: 3.3, drumroll: 3.4, airhorn: 1.5, sad: 2.4, tada: 1.4, suspense: 2.8, confetti: 0.9,
 };
 
 export function play(name: SoundName) {
