@@ -1,0 +1,623 @@
+{
+  "format": "buzzoff.pack",
+  "version": 1,
+  "pack": {
+    "title": "Mogul Money",
+    "description": "A full show adapted from an episode of Ludwig's Mogul Money: ten board categories, a Baseball category for Final Trivia and the five Fast Money surveys. Questions are paraphrased. Dubbin and a few other clues are about the show and its host. Only the top survey answer comes from the episode; the other answers and all survey numbers are illustrative.",
+    "author": "Adapted from Mogul Money",
+    "categories": [
+      {
+        "id": "mm-01",
+        "title": "Names the Same",
+        "blurb": "Two people, one first name. Tell us the name they share.",
+        "clues": [
+          {
+            "id": "mm-01-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "What first name is shared by the streamers Kjellberg, known as PewDiePie, and Lengyel, known as xQc?",
+            "answer": "Felix",
+            "accept": ["Félix"]
+          },
+          {
+            "id": "mm-01-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What first name does the \"Twilight\" actor Lautner share with his wife, who is also a Lautner?",
+            "answer": "Taylor",
+            "accept": [],
+            "notes": "Taylor Lautner married Taylor Dome in 2022 and she took his surname."
+          },
+          {
+            "id": "mm-01-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What first name connects the actors Rogen and Green?",
+            "answer": "Seth",
+            "accept": []
+          },
+          {
+            "id": "mm-01-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What first name connects the comedian Poehler and the singer Winehouse?",
+            "answer": "Amy",
+            "accept": []
+          },
+          {
+            "id": "mm-01-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What first name connects the comedian Lopez and the singer Michael?",
+            "answer": "George",
+            "accept": []
+          }
+        ]
+      },
+      {
+        "id": "mm-02",
+        "title": "Exploring Bodies",
+        "blurb": "Human anatomy, from the bones outwards.",
+        "clues": [
+          {
+            "id": "mm-02-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which bone is the longest and largest in the human body?",
+            "answer": "The femur",
+            "accept": ["Femur", "Thigh bone", "Thighbone"]
+          },
+          {
+            "id": "mm-02-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is the largest organ of the human body?",
+            "answer": "The skin",
+            "accept": ["Skin"]
+          },
+          {
+            "id": "mm-02-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which organ stores bile and releases it to help with digestion?",
+            "answer": "The gallbladder",
+            "accept": ["Gallbladder", "Gall bladder"],
+            "notes": "The liver makes bile; the gallbladder only stores and releases it."
+          },
+          {
+            "id": "mm-02-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which part of the brain handles higher-level processes such as reasoning, memory and sensory information?",
+            "answer": "The cerebral cortex",
+            "accept": ["Cerebral cortex", "Cortex"],
+            "notes": "\"Cerebrum\" is close but is the larger structure; the cortex is its outer layer. Host's call."
+          },
+          {
+            "id": "mm-02-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which body system controls the production and regulation of hormones?",
+            "answer": "The endocrine system",
+            "accept": ["Endocrine system", "Endocrine"]
+          }
+        ]
+      },
+      {
+        "id": "mm-03",
+        "title": "Tip2Tip",
+        "blurb": "Estimate a distance in miles. Each clue says how close you need to be.",
+        "clues": [
+          {
+            "id": "mm-03-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "To the nearest 500 miles, how wide is the United States from east to west?",
+            "answer": "About 2,800 miles (accept 3,000)",
+            "accept": ["3,000 miles", "2,800 miles", "2,500 miles"],
+            "notes": "The show's figure is 2,800 miles, which rounds to 3,000. Give 2,500 at your discretion."
+          },
+          {
+            "id": "mm-03-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "To the nearest 500 miles, how far does China extend from north to south?",
+            "answer": "About 3,400 miles (accept 3,500)",
+            "accept": ["3,500 miles", "3,400 miles"],
+            "notes": "The show's figure is 3,400 miles, which rounds to 3,500."
+          },
+          {
+            "id": "mm-03-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "To the nearest 10 miles, how wide is Chile at its narrowest point from east to west?",
+            "answer": "About 9.6 miles (accept 10)",
+            "accept": ["10 miles", "9.6 miles"],
+            "notes": "This is the show's figure. Other sources measure the narrowest point differently and give a larger number, so judge generously."
+          },
+          {
+            "id": "mm-03-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "To the nearest 500 miles, how far does Russia extend from east to west?",
+            "answer": "About 5,600 miles (accept 5,500)",
+            "accept": ["5,500 miles", "5,600 miles", "6,000 miles"],
+            "notes": "The show's figure is 5,600 miles, which rounds to 5,500. Give 6,000 at your discretion."
+          },
+          {
+            "id": "mm-03-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "To the nearest 1,000 miles, what is the distance over the Earth's surface from the North Pole to the South Pole?",
+            "answer": "About 12,430 miles (accept 12,000)",
+            "accept": ["12,000 miles", "12,430 miles", "12,500 miles"],
+            "notes": "Half of the Earth's circumference through the poles."
+          }
+        ]
+      },
+      {
+        "id": "mm-04",
+        "title": "Few-Wheeled Vehicles",
+        "blurb": "Things you ride or drive on three wheels or fewer.",
+        "clues": [
+          {
+            "id": "mm-04-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which single-wheeled vehicle is associated with circus performers and acrobats?",
+            "answer": "A unicycle",
+            "accept": ["Unicycle"]
+          },
+          {
+            "id": "mm-04-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which famous Italian scooter brand made its debut in 1946?",
+            "answer": "Vespa",
+            "accept": ["Piaggio Vespa"],
+            "notes": "Made by Piaggio. \"Vespa\" is Italian for wasp."
+          },
+          {
+            "id": "mm-04-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which three-wheeled motorised taxi is a common sight in Southeast Asia?",
+            "answer": "A tuk-tuk",
+            "accept": ["Tuk tuk", "Tuktuk", "Auto rickshaw", "Autorickshaw"]
+          },
+          {
+            "id": "mm-04-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which self-balancing, two-wheeled personal transporter was invented by Dean Kamen?",
+            "answer": "The Segway",
+            "accept": ["Segway", "Segway PT", "Segway HT"]
+          },
+          {
+            "id": "mm-04-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which three-wheeled vehicle went on sale in 2014 with a starting price of about $19,999?",
+            "answer": "The Polaris Slingshot",
+            "accept": ["Polaris Slingshot", "Slingshot"]
+          }
+        ]
+      },
+      {
+        "id": "mm-05",
+        "title": "League of Legends",
+        "blurb": "Champions, monsters and items from Summoner's Rift.",
+        "clues": [
+          {
+            "id": "mm-05-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which champion, a star of the series \"Arcane\", is known for her long blue twin braids?",
+            "answer": "Jinx",
+            "accept": ["Powder"],
+            "notes": "Powder is her name as a child in Arcane."
+          },
+          {
+            "id": "mm-05-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which scarecrow champion, sometimes played as a support, shares a name with Ludwig's alter ego \"the Fiddler\"?",
+            "answer": "Fiddlesticks",
+            "accept": ["Fiddle", "Fiddle sticks"],
+            "notes": "Show-specific: the Fiddler is a running bit of Ludwig's."
+          },
+          {
+            "id": "mm-05-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "On which map are standard games of League of Legends played?",
+            "answer": "Summoner's Rift",
+            "accept": ["Summoners Rift", "The Rift"]
+          },
+          {
+            "id": "mm-05-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the proper name of the jungle monster that players usually just call \"Red Buff\"?",
+            "answer": "Red Brambleback",
+            "accept": ["Brambleback", "The Red Brambleback"]
+          },
+          {
+            "id": "mm-05-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which item builds up stacks over time and, once fully stacked, grants its owner a level?",
+            "answer": "Rod of Ages",
+            "accept": ["RoA", "Rod of Age"]
+          }
+        ]
+      },
+      {
+        "id": "mm-06",
+        "title": "Not an Alloy",
+        "blurb": "Every answer is a metal, and a pure one.",
+        "clues": [
+          {
+            "id": "mm-06-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which abundant metal is commonly found in kitchen utensils and kitchen foil?",
+            "answer": "Aluminium",
+            "accept": ["Aluminum", "Iron"],
+            "notes": "The show also accepted iron after a dispute over whether \"abundant\" meant in the Earth's crust or in the whole planet."
+          },
+          {
+            "id": "mm-06-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which shiny precious metal is traditionally used for fine tableware?",
+            "answer": "Silver",
+            "accept": []
+          },
+          {
+            "id": "mm-06-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which metal is a liquid at ordinary room temperature?",
+            "answer": "Mercury",
+            "accept": ["Quicksilver"]
+          },
+          {
+            "id": "mm-06-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which metal in a cheap gold-coloured ring can turn the skin underneath it green?",
+            "answer": "Copper",
+            "accept": []
+          },
+          {
+            "id": "mm-06-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which highly corrosion-resistant metal of the platinum group has been called the most valuable precious metal?",
+            "answer": "Rhodium",
+            "accept": [],
+            "notes": "Its price moves a lot, so \"most valuable\" is as the show described it rather than a fixed fact."
+          }
+        ]
+      },
+      {
+        "id": "mm-07",
+        "title": "Dubbin",
+        "blurb": "Show-specific: trivia about Mogul Money's host, Ludwig.",
+        "clues": [
+          {
+            "id": "mm-07-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which two contestants on this episode of Mogul Money are Ludwig's prospective groomsmen?",
+            "answer": "Connor and Michael",
+            "accept": ["Michael and Connor"],
+            "notes": "Only makes sense to people who know the episode's line-up."
+          },
+          {
+            "id": "mm-07-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is the medical name for Ludwig's sunken-chest condition?",
+            "answer": "Pectus excavatum",
+            "accept": ["Funnel chest"]
+          },
+          {
+            "id": "mm-07-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which Smash Bros. video was the first of Ludwig's uploads to reach one million views?",
+            "answer": "Top 10 Salty Ice Climber Moments",
+            "accept": ["Salty Ice Climber Moments", "Top 10 Salty Ice Climbers Moments"]
+          },
+          {
+            "id": "mm-07-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which multiplayer game on the PSP frustrated Ludwig so much that he damaged his control stick?",
+            "answer": "Star Wars Battlefront: Renegade Squadron",
+            "accept": ["Renegade Squadron", "Battlefront Renegade Squadron"],
+            "notes": "\"Star Wars Battlefront\" alone is the host's call."
+          },
+          {
+            "id": "mm-07-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "At which charity Smash tournament did Ludwig beat ChillinDude's Mario?",
+            "answer": "Smash the Record",
+            "accept": []
+          }
+        ]
+      },
+      {
+        "id": "mm-08",
+        "title": "Real Creamers",
+        "blurb": "Milk, cream and the things made from them.",
+        "clues": [
+          {
+            "id": "mm-08-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "What do you get by churning heavy cream?",
+            "answer": "Butter",
+            "accept": []
+          },
+          {
+            "id": "mm-08-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is Ludwig's favourite flavour of ice cream?",
+            "answer": "Cookie dough",
+            "accept": ["Double Dough", "Chocolate chip cookie dough"],
+            "notes": "Show-specific. The show also accepted Double Dough."
+          },
+          {
+            "id": "mm-08-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which sugar found in milk is digested with the help of the enzyme lactase?",
+            "answer": "Lactose",
+            "accept": []
+          },
+          {
+            "id": "mm-08-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which heat treatment makes raw milk safer to drink by reducing harmful microorganisms?",
+            "answer": "Pasteurisation",
+            "accept": ["Pasteurization", "Pasteurising", "Pasteurizing"],
+            "notes": "Named after Louis Pasteur."
+          },
+          {
+            "id": "mm-08-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which month is recognised as National Dairy Month in the United States?",
+            "answer": "June",
+            "accept": []
+          }
+        ]
+      },
+      {
+        "id": "mm-09",
+        "title": "Hypothetically Speaking",
+        "blurb": "Every answer is a theory or a theorem.",
+        "clues": [
+          {
+            "id": "mm-09-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which theorem relates the sides of a right-angled triangle with the formula a² + b² = c²?",
+            "answer": "The Pythagorean theorem",
+            "accept": ["Pythagoras' theorem", "Pythagoras's theorem", "Pythagoras theorem", "Pythagorean theorem", "Pythagoras"]
+          },
+          {
+            "id": "mm-09-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which scientific theory, associated with Charles Darwin, explains how species change over generations?",
+            "answer": "The theory of evolution",
+            "accept": ["Evolution", "Natural selection", "Evolution by natural selection"]
+          },
+          {
+            "id": "mm-09-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which cosmological theory describes the universe expanding from an early hot, dense state?",
+            "answer": "The Big Bang theory",
+            "accept": ["Big Bang", "The Big Bang"]
+          },
+          {
+            "id": "mm-09-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which theory developed by Albert Einstein changed our understanding of space, time and gravity?",
+            "answer": "The theory of relativity",
+            "accept": ["Relativity", "General relativity", "Theory of general relativity"],
+            "notes": "\"Special relativity\" alone leaves out gravity. Host's call."
+          },
+          {
+            "id": "mm-09-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which field of mathematics studies strategic decisions made by rational participants?",
+            "answer": "Game theory",
+            "accept": []
+          }
+        ]
+      },
+      {
+        "id": "mm-10",
+        "title": "Boggle",
+        "blurb": "Find the word. Answers grow by two letters a clue: 2, 4, 6, 8, then 10.",
+        "clues": [
+          {
+            "id": "mm-10-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Give a two-letter word meaning to move or travel.",
+            "answer": "GO",
+            "accept": []
+          },
+          {
+            "id": "mm-10-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Give a four-letter word for something uninteresting or lacking excitement.",
+            "answer": "DULL",
+            "accept": ["Drab", "Blah", "Tame"],
+            "notes": "The show's answer is DULL. Other four-letter words that fit are the host's call."
+          },
+          {
+            "id": "mm-10-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which six-letter word means a financial plan of expected income and spending?",
+            "answer": "BUDGET",
+            "accept": []
+          },
+          {
+            "id": "mm-10-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which eight-letter word means exaggerated or assertive masculine pride?",
+            "answer": "MACHISMO",
+            "accept": []
+          },
+          {
+            "id": "mm-10-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which ten-letter word names a decorative light fitting that hangs from the ceiling?",
+            "answer": "CHANDELIER",
+            "accept": []
+          }
+        ]
+      },
+      {
+        "id": "mm-11",
+        "title": "Baseball",
+        "blurb": "The show's Final Trivia category. Pick it for Final Trivia and the last clue is asked.",
+        "clues": [
+          {
+            "id": "mm-11-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "How many strikes does it take to strike a batter out?",
+            "answer": "Three",
+            "accept": ["3"],
+            "notes": "Not from the episode: added so the category can also fill a board."
+          },
+          {
+            "id": "mm-11-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "How many players does a baseball team have on the field when it is defending?",
+            "answer": "Nine",
+            "accept": ["9"],
+            "notes": "Not from the episode: added so the category can also fill a board."
+          },
+          {
+            "id": "mm-11-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What is a home run called when it is hit with the bases loaded?",
+            "answer": "A grand slam",
+            "accept": ["Grand slam"],
+            "notes": "Not from the episode: added so the category can also fill a board."
+          },
+          {
+            "id": "mm-11-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which New York Yankees slugger was nicknamed \"the Sultan of Swat\"?",
+            "answer": "Babe Ruth",
+            "accept": ["George Herman Ruth", "Ruth", "The Babe"],
+            "notes": "Not from the episode: added so the category can also fill a board."
+          },
+          {
+            "id": "mm-11-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which team did the Los Angeles Dodgers beat in Game 7 of the 2025 World Series?",
+            "answer": "The Toronto Blue Jays",
+            "accept": ["Toronto Blue Jays", "Blue Jays", "Toronto", "Jays"],
+            "notes": "The show's Final Trivia question."
+          }
+        ]
+      }
+    ],
+    "surveys": [
+      {
+        "id": "mm-sv-1",
+        "question": "Name a flavour of ice cream.",
+        "answers": [
+          { "text": "Vanilla", "points": 30, "aliases": ["vanilla bean", "french vanilla", "plain"] },
+          { "text": "Chocolate", "points": 26, "aliases": ["choc", "double chocolate", "chocolate fudge"] },
+          { "text": "Strawberry", "points": 12, "aliases": ["strawberries and cream"] },
+          { "text": "Mint chocolate chip", "points": 10, "aliases": ["mint", "mint choc chip", "mint chip", "mint chocolate", "peppermint"] },
+          { "text": "Cookie dough", "points": 8, "aliases": ["chocolate chip cookie dough", "double dough"] },
+          { "text": "Cookies and cream", "points": 6, "aliases": ["cookies n cream", "oreo", "cookie and cream"] },
+          { "text": "Chocolate chip", "points": 4, "aliases": ["choc chip", "chocolate chips"] },
+          { "text": "Pistachio", "points": 3, "aliases": ["pistachio nut"] }
+        ]
+      },
+      {
+        "id": "mm-sv-2",
+        "question": "What percentage would you tip for good service?",
+        "answers": [
+          { "text": "20%", "points": 46, "aliases": ["20 percent", "20 per cent", "twenty percent", "twenty per cent"] },
+          { "text": "15%", "points": 22, "aliases": ["15 percent", "15 per cent", "fifteen", "fifteen percent", "fifteen per cent"] },
+          { "text": "25%", "points": 12, "aliases": ["25 percent", "25 per cent", "twenty five", "twenty five percent", "twenty-five"] },
+          { "text": "10%", "points": 9, "aliases": ["10 percent", "10 per cent", "ten percent", "ten per cent"] },
+          { "text": "18%", "points": 6, "aliases": ["18 percent", "18 per cent", "eighteen", "eighteen percent"] },
+          { "text": "30%", "points": 3, "aliases": ["30 percent", "30 per cent", "thirty percent", "thirty per cent"] },
+          { "text": "Nothing", "points": 2, "aliases": ["0%", "0 percent", "zero percent", "none", "no tip", "i don't tip"] }
+        ]
+      },
+      {
+        "id": "mm-sv-3",
+        "question": "How many times a day do you use the bathroom?",
+        "answers": [
+          { "text": "4 times", "points": 27, "aliases": ["4", "four times", "4x"] },
+          { "text": "5 times", "points": 24, "aliases": ["5", "five times", "5x"] },
+          { "text": "3 times", "points": 18, "aliases": ["3", "three times", "3x", "thrice"] },
+          { "text": "6 times", "points": 14, "aliases": ["6", "six times", "6x"] },
+          { "text": "2 times", "points": 6, "aliases": ["2", "two times", "2x", "twice"] },
+          { "text": "7 times", "points": 5, "aliases": ["7", "seven times", "7x"] },
+          { "text": "8 times", "points": 3, "aliases": ["8", "eight times", "8x"] },
+          { "text": "10 times", "points": 2, "aliases": ["10", "ten times", "10x"] }
+        ]
+      },
+      {
+        "id": "mm-sv-4",
+        "question": "Name something a person might get caught in.",
+        "answers": [
+          { "text": "A lie", "points": 38, "aliases": ["lie", "lying", "a web of lies", "fib"] },
+          { "text": "The rain", "points": 24, "aliases": ["rain", "storm", "a storm", "downpour", "bad weather", "weather", "thunderstorm"] },
+          { "text": "Traffic", "points": 12, "aliases": ["traffic jam", "a traffic jam", "rush hour", "a jam"] },
+          { "text": "A trap", "points": 9, "aliases": ["trap", "snare", "a bear trap", "mousetrap"] },
+          { "text": "The act", "points": 6, "aliases": ["act", "in the act", "red-handed", "cheating", "an affair"] },
+          { "text": "A door", "points": 5, "aliases": ["door", "doorway", "lift doors", "elevator doors", "revolving door"] },
+          { "text": "A net", "points": 3, "aliases": ["net", "web", "a spider's web", "spider web", "fishing net"] }
+        ]
+      },
+      {
+        "id": "mm-sv-5",
+        "question": "Name something a doctor might remove from somebody.",
+        "answers": [
+          { "text": "A tooth", "points": 26, "aliases": ["tooth", "teeth", "wisdom tooth", "wisdom teeth"] },
+          { "text": "Appendix", "points": 22, "aliases": ["the appendix", "their appendix"] },
+          { "text": "Tonsils", "points": 14, "aliases": ["tonsil", "the tonsils", "adenoids"] },
+          { "text": "Stitches", "points": 10, "aliases": ["sutures", "staples", "stitch"] },
+          { "text": "A mole", "points": 8, "aliases": ["mole", "wart", "skin tag", "a wart"] },
+          { "text": "A splinter", "points": 6, "aliases": ["splinter", "a thorn", "glass", "a foreign object"] },
+          { "text": "A kidney", "points": 5, "aliases": ["kidney", "kidney stone", "an organ", "organ"] },
+          { "text": "A tumour", "points": 4, "aliases": ["tumour", "tumor", "a tumor", "cancer", "a growth", "cyst", "a cyst"] },
+          { "text": "A cast", "points": 3, "aliases": ["cast", "plaster cast", "bandage", "a bandage"] }
+        ]
+      }
+    ]
+  }
+}

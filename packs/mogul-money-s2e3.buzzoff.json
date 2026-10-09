@@ -1,0 +1,633 @@
+{
+  "format": "buzzoff.pack",
+  "version": 1,
+  "pack": {
+    "title": "Mogul Money: Season 2, Episode 3",
+    "description": "A full show adapted from Mogul Money season 2, episode 3 (Valkyrae, Fuslie and Squeex): ten board categories, a Video Games category for Final Trivia and the five Fast Money surveys. Questions are paraphrased. Steam Games and Leaksley are about the show's cast. Four censored language clues are replaced with new ones. Survey numbers are the show's where revealed and illustrative otherwise.",
+    "author": "Adapted from Mogul Money",
+    "categories": [
+      {
+        "id": "m3-01",
+        "title": "A Very Chinese Time",
+        "blurb": "China: its culture, language and history.",
+        "clues": [
+          {
+            "id": "m3-01-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which enormous Chinese structure is often wrongly claimed to be visible from space?",
+            "answer": "The Great Wall of China",
+            "accept": ["Great Wall of China", "The Great Wall", "Great Wall"]
+          },
+          {
+            "id": "m3-01-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What is the capital of China, home to the Forbidden City?",
+            "answer": "Beijing",
+            "accept": ["Peking"]
+          },
+          {
+            "id": "m3-01-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which valuable Chinese product, described as \"white gold\", travelled west along an ancient trading network named after it?",
+            "answer": "Silk",
+            "accept": [],
+            "notes": "The Silk Road. A Red Bull Boost on the show: the contestant said platinum and lost 700."
+          },
+          {
+            "id": "m3-01-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the Chinese name for the characters used to write the Chinese language?",
+            "answer": "Hanzi",
+            "accept": ["Han characters", "汉字", "漢字"],
+            "notes": "Pronounced roughly \"hahn-dzuh\". Kanji is the Japanese reading of the same word; host's call."
+          },
+          {
+            "id": "m3-01-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which animal of the Chinese zodiac represents the year 2026?",
+            "answer": "The Horse",
+            "accept": ["Horse", "Fire Horse"],
+            "notes": "2026 is the year of the Fire Horse, starting on 17 February."
+          }
+        ]
+      },
+      {
+        "id": "m3-02",
+        "title": "Steam Games",
+        "blurb": "Show-specific: games on Steam and the cast's Steam libraries.",
+        "clues": [
+          {
+            "id": "m3-02-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which tactical first-person shooter is the game in which Ludwig has the lowest rank of anyone on the show?",
+            "answer": "Counter-Strike 2",
+            "accept": ["CS2", "Counter-Strike", "Counter Strike 2", "CS"]
+          },
+          {
+            "id": "m3-02-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which sequel to a popular pizzeria-themed horror game received Squeex's only negative review on Steam?",
+            "answer": "Five Nights at Freddy's 2",
+            "accept": ["FNAF 2", "Five Nights at Freddys 2"],
+            "notes": "\"Five Nights at Freddy's\" without the 2 is the host's call."
+          },
+          {
+            "id": "m3-02-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which social-deduction game is said to have peaked above four million concurrent players in September 2020 and is Valkyrae's most-played game?",
+            "answer": "Among Us",
+            "accept": []
+          },
+          {
+            "id": "m3-02-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which co-op game does Ludwig enthusiastically promote as his favourite game of all time?",
+            "answer": "The Spell Brigade",
+            "accept": ["Spell Brigade"]
+          },
+          {
+            "id": "m3-02-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which strategy game, in which teams of adorable animals battle one another, has Ludwig played more than any other on Steam?",
+            "answer": "Super Auto Pets",
+            "accept": ["SAP"]
+          }
+        ]
+      },
+      {
+        "id": "m3-03",
+        "title": "AI",
+        "blurb": "Every answer contains the letters A-I in a row.",
+        "clues": [
+          {
+            "id": "m3-03-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which short form of Japanese poetry traditionally follows a five-seven-five syllable pattern?",
+            "answer": "Haiku",
+            "accept": ["A haiku"]
+          },
+          {
+            "id": "m3-03-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "What do you call a depiction of a person that concentrates on their face and head?",
+            "answer": "A portrait",
+            "accept": ["Portrait", "Portraiture"]
+          },
+          {
+            "id": "m3-03-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which compound gives chilli peppers their heat?",
+            "answer": "Capsaicin",
+            "accept": ["Capsaicine"]
+          },
+          {
+            "id": "m3-03-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which dark-purple berry is often promoted as a superfood because of its antioxidants?",
+            "answer": "Açaí",
+            "accept": ["Acai", "Acai berry", "Açaí berry"],
+            "notes": "Pronounced \"ah-sah-EE\"."
+          },
+          {
+            "id": "m3-03-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which geographical term describes a narrow waterway linking two larger bodies of water?",
+            "answer": "A strait",
+            "accept": ["Strait", "Straits"],
+            "notes": "\"Channel\" fits the definition but has no A-I."
+          }
+        ]
+      },
+      {
+        "id": "m3-04",
+        "title": "It's a Date",
+        "blurb": "Holidays and the days they fall on.",
+        "clues": [
+          {
+            "id": "m3-04-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which annual celebration of romantic love falls on 14 February?",
+            "answer": "Valentine's Day",
+            "accept": ["Valentines Day", "St Valentine's Day", "Saint Valentine's Day", "Valentine's"]
+          },
+          {
+            "id": "m3-04-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which date is commemorated in the United States with the phrase \"Never forget\"?",
+            "answer": "September 11",
+            "accept": ["11 September", "9/11", "September 11th", "September 11, 2001", "Nine eleven"]
+          },
+          {
+            "id": "m3-04-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which US federal holiday in January honours a leader of the civil-rights movement?",
+            "answer": "Martin Luther King Jr. Day",
+            "accept": ["MLK Day", "Martin Luther King Day", "Martin Luther King Jr Day"],
+            "notes": "The third Monday of January."
+          },
+          {
+            "id": "m3-04-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "In which month does the United States celebrate Labor Day, on the first Monday?",
+            "answer": "September",
+            "accept": []
+          },
+          {
+            "id": "m3-04-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which US federal holiday, made official in 2021, commemorates the end of slavery in the United States?",
+            "answer": "Juneteenth",
+            "accept": ["June 19", "19 June", "June 19th", "Juneteenth National Independence Day"]
+          }
+        ]
+      },
+      {
+        "id": "m3-05",
+        "title": "Keep Yourself Safe",
+        "blurb": "Name the language. Every word here means \"sorry\".",
+        "clues": [
+          {
+            "id": "m3-05-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "In which language does \"désolé\" mean \"sorry\"?",
+            "answer": "French",
+            "accept": [],
+            "notes": "The only clue in this category that survived the show's edit. Say it \"day-zo-LAY\"."
+          },
+          {
+            "id": "m3-05-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In which language does \"lo siento\" mean \"sorry\"?",
+            "answer": "Spanish",
+            "accept": ["Castilian"],
+            "notes": "Not from the episode: the original clue was cut from the video. Say it \"lo see-EN-toh\"."
+          },
+          {
+            "id": "m3-05-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "In which language does \"Entschuldigung\" mean \"sorry\"?",
+            "answer": "German",
+            "accept": [],
+            "notes": "Not from the episode: the original clue was cut from the video. Say it \"ent-SHOOL-dee-goong\"."
+          },
+          {
+            "id": "m3-05-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "In which language does \"gomen nasai\" mean \"sorry\"?",
+            "answer": "Japanese",
+            "accept": [],
+            "notes": "Not from the episode: the original clue was censored. Say it \"go-men nah-sigh\"."
+          },
+          {
+            "id": "m3-05-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "In which language does \"przepraszam\" mean \"sorry\"?",
+            "answer": "Polish",
+            "accept": [],
+            "notes": "Not from the episode: the original clue was never picked. Say it \"psheh-PRAH-shahm\"."
+          }
+        ]
+      },
+      {
+        "id": "m3-06",
+        "title": "Who's That Pogemon",
+        "blurb": "Name the Twitch emote from its description.",
+        "clues": [
+          {
+            "id": "m3-06-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which emote, typed as one letter and one digit, shows a salute?",
+            "answer": "o7",
+            "accept": ["O7", "Salute"],
+            "notes": "A silhouette on the show. Add the emote image in the pack editor to play it that way."
+          },
+          {
+            "id": "m3-06-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which emote, a three-letter word in capitals, shows a confused yellow face with its hands raised?",
+            "answer": "HUH",
+            "accept": ["Huh?"],
+            "notes": "A silhouette on the show."
+          },
+          {
+            "id": "m3-06-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which emote shows a smug yellow character, named Jupie, with its fists held together?",
+            "answer": "JupieJudge",
+            "accept": ["Jupie Judge", "Jupijej"],
+            "notes": "A silhouette on the show. The name is as the show revealed it."
+          },
+          {
+            "id": "m3-06-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which emote, named after the scream it is making, shows a wide-eyed, startled face?",
+            "answer": "AAGH",
+            "accept": ["AAAGH", "AGH", "AAAH"],
+            "notes": "A silhouette on the show. Be generous with the number of As."
+          },
+          {
+            "id": "m3-06-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which emote shows a winking character making finger guns?",
+            "answer": "Flirt",
+            "accept": [],
+            "notes": "A silhouette on the show."
+          }
+        ]
+      },
+      {
+        "id": "m3-07",
+        "title": "Inbreeding",
+        "blurb": "Genetics, royal families and people who married their cousins.",
+        "clues": [
+          {
+            "id": "m3-07-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which molecule carries the genetic information responsible for inherited characteristics?",
+            "answer": "DNA",
+            "accept": ["Deoxyribonucleic acid"]
+          },
+          {
+            "id": "m3-07-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which evolutionary process is commonly summed up by the phrase \"survival of the fittest\"?",
+            "answer": "Natural selection",
+            "accept": ["Evolution by natural selection"],
+            "notes": "\"Evolution\" alone is the host's call."
+          },
+          {
+            "id": "m3-07-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which Habsburg monarch, famous for his severe hereditary health problems, was the dynasty's last king of Spain?",
+            "answer": "Charles II of Spain",
+            "accept": ["Charles II", "Carlos II", "Charles the Second", "Charles the Bewitched"],
+            "notes": "He died without an heir in 1700, which set off the War of the Spanish Succession."
+          },
+          {
+            "id": "m3-07-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which pioneering naturalist developed the theory of natural selection and married his first cousin?",
+            "answer": "Charles Darwin",
+            "accept": ["Darwin"],
+            "notes": "He married Emma Wedgwood in 1839. A Red Bull Boost on the show."
+          },
+          {
+            "id": "m3-07-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Name one of the two US states that, according to the show, do not criminalise consensual incest between adults.",
+            "answer": "New Jersey or Rhode Island",
+            "accept": ["New Jersey", "Rhode Island"],
+            "notes": "Either one is enough. This is the show's claim, not a full statement of current state law."
+          }
+        ]
+      },
+      {
+        "id": "m3-08",
+        "title": "Counter-Strike Arsenal",
+        "blurb": "Every answer is a weapon or knife from Counter-Strike.",
+        "clues": [
+          {
+            "id": "m3-08-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "What is the name of Counter-Strike's iconic high-powered sniper rifle that kills with one shot?",
+            "answer": "The AWP",
+            "accept": ["AWP", "Arctic Warfare Police", "AWM"],
+            "notes": "Said \"awp\", to rhyme with \"stop\"."
+          },
+          {
+            "id": "m3-08-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which powerful handgun is often nicknamed the pocket sniper?",
+            "answer": "The Desert Eagle",
+            "accept": ["Desert Eagle", "Deagle"]
+          },
+          {
+            "id": "m3-08-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which scoped assault rifle became notoriously powerful during the \"Krieg\" meta of 2019?",
+            "answer": "The SG 553",
+            "accept": ["SG 553", "SG553", "SG", "Krieg", "Krieg 552"]
+          },
+          {
+            "id": "m3-08-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which revolver was so powerful when it was released in 2015 that it needed an emergency balance update?",
+            "answer": "The R8 Revolver",
+            "accept": ["R8 Revolver", "R8"],
+            "notes": "\"The revolver\" is the host's call, since the question gives that much away."
+          },
+          {
+            "id": "m3-08-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which type of knife was involved in a Counter-Strike skin deal that the show valued at about $1.5 million?",
+            "answer": "A Karambit",
+            "accept": ["Karambit", "Karambit Case Hardened", "Case Hardened Karambit"],
+            "notes": "The Case Hardened Karambit, pattern #387, known as the \"Blue Gem\". Only the knife type is needed."
+          }
+        ]
+      },
+      {
+        "id": "m3-09",
+        "title": "Leaksley",
+        "blurb": "Show-specific: things the cast leaked or let slip on stream.",
+        "clues": [
+          {
+            "id": "m3-09-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which actor, a star of \"A Minecraft Movie\", was the answer to a clue about leaked information involving the film's catchphrases?",
+            "answer": "Jason Momoa",
+            "accept": ["Momoa"],
+            "notes": "The clue was reworded mid-show and caused confusion with Jack Black. Jason Momoa was the accepted answer."
+          },
+          {
+            "id": "m3-09-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which major video platform was accidentally revealed as the place Fuslie was moving her streams to?",
+            "answer": "YouTube",
+            "accept": ["YouTube Gaming"]
+          },
+          {
+            "id": "m3-09-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which production company associated with Ludwig reportedly lost around $3 million before that became public?",
+            "answer": "Offbrand",
+            "accept": ["Offbrand Productions", "Off Brand", "Offbrand Studios"]
+          },
+          {
+            "id": "m3-09-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "For which soft-drink brand did Fuslie accidentally reveal promotional discount codes earlier than she was meant to?",
+            "answer": "Mountain Dew",
+            "accept": ["Mtn Dew", "Mountain Dew Game Fuel"]
+          },
+          {
+            "id": "m3-09-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which name connects a controversial online streaming persona and a member of FSLR?",
+            "answer": "Raj Patel",
+            "accept": ["Raj"],
+            "notes": "As given on the show; an in-joke for viewers. FSLR is the Counter-Strike team of Fuslie, Squeex, Ludwig and Valkyrae."
+          }
+        ]
+      },
+      {
+        "id": "m3-10",
+        "title": "Famous Balds",
+        "blurb": "Well-known people without much on top.",
+        "clues": [
+          {
+            "id": "m3-10-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which bald billionaire is best known for founding Amazon?",
+            "answer": "Jeff Bezos",
+            "accept": ["Bezos"]
+          },
+          {
+            "id": "m3-10-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which former WWE champion turned Hollywood actor is also behind Teremana Tequila?",
+            "answer": "Dwayne \"The Rock\" Johnson",
+            "accept": ["The Rock", "Dwayne Johnson", "Dwayne The Rock Johnson"]
+          },
+          {
+            "id": "m3-10-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which bald musician goes by the nickname \"Mr. Worldwide\"?",
+            "answer": "Pitbull",
+            "accept": ["Armando Pérez", "Armando Perez", "Mr. 305"]
+          },
+          {
+            "id": "m3-10-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which bald comedian and television personality is famous for presenting \"Family Feud\"?",
+            "answer": "Steve Harvey",
+            "accept": ["Harvey"]
+          },
+          {
+            "id": "m3-10-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which player, drafted third overall in 1984, won six NBA Finals MVP awards?",
+            "answer": "Michael Jordan",
+            "accept": ["Jordan", "MJ", "Air Jordan"]
+          }
+        ]
+      },
+      {
+        "id": "m3-11",
+        "title": "Video Games",
+        "blurb": "The show's Final Trivia category. Pick it for Final Trivia and the last clue is asked.",
+        "clues": [
+          {
+            "id": "m3-11-1",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which company makes the PlayStation consoles?",
+            "answer": "Sony",
+            "accept": ["Sony Interactive Entertainment"],
+            "notes": "Not from the episode: added so the category can also fill a board."
+          },
+          {
+            "id": "m3-11-2",
+            "value": 200,
+            "difficulty": 2,
+            "question": "In which battle royale game do players jump into each match from the Battle Bus?",
+            "answer": "Fortnite",
+            "accept": ["Fortnite Battle Royale"],
+            "notes": "Not from the episode: added so the category can also fill a board."
+          },
+          {
+            "id": "m3-11-3",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which hero shooter has the higher all-time peak player count on Steam: \"Overwatch\" or \"Marvel Rivals\"?",
+            "answer": "Marvel Rivals",
+            "accept": ["Rivals"],
+            "notes": "The show's tiebreaker, turned into a question. Its figures: Marvel Rivals 644,000, Overwatch 165,000."
+          },
+          {
+            "id": "m3-11-4",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which Polish studio developed both \"The Witcher 3: Wild Hunt\" and \"Cyberpunk 2077\"?",
+            "answer": "CD Projekt Red",
+            "accept": ["CD Projekt", "CDPR", "CD Project Red"],
+            "notes": "Not from the episode: added so the category can also fill a board."
+          },
+          {
+            "id": "m3-11-5",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which team-based shooter has the highest all-time concurrent player count on Steam?",
+            "answer": "PUBG: Battlegrounds",
+            "accept": ["PUBG", "PlayerUnknown's Battlegrounds", "Player Unknown's Battlegrounds", "Battlegrounds"],
+            "notes": "The show's Final Trivia question. It peaked above 3.2 million in January 2018. Nobody on the show got it."
+          }
+        ]
+      }
+    ],
+    "surveys": [
+      {
+        "id": "m3-sv-1",
+        "question": "Who is the worst video game player in FSLR?",
+        "answers": [
+          { "text": "Fuslie", "points": 48, "aliases": ["leslie", "fus", "leslie fu"] },
+          { "text": "Ludwig", "points": 31, "aliases": ["lud", "ludwig ahgren", "ludwig anders ahgren"] },
+          { "text": "Valkyrae", "points": 13, "aliases": ["rae", "ray", "valk", "rachell"] },
+          { "text": "Squeex", "points": 7, "aliases": ["squeeks", "squeak"] }
+        ]
+      },
+      {
+        "id": "m3-sv-2",
+        "question": "How many days a week do you shower?",
+        "answers": [
+          { "text": "7 days", "points": 30, "aliases": ["7", "seven days", "every day", "everyday", "daily", "all of them"] },
+          { "text": "5 days", "points": 18, "aliases": ["5", "five days"] },
+          { "text": "6 days", "points": 14, "aliases": ["6", "six days"] },
+          { "text": "4 days", "points": 13, "aliases": ["4", "four days"] },
+          { "text": "3 days", "points": 12, "aliases": ["3", "three days"] },
+          { "text": "2 days", "points": 6, "aliases": ["2", "two days"] },
+          { "text": "1 day", "points": 4, "aliases": ["1", "one day", "once"] },
+          { "text": "0 days", "points": 2, "aliases": ["0", "zero days", "none", "never"] }
+        ]
+      },
+      {
+        "id": "m3-sv-3",
+        "question": "What is a normal price for a cup of coffee, to the nearest dollar?",
+        "answers": [
+          { "text": "$3", "points": 25, "aliases": ["3 dollars", "three dollars", "3 bucks", "3.00"] },
+          { "text": "$4", "points": 24, "aliases": ["4 dollars", "four dollars", "4 bucks", "4.00"] },
+          { "text": "$5", "points": 22, "aliases": ["5 dollars", "five dollars", "5 bucks", "5.00"] },
+          { "text": "$6", "points": 12, "aliases": ["6 dollars", "six dollars", "6 bucks", "6.00"] },
+          { "text": "$2", "points": 8, "aliases": ["2 dollars", "two dollars", "2 bucks", "2.00"] },
+          { "text": "$7", "points": 5, "aliases": ["7 dollars", "seven dollars", "7 bucks", "7.00"] },
+          { "text": "$1", "points": 3, "aliases": ["1 dollar", "one dollar", "a dollar", "1 buck", "1.00"] }
+        ]
+      },
+      {
+        "id": "m3-sv-4",
+        "question": "Who is the best character in Mario Party?",
+        "answers": [
+          { "text": "Yoshi", "points": 26, "aliases": [] },
+          { "text": "Luigi", "points": 14, "aliases": [] },
+          { "text": "Waluigi", "points": 12, "aliases": [] },
+          { "text": "Mario", "points": 10, "aliases": ["super mario"] },
+          { "text": "Peach", "points": 8, "aliases": ["princess peach"] },
+          { "text": "Toad", "points": 8, "aliases": ["toadette"] },
+          { "text": "Daisy", "points": 6, "aliases": ["princess daisy"] },
+          { "text": "Wario", "points": 5, "aliases": [] },
+          { "text": "Donkey Kong", "points": 4, "aliases": ["dk", "d.k."] },
+          { "text": "Monty Mole", "points": 3, "aliases": ["monty", "mole"] },
+          { "text": "Bowser", "points": 2, "aliases": ["bowser jr", "bowser junior"] }
+        ]
+      },
+      {
+        "id": "m3-sv-5",
+        "question": "Which video game are you best at?",
+        "answers": [
+          { "text": "Minecraft", "points": 20, "aliases": ["mc"] },
+          { "text": "League of Legends", "points": 15, "aliases": ["league", "lol"] },
+          { "text": "Fortnite", "points": 12, "aliases": ["fortnite battle royale"] },
+          { "text": "Valorant", "points": 10, "aliases": ["val"] },
+          { "text": "Mario Kart", "points": 8, "aliases": ["mario kart 8", "mario kart world", "mariokart"] },
+          { "text": "Super Smash Bros.", "points": 8, "aliases": ["smash", "smash bros", "melee", "smash ultimate", "super smash bros ultimate"] },
+          { "text": "Rocket League", "points": 6, "aliases": ["rl"] },
+          { "text": "Overwatch", "points": 6, "aliases": ["overwatch 2", "ow", "ow2"] },
+          { "text": "Call of Duty", "points": 5, "aliases": ["cod", "warzone", "black ops"] },
+          { "text": "Tetris", "points": 4, "aliases": [] },
+          { "text": "Counter-Strike", "points": 3, "aliases": ["cs", "cs2", "csgo", "cs go", "counter strike 2"] },
+          { "text": "Pokémon", "points": 2, "aliases": ["pokemon go", "pokemon showdown"] }
+        ]
+      }
+    ]
+  }
+}
