@@ -10,10 +10,10 @@ import {
 } from '@buzzoff/shared';
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { api, ApiFailure } from '../../lib/api';
-import { plural } from '../../lib/format';
+import { fmtDay, plural } from '../../lib/format';
 import { storage } from '../../lib/storage';
 import { Button, cx, toast } from '../../ui/kit';
-import { NumField, SelectField } from './fields';
+import { NumField, SelectField, ToggleField } from './fields';
 import { HostShell, PageHead, useShell } from './HostShell';
 
 export function Settings() {
@@ -26,7 +26,6 @@ export function Settings() {
 
 const range = (key: keyof typeof SETTINGS_LIMITS) => ({ min: SETTINGS_LIMITS[key].min, max: SETTINGS_LIMITS[key].max });
 const when = (ts: number) => new Date(ts).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
-const day = (ts: number) => new Date(ts).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 
 /** "Chrome on Windows" from a user-agent string: enough to tell your own devices apart. */
 function device(agent: string): string {
@@ -43,6 +42,7 @@ const SETTING_LABEL: Record<keyof AppSettings, string> = {
   finishedTtlHours: 'Finished games kept (hours)',
   maxUploadMb: 'Largest upload (MB)',
   sessionDays: 'Stay signed in (days)',
+  publicLeaderboard: 'Leaderboard open to players',
 };
 
 /** One line of plain English for an audit entry. */
@@ -61,7 +61,7 @@ function describe(entry: AuditEntry, presets: Preset[]): string {
     case 'settings.changed': {
       const changes = (detail.changes ?? {}) as Record<string, { from: unknown; to: unknown }>;
       const show = (key: string, value: unknown) =>
-        value === null ? 'not set' : key === 'defaultPresetId' ? (presets.find((p) => p.id === value)?.name ?? String(value)) : String(value);
+        value === null ? 'not set' : typeof value === 'boolean' ? (value ? 'yes' : 'no') : key === 'defaultPresetId' ? (presets.find((p) => p.id === value)?.name ?? String(value)) : String(value);
       return Object.entries(changes)
         .map(([key, { from, to }]) => `${SETTING_LABEL[key as keyof AppSettings] ?? key}: ${show(key, from)} → ${show(key, to)}`)
         .join(' · ');
@@ -236,6 +236,15 @@ function SettingsPage() {
               help="How long a finished game stays open for a rematch. Results stay in History regardless."
             />
           </div>
+        </Group>
+
+        <Group icon="🏆" title="Leaderboard" lead="Every finished game, added up into all-time standings. You can always see them from the Leaderboard page.">
+          <ToggleField
+            label="Let players see the leaderboard"
+            checked={draft.publicLeaderboard}
+            onChange={(publicLeaderboard) => set({ publicLeaderboard })}
+            help="Adds a Leaderboard link to the join screen. Anyone who can open this server’s address can then see players’ names, results and statistics."
+          />
         </Group>
 
         <Group icon="🖼️" title="Uploads" lead="Pictures, sound and video attached to questions.">
@@ -481,7 +490,7 @@ function Devices({ sessions, onSignedOutOthers, onSignedOut }: { sessions: Admin
               {s.current && <span className="bz-pill bz-pill--good">This device</span>}
             </span>
             <small>
-              <span className="bz-mono">{s.ip}</span> · signed in {when(s.createdAt)} · until {day(s.expiresAt)}
+              <span className="bz-mono">{s.ip}</span> · signed in {when(s.createdAt)} · until {fmtDay(s.expiresAt)}
             </small>
           </li>
         ))}

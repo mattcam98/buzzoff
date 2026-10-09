@@ -39,7 +39,7 @@ function Results() {
   }, [fail]);
 
   async function remove(result: GameResult) {
-    if (!window.confirm(`Remove “${result.name}” from ${when(result.finishedAt)} from the history?`)) return;
+    if (!window.confirm(`Remove “${result.name}” from ${when(result.finishedAt)} from the history? It will stop counting towards the leaderboard too.`)) return;
     try {
       await api.deleteResult(result.id);
       setResults((list) => list?.filter((r) => r.id !== result.id) ?? null);

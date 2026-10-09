@@ -8,6 +8,12 @@ export const averageBuzzMs = (s: PlayerStats) => (s.buzzes ? s.buzzMsTotal / s.b
 export const accuracy = (s: PlayerStats) => (s.correct + s.incorrect ? s.correct / (s.correct + s.incorrect) : null);
 
 export interface ResultPlayer {
+  /**
+   * Who was in this seat, as an id that stays the same from game to game whatever name they pick
+   * (see leaderboard.ts). Absent for games played before players were recognised, and for a phone
+   * that kept no cookie.
+   */
+  profileId?: string;
   name: string;
   avatar: Avatar;
   score: number;
@@ -29,10 +35,12 @@ export interface GameResult {
   teams: { name: string; score: number }[] | null;
 }
 
-export function buildResult(g: GameState, id: string): GameResult {
+/** `profiles` maps a seat (player id) to the returning player sitting in it, where the server knows. */
+export function buildResult(g: GameState, id: string, profiles: Record<string, string> = {}): GameResult {
   const players = g.order
     .map((pid) => g.players[pid])
-    .map((p) => ({
+    .map((p): ResultPlayer => ({
+      ...(profiles[p.id] ? { profileId: profiles[p.id] } : {}),
       name: p.name,
       avatar: p.avatar,
       score: p.score,

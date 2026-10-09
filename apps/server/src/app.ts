@@ -5,6 +5,7 @@ import { Server } from 'socket.io';
 import type { Config } from './config';
 import { AdminAuth } from './auth';
 import { createHttp } from './http';
+import { Results } from './results';
 import type { AppServer } from './room';
 import { Rooms } from './rooms';
 import { auditTo, Settings } from './settings';
@@ -48,10 +49,11 @@ export async function createApp(config: Config, store: Store): Promise<App> {
     pingInterval: 10_000,
     pingTimeout: 8_000,
   });
-  const rooms = new Rooms(io, store, settings);
+  const results = await Results.load(store);
+  const rooms = new Rooms(io, store, results, settings);
   await rooms.restore();
   // Socket.IO answers its own path; everything else is the HTTP app's.
-  const http = createHttp({ config, store, rooms, auth, settings, audit });
+  const http = createHttp({ config, store, rooms, results, auth, settings, audit });
   server.on('request', (req, res) => {
     if (!req.url?.startsWith('/socket.io/')) http(req, res);
   });

@@ -33,6 +33,8 @@ export const ordinal = (n: number) => {
 
 export const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
+export const fmtDay = (ts: number) => new Date(ts).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+
 /** Where players should go to join, shown on the lobby screen. */
 export function joinAddress(publicUrl: string | null): { url: string; label: string } {
   const base = (publicUrl ?? window.location.origin).replace(/\/+$/, '');

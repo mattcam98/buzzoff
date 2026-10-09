@@ -34,6 +34,9 @@ export interface Player {
   joinedAt: number;
 }
 
+/** Names are compared without case or spacing, so "Ann" and "a n n" are the same player. */
+export const nameKey = (name: string) => name.toLowerCase().replace(/\s+/g, '');
+
 /**
  * Who the show is still waiting on in the lobby: players whose phones are connected and who have
  * not tapped ready. A phone that has dropped out does not hold the room up.

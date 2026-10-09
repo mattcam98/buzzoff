@@ -37,6 +37,7 @@ const NAV = [
   { href: '/host', label: 'Games', match: (path: string) => path === '/host' || path.startsWith('/host/new') },
   { href: '/host/packs', label: 'Packs', match: (path: string) => path.startsWith('/host/packs') },
   { href: '/host/history', label: 'History', match: (path: string) => path.startsWith('/host/history') },
+  { href: '/host/leaderboard', label: 'Leaderboard', match: (path: string) => path.startsWith('/host/leaderboard') },
   { href: '/host/settings', label: 'Settings', match: (path: string) => path.startsWith('/host/settings') },
 ];
 

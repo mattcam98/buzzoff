@@ -171,8 +171,9 @@ export class PostgresStore implements Store {
       [result.id, result.finishedAt, json(result)],
     );
   }
-  async listResults(limit: number) {
-    return (await this.rows<{ data: GameResult }>('SELECT data FROM results ORDER BY finished_at DESC LIMIT $1', [limit])).map((r) => r.data);
+  async listResults(limit?: number) {
+    // LIMIT NULL is no limit.
+    return (await this.rows<{ data: GameResult }>('SELECT data FROM results ORDER BY finished_at DESC LIMIT $1', [limit ?? null])).map((r) => r.data);
   }
   async deleteResult(id: string) {
     await this.pool.query('DELETE FROM results WHERE id = $1', [id]);

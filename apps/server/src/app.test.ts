@@ -6,8 +6,9 @@ import type { AddressInfo } from 'node:net';
 import {
   BUILTIN_PRESETS, DEFAULT_BUZZER,
   type Ack, type ApiError, type AuditEntry, type BuzzAck, type ClientToServerEvents, type CreateGameResponse, type GameEvent,
-  type GameRules, type HostAction, type HostRoomView, type JoinResponse, type NetStat, type PackSummary, type PlayerAction,
-  type PlayerView, type PublicView, type Role, type ServerInfo, type ServerToClientEvents, type SettingsView,
+  type GameResult, type GameRules, type HostAction, type HostRoomView, type JoinResponse, type LeaderboardView, type NetStat,
+  type PackSummary, type PlayerAction, type PlayerView, type PublicView, type Role, type ServerInfo, type ServerToClientEvents,
+  type SettingsView,
 } from '@buzzoff/shared';
 import { io, type Socket } from 'socket.io-client';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -59,10 +60,10 @@ class Client {
   }
 }
 
-/** Poll until a condition holds; state arrives asynchronously over the socket. */
+/** Poll until a condition holds; state arrives asynchronously over the socket. The condition may itself ask the server. */
 async function until(condition: () => unknown, what = 'condition', timeoutMs = 3000) {
   const start = Date.now();
-  while (!condition()) {
+  while (!(await condition())) {
     if (Date.now() - start > timeoutMs) throw new Error(`timed out waiting for ${what}`);
     await new Promise((r) => setTimeout(r, 5));
   }
@@ -84,13 +85,15 @@ class Harness {
     this.clients = [];
     await this.app.close();
   }
-  async api<T>(method: string, path: string, body?: unknown, headers: Record<string, string> = {}): Promise<{ status: number; body: T }> {
+  async api<T>(method: string, path: string, body?: unknown, headers: Record<string, string> = {}): Promise<{ status: number; body: T; cookie: string | null }> {
     const res = await fetch(`${this.url}/api${path}`, {
       method,
       headers: { 'content-type': 'application/json', ...headers },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-    return { status: res.status, body: (res.status === 204 ? null : await res.json()) as T };
+    // What a browser would send back: the cookie the reply set, if it set one.
+    const cookie = res.headers.getSetCookie()[0]?.split(';')[0] ?? null;
+    return { status: res.status, body: (res.status === 204 ? null : await res.json()) as T, cookie };
   }
   async createGame(rules: GameRules = RULES, headers: Record<string, string> = {}) {
     const packs = await this.api<PackSummary[]>('GET', '/packs', undefined, headers);
@@ -109,14 +112,15 @@ class Harness {
       });
     });
   }
-  async join(code: string, name: string, ready = true) {
-    const res = await this.api<JoinResponse>('POST', `/games/${code}/join`, { name, avatar: AVATAR });
+  /** `cookie` is what the joining phone already holds: pass one a previous join returned to come back as the same person. */
+  async join(code: string, name: string, ready = true, cookie?: string) {
+    const res = await this.api<JoinResponse>('POST', `/games/${code}/join`, { name, avatar: AVATAR }, cookie ? { cookie } : {});
     if (res.body.status !== 'joined') throw new Error(`could not join: ${JSON.stringify(res.body)}`);
     const { playerId, token } = res.body;
     const client = await this.connect('player', code, token);
     // The show cannot start until everyone in the room has tapped ready.
     if (ready) await client.act({ t: 'ready', ready: true });
-    return { playerId, token, client };
+    return { playerId, token, client, cookie: res.cookie! };
   }
 }
 
@@ -610,5 +614,90 @@ describe('content and results', () => {
     await until(() => host.pub.phase === 'lobby');
     expect(host.pub.players[0]).toMatchObject({ name: 'Ann', score: 0 });
     expect(ann.client.pub.phase).toBe('lobby');
+  });
+
+  /** Play a two-player game to the end over the wire, the first player winning. Returns the phones' cookies. */
+  async function playNight(names: [string, string], cookies: [string?, string?] = []) {
+    const { code, hostKey } = await h.createGame();
+    const host = await h.connect('host', code, hostKey);
+    const first = await h.join(code, names[0], true, cookies[0]);
+    const second = await h.join(code, names[1], true, cookies[1]);
+    await host.host({ t: 'start' });
+    await host.host({ t: 'score.adjust', id: first.playerId, delta: 400 });
+    await host.host({ t: 'game.end' });
+    await until(() => host.pub.phase === 'finished');
+    return { host, first, second };
+  }
+  const board = async (headers: Record<string, string> = {}) => (await h.api<LeaderboardView>('GET', '/leaderboard', undefined, headers)).body;
+  const named = (view: LeaderboardView, name: string) => view.players.filter((p) => p.name === name);
+
+  it('keeps a leaderboard across games, recognising a phone whatever name it joins under', async () => {
+    h = await new Harness().start();
+    const one = await playNight(['Ann', 'Bo']);
+    expect(one.first.cookie).toMatch(/^buzzoff_player=[\w-]{24,}$/);
+    await until(async () => (await board()).games === 1, 'the first game to count');
+
+    // Ann comes back under another name on the same phone; Bo comes back on a new one.
+    await playNight(['Bo', 'Annie'], [undefined, one.first.cookie]);
+    await until(async () => (await board()).games === 2, 'the second game to count');
+    const view = await board({ cookie: one.first.cookie });
+    const [annie] = named(view, 'Annie');
+    expect(annie).toMatchObject({ aliases: ['Ann'], games: 2, wins: 1, points: 400 });
+    expect(view.you).toBe(annie.id);
+    expect((await board()).you).toBeNull();
+
+    // Nothing ties the two Bos together but the name, and that is the host's call to make.
+    const bos = named(view, 'Bo');
+    expect(bos.map((p) => [p.games, p.wins]).sort()).toEqual([[1, 0], [1, 1]]);
+    const clash = await h.api<ApiError>('POST', '/leaderboard/merge', { from: annie.id, into: bos[0].id });
+    expect(clash.status).toBe(409);
+    expect(clash.body.error.message).toMatch(/same game/);
+    const merged = (await h.api<LeaderboardView>('POST', '/leaderboard/merge', { from: bos[0].id, into: bos[1].id })).body;
+    expect(named(merged, 'Bo')).toMatchObject([{ id: bos[1].id, games: 2, wins: 1 }]);
+    expect(named(merged, 'Bo')[0].identities.map((i) => i.id).sort()).toEqual(bos.map((p) => p.id).sort());
+    const apart = (await h.api<LeaderboardView>('POST', '/leaderboard/separate', { id: bos[0].id })).body;
+    expect(named(apart, 'Bo')).toHaveLength(2);
+
+    // The standings are History added up: take a game out of one and it leaves the other.
+    const history = (await h.api<GameResult[]>('GET', '/history')).body;
+    expect(history[0].players.every((p) => /^[0-9a-f]{24}$/.test(p.profileId!))).toBe(true);
+    await h.api('DELETE', `/history/${encodeURIComponent(history[0].id)}`);
+    expect(await board()).toMatchObject({ games: 1, players: [{ games: 1 }, { games: 1 }] });
+  });
+
+  it('takes a game back out of the standings when its ending is undone, and never shows a screen who is who', async () => {
+    h = await new Harness().start();
+    const { host, first } = await playNight(['Ann', 'Bo']);
+    await until(async () => (await board()).games === 1, 'the game to count');
+    const { id } = (await board()).players[0].identities[0];
+    expect(JSON.stringify([host.pub, host.hostView, first.client.you])).not.toContain(id);
+    await host.host({ t: 'undo' });
+    await until(async () => (await board()).games === 0, 'the game to stop counting');
+  });
+
+  it('shows the leaderboard to players only once the host opens it, and never lets them change it', async () => {
+    h = await new Harness().start(new MemoryStore(), { BUZZOFF_ADMIN_PASSWORD: 'hunter2' });
+    const auth = { authorization: `Bearer ${(await h.api<{ token: string }>('POST', '/auth/login', { password: 'hunter2' })).body.token}` };
+    const { code, hostKey } = await h.createGame(RULES, auth);
+    const host = await h.connect('host', code, hostKey);
+    const ann = await h.join(code, 'Ann');
+    await h.join(code, 'Bo');
+    await host.host({ t: 'start' });
+    await host.host({ t: 'score.adjust', id: ann.playerId, delta: 400 });
+    await host.host({ t: 'game.end' });
+    await until(async () => (await board(auth)).games === 1, 'the game to count');
+
+    expect((await h.api<ServerInfo>('GET', '/info')).body.publicLeaderboard).toBe(false);
+    expect((await h.api('GET', '/leaderboard')).status).toBe(403);
+    expect(await board(auth)).toMatchObject({ canEdit: true, players: [{ identities: [{ games: 1 }] }, {}] });
+
+    const { settings } = (await h.api<SettingsView>('GET', '/settings', undefined, auth)).body;
+    expect((await h.api('PUT', '/settings', { ...settings, publicLeaderboard: true }, auth)).status).toBe(200);
+    expect((await h.api<ServerInfo>('GET', '/info')).body.publicLeaderboard).toBe(true);
+    const open = await board({ cookie: ann.cookie });
+    expect(open).toMatchObject({ canEdit: false, games: 1, players: [{ name: 'Ann', wins: 1, identities: [] }, { name: 'Bo', identities: [] }] });
+    expect(open.you).toBe(open.players[0].id);
+    expect((await h.api('POST', '/leaderboard/merge', { from: open.players[0].id, into: open.players[1].id })).status).toBe(401);
+    expect((await h.api('POST', '/leaderboard/separate', { id: open.players[0].id })).status).toBe(401);
   });
 });

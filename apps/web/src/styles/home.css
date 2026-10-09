@@ -270,12 +270,24 @@ html.kb-open .home {
 .home__foot {
   flex: none;
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px 10px;
   font-size: 0.875rem;
   color: var(--text-faint);
 }
 .home__foot a {
   color: var(--text-dim);
+}
+/* Too narrow for three links on a line (the container is measured inside its padding): the third goes underneath, without a dot left dangling. */
+@container app (max-width: 320px) {
+  .home__foot > span:nth-of-type(2) {
+    display: none;
+  }
+  .home__foot > a:nth-of-type(3) {
+    flex-basis: 100%;
+    text-align: center;
+  }
 }
 
 /* ================================================================ shorter screens */

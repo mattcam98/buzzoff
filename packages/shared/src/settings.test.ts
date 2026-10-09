@@ -13,7 +13,7 @@ describe('settings', () => {
 
   it('fills in defaults, so a document saved by an older version still loads', () => {
     expect(AppSettingsSchema.parse({ roomTtlHours: 48 })).toEqual({
-      publicUrl: null, defaultPresetId: null, roomTtlHours: 48, finishedTtlHours: 6, maxUploadMb: 25, sessionDays: 30,
+      publicUrl: null, defaultPresetId: null, roomTtlHours: 48, finishedTtlHours: 6, maxUploadMb: 25, sessionDays: 30, publicLeaderboard: false,
     });
   });
 });

@@ -8,7 +8,7 @@ game; browsers render what they are sent and ask the server to do things.
  TV screen ───┼── WebSocket ── Room ──┤ engine: pure state machine     │
  phones ──────┘   (Socket.IO)   │     │ schemas: every message, typed  │
                                 │     └────────────────────────────────┘
-        HTTP API ── packs, presets, join, history
+        HTTP API ── packs, presets, join, history, leaderboard
                                 │
                             Postgres (JSONB snapshots)
 ```
@@ -109,10 +109,11 @@ drive sound and animation only; missing one never leaves a screen wrong.
 
 | Who | Proves it with | Can do |
 |---|---|---|
-| Admin | The host password → a session token kept in that browser | Create games, read and edit packs and presets, view history, change settings |
+| Admin | The host password → a session token kept in that browser | Create games, read and edit packs and presets, view history, merge leaderboard entries, change settings |
 | Host of a game | A 256-bit host key returned once at creation and kept in that browser | Everything in that room |
 | Player | A token issued on joining and kept on that phone | Buzz, wager and answer as that one player. Never pick a clue: the board is the host's |
 | TV / spectator | The room code | Receive the public view; send nothing |
+| Anyone | Nothing | Read the leaderboard, if the host has made it public |
 
 - A socket's role is fixed at the handshake after its credential is checked.
   Host handlers are not attached to player sockets at all, so a forged host
@@ -189,17 +190,65 @@ size for a house full of people. Running several server processes would need
 sticky routing by room code or a shared room store; the room boundary
 (`Room`, `Rooms`, `Store`) is where that would go.
 
+## Results and the leaderboard
+
+When a game finishes, the room writes one `GameResult` document (`stats.ts`):
+who played, their scores, who won and each player's buzzer and answer
+statistics. History shows those documents as they are. The leaderboard is the
+same documents added up by a pure function, `buildLeaderboard` in
+`packages/shared/src/leaderboard.ts`; nothing about it is stored, so there is
+no second record to drift from the first. Removing a result, or undoing the
+end of a game, changes the standings because it changes their only input.
+`results.ts` on the server is the one door results go through, which lets it
+keep the computed standings in memory until the next result is saved or
+removed instead of reading the whole history for every request.
+
+**Recognising players.** There are no accounts. `POST /games/:code/join`
+gives a phone a random key in an `HttpOnly` cookie the first time it joins
+(a server-set cookie outlives the script-writable storage that browsers clear
+on their own) and renews it on every later join. The key is never stored: the
+room keeps a truncated SHA-256 of it per seat, next to the seat's token hash
+in the game's credentials rather than in the game state, so it cannot appear
+in any view. `buildResult` copies it onto the result as `profileId`. Two
+results with the same `profileId` are the same phone, whatever names were
+typed.
+
+What the cookie cannot know is settled in `leaderboard.ts`, in this order:
+
+1. A seat with a `profileId` is that profile. A seat without one (a game from
+   before this existed, or a browser that refused the cookie) is known by its
+   name, compared the way the lobby compares names.
+2. A bare name is taken to be a profile when exactly one profile has ever
+   played under it and the two never met in a game.
+3. The host's links (`PlayerLinks`, one JSON document in `settings`) override
+   that: `from → into` merges two entries, and an identity linked to itself is
+   kept apart from whatever its name would match.
+4. Two seats in one game are never one person. If links say otherwise for a
+   particular game, the second seat keeps its own identity there. A second
+   seat on the same phone that never scored, buzzed or answered is one
+   somebody joined and abandoned for another name, and is dropped.
+
+**Ranking** (`rankPlayers`) orders the entries one way at a time: counts rank
+everybody, rates rank only players above a minimum sample, equals share a rank.
+It runs in the browser, on the entries the API returns, so changing the order
+needs no request.
+
+`GET /api/leaderboard` answers the host always and everyone else only when the
+`publicLeaderboard` setting is on. It tells the caller which entry is theirs
+(from the cookie) and leaves out, for anyone but the host, which identities
+make up each entry.
+
 ## Web app (`apps/web`)
 
-A single-page React app with four surfaces that share a design system
+A single-page React app with five surfaces that share a design system
 (`styles/base.css`) and a connection layer (`lib/connection.ts`). The design
 system's surfaces are tokens in `base.css`: *glass* for cards and panels
 (`.bz-card`), *tile* for repeated rows, *well* for recessed areas inside a
 card, *bar* for sticky chrome and *scrim* for overlays. Components take their
 background, border, blur and shadow from those rather than defining their
 own, which is what keeps the dashboard, console, phone and TV looking alike. It is built
-as three pieces: the join screen and phone controller load first, and the TV
-and the host's pages each load as their own chunk when opened, so a phone
+in pieces: the join screen and phone controller load first, and the TV, the
+leaderboard and the host's pages each load as their own chunk when opened, so a phone
 never downloads the dashboard, the pack editor or zod. `@buzzoff/shared` is
 marked side-effect free and keeps what a phone needs (room codes, avatars,
 statistics) out of the modules that define schemas, which is what lets the
@@ -210,7 +259,8 @@ bundler leave the rest behind.
 | `/`, `/join/CODE` | Join |
 | `/play/CODE`, `/watch/CODE` | Phone controller, spectator |
 | `/tv/CODE` | Shared screen, sized entirely from the viewport so it fills any display |
-| `/host`, `/host/new`, `/host/packs`, `/host/history`, `/host/settings` | Dashboard |
+| `/host`, `/host/new`, `/host/packs`, `/host/history`, `/host/leaderboard`, `/host/settings` | Dashboard |
+| `/leaderboard` | The standings as players see them, when the host has opened them |
 | `/host/game/CODE` | Live console |
 
 **Phone layout.** The join and controller screens sit in a fixed shell
@@ -236,8 +286,9 @@ never do something the visible controls would not allow.
 
 | Layer | What it covers |
 |---|---|
+| Leaderboard unit tests (`packages/shared`) | Totals, what counts as a game and as a win, recognising players by profile and by name, shared phones, host merges and their limits, ranking with ties and minimum samples |
 | Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, the dice roll for the first pick, automatic opening, the hidden question and its held timer, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching and reveal order, the final, answer secrecy |
-| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch |
+| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch; the leaderboard across games, a returning phone under a new name, merging and separating players, who may see it |
 | Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; every phone screen measured for fit across phone sizes, orientations and keyboard heights |
 
 The server tests use the in-memory store. The Postgres store is exercised by

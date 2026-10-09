@@ -5,17 +5,19 @@ import { Button, Notice, Toasts } from './ui/kit';
 import { Home } from './views/Home';
 import { Play } from './views/Play';
 
-/** Phones get the join screen and controller up front; the TV and the host's pages each load as one chunk when opened. */
+/** Phones get the join screen and controller up front; the TV, the leaderboard and the host's pages each load as one chunk when opened. */
 function view<K extends string, M extends Record<K, ComponentType<any>>>(load: () => Promise<M>, name: K) {
   return lazy(async () => ({ default: (await load())[name] }));
 }
 const tv = () => import('./views/Tv');
+const PublicLeaderboard = view(() => import('./views/Leaderboard'), 'PublicLeaderboard');
 const host = () => import('./views/host');
 const Tv = view(tv, 'Tv');
 const TvCodeEntry = view(tv, 'TvCodeEntry');
 const HostConsole = view(host, 'HostConsole');
 const HostHome = view(host, 'HostHome');
 const History = view(host, 'History');
+const Leaderboard = view(host, 'Leaderboard');
 const NewGame = view(host, 'NewGame');
 const PackEditor = view(host, 'PackEditor');
 const Packs = view(host, 'Packs');
@@ -36,11 +38,13 @@ export function App() {
             <Route path="/watch/:code">{(p) => <Play key={code(p.code)} code={code(p.code)} spectator />}</Route>
             <Route path="/tv">{() => <TvCodeEntry />}</Route>
             <Route path="/tv/:code">{(p) => <Tv key={code(p.code)} code={code(p.code)} />}</Route>
+            <Route path="/leaderboard">{() => <PublicLeaderboard />}</Route>
             <Route path="/host">{() => <HostHome />}</Route>
             <Route path="/host/new">{() => <NewGame />}</Route>
             <Route path="/host/packs">{() => <Packs />}</Route>
             <Route path="/host/packs/:id">{(p) => <PackEditor key={p.id} id={p.id!} />}</Route>
             <Route path="/host/history">{() => <History />}</Route>
+            <Route path="/host/leaderboard">{() => <Leaderboard />}</Route>
             <Route path="/host/settings">{() => <Settings />}</Route>
             <Route path="/host/game/:code">{(p) => <HostConsole key={code(p.code)} code={code(p.code)} />}</Route>
             {/* Typing just the code after the address should work too. */}

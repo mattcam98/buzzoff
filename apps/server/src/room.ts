@@ -15,6 +15,7 @@ import {
 } from '@buzzoff/shared';
 import type { Server, Socket } from 'socket.io';
 import { z } from 'zod';
+import type { Results } from './results';
 import type { SavedGame, Store } from './store/types';
 import { Bucket, clock, log, random, randomId, randomToken, RecentIds, sha256, tokenMatches } from './util';
 
@@ -57,6 +58,8 @@ function toFailure(err: unknown, code: string): Ack<never> {
 }
 
 interface ClaimRecord extends Claim {
+  /** Who is asking, if their phone said. */
+  profileId?: string;
   secretHash: string;
   createdAt: number;
   status: 'pending' | 'approved' | 'denied';
@@ -66,6 +69,8 @@ interface ClaimRecord extends Claim {
 export class Room {
   state: GameState;
   readonly secrets: SavedGame['secrets'];
+  /** Which returning player is in which seat. It goes into the result, never into a view. */
+  private profiles: Record<string, string>;
   updatedAt: number;
 
   private history: { state: GameState; at: number; label: string }[] = [];
@@ -86,10 +91,12 @@ export class Room {
   constructor(
     private io: AppServer,
     private store: Store,
+    private results: Results,
     saved: SavedGame,
   ) {
     this.state = saved.state;
     this.secrets = saved.secrets;
+    this.profiles = this.secrets.profiles ??= {};
     this.updatedAt = saved.updatedAt;
     this.netTimer = setInterval(() => this.io.to(this.hostChannel).emit('net', this.netStats()), PROBE_INTERVAL_MS).unref();
     this.schedule();
@@ -142,7 +149,7 @@ export class Room {
     this.schedule();
     this.save();
     if (!wasFinished && this.state.phase === 'finished') {
-      this.store.saveResult(buildResult(this.state, this.resultId)).catch((err) => log.error('could not save result', { code: this.code, err }));
+      this.results.save(buildResult(this.state, this.resultId, this.profiles)).catch((err) => log.error('could not save result', { code: this.code, err }));
       log.info('game finished', { code: this.code, players: this.state.order.length });
     }
   }
@@ -217,7 +224,7 @@ export class Room {
     const resultId = this.resultId;
     this.commit({ state: restoreSnapshot(this.state, snapshot.state, snapshot.at, clock()), events: [] });
     if (wasFinished && this.state.phase !== 'finished') {
-      this.store.deleteResult(resultId).catch((err) => log.error('could not delete result', { code: this.code, err }));
+      this.results.remove(resultId).catch((err) => log.error('could not delete result', { code: this.code, err }));
     }
   }
 
@@ -246,7 +253,8 @@ export class Room {
 
   // -------------------------------------------------------------- joining
 
-  join(name: string, avatar: Avatar): JoinResponse {
+  /** `profileId` is who the joining phone says it is (see `identify` in http.ts), if it says. */
+  join(name: string, avatar: Avatar, profileId?: string): JoinResponse {
     const existing = findPlayerByName(this.state, name);
     // A seat whose phone has not connected yet is not abandoned, it is still arriving: two people
     // picking the same name at the same moment must not end up sharing one.
@@ -254,15 +262,25 @@ export class Room {
     if (existing && !arriving && !existing.connected && this.state.phase !== 'finished') {
       // Someone is asking for a disconnected player's seat. In the lobby
       // nothing is at stake, so hand it over; mid-game the host decides.
-      if (this.state.phase === 'lobby') return { status: 'joined', playerId: existing.id, token: this.issueToken(existing.id) };
-      return this.openClaim(existing.id, existing.name);
+      if (this.state.phase === 'lobby') {
+        // Nothing has been played in this seat, so it is simply whoever holds it now.
+        this.seat(existing.id, profileId);
+        return { status: 'joined', playerId: existing.id, token: this.issueToken(existing.id) };
+      }
+      return this.openClaim(existing.id, existing.name, profileId);
     }
     const id = randomId();
     const out = applySystem(this.state, { t: 'join', id, name, avatar }, this.env());
+    this.seat(id, profileId);
     const token = this.issueToken(id);
     this.unconnected.add(id);
     this.commit(out);
     return { status: 'joined', playerId: id, token };
+  }
+
+  private seat(playerId: string, profileId: string | undefined) {
+    if (profileId) this.profiles[playerId] = profileId;
+    else delete this.profiles[playerId];
   }
 
   /** Issue a fresh token, invalidating any earlier one for this player. */
@@ -278,12 +296,12 @@ export class Room {
     for (const [id, claim] of this.claims) if (claim.createdAt < cutoff) this.claims.delete(id);
   }
 
-  private openClaim(playerId: string, name: string): JoinResponse {
+  private openClaim(playerId: string, name: string, profileId?: string): JoinResponse {
     this.pruneClaims();
     const pending = [...this.claims.values()].filter((c) => c.status === 'pending');
     if (pending.length >= MAX_PENDING_CLAIMS) throw new GameError('busy', 'Too many people are waiting to rejoin — ask the host');
     const claimSecret = randomToken();
-    const claim: ClaimRecord = { id: randomId(), playerId, name, secretHash: sha256(claimSecret), createdAt: Date.now(), status: 'pending' };
+    const claim: ClaimRecord = { id: randomId(), playerId, name, profileId, secretHash: sha256(claimSecret), createdAt: Date.now(), status: 'pending' };
     this.claims.set(claim.id, claim);
     this.broadcastHost();
     return { status: 'pending', claimId: claim.id, claimSecret };
@@ -293,6 +311,9 @@ export class Room {
     const claim = this.claims.get(claimId);
     if (!claim || claim.status !== 'pending') throw new GameError('no_claim', 'That request has expired');
     if (approve && this.state.players[claim.playerId]) {
+      // Mid-game the seat stays with whoever started in it: a takeover is the same person on another
+      // phone far more often than a substitute. A seat nobody was known in takes the newcomer.
+      if (!this.profiles[claim.playerId]) this.seat(claim.playerId, claim.profileId);
       claim.token = this.issueToken(claim.playerId);
       claim.status = 'approved';
       this.playerSockets.get(claim.playerId)?.emit('bye', 'replaced');
@@ -313,6 +334,7 @@ export class Room {
 
   private forget(playerId: string) {
     delete this.secrets.players[playerId];
+    delete this.profiles[playerId];
     this.rtt.delete(playerId);
     this.lastYou.delete(playerId);
     this.unconnected.delete(playerId);

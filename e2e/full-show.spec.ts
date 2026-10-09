@@ -365,6 +365,20 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   expect(history[0]).toMatchObject({ code, name: 'E2E Night' });
   expect(history[0].players).toHaveLength(3);
 
+  // --- the night goes on the leaderboard, and each phone is recognised as the player it was
+  const standings = watch(await ann.context().newPage());
+  await standings.goto('/leaderboard');
+  await expect(standings.locator('.lb-row')).toHaveCount(3);
+  await expect(standings.locator('.lb-list li[data-you] .lb-name strong')).toHaveText('Ann');
+  await snap(standings, 'leaderboard-phone');
+  await standings.getByRole('radio', { name: 'Accuracy' }).click();
+  await standings.locator('.lb-list li[data-you] .lb-row').click();
+  await expect(standings.getByRole('dialog', { name: 'Ann’s record' })).toContainText('E2E Night');
+  await snap(standings, 'leaderboard-phone-player');
+  await standings.keyboard.press('Escape');
+  await expect(standings.getByRole('dialog')).toHaveCount(0);
+  await standings.close();
+
   // --- play again: everyone lands back in the lobby with scores cleared
   await host.evaluate(([c, setup]) => localStorage.setItem(`buzzoff.setup.${c}`, setup), [code, JSON.stringify({ packIds: [packs[0].id], rules: RULES })]);
   await host.reload();
@@ -399,7 +413,7 @@ test('a player who reloads keeps their seat, and a stranger cannot host', async 
   await expect(lost.locator('#room-status')).toContainText('No game with that code');
 });
 
-test('the host dashboard: create a game, edit a pack, review history', async ({ browser }) => {
+test('the host dashboard: create a game, edit a pack, review history and the leaderboard', async ({ browser }) => {
   const page = watch(await (await browser.newContext({ viewport: { width: 1280, height: 800 } })).newPage());
   await page.goto('/host');
   await snap(page, 'manage-home');
@@ -425,4 +439,13 @@ test('the host dashboard: create a game, edit a pack, review history', async ({ 
 
   await page.goto('/host/history');
   await snap(page, 'manage-history');
+
+  // The standings, with the host's tools for saying who is who in a player's record.
+  await page.getByRole('link', { name: 'Leaderboard' }).click();
+  await expect(page).toHaveURL(/\/host\/leaderboard$/);
+  await expect(page.locator('.lb-row')).toHaveCount(3);
+  await snap(page, 'manage-leaderboard');
+  await page.locator('.lb-row').first().click();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'Same person, counted twice?' })).toBeVisible();
+  await snap(page, 'manage-leaderboard-player');
 });

@@ -49,6 +49,15 @@ function safeEqual(a: string, b: string): boolean {
   return x.length === y.length && timingSafeEqual(x, y);
 }
 
+/** One cookie's value from a `Cookie` request header, or undefined. */
+export function cookie(header: string | undefined, name: string): string | undefined {
+  for (const part of header?.split(';') ?? []) {
+    const eq = part.indexOf('=');
+    if (eq > 0 && part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim();
+  }
+  return undefined;
+}
+
 /** Tokens are stored hashed, so a database leak does not hand out live sessions. */
 export const tokenMatches = (token: string | undefined, hash: string | undefined) =>
   !!token && !!hash && safeEqual(sha256(token), hash);

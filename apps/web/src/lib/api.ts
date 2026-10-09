@@ -1,7 +1,7 @@
 /** Typed wrapper around the HTTP API. */
 import type {
   AppSettings, AuditEntry, ClaimStatus, CreateGameRequest, CreateGameResponse, GameInfo, GameResult, GameRules, JoinRequest,
-  JoinResponse, Media, Pack, PackContent, PackFile, PackSummary, Preset, ServerInfo, SettingsView,
+  JoinResponse, LeaderboardView, Media, Pack, PackContent, PackFile, PackSummary, Preset, ServerInfo, SettingsView,
 } from '@buzzoff/shared';
 import { storage } from './storage';
 
@@ -84,4 +84,10 @@ export const api = {
 
   history: () => request<GameResult[]>('GET', '/history'),
   deleteResult: (id: string) => request<void>('DELETE', `/history/${encodeURIComponent(id)}`),
+
+  leaderboard: () => request<LeaderboardView>('GET', '/leaderboard'),
+  /** Count everything `from` has played as `into`'s. Both are ids of leaderboard entries. */
+  mergePlayers: (from: string, into: string) => request<LeaderboardView>('POST', '/leaderboard/merge', { from, into }),
+  /** Make one of an entry's identities its own player again. */
+  separatePlayer: (id: string) => request<LeaderboardView>('POST', '/leaderboard/separate', { id }),
 };

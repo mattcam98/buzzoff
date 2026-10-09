@@ -41,6 +41,7 @@ effect the moment it is saved, with no restart:
 | Default format | last played | The format the New game page opens on. |
 | Keep idle / finished games | 24 h / 6 h | How long a game nobody is touching stays on the server. |
 | Largest file | 25 MB | Largest image, audio or video file a question may use. |
+| Let players see the leaderboard | off | Off: only the host sees the standings. On: a Leaderboard link appears on the join screen and anyone who can open the address can see players' names, results and statistics. |
 | Host password | from `.env` | Changing it needs the current one and signs every device out. |
 | Sign-in lasts | 30 days | How long a device stays signed in as host. |
 
@@ -104,6 +105,40 @@ Things that go wrong at a party, and what to do:
 | A phone dies or a browser closes | Reopening the page puts them straight back in their seat. |
 | Someone switches to a different phone | They join again under the same name; you get a prompt to let them take over the seat. |
 | The server restarts mid-game | The game comes back **paused** with scores and seats intact. Resume when ready. |
+
+## The leaderboard
+
+Every finished game is kept in **History**. The **Leaderboard** page adds
+those games up into all-time standings: games played, wins and win rate, total,
+average and best score, how many judged answers were right, and how each
+player does on the buzzer. Tap a player for their full record and latest
+games.
+
+- **Nobody registers.** The first time a phone joins a game the server gives
+  it a cookie, and from then on that phone is the same player whatever name or
+  avatar is typed. The cookie holds a random key and nothing else; it is not
+  readable by scripts and is only ever sent to this server.
+- **New phone, cleared browser, private window?** That starts a new entry.
+  Open either entry on the host's Leaderboard page and merge them; a merge can
+  be undone from the same place. Games from before this feature are matched by
+  name, and can be separated the same way if two people shared one.
+- **What counts.** Any finished game with two or more players in which
+  something was played. Playing alone is practice. A win needs someone to
+  beat: when everyone finishes level, nobody is credited with one. Every
+  member of a winning team gets the win.
+- **How it is ranked.** By wins, with win rate breaking ties, and players who
+  are level share a rank. The other orders are win rate, points, accuracy and
+  buzzer. Rates only rank players with enough behind them (3 games, 10 judged
+  answers, 10 buzzes — or as many as the busiest player has, while the league
+  is new); everyone else is listed underneath. Points are shown but formats
+  score differently, so they say more about how much someone plays than how
+  well.
+- **Corrections.** The standings are worked out from History, not stored.
+  Remove a game from History and it stops counting; undo the end of a game and
+  it never counted.
+
+Only the host sees the leaderboard unless *Let players see the leaderboard* is
+switched on in Settings.
 
 ## On phones
 

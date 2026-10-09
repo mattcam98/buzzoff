@@ -4,7 +4,8 @@ import path from 'node:path';
 import {
   AppSettingsSchema, BUILTIN_PRESETS, ChangePasswordSchema, CreateGameSchema, GameError, GameRulesSchema, JoinSchema,
   PackContentSchema, PackFileSchema, summarizePack,
-  type ApiError, type GameInfo, type Pack, type PackContent, type PackFile, type Preset, type ServerInfo, type SettingsView,
+  type ApiError, type GameInfo, type LeaderboardView, type Pack, type PackContent, type PackFile, type Preset, type ServerInfo,
+  type SettingsView,
 } from '@buzzoff/shared';
 import compression from 'compression';
 import express, { type NextFunction, type Request, type RequestHandler, type Response } from 'express';
@@ -13,11 +14,12 @@ import { z } from 'zod';
 import type { AdminAuth, Caller } from './auth';
 import { VERSION, type Config } from './config';
 import { storeMedia } from './media';
+import type { Results } from './results';
 import type { Room } from './room';
 import type { Rooms } from './rooms';
 import type { Audit, Settings } from './settings';
 import type { Store } from './store/types';
-import { Limiter, log, randomId } from './util';
+import { cookie, Limiter, log, randomId, randomToken, sha256 } from './util';
 
 class HttpError extends Error {
   constructor(
@@ -38,6 +40,26 @@ function clientError(err: unknown): number | null {
 const bearer = (req: Request) => req.get('authorization')?.replace(/^Bearer\s+/i, '');
 const caller = (req: Request): Caller => ({ ip: req.ip ?? 'unknown', agent: req.get('user-agent') ?? '' });
 
+/**
+ * How a returning player is recognised without an account. A phone is given a random key in a
+ * cookie the first time it joins a game; it is HttpOnly, so no script can read or lose it, and it
+ * outlasts the storage that browsers clear on their own. The key itself is never stored or sent
+ * anywhere else: results carry a hash of it, which says "the same phone as last time" and nothing more.
+ */
+const PLAYER_COOKIE = 'buzzoff_player';
+const PLAYER_COOKIE_DAYS = 400; // the longest a browser will keep one; every join starts it again
+const profileId = (key: string) => sha256(key).slice(0, 24);
+function playerKey(req: Request): string | null {
+  const key = cookie(req.get('cookie'), PLAYER_COOKIE);
+  return key && /^[\w-]{24,64}$/.test(key) ? key : null;
+}
+/** Who is joining: the phone's existing key, or a new one, kept for next time either way. */
+function identify(req: Request, res: Response): string {
+  const key = playerKey(req) ?? randomToken();
+  res.cookie(PLAYER_COOKIE, key, { httpOnly: true, sameSite: 'lax', secure: req.secure, path: '/api', maxAge: PLAYER_COOKIE_DAYS * 86_400_000 });
+  return profileId(key);
+}
+
 function parse<T extends z.ZodType>(schema: T, value: unknown): z.infer<T> {
   const result = schema.safeParse(value);
   if (result.success) return result.data;
@@ -46,8 +68,8 @@ function parse<T extends z.ZodType>(schema: T, value: unknown): z.infer<T> {
   throw new HttpError(400, 'invalid', `${where}${issue.message}`);
 }
 
-export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; auth: AdminAuth; settings: Settings; audit: Audit }) {
-  const { config, store, rooms, auth, settings, audit } = deps;
+export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; results: Results; auth: AdminAuth; settings: Settings; audit: Audit }) {
+  const { config, store, rooms, results, auth, settings, audit } = deps;
   const app = express();
   app.set('trust proxy', config.TRUST_PROXY);
   app.disable('x-powered-by');
@@ -98,8 +120,8 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
   });
 
   api.get('/info', (_req, res) => {
-    const { publicUrl, defaultPresetId } = settings.current;
-    res.json({ version: VERSION, authRequired: auth.required, publicUrl, defaultPresetId } satisfies ServerInfo);
+    const { publicUrl, defaultPresetId, publicLeaderboard } = settings.current;
+    res.json({ version: VERSION, authRequired: auth.required, publicUrl, defaultPresetId, publicLeaderboard } satisfies ServerInfo);
   });
 
   // ------------------------------------------------------------ sign-in
@@ -250,7 +272,8 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
   });
   api.post('/games/:code/join', limit(joining), (req, res) => {
     const body = parse(JoinSchema, req.body);
-    res.json(roomOf(req).join(body.name, body.avatar));
+    const room = roomOf(req);
+    res.json(room.join(body.name, body.avatar, identify(req, res)));
   });
   api.get('/games/:code/claims/:id', (req, res) => {
     const status = roomOf(req).claimStatus(String(req.params.id), String(req.query.secret ?? ''));
@@ -269,14 +292,45 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; a
     res.status(204).end();
   });
 
-  // ------------------------------------------------------------ history
+  // ------------------------------------------------------------ history and the leaderboard
 
   api.get('/history', admin, async (_req, res) => {
-    res.json(await store.listResults(100));
+    res.json(await results.list(100));
   });
   api.delete('/history/:id', admin, async (req, res) => {
-    await store.deleteResult(String(req.params.id));
+    await results.remove(String(req.params.id));
     res.status(204).end();
+  });
+
+  const leaderboard = async (req: Request): Promise<LeaderboardView> => {
+    const board = await results.leaderboard();
+    const canEdit = auth.allows(bearer(req));
+    const key = playerKey(req);
+    const profile = key && profileId(key);
+    return {
+      games: board.games,
+      // Which phones and names make up an entry is the host's business only.
+      players: canEdit ? board.players : board.players.map((p) => ({ ...p, identities: [] })),
+      you: (profile && board.players.find((p) => p.identities.some((i) => i.id === profile))?.id) ?? null,
+      canEdit,
+    };
+  };
+  // Open to the host always, and to everyone else when the host has made it public.
+  const standings: RequestHandler = (req, _res, next) =>
+    next(settings.current.publicLeaderboard || auth.allows(bearer(req)) ? undefined : new HttpError(403, 'private', 'The leaderboard is not public on this server'));
+  const identity = z.string().min(1).max(80);
+
+  api.get('/leaderboard', standings, async (req, res) => {
+    res.json(await leaderboard(req));
+  });
+  api.post('/leaderboard/merge', admin, async (req, res) => {
+    const { from, into } = parse(z.object({ from: identity, into: identity }), req.body);
+    await results.merge(from, into);
+    res.json(await leaderboard(req));
+  });
+  api.post('/leaderboard/separate', admin, async (req, res) => {
+    await results.separate(parse(z.object({ id: identity }), req.body).id);
+    res.json(await leaderboard(req));
   });
 
   api.use((_req, _res, next) => next(new HttpError(404, 'not_found', 'No such endpoint')));

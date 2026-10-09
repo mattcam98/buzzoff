@@ -11,7 +11,7 @@ import type { BuzzAck, HostAction, PlayerAction } from '../actions';
 import type { Category, Survey } from '../content';
 import type { GameMode, GameRules } from '../rules';
 import {
-  canStart, emptyStats, notReady, type Avatar, type BoardCategory, type GameEvent, type GameState, type Player, type RoundState,
+  canStart, emptyStats, nameKey, notReady, type Avatar, type BoardCategory, type GameEvent, type GameState, type Player, type RoundState,
 } from '../state';
 import type { HostView, PlayerView, PublicView, RoundPublic, RoundSecret, TeamView } from '../views';
 import { activePlayers, fail, playersOf, ranked, requirePlayer, type Ctx, type Mode } from './core';
@@ -189,8 +189,6 @@ function removePlayer(g: GameState, id: string): void {
   if (g.champions) g.champions = g.champions.filter((x) => x !== id);
 }
 
-const nameKey = (name: string) => name.toLowerCase().replace(/\s+/g, '');
-/** Names are compared without case or spacing, so "Ann" and "a n n" are the same player. */
 export const findPlayerByName = (g: GameState, name: string): Player | undefined =>
   playersOf(g).find((p) => nameKey(p.name) === nameKey(name));
 const nameTaken = (g: GameState, name: string, exceptId?: string) =>

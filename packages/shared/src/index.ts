@@ -8,6 +8,7 @@ export * from './protocol';
 export * from './roomCode';
 export * from './settings';
 export * from './stats';
+export * from './leaderboard';
 export { GameError, type Ctx } from './engine/core';
 export {
   applyBuzz, applyHost, applyPlayer, applySystem, assembleRounds, createGame, findPlayerByName, hostView, nextDeadline, playerView,

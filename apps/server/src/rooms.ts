@@ -3,6 +3,7 @@ import {
   applySystem, assembleRounds, createGame, GameError, normalizeRoomCode,
   type ContentPool, type CreateGameRequest, type CreateGameResponse,
 } from '@buzzoff/shared';
+import type { Results } from './results';
 import { Room, type AppServer } from './room';
 import type { Settings } from './settings';
 import type { Store } from './store/types';
@@ -18,6 +19,7 @@ export class Rooms {
   constructor(
     private io: AppServer,
     private store: Store,
+    private results: Results,
     private settings: Settings,
   ) {
     this.sweeper = setInterval(() => void this.sweep(), SWEEP_INTERVAL_MS).unref();
@@ -42,7 +44,7 @@ export class Rooms {
       try {
         const env = { now: clock(), rand: random, rtt: () => null };
         const state = applySystem(saved.state, { t: 'recover', savedAt: saved.updatedAt }, env).state;
-        this.rooms.set(saved.code, new Room(this.io, this.store, { ...saved, state }));
+        this.rooms.set(saved.code, new Room(this.io, this.store, this.results, { ...saved, state }));
       } catch (err) {
         // One unreadable game must not keep every other game, or the server, from coming back.
         log.error('could not restore game', { code: saved.code, err });
@@ -74,7 +76,8 @@ export class Rooms {
     }
     const hostKey = randomToken(32);
     const state = createGame({ code, rules: req.rules, rounds, packTitles: titles, now: clock() });
-    const room = new Room(this.io, this.store, { code, state, secrets: { hostKeyHash: sha256(hostKey), players: {}, plays: 1 }, updatedAt: Date.now() });
+    const secrets = { hostKeyHash: sha256(hostKey), players: {}, plays: 1, profiles: {} };
+    const room = new Room(this.io, this.store, this.results, { code, state, secrets, updatedAt: Date.now() });
     this.rooms.set(code, room);
     await room.flush();
     log.info('game created', { code, rules: req.rules.name, packs: titles });

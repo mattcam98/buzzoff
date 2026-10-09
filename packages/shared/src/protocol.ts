@@ -108,6 +108,8 @@ export interface ServerInfo {
   publicUrl: string | null;
   /** The format the New game page should start on, if the administrator chose one. */
   defaultPresetId: string | null;
+  /** Whether the leaderboard is open to players. */
+  publicLeaderboard: boolean;
 }
 
 export interface ApiError {

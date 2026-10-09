@@ -53,7 +53,7 @@ export class MemoryStore implements Store {
   async saveResult(result: GameResult) {
     this.results.set(result.id, copy(result));
   }
-  async listResults(limit: number) {
+  async listResults(limit?: number) {
     return [...this.results.values()].sort((a, b) => b.finishedAt - a.finishedAt).slice(0, limit).map(copy);
   }
   async deleteResult(id: string) {

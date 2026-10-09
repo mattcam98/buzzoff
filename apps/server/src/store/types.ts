@@ -7,6 +7,11 @@ interface RoomSecrets {
   players: Record<string, string>;
   /** How many games have been played in this room (it goes up on a rematch). */
   plays: number;
+  /**
+   * playerId -> the returning player in that seat, where their phone said who it was. It is kept
+   * here rather than in the game state so that it never reaches a screen.
+   */
+  profiles?: Record<string, string>;
 }
 
 export interface SavedGame {
@@ -47,7 +52,8 @@ export interface Store {
   deleteGame(code: string): Promise<void>;
 
   saveResult(result: GameResult): Promise<void>;
-  listResults(limit: number): Promise<GameResult[]>;
+  /** Newest first. Without a limit, every result there is. */
+  listResults(limit?: number): Promise<GameResult[]>;
   deleteResult(id: string): Promise<void>;
 
   getSetting(key: string): Promise<string | null>;

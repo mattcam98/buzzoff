@@ -79,8 +79,14 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
   const [claim, setClaim] = useState<{ id: string; secret: string } | null>(null);
   const [changingCode, setChangingCode] = useState(false);
   const [, refresh] = useState(0);
+  const [leaderboard, setLeaderboard] = useState(false);
   const codeInput = useRef<HTMLInputElement>(null);
   useFixedViewport();
+
+  // The standings are linked from here only where the host has opened them to players.
+  useEffect(() => {
+    api.info().then((info) => setLeaderboard(info.publicLeaderboard), () => undefined);
+  }, []);
 
   const complete = code.length === ROOM_CODE_LENGTH;
   const seat = complete ? storage.seat(code) : null;
@@ -269,6 +275,12 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
         <Link href="/host">Host a game</Link>
         <span aria-hidden>·</span>
         <Link href="/tv">Open a TV screen</Link>
+        {leaderboard && (
+          <>
+            <span aria-hidden>·</span>
+            <Link href="/leaderboard">Leaderboard</Link>
+          </>
+        )}
       </footer>
     </main>
   );

@@ -48,6 +48,8 @@ export const AppSettingsSchema = z.object({
   maxUploadMb: bounded('maxUploadMb'),
   /** How long a host stays signed in on a device. */
   sessionDays: bounded('sessionDays'),
+  /** Whether anyone who can reach the server may see the leaderboard, or only the host. */
+  publicLeaderboard: z.boolean().default(false),
 });
 export type AppSettings = z.infer<typeof AppSettingsSchema>;
 

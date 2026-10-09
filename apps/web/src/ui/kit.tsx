@@ -93,7 +93,8 @@ export function TimerBar({ timer, held, clockOffset, pausedAt, className }: {
   );
 }
 
-export function Modal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
+/** `heading` replaces the plain title at the top of the panel; `title` still names the dialog. */
+export function Modal({ title, heading, className, children, onClose }: { title: string; heading?: ReactNode; className?: string; children: ReactNode; onClose: () => void }) {
   const panel = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
   close.current = onClose;
@@ -120,8 +121,8 @@ export function Modal({ title, children, onClose }: { title: string; children: R
   }, []);
   return (
     <div className="bz-modal" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div ref={panel} className="bz-modal__panel" role="dialog" aria-modal="true" aria-label={title}>
-        <h2>{title}</h2>
+      <div ref={panel} className={cx('bz-modal__panel', className)} role="dialog" aria-modal="true" aria-label={title}>
+        {heading ?? <h2>{title}</h2>}
         {children}
       </div>
     </div>

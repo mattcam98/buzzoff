@@ -50,10 +50,29 @@
   .mg-top__new {
     margin-left: auto;
   }
+  /* Five pages on one line of a phone: tighter, and able to scroll sideways on the narrowest. */
   .mg-nav {
     order: 3;
-    width: 100%;
+    width: calc(100% + 16px);
     margin: 0 -8px;
+    gap: 0;
+    justify-content: space-between;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .mg-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .mg-nav a {
+    padding: 8px 5px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+}
+@media (min-width: 400px) and (max-width: 560px) {
+  .mg-nav a {
+    padding-inline: 10px;
+    font-size: 0.9375rem;
   }
 }
 
