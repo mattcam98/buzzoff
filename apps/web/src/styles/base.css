@@ -84,6 +84,19 @@
   color-scheme: dark;
 }
 
+/*
+ * The pages that scroll (the host's pages, the console, the leaderboard) carry tall cards under
+ * sticky bars. Blurred glass there is blurred again on every frame of a scroll, and a browser that
+ * draws a card's blur in two pieces leaves a pale band across the card. So on these pages glass is
+ * not blurred: it sits on enough ink to keep the honeycomb out from behind its text instead.
+ */
+.mg,
+.hc,
+.lb-page {
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03)), linear-gradient(rgb(26 21 70 / 0.75) 0 0);
+  --glass-blur: none;
+}
+
 *,
 *::before,
 *::after {

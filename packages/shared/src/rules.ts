@@ -198,13 +198,15 @@ export const BUILTIN_PRESETS: Preset[] = [
     rules: {
       ...base,
       name: 'The Full Show',
+      lateJoin: false,
       rounds: [
         trivia('Board One', { wagers: 1 }),
         trivia('Board Two', { valueMultiplier: 2, wagers: 1 }),
         final(),
         fastMoney(),
       ],
-      buzzer: DEFAULT_BUZZER,
+      // As on the show, a player who missed may buzz again; the longer grace period records more of the near misses.
+      buzzer: { ...DEFAULT_BUZZER, rebuzz: true, graceMs: 700 },
     },
   },
   {
