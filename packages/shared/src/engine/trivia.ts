@@ -29,7 +29,7 @@ const MIN_REOPEN_MS = 5_000;
 
 const HIDDEN: BuzzerView = { state: 'hidden', ms: null, deltaMs: null, rank: null };
 
-const activeClue = (r: TriviaRound): ActiveClue => r.clue ?? fail('no_clue', 'No clue is in play');
+const activeClue = (r: TriviaRound): ActiveClue => r.clue ?? fail('no_clue', 'No question is in play');
 
 const canStillBuzz = (g: GameState, c: ActiveClue) => activePlayers(g).filter((p) => !c.excluded.includes(p.id));
 
@@ -37,13 +37,13 @@ const canStillBuzz = (g: GameState, c: ActiveClue) => activePlayers(g).filter((p
 const effectiveMs = (a: BuzzAttempt) => a.adjustedMs ?? a.ms;
 
 function selectClue(g: GameState, r: TriviaRound, cat: number, idx: number, ctx: Ctx): void {
-  if (r.stage !== 'board') fail('bad_stage', 'A clue can only be picked from the board');
-  const clue = r.board[cat]?.clues[idx] ?? fail('no_clue', 'That clue does not exist');
-  if (clue.used) fail('clue_used', 'That clue has already been played');
+  if (r.stage !== 'board') fail('bad_stage', 'A question can only be picked from the board');
+  const clue = r.board[cat]?.clues[idx] ?? fail('no_clue', 'That question does not exist');
+  if (clue.used) fail('clue_used', 'That question has already been played');
 
   const controller = r.controlId ? g.players[r.controlId] : undefined;
   if (clue.wager && (!controller || controller.eliminated)) {
-    fail('no_control', 'This is a wager clue. Give a player the board first.');
+    fail('no_control', 'This is a wager question. Give a player the board first.');
   }
 
   const c: ActiveClue = {
@@ -213,7 +213,7 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
         // Dispute handling: discard the current buzz and open again for everyone still eligible.
         const c = activeClue(r);
         if (c.stage !== 'open' && c.stage !== 'answering') fail('bad_stage', 'There is no buzz to reset');
-        if (c.wager) fail('bad_stage', 'A wager clue has no buzzer');
+        if (c.wager) fail('bad_stage', 'A wager question has no buzzer');
         if (c.answererId) g.stats[c.answererId].buzzWins -= 1;
         if (c.stage === 'open') holdTimer(c, ctx.now);
         openBuzzers(g, c, ctx, 'resume');
@@ -225,13 +225,13 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
       case 'clue.reveal': {
         const c = activeClue(r);
         if (c.stage === 'result') fail('bad_stage', 'The answer is already showing');
-        if (c.stage === 'wager') fail('bad_stage', 'Take the wager first, or cancel the clue');
+        if (c.stage === 'wager') fail('bad_stage', 'Take the wager first, or cancel the question');
         finish(r, c, null, ctx);
         return true;
       }
       case 'clue.continue': {
         const c = activeClue(r);
-        if (c.stage !== 'result') fail('bad_stage', 'Finish the clue first');
+        if (c.stage !== 'result') fail('bad_stage', 'Finish the question first');
         r.clue = null;
         r.stage = r.board.every((cat) => cat.clues.every((cl) => cl.used)) ? 'done' : 'board';
         return true;

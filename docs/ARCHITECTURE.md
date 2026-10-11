@@ -15,6 +15,11 @@ game; browsers render what they are sent and ask the server to do things.
 
 ## The engine (`packages/shared/src/engine`)
 
+A word on words: the code and the pack format call a trivia question a *clue*
+(a category holds `clues`, the host action is `clue.select`). Every screen
+calls it a question, because a host reads "clue" as a hint, and there are no
+hints. This document uses the code's word.
+
 The game is a pure function: `(state, action, clock) → new state + events`. It
 reads no clock, makes no random numbers and touches no network; those arrive
 as arguments. That is why the buzzer and every transition can be unit-tested

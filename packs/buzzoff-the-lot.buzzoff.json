@@ -3,7 +3,7 @@
   "version": 1,
   "pack": {
     "title": "BuzzOff: The Lot",
-    "description": "Every BuzzOff question in one pack. Most categories hold several clues at each value and a game is dealt one of them, so a question takes a long time to come round again. Distances are in kilometres and prices in euros. Each survey stands for a hundred people: its answers add up to 100, following published polls where there is one and estimated where there is not.",
+    "description": "Every BuzzOff question in one pack. Most categories hold several questions at each value and a game is dealt one of them, so a question takes a long time to come round again. Distances are in kilometres and prices in euros. Each survey stands for a hundred people: its answers add up to 100, following published polls where there is one and estimated where there is not.",
     "author": "BuzzOff",
     "categories": [
       {

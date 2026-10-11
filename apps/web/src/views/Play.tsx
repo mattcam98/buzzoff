@@ -323,7 +323,7 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
           ) : picker ? (
             `${picker.name} is picking`
           ) : (
-            'Next clue coming up'
+            'Next question coming up'
           )}
         </h1>
         <div
@@ -389,7 +389,7 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
             {mine ? <p className="play__delta bz-num">{fmtDelta(mine.delta)}</p> : <p>{gotIt ? `${players[gotIt.playerId]?.name ?? 'Someone'} got it.` : 'Nobody got it.'}</p>}
           </Panel>
         ) : clue.isWager ? (
-          <Panel eyebrow="Wager clue" title={answerer?.id === me?.id ? 'Answer out loud' : `${answerer?.name ?? 'Someone'} is answering`} tone={answerer?.id === me?.id ? 'buzz' : undefined} />
+          <Panel eyebrow="Wager question" title={answerer?.id === me?.id ? 'Answer out loud' : `${answerer?.name ?? 'Someone'} is answering`} tone={answerer?.id === me?.id ? 'buzz' : undefined} />
         ) : you && you.buzzer.state !== 'hidden' ? (
           <Buzzer {...ctx} you={you} round={round} />
         ) : (
@@ -439,12 +439,12 @@ function RollPanel({ conn, pub, me, players, roll }: Ctx & { roll: NonNullable<T
         ? ['A tie! You roll again', 'Get ready.']
         : ['A tie!', `${tied.map((id) => players[id]?.name).filter(Boolean).join(' and ')} roll again.`]
       : canRoll
-        ? ['Tap to roll', 'The highest roll picks the first clue.']
+        ? ['Tap to roll', 'The highest roll picks the first question.']
         : inIt
           ? [`You rolled a ${mine}`, waitingFor ? `Waiting for ${waitingFor} more…` : 'Here it comes…']
           : me && mine !== null
             ? [`You rolled a ${mine}`, 'Not enough this time. Watch the tie-break.']
-            : ['Rolling for the first pick', 'The highest roll picks the first clue.'];
+            : ['Rolling for the first pick', 'The highest roll picks the first question.'];
 
   return (
     <section className="play__panel play__roll bz-rise" data-tone={winner?.id === me?.id && winner ? 'good' : canRoll ? 'buzz' : undefined}>
@@ -957,7 +957,7 @@ function FinishedPanel({ pub, me }: Ctx) {
         {stats && (
           <dl className="play__stats">
             <div>
-              <dt>Clues won</dt>
+              <dt>Questions won</dt>
               <dd className="bz-num">{stats.buzzWins}</dd>
             </div>
             <div>

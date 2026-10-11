@@ -43,8 +43,8 @@ function describeIssue(draft: PackContent, path: PropertyKey[], message: string)
     `the ${String(what ?? fallback)} ${/^Too small/.test(message) ? 'is empty' : /^Too big/.test(message) ? 'is too long' : `is not valid (${message})`}`;
   if (section === 'categories' && typeof i === 'number') {
     const where = `Category ${name(draft.categories[i]?.title, `#${i + 1}`)}`;
-    if (list === 'clues' && typeof j === 'number') return `${where}, clue ${j + 1}: ${problem(field, 'clue')}`;
-    if (list === 'clues') return `${where} needs at least one clue with a question and an answer`;
+    if (list === 'clues' && typeof j === 'number') return `${where}, question ${j + 1}: ${problem(field === 'question' ? 'wording' : field, 'question')}`;
+    if (list === 'clues') return `${where} needs at least one question with an answer`;
     return `${where}: ${problem(list, 'category')}`;
   }
   if (section === 'surveys' && typeof i === 'number') {
@@ -206,7 +206,7 @@ function Editor({ id }: { id: string }) {
 
       <div className="mg-tabs" role="tablist" aria-label="Pack contents">
         <button type="button" role="tab" aria-selected={tab === 'categories'} onClick={() => setTab('categories')}>
-          Trivia <span>{plural(draft.categories.length, 'category', 'categories')} · {plural(clueCount, 'clue')}</span>
+          Trivia <span>{plural(draft.categories.length, 'category', 'categories')} · {plural(clueCount, 'question')}</span>
         </button>
         <button type="button" role="tab" aria-selected={tab === 'surveys'} onClick={() => setTab('surveys')}>
           Surveys <span>{plural(draft.surveys.length, 'question')}</span>
@@ -218,8 +218,8 @@ function Editor({ id }: { id: string }) {
           {draft.categories.length === 0 && (
             <div className="bz-card mg-empty mg-empty--inline">
               <p>
-                No categories yet. A category is one column on the board: a theme and a handful of clues that get harder as the points go up. Give it
-                several clues at the same value and each game is dealt a different one.
+                No categories yet. A category is one column on the board: a theme and a handful of questions that get harder as the points go up. Give it
+                several questions at the same value and each game is dealt a different one.
               </p>
             </div>
           )}
@@ -236,7 +236,7 @@ function Editor({ id }: { id: string }) {
               onChange={(c) => setCategory(i, c)}
               onMove={(to) => patch({ categories: move(draft.categories, i, to) })}
               onRemove={() => {
-                if (cat.clues.some((k) => k.question.trim()) && !window.confirm(`Remove “${cat.title || 'this category'}” and its ${plural(cat.clues.length, 'clue')}?`)) return;
+                if (cat.clues.some((k) => k.question.trim()) && !window.confirm(`Remove “${cat.title || 'this category'}” and its ${plural(cat.clues.length, 'question')}?`)) return;
                 patch({ categories: draft.categories.filter((_, k) => k !== i) });
               }}
               requestFocus={setFocus}
@@ -315,7 +315,7 @@ function CategoryCard({ category: cat, index, count, open, focus, onFocusDone, r
           </span>
           <span className="mg-cat__name">{cat.title.trim() || 'Untitled category'}</span>
           <span className="mg-chip">
-            {filled}/{cat.clues.length} clues
+            {filled}/{cat.clues.length} questions
           </span>
           {cat.singleAttempt && <span className="bz-pill bz-pill--cyan">no steals</span>}
         </button>
@@ -354,7 +354,7 @@ function CategoryCard({ category: cat, index, count, open, focus, onFocusDone, r
                 onChange={(c) => setClue(i, c)}
                 onMove={(to) => onChange({ ...cat, clues: move(cat.clues, i, to) })}
                 onRemove={() => {
-                  if ((clue.question.trim() || clue.answer.trim()) && !window.confirm(`Remove clue ${i + 1} and what is written in it?`)) return;
+                  if ((clue.question.trim() || clue.answer.trim()) && !window.confirm(`Remove question ${i + 1} and what is written in it?`)) return;
                   onChange({ ...cat, clues: cat.clues.filter((_, k) => k !== i) });
                 }}
                 onNext={() => {
@@ -367,7 +367,7 @@ function CategoryCard({ category: cat, index, count, open, focus, onFocusDone, r
           </ol>
           {cat.clues.length < MAX_CLUES_PER_CATEGORY && (
             <Button variant="ghost" size="s" onClick={addClue}>
-              + Add a clue
+              + Add a question
             </Button>
           )}
         </div>
@@ -443,7 +443,7 @@ function ClueRow({ clue, index, count, autoFocus, onFocusDone, onChange, onMove,
             {more ? 'Less' : 'More'}
             {extras > 0 && !more && <span className="mg-dot" aria-label={`${extras} extra details`} />}
           </button>
-          <RowTools index={index} count={count} what={`clue ${index + 1}`} onMove={onMove} onRemove={count > 1 ? onRemove : undefined} />
+          <RowTools index={index} count={count} what={`question ${index + 1}`} onMove={onMove} onRemove={count > 1 ? onRemove : undefined} />
         </div>
       </div>
 
@@ -515,7 +515,7 @@ function MediaField({ media, onChange }: { media: Media | undefined; onChange: (
       <span className="bz-label">Picture, sound or video</span>
       {media ? (
         <div className="mg-media__has">
-          {media.kind === 'image' && <img src={media.url} alt="Clue media preview" />}
+          {media.kind === 'image' && <img src={media.url} alt="Preview of the picture for this question" />}
           {media.kind === 'audio' && <audio src={media.url} controls preload="none" />}
           {media.kind === 'video' && <video src={media.url} controls preload="metadata" />}
           <span className="mg-media__info">

@@ -80,7 +80,7 @@ function WagerForm({ name, max, run }: { name: string | undefined; max: number; 
   return (
     <form className="hc-wager" onSubmit={submit}>
       <p>
-        <strong>{name}</strong> is entering a wager on their phone (up to {fmtScore(max)}). The clue stays hidden until it’s locked in. You can also enter it for them:
+        <strong>{name}</strong> is entering a wager on their phone (up to {fmtScore(max)}). The question stays hidden until it’s locked in. You can also enter it for them:
       </p>
       <input className="bz-input" type="number" min={0} max={max} step={1} value={wager} onChange={(e) => setWager(e.target.value)} placeholder="Wager" aria-label="Wager amount" />
       <Button type="submit" variant="primary" disabled={wager === ''}>
@@ -103,17 +103,17 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
       <section className="hc-card hc-stage">
         <div className="hc-stage__head">
           <div>
-            <span className="bz-eyebrow">{round.title} · {plural(left, 'clue')} left</span>
-            <h1>{picker ? `${picker.name} picks` : 'Pick a clue'}</h1>
+            <span className="bz-eyebrow">{round.title} · {plural(left, 'question')} left</span>
+            <h1>{picker ? `${picker.name} picks` : 'Pick a question'}</h1>
           </div>
-          <Button variant="ghost" size="s" onClick={() => confirm(left ? `End this round with ${plural(left, 'clue')} unplayed?` : 'End this round?') && run({ t: 'round.end' })}>
+          <Button variant="ghost" size="s" onClick={() => confirm(left ? `End this round with ${plural(left, 'question')} unplayed?` : 'End this round?') && run({ t: 'round.end' })}>
             End round
           </Button>
         </div>
         <Board round={round} secret={secret} players={players} paused={pub.paused} run={run} />
         <p className="hc-note">
-          {picker ? `${picker.name} calls a category and a value; you click it. ` : 'Players call the clue; you click it. '}★ marks a hidden wager (only you
-          can see it). Hover a clue to preview it.{round.board.some((cat) => cat.blurb) && ' Hold a category to read its description.'}
+          {picker ? `${picker.name} calls a category and a value; you click it. ` : 'Players call a category and a value; you click it. '}★ marks a hidden wager (only you
+          can see it). Hover a value to preview its question.{round.board.some((cat) => cat.blurb) && ' Hold a category to read its description.'}
         </p>
       </section>
     );
@@ -189,8 +189,9 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
             Reveal answer
           </Button>
         )}
-        <Button variant="ghost" onClick={() => confirm('Throw this clue out? Any points are reversed and it goes back on the board.') && run({ t: 'clue.cancel' })}>
-          Throw out clue
+        {/* Not a hint for the players: this takes the question out of play, as if it had never been picked. */}
+        <Button variant="ghost" title="Take this question out of play and go back to the board" onClick={() => confirm('Cancel this question? Any points from it are taken back, and it goes back on the board to be picked again.') && run({ t: 'clue.cancel' })}>
+          Cancel question
         </Button>
       </div>
 

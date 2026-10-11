@@ -129,7 +129,7 @@ function ResultCard({ result, onRemove }: { result: GameResult; onRemove: () => 
             <tr>
               <th scope="col">Player</th>
               <th scope="col">Score</th>
-              <th scope="col">Clues won</th>
+              <th scope="col">Questions won</th>
               <th scope="col">Correct</th>
               <th scope="col">Fastest buzz</th>
               <th scope="col">Average buzz</th>

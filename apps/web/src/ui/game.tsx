@@ -72,7 +72,7 @@ export function BuzzLadder({ attempts, players, adjusted, limit = 6 }: {
 export function roundBlurb(round: RoundPublic): string {
   if (round.mode === 'trivia') {
     const clues = round.board[0]?.clues.length ?? 0;
-    return `${plural(round.board.length, 'category', 'categories')} · ${plural(clues, 'clue')} each${round.multiplier > 1 ? ` · ${round.multiplier}× points` : ''}`;
+    return `${plural(round.board.length, 'category', 'categories')} · ${plural(clues, 'question')} each${round.multiplier > 1 ? ` · ${round.multiplier}× points` : ''}`;
   }
   if (round.mode === 'final') return 'One question. Everybody wagers.';
   const who = round.participants === 'all' ? 'Everybody plays' : round.participants === 'top2' ? 'The top two go head to head' : 'The leader plays alone';

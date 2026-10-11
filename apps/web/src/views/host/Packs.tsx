@@ -149,7 +149,7 @@ function Library() {
                 <p>{pack.description || 'No description yet.'}</p>
                 <span className="mg-chips">
                   <span className="mg-chip">{plural(pack.categoryCount, 'category', 'categories')}</span>
-                  <span className="mg-chip">{plural(pack.clueCount, 'clue')}</span>
+                  <span className="mg-chip">{plural(pack.clueCount, 'question')}</span>
                   <span className="mg-chip">{plural(pack.surveyCount, 'survey')}</span>
                 </span>
                 <small>

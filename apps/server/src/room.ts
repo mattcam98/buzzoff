@@ -31,7 +31,7 @@ type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, Record<strin
 /** Host actions worth a line in the undo history, with the label shown on the undo button. */
 const UNDOABLE: Partial<Record<HostAction['t'], string>> = {
   start: 'start game', judge: 'ruling', 'score.adjust': 'score change', 'score.set': 'score change',
-  'clue.select': 'clue pick', 'clue.reveal': 'answer reveal', 'clue.continue': 'back to board', 'clue.cancel': 'cancelled clue',
+  'clue.select': 'question pick', 'clue.reveal': 'answer reveal', 'clue.continue': 'back to board', 'clue.cancel': 'cancelled question',
   'buzz.reset': 'buzzer reset', 'wager.set': 'wager', 'control.set': 'control change',
   'round.begin': 'round start', 'round.end': 'round end', 'round.next': 'next round', 'game.end': 'end game',
   'player.eliminate': 'elimination', 'fm.start': 'turn start', 'fm.endTurn': 'turn end', 'fm.reveal': 'reveal',

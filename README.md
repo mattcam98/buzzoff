@@ -90,11 +90,11 @@ the proxy must pass `Upgrade` requests through.
    the highest roll gets the board; tied players roll again on their own. The
    roll is not timed: it waits for everyone, and **Roll for everyone still to
    roll** on the console (or Space) rolls for anyone who is not going to.
-6. **Players call the clue, you select it.** Whoever has the board says a
+6. **Players call the question, you select it.** Whoever has the board says a
    category and a value out loud ("Movies for 300") and you click it on the
    console. Phones show the board and whose pick it is, but only the host can
-   put a clue in play. A correct answer takes the board. Buzzers open the
-   moment you select the clue, with a 30-second question timer; **+10 s** and
+   put a question in play. A correct answer takes the board. Buzzers open the
+   moment you select it, with a 30-second question timer; **+10 s** and
    **Stop clock** are next to it if you need longer. When someone buzzes in,
    the question disappears from the TV and every phone while you judge the
    answer (you still see it, with the answer). If they are wrong it comes
@@ -121,9 +121,9 @@ the proxy must pass `Upgrade` requests through.
    room you already have first.
 
 Questions do not come round again until they have to. The server remembers
-when each category, clue and survey was last played, in any room, and deals a
+when each category, question and survey was last played, in any room, and deals a
 new game (or a reroll) what has never been played first, then what has rested
-longest. A category that holds several clues at the same value is dealt one of
+longest. A category that holds several questions at the same value is dealt one of
 them, the one that has rested longest, so the same category comes back with
 different questions. What you hand-pick is dealt whatever its history.
 
@@ -131,11 +131,11 @@ Things that go wrong at a party, and what to do:
 
 | Situation | What to do |
 |---|---|
-| Wrong ruling, wrong clue, fat-fingered anything | **Undo** (`U`). The last 40 host steps can be unwound. |
+| Wrong ruling, wrong question, fat-fingered anything | **Undo** (`U`). The last 40 host steps can be unwound. |
 | The dice roll is taking too long, or you want to skip it | **Space** rolls for everyone who has not. Or click a player and *Give control of the board*. |
 | Start is greyed out | Someone has not tapped ready; the console names them. Remove them from the player list if they are not playing after all. |
 | A buzz is disputed | **Re-do the buzz** discards it and opens the buzzers again for everyone still in. |
-| A clue was bad | **Throw out clue** reverses its scoring and puts it back on the board. |
+| A question was bad | **Cancel question** takes back any points from it and puts it back on the board, as if it had never been picked. It is not a hint: questions have none. |
 | A score needs correcting | `−` / `+` next to the player, or click the player to type a score. After the game has ended this corrects History and the leaderboard too, including who won (unless a Fast Money decider settled that). |
 | Someone forgot to save their final answer | Nothing to do. Answers are saved as they are typed, within half a second, so what they had written when the clock stopped is what counts. |
 | A phone dies or a browser closes | Reopening the page puts them straight back in their seat. So does opening the site's front page: it shows the room they are in. |
@@ -235,10 +235,10 @@ New game page and saved as your own format. The options:
 
 - **Rounds:** any sequence of *trivia board*, *final* (everyone wagers on one
   written-answer question) and *Fast Money* (survey questions against the clock).
-- **Buzzers:** they open by themselves when a clue is selected. The rules
+- **Buzzers:** they open by themselves when a question is selected. The rules
   cover the question timer (30 seconds by default) and the answer timer;
   whether a wrong answer opens them again for steals; whether the same player
-  may buzz again; and the penalty as a percentage of the clue.
+  may buzz again; and the penalty as a percentage of the question's value.
 - **Fast Money:** who plays (leader, top two, everybody at once), time per
   turn, duplicate blocking, reveal between turns or side by side at the end,
   and what is at stake: points added to scores (optionally with a target and
@@ -250,22 +250,23 @@ New game page and saved as your own format. The options:
 `/host/packs` is the editor. A pack is a pool of trivia categories and survey
 questions with no rules attached, so the same pack works for any format; the
 New game page tells you whether the packs you picked have enough content.
-Clues can carry an image, audio or video (uploaded or by URL), accepted
-alternative answers and private host notes. A clue may run to 600 characters
+Trivia questions can carry an image, audio or video (uploaded or by URL), accepted
+alternative answers and private host notes. A question may run to 600 characters
 and its answer to 300: the TV sets a long one in smaller type so that all of
 it is on the screen, and a phone lets it scroll inside its card. Packs export
 to and import from a single JSON file (`*.buzzoff.json`).
 
-A category is a pool, not a fixed column. It can hold up to 60 clues, several
-at each value, and a board takes one clue at each of its lowest values. Write
+A category is a pool, not a fixed column. It can hold up to 60 questions, several
+at each value, and a board takes one question at each of its lowest values. Write
 four 100s, four 200s and so on, and the category plays four games before a
-clue repeats. A pack holds up to 400 categories and 400 surveys.
+question repeats. A pack holds up to 400 categories and 400 surveys. (A pack file
+and the code call a trivia question a `clue`; on screen it is always a question.)
 
 `packs/buzzoff-the-lot.buzzoff.json` is every question BuzzOff has, in one
 pack to import from the Packs page: 110 categories, each with at least
-twenty clues and four at every value, over 2,200 clues in all, and 71
+twenty questions and four at every value, over 2,200 questions in all, and 71
 surveys. That is ten full shows before a category comes round again, about
-forty before a clue does, and fourteen before a survey does.
+forty before a question does, and fourteen before a survey does.
 
 Every survey stands for a hundred people: its answers add up to 100 points,
 and an answer's points are how many of the hundred gave it. Where a published

@@ -3,7 +3,7 @@
   "version": 1,
   "pack": {
     "title": "BuzzOff Starter Pack",
-    "description": "A general-knowledge and pop-culture mix for a group of friends: 14 trivia categories (including one either/or Higher or Lower category) and 12 survey rounds. Survey numbers are illustrative, not from a real poll.",
+    "description": "A general-knowledge and pop-culture mix for a group of friends: 14 trivia categories (including one either/or Higher or Lower category) and 12 surveys. Each survey stands for a hundred people: its answers add up to 100.",
     "author": "BuzzOff",
     "categories": [
       {

@@ -101,13 +101,13 @@ export function RulesEditor({ rules, onChange }: Props) {
             </>
           )}
           <NumField label="Grace period (ms)" value={b.graceMs} min={0} max={2000} onChange={(graceMs) => setBuzzer({ graceMs })} help="After the first buzz, the other buzzers stay open this long so near misses are recorded. It never changes who won. 0 closes them at once." />
-          <NumField label="Question timer (s)" value={b.buzzSec} min={0} max={120} onChange={(buzzSec) => setBuzzer({ buzzSec })} help="Buzzers open as soon as you select a clue, and players have this long to buzz. 0 turns the timer off." />
+          <NumField label="Question timer (s)" value={b.buzzSec} min={0} max={120} onChange={(buzzSec) => setBuzzer({ buzzSec })} help="Buzzers open as soon as you select a question, and players have this long to buzz. 0 turns the timer off." />
           <NumField label="Time to answer (s)" value={b.answerSec} min={0} max={120} onChange={(answerSec) => setBuzzer({ answerSec })} help="0 turns the timer off. The host always makes the call." />
-          <NumField label="Wrong-answer penalty (%)" value={b.incorrectPenaltyPct} min={0} max={100} onChange={(incorrectPenaltyPct) => setBuzzer({ incorrectPenaltyPct })} help="How much of the clue’s value a wrong answer costs. 0 means no penalty." />
+          <NumField label="Wrong-answer penalty (%)" value={b.incorrectPenaltyPct} min={0} max={100} onChange={(incorrectPenaltyPct) => setBuzzer({ incorrectPenaltyPct })} help="How much of the question’s value a wrong answer costs. 0 means no penalty." />
         </div>
         <div className="mg-toggles">
           <ToggleField label="Steals" checked={b.reopenOnIncorrect} onChange={(reopenOnIncorrect) => setBuzzer({ reopenOnIncorrect })} help="After a wrong answer, the buzzers open again for everyone else." />
-          <ToggleField label="Second chances" checked={b.rebuzz} onChange={(rebuzz) => setBuzzer({ rebuzz })} help="A player who got it wrong may buzz again on the same clue." />
+          <ToggleField label="Second chances" checked={b.rebuzz} onChange={(rebuzz) => setBuzzer({ rebuzz })} help="A player who got it wrong may buzz again on the same question." />
           {rules.teams.enabled && (
             <ToggleField label="Team lockout" checked={b.teamLockout} onChange={(teamLockout) => setBuzzer({ teamLockout })} help="A wrong answer locks out the whole team." />
           )}
@@ -162,9 +162,9 @@ function TriviaFields({ def, set }: { def: TriviaRoundDef; set: (p: Partial<Triv
   return (
     <>
       <NumField label="Categories" value={def.categories} min={1} max={8} onChange={(categories) => set({ categories })} />
-      <NumField label="Clues per category" value={def.cluesPerCategory} min={1} max={8} onChange={(cluesPerCategory) => set({ cluesPerCategory })} />
-      <NumField label="Value multiplier" value={def.valueMultiplier} min={1} max={20} onChange={(valueMultiplier) => set({ valueMultiplier })} help="2 doubles every clue value." />
-      <NumField label="Hidden wagers" value={def.wagers} min={0} max={6} onChange={(wagers) => set({ wagers })} help="Wager clues placed at random on the board." />
+      <NumField label="Questions per category" value={def.cluesPerCategory} min={1} max={8} onChange={(cluesPerCategory) => set({ cluesPerCategory })} />
+      <NumField label="Value multiplier" value={def.valueMultiplier} min={1} max={20} onChange={(valueMultiplier) => set({ valueMultiplier })} help="2 doubles the value of every question." />
+      <NumField label="Hidden wagers" value={def.wagers} min={0} max={6} onChange={(wagers) => set({ wagers })} help="Questions placed at random on the board that are played for a wager." />
       <NumField label="Wager cap" value={def.wagerCap} min={0} max={1000000} step={100} onChange={(wagerCap) => set({ wagerCap })} help="Players can wager up to their score, or up to this if they have less." />
       <NumField label="Eliminate lowest" value={def.eliminateLowest} min={0} max={20} onChange={(eliminateLowest) => set({ eliminateLowest })} help="Knock out this many of the lowest scorers when the round ends." />
     </>

@@ -339,7 +339,7 @@ function awards(pub: PublicView): Award[] {
   const sharpest = best((s) => (s.correct + s.incorrect >= 3 ? accuracy(s) : null), true);
   if (sharpest) out.push({ title: 'Sharpest shooter', player: sharpest.p, detail: `${fmtPercent(sharpest.v)} correct` });
   const busiest = best((s) => s.buzzWins || null, true);
-  if (busiest) out.push({ title: 'First on the buzzer', player: busiest.p, detail: `${plural(busiest.v, 'clue')} won` });
+  if (busiest) out.push({ title: 'First on the buzzer', player: busiest.p, detail: `${plural(busiest.v, 'question')} won` });
   const surveyed = best((s) => s.surveyPoints || null, true);
   if (surveyed) out.push({ title: 'Survey says', player: surveyed.p, detail: `${surveyed.v} survey points` });
   return out;
