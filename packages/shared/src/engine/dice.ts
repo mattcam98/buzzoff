@@ -67,8 +67,13 @@ export function tickRoll(r: TriviaRound, ctx: Ctx): void {
   // Everyone who was rolling may have left the game.
   if (!dice.contenders.length) return endRoll(r);
   if (dice.phase === 'rolling') {
-    // Only a game saved by a version that timed the roll still carries a deadline here.
     dice.deadline = null;
+    // The roll was waiting on someone who has since left the game: it is complete without them.
+    // (A game saved by a version that timed the roll carries a deadline here too, and just loses it.)
+    if (!waiting(dice).length) {
+      dice.phase = 'landing';
+      dice.deadline = ctx.now + LAND_MS;
+    }
     return;
   }
   if (dice.phase === 'won') return endRoll(r);
@@ -98,4 +103,6 @@ export function removeFromRoll(r: TriviaRound, playerId: string): void {
   delete dice.rolls[playerId];
   delete dice.out[playerId];
   if (dice.winnerId === playerId) dice.winnerId = null;
+  // Rolling has no clock, so a roll left with nobody to wait for would wait for ever: have the next tick move it on.
+  if (dice.phase === 'rolling' && !waiting(dice).length) dice.deadline = 0;
 }

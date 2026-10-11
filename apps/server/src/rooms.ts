@@ -39,12 +39,12 @@ export class Rooms {
   /** Bring saved games back after a restart. They return paused, so no timer runs unattended. */
   async restore() {
     for (const saved of await this.store.loadGames()) {
-      if (this.isExpired(saved.updatedAt, saved.state.phase === 'finished')) {
-        this.playLog.record(playedContent(saved.state), saved.updatedAt);
-        await this.store.deleteGame(saved.code);
-        continue;
-      }
       try {
+        if (this.isExpired(saved.updatedAt, saved.state.phase === 'finished')) {
+          if (saved.state.phase !== 'finished') this.playLog.record(playedContent(saved.state), saved.updatedAt);
+          await this.store.deleteGame(saved.code);
+          continue;
+        }
         const env = { now: clock(), rand: random, rtt: () => null };
         const state = applySystem(saved.state, { t: 'recover', savedAt: saved.updatedAt }, env).state;
         this.rooms.set(saved.code, new Room(this.io, this.store, this.results, this.playLog, { ...saved, state }));
@@ -114,8 +114,9 @@ export class Rooms {
     const room = this.rooms.get(code);
     if (!room) return;
     this.rooms.delete(code);
-    // A game closed or left part-way through still used the questions it reached.
-    room.recordPlayed();
+    // A game closed or left part-way through still used the questions it reached. One that finished
+    // has them recorded already, as of when it was played.
+    if (room.state.phase !== 'finished') room.recordPlayed();
     await room.close('closed');
     await this.store.deleteGame(code);
   }

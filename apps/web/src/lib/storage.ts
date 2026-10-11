@@ -1,9 +1,15 @@
 /** Everything the browser remembers between visits. All access is defensive: storage may be blocked. */
 import type { Avatar, CreateGameRequest } from '@buzzoff/shared';
 
+/**
+ * Where the browser refuses storage (private modes, some in-app browsers), what would have been
+ * kept is held here instead. It lasts until the page is closed, which is enough to take a seat and play.
+ */
+const memory = new Map<string, string>();
+
 function read<T>(key: string, fallback: T): T {
   try {
-    const raw = localStorage.getItem(key);
+    const raw = memory.get(key) ?? localStorage.getItem(key);
     return raw === null ? fallback : (JSON.parse(raw) as T);
   } catch {
     return fallback;
@@ -11,11 +17,13 @@ function read<T>(key: string, fallback: T): T {
 }
 
 function write(key: string, value: unknown) {
+  const gone = value === null || value === undefined;
+  memory.delete(key);
   try {
-    if (value === null || value === undefined) localStorage.removeItem(key);
+    if (gone) localStorage.removeItem(key);
     else localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    /* private mode or storage full: the app still works for this session */
+    if (!gone) memory.set(key, JSON.stringify(value));
   }
 }
 
@@ -39,6 +47,9 @@ export interface LastSetup {
   presetId: string;
 }
 
+/** How many rooms a browser remembers hosting. What it kept for an older one goes when the room does. */
+const HOSTED_LIMIT = 12;
+
 export const storage = {
   seat: (code: string) => read<PlayerSeat | null>(`buzzoff.seat.${code}`, null),
   setSeat(code: string, seat: PlayerSeat | null) {
@@ -57,10 +68,13 @@ export const storage = {
 
   hostedGames: () => read<HostedGame[]>('buzzoff.hosted', []),
   addHostedGame(game: HostedGame) {
-    write('buzzoff.hosted', [game, ...this.hostedGames().filter((g) => g.code !== game.code)].slice(0, 12));
+    const games = [game, ...this.hostedGames().filter((g) => g.code !== game.code)];
+    for (const dropped of games.slice(HOSTED_LIMIT)) this.setGameSetup(dropped.code, null);
+    write('buzzoff.hosted', games.slice(0, HOSTED_LIMIT));
   },
   removeHostedGame(code: string) {
     write('buzzoff.hosted', this.hostedGames().filter((g) => g.code !== code));
+    this.setGameSetup(code, null);
   },
   hostKey(code: string) {
     return this.hostedGames().find((g) => g.code === code)?.hostKey ?? null;

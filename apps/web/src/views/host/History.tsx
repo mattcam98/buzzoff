@@ -49,7 +49,7 @@ function Results() {
 
   return (
     <>
-      <PageHead eyebrow="Archive" title="History" lead="Every finished game, newest first." />
+      <PageHead eyebrow="Archive" title="History" lead="Finished games, newest first. The latest 100 are listed." />
       {error && (
         <p className="mg-error" role="alert">
           {error}

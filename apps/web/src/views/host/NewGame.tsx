@@ -25,6 +25,18 @@ export function NewGame() {
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
+/** Say what is wrong with the rules in the host's terms rather than as a path into them. */
+function describeIssue(rules: GameRules, path: PropertyKey[], message: string): string {
+  const empty = /^Too small/.test(message);
+  if (path[0] === 'name' && empty) return 'Give the game a name.';
+  if (path[0] === 'rounds' && typeof path[1] === 'number') {
+    const round = `Round ${path[1] + 1}${rules.rounds[path[1]]?.title.trim() ? ` (${rules.rounds[path[1]].title.trim()})` : ''}`;
+    return path[2] === 'title' && empty ? `Round ${path[1] + 1} needs a title.` : `Check ${round}: ${message}`;
+  }
+  if (path[0] === 'teams' && path[1] === 'names' && empty) return 'Every team needs a name.';
+  return `Check the rules (${path.map(String).join(' › ')}): ${message}`;
+}
+
 /** How many categories (or, for Fast Money, survey questions) a round draws. A final round takes one category. */
 const drawCount = (r: RoundDef) => (r.mode === 'trivia' ? r.categories : r.mode === 'final' ? 1 : r.questions);
 
@@ -68,7 +80,10 @@ function Setup() {
       ([presetList, packList]) => {
         if (cancelled) return;
         const last = storage.lastSetup();
-        const previous = arrivedFor ? storage.gameSetup(arrivedFor) : null;
+        // What this browser kept may have been written by an older version: use it only if it still holds up.
+        const kept = arrivedFor ? storage.gameSetup(arrivedFor) : null;
+        const keptRules = GameRulesSchema.safeParse(kept?.rules);
+        const previous = kept && keptRules.success ? { packIds: kept.packIds, rules: keptRules.data } : null;
         // The server's chosen default, else whatever this browser played last, else the flagship format.
         const wantedPreset = info.defaultPresetId ?? last?.presetId;
         const preset = presetList.find((p) => p.id === wantedPreset) ?? presetList.find((p) => p.id === 'full-show') ?? presetList[0];
@@ -144,7 +159,7 @@ function Setup() {
   let blocker: string | null = null;
   if (!packs.length) blocker = 'There are no question packs yet. Create or import one first.';
   else if (!chosen.length) blocker = 'Pick at least one question pack.';
-  else if (issue) blocker = `Check the rules (${issue.path.join(' › ')}): ${issue.message}`;
+  else if (issue) blocker = describeIssue(rules, issue.path, issue.message);
   else if (have.categories < need.categories) {
     blocker = `These rules need ${plural(need.categories, 'category', 'categories')} but the selected ${chosen.length === 1 ? 'pack has' : 'packs have'} ${have.categories}. Add a pack or shrink a board.`;
   } else if (have.surveys < need.surveys) {
@@ -158,8 +173,10 @@ function Setup() {
   }
 
   function togglePack(id: string) {
-    setPackIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
-    setPicks(rules!.rounds.map(() => null));
+    const removing = packIds.includes(id);
+    setPackIds(removing ? packIds.filter((x) => x !== id) : [...packIds, id]);
+    // Hand-picks may have come from the pack being taken away. Adding a pack leaves them as they are.
+    if (removing) setPicks(rules!.rounds.map(() => null));
   }
 
   function changeRules(next: GameRules, structural?: boolean) {
@@ -211,7 +228,8 @@ function Setup() {
   }
 
   return (
-    <form className="mg-setup" onSubmit={create}>
+    // Enter in a field is not "create the game": only the button at the bottom is.
+    <form className="mg-setup" onSubmit={create} onKeyDown={(e) => e.key === 'Enter' && e.target instanceof HTMLInputElement && e.preventDefault()}>
       <PageHead
         eyebrow={rematch ? `Room ${rematch}` : 'Host'}
         title={rematch ? 'Next game' : 'New game'}

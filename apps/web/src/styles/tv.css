@@ -369,9 +369,6 @@
   color: var(--buzz);
 }
 .tv-roll__head p {
-  display: flex;
-  align-items: center;
-  gap: 0.7em;
   font-size: 1.3em;
   color: var(--text-dim);
 }

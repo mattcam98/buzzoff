@@ -19,7 +19,7 @@ import type { Room } from './room';
 import type { Rooms } from './rooms';
 import type { Audit, Settings } from './settings';
 import type { Store } from './store/types';
-import { cookie, Limiter, log, randomId, randomToken, sha256 } from './util';
+import { Bucket, cookie, Limiter, log, randomId, randomToken, sha256 } from './util';
 
 class HttpError extends Error {
   constructor(
@@ -95,10 +95,16 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
   const general = new Limiter(20, 60);
   const joining = new Limiter(2, 40);
   const logins = new Limiter(0.1, 6);
+  // Addresses are cheap to come by (a whole IPv6 network, or a forged header where TRUST_PROXY is
+  // set too high), so password guesses are also capped for the server as a whole.
+  const allLogins = new Bucket(0.5, 30);
   const limit =
     (limiter: Limiter): RequestHandler =>
     (req, _res, next) =>
       next(limiter.allow(req.ip ?? 'unknown') ? undefined : new HttpError(429, 'rate_limited', 'Too many requests. Wait a moment and try again.'));
+
+  const guessing: RequestHandler = (req, _res, next) =>
+    next(logins.allow(req.ip ?? 'unknown') && allLogins.take() ? undefined : new HttpError(429, 'rate_limited', 'Too many sign-in attempts. Wait a minute and try again.'));
 
   const admin: RequestHandler = (req, _res, next) =>
     next(auth.allows(bearer(req)) ? undefined : new HttpError(401, 'unauthorized', 'Host password required'));
@@ -132,7 +138,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
 
   // ------------------------------------------------------------ sign-in
 
-  api.post('/auth/login', limit(logins), async (req, res) => {
+  api.post('/auth/login', guessing, async (req, res) => {
     const { password } = parse(z.object({ password: z.string().max(200) }), req.body);
     const token = await auth.login(password, caller(req));
     if (!token) throw new HttpError(401, 'unauthorized', 'Wrong password');
@@ -146,7 +152,7 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
     res.status(204).end();
   });
   // Throttled like signing in: it checks the current password, so it must not become a way to guess it.
-  api.post('/auth/password', admin, limit(logins), async (req, res) => {
+  api.post('/auth/password', admin, guessing, async (req, res) => {
     const { current, next } = parse(ChangePasswordSchema, req.body);
     const token = await auth.setPassword(current, next, caller(req));
     if (!token) throw new HttpError(403, 'wrong_password', 'That’s not the current password');
@@ -249,7 +255,10 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
     res.status(201).json(preset);
   });
   api.delete('/presets/:id', admin, async (req, res) => {
-    if (!(await store.deletePreset(String(req.params.id)))) notFound('That format no longer exists');
+    const id = String(req.params.id);
+    if (!(await store.deletePreset(id))) notFound('That format no longer exists');
+    // New games opened on this format. With it gone they open on whatever each host played last.
+    if (settings.current.defaultPresetId === id) await settings.update({ ...settings.current, defaultPresetId: null });
     res.status(204).end();
   });
 
@@ -257,7 +266,10 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
 
   // The size limit is read per upload, so changing it in Settings applies to the next file.
   const upload: RequestHandler = (req, res, next) =>
-    multer({ storage: multer.memoryStorage(), limits: { fileSize: settings.current.maxUploadMb * 1024 * 1024, files: 1 } }).single('file')(req, res, next);
+    multer({ storage: multer.memoryStorage(), limits: { fileSize: settings.current.maxUploadMb * 1024 * 1024, files: 1 } }).single('file')(req, res, (err: unknown) =>
+      // Anything that is not one of multer's own limits is a body it could not read: the sender's mistake, not the server's.
+      next(err && !(err instanceof multer.MulterError) ? new HttpError(400, 'invalid', 'Couldn’t read that upload') : err),
+    );
   api.post('/media', admin, upload, async (req, res) => {
     if (!req.file) throw new HttpError(400, 'invalid', 'No file was uploaded');
     res.status(201).json(await storeMedia(config.MEDIA_DIR, req.file.buffer));

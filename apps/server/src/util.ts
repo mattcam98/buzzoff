@@ -65,7 +65,7 @@ export const tokenMatches = (token: string | undefined, hash: string | undefined
 const derive = (password: string, salt: Buffer, length: number, options: ScryptOptions) =>
   new Promise<Buffer>((resolve, reject) => scrypt(password, salt, length, options, (err, key) => (err ? reject(err) : resolve(key))));
 
-/** scrypt cost: 2^15 blocks of 8 KiB, about 32 MB and a twentieth of a second per guess. */
+/** scrypt cost: 2^15 blocks of 1 KiB, about 32 MB and a twentieth of a second per guess. */
 const SCRYPT = { logN: 15, r: 8, p: 1 };
 const scryptOptions = (logN: number, r: number, p: number): ScryptOptions => ({ N: 2 ** logN, r, p, maxmem: 256 * 2 ** logN * r });
 

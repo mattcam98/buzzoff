@@ -30,7 +30,8 @@ export function useShell(): Shell {
 type Gate =
   | { state: 'loading' }
   | { state: 'offline'; message: string }
-  | { state: 'login'; info: ServerInfo }
+  /** `keep`: the page was open with unsaved work when the session ended, so it stays where it is under the form. */
+  | { state: 'login'; info: ServerInfo; keep?: boolean }
   | { state: 'ready'; info: ServerInfo };
 
 const NAV = [
@@ -43,6 +44,37 @@ const NAV = [
 
 /** Once the server has let this browser in, moving between host pages does not ask again. */
 let admitted: ServerInfo | null = null;
+/** How many pages on screen are holding work that has not been saved. */
+let unsavedPages = 0;
+
+/**
+ * Look after work that has not been saved: ask before the tab is closed or a link is followed, and
+ * keep the page as it is if the session ends underneath it.
+ */
+export function useUnsavedWork(dirty: boolean) {
+  useEffect(() => {
+    if (!dirty) return;
+    const onUnload = (e: BeforeUnloadEvent) => e.preventDefault();
+    const onClick = (e: MouseEvent) => {
+      // A link opened in another tab or window leaves this page where it is.
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      const link = (e.target as HTMLElement | null)?.closest?.('a[href]');
+      if (!link || link.hasAttribute('download') || link.getAttribute('target') === '_blank') return;
+      if (!window.confirm('Leave without saving? Your changes will be lost.')) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    unsavedPages++;
+    window.addEventListener('beforeunload', onUnload);
+    document.addEventListener('click', onClick, true);
+    return () => {
+      unsavedPages--;
+      window.removeEventListener('beforeunload', onUnload);
+      document.removeEventListener('click', onClick, true);
+    };
+  }, [dirty]);
+}
 
 export function HostShell({ children, wide }: { children: ReactNode; wide?: boolean }) {
   const [gate, setGate] = useState<Gate>(admitted ? { state: 'ready', info: admitted } : { state: 'loading' });
@@ -64,7 +96,8 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
         setGate({ state: 'login', info });
       }
     } catch (err) {
-      setGate({ state: 'offline', message: err instanceof ApiFailure ? err.message : 'Couldn’t reach the server. Check your connection.' });
+      // A refresh behind a page that is already open is not worth losing the page over.
+      if (!quiet) setGate({ state: 'offline', message: err instanceof ApiFailure ? err.message : 'Couldn’t reach the server. Check your connection.' });
     }
   }, []);
 
@@ -84,24 +117,21 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
     return () => watcher.disconnect();
   }, []);
 
+  // Both are the same function for as long as the page is open, so a page's effects can depend on them.
+  const fail = useCallback((err: unknown) => {
+    if (err instanceof ApiFailure && err.status === 401) {
+      storage.setAdminToken(null);
+      admitted = null;
+      setGate((g) => (g.state === 'ready' ? { state: 'login', info: g.info, keep: unsavedPages > 0 } : g));
+      return 'You’ve been signed out. Sign in again.';
+    }
+    return err instanceof Error ? err.message : 'Something went wrong';
+  }, []);
+  const refresh = useCallback(() => check(true), [check]);
+
   const info = gate.state === 'ready' || gate.state === 'login' ? gate.info : null;
-  const shell = useMemo<Shell | null>(
-    () =>
-      info && {
-        info,
-        fail(err) {
-          if (err instanceof ApiFailure && err.status === 401) {
-            storage.setAdminToken(null);
-            admitted = null;
-            setGate({ state: 'login', info });
-            return 'You’ve been signed out. Sign in again.';
-          }
-          return err instanceof Error ? err.message : 'Something went wrong';
-        },
-        refresh: () => check(true),
-      },
-    [info, check],
-  );
+  const shell = useMemo<Shell | null>(() => info && { info, fail, refresh }, [info, fail, refresh]);
+  const showPage = gate.state === 'ready' || (gate.state === 'login' && gate.keep);
 
   return (
     <div ref={page} className="bz-stage mg">
@@ -135,14 +165,14 @@ export function HostShell({ children, wide }: { children: ReactNode; wide?: bool
             </Button>
           </div>
         )}
-        {gate.state === 'login' && <Login onDone={() => setGate({ state: 'ready', info: (admitted = gate.info) })} />}
-        {gate.state === 'ready' && shell && <ShellContext.Provider value={shell}>{children}</ShellContext.Provider>}
+        {gate.state === 'login' && <Login interrupted={gate.keep} onDone={() => setGate({ state: 'ready', info: (admitted = gate.info) })} />}
+        {showPage && shell && <ShellContext.Provider value={shell}>{children}</ShellContext.Provider>}
       </main>
     </div>
   );
 }
 
-function Login({ onDone }: { onDone: () => void }) {
+function Login({ interrupted, onDone }: { interrupted?: boolean; onDone: () => void }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -168,7 +198,7 @@ function Login({ onDone }: { onDone: () => void }) {
         🔑
       </span>
       <h1>Host sign-in</h1>
-      <p>Hosting needs a password on this server. Players never need it.</p>
+      <p>{interrupted ? 'You’ve been signed out. Sign in again and carry on: your unsaved changes are still here.' : 'Hosting needs a password on this server. Players never need it.'}</p>
       <label className="bz-field">
         <span>Host password</span>
         <input className="bz-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" autoFocus />

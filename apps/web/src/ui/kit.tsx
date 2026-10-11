@@ -1,7 +1,7 @@
 /** The shared component kit. Styles live in styles/base.css under the `bz-` prefix. */
 import type { Avatar as AvatarData, TimerView } from '@buzzoff/shared';
 import {
-  useEffect, useRef, useSyncExternalStore,
+  useEffect, useRef, useState, useSyncExternalStore,
   type ButtonHTMLAttributes, type CSSProperties, type ReactNode,
 } from 'react';
 import { Link } from 'wouter';
@@ -138,6 +138,20 @@ export function Notice({ title, children, busy }: { title: string; children?: Re
         {children}
       </div>
     </main>
+  );
+}
+
+/** The wait for a room's first view. Left turning for a while, it says what may be in the way rather than spin for ever. */
+export function Connecting({ title }: { title: string }) {
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSlow(true), 8000);
+    return () => window.clearTimeout(timer);
+  }, []);
+  return (
+    <Notice title={title} busy>
+      {slow && <p>This is taking a while. Check the connection. BuzzOff needs WebSockets, which some networks and reverse proxies block.</p>}
+    </Notice>
   );
 }
 

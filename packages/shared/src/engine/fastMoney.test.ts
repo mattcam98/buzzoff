@@ -31,6 +31,15 @@ describe('fast money: head-to-head decider', () => {
     expect(s.fm.timer!.totalMs).toBe(55_000);
   });
 
+  it('keeps the questions off every screen until the first clock starts', () => {
+    const s = sim();
+    // How many there are is known; what they ask is not.
+    expect(s.fm.questions).toEqual(['', '']);
+    expect(JSON.stringify([s.pub, s.you('ann'), s.you('cat')])).not.toMatch(/Name a fruit/);
+    s.host({ t: 'fm.start' });
+    expect(s.fm.questions).toEqual(['Name a fruit (0)', 'Name a fruit (1)']);
+  });
+
   it('matches answers, blocks duplicates and keeps answers hidden until revealed', () => {
     const s = sim();
     s.host({ t: 'fm.start' });
@@ -81,6 +90,20 @@ describe('fast money: head-to-head decider', () => {
     expect([s.score('ann'), s.score('bob')]).toEqual([500, 300]);
     s.host({ t: 'round.end' });
     expect(s.pub).toMatchObject({ phase: 'finished', champions: ['bob'] });
+    // The decider settled it: correcting a board score afterwards does not unseat the winner.
+    s.host({ t: 'score.adjust', id: 'ann', delta: 1000 });
+    expect(s.pub.champions).toEqual(['bob']);
+  });
+
+  it('lets the scores decide when the winner of the decider has left the game', () => {
+    const s = sim();
+    s.host({ t: 'fm.start' }).player('ann', { t: 'fm.done' });
+    s.host({ t: 'fm.start' }).player('bob', { t: 'fm.answer', q: 0, text: 'apple' }).player('bob', { t: 'fm.done' });
+    revealAll(s);
+    s.host({ t: 'fm.next' });
+    expect(s.fm.outcome!.winners).toEqual(['bob']);
+    s.host({ t: 'player.kick', id: 'bob' }).host({ t: 'round.end' });
+    expect(s.pub).toMatchObject({ phase: 'finished', champions: ['ann'] });
   });
 
   it('only settles the game when nothing is played after it', () => {

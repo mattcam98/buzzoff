@@ -47,7 +47,7 @@ export const notReady = <P extends { connected: boolean; ready: boolean }>(playe
 export const canStart = (players: { connected: boolean; ready: boolean }[]): boolean => !notReady(players).length && players.some((p) => p.ready);
 
 export interface PlayerStats {
-  /** Buzzes the server registered while buzzers were armed (or just after someone won). */
+  /** Buzzes the server registered while buzzers were open (or just after someone won). */
   buzzes: number;
   buzzMsTotal: number;
   fastestMs: number | null;
@@ -97,7 +97,7 @@ export interface BoardCategory {
 
 export interface BuzzAttempt {
   playerId: string;
-  /** Milliseconds between the buzzers being armed and the server receiving this buzz. */
+  /** Milliseconds between the buzzers opening and the server receiving this buzz. */
   ms: number;
   /** The player's median server-measured round-trip time when they buzzed, if known. */
   rttMs: number | null;
@@ -277,7 +277,7 @@ export interface GameState {
   stats: Record<string, PlayerStats>;
   /** Players eliminated at the end of the most recent round. */
   lastEliminated: string[];
-  /** Set when a decider round names the winner outright; otherwise the top score wins. */
+  /** Who won. A decider round names them outright; otherwise the top score does, when the game ends. */
   champions: string[] | null;
   /** When the host started the show. A room is created, and may be played in again, well before or after. */
   startedAt?: number | null;

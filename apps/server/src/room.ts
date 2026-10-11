@@ -26,7 +26,7 @@ interface SocketData {
   playerId?: string;
 }
 export type AppServer = Server<ClientToServerEvents, ServerToClientEvents, Record<string, never>, SocketData>;
-export type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, Record<string, never>, SocketData>;
+type AppSocket = Socket<ClientToServerEvents, ServerToClientEvents, Record<string, never>, SocketData>;
 
 /** Host actions worth a line in the undo history, with the label shown on the undo button. */
 const UNDOABLE: Partial<Record<HostAction['t'], string>> = {
@@ -80,8 +80,11 @@ export class Room {
   private playerSockets = new Map<string, AppSocket>();
   private audience = { display: new Set<string>(), spectator: new Set<string>() };
   private lastYou = new Map<string, string>();
-  /** Players who have joined but whose phone has never connected. */
-  private unconnected = new Set<string>();
+  private lastPublic = '';
+  /** The finished game's result as it was last saved, so that it is saved again only when it changes. */
+  private lastResult: string | null = null;
+  /** Seats handed to a phone that has not connected yet, and when. */
+  private unconnected = new Map<string, number>();
   private seen = new RecentIds();
   private tickTimer: NodeJS.Timeout | null = null;
   private saveTimer: NodeJS.Timeout | null = null;
@@ -100,6 +103,8 @@ export class Room {
     this.secrets = saved.secrets;
     this.profiles = this.secrets.profiles ??= {};
     this.updatedAt = saved.updatedAt;
+    // A finished game that comes back after a restart has its result already; only a change to it is news.
+    if (this.state.phase === 'finished') this.lastResult = JSON.stringify(this.result());
     this.netTimer = setInterval(() => this.io.to(this.hostChannel).emit('net', this.netStats()), PROBE_INTERVAL_MS).unref();
     this.schedule();
   }
@@ -150,11 +155,26 @@ export class Room {
     this.broadcast();
     this.schedule();
     this.save();
-    if (!wasFinished && this.state.phase === 'finished') {
-      this.results.save(buildResult(this.state, this.resultId, this.profiles)).catch((err) => log.error('could not save result', { code: this.code, err }));
+    if (this.state.phase !== 'finished') {
+      this.lastResult = null;
+      return;
+    }
+    // Saved when the game ends, and again if the host then corrects a score or a name:
+    // History and the leaderboard say what the screens say.
+    const result = this.result();
+    const json = JSON.stringify(result);
+    if (json !== this.lastResult) {
+      this.lastResult = json;
+      this.results.save(result).catch((err) => log.error('could not save result', { code: this.code, err }));
+    }
+    if (!wasFinished) {
       this.recordPlayed();
       log.info('game finished', { code: this.code, players: this.state.order.length });
     }
+  }
+
+  private result() {
+    return buildResult(this.state, this.resultId, this.profiles);
   }
 
   /** Note the questions this game has used, so the games that follow are dealt others. */
@@ -163,7 +183,14 @@ export class Room {
   }
 
   private broadcast() {
-    this.io.to(this.channel).emit('state', publicView(this.state));
+    // Much of what changes is private (an answer being typed, a wager), and the screens have no
+    // need to draw the same thing again. A view that differs only in its number is not sent.
+    const view = publicView(this.state);
+    const json = JSON.stringify({ ...view, seq: 0 });
+    if (json !== this.lastPublic) {
+      this.lastPublic = json;
+      this.io.to(this.channel).emit('state', view);
+    }
     this.broadcastHost();
     for (const id of this.playerSockets.keys()) this.sendYou(id);
   }
@@ -284,7 +311,7 @@ export class Room {
     const existing = findPlayerByName(this.state, name);
     // A seat whose phone has not connected yet is not abandoned, it is still arriving: two people
     // picking the same name at the same moment must not end up sharing one.
-    const arriving = existing && this.unconnected.has(existing.id) && clock() - existing.joinedAt < JOIN_GRACE_MS;
+    const arriving = existing && clock() - (this.unconnected.get(existing.id) ?? -Infinity) < JOIN_GRACE_MS;
     if (existing && !arriving && !existing.connected && this.state.phase !== 'finished') {
       // Someone is asking for a disconnected player's seat. In the lobby
       // nothing is at stake, so hand it over; mid-game the host decides.
@@ -293,6 +320,7 @@ export class Room {
         // it now. After a game it is someone coming back to their own seat on another browser, and
         // they are still who they were: the results already saved in their name stay theirs.
         if (this.secrets.plays === 1 || !this.profiles[existing.id]) this.seat(existing.id, profileId);
+        this.unconnected.set(existing.id, clock());
         return { status: 'joined', playerId: existing.id, token: this.issueToken(existing.id) };
       }
       return this.openClaim(existing.id, existing.name, profileId);
@@ -301,7 +329,7 @@ export class Room {
     const out = applySystem(this.state, { t: 'join', id, name, avatar }, this.env());
     this.seat(id, profileId);
     const token = this.issueToken(id);
-    this.unconnected.add(id);
+    this.unconnected.set(id, clock());
     this.commit(out);
     return { status: 'joined', playerId: id, token };
   }
@@ -326,6 +354,8 @@ export class Room {
 
   private openClaim(playerId: string, name: string, profileId?: string): JoinResponse {
     this.pruneClaims();
+    // Asking again (the page was reloaded while waiting) replaces the earlier request rather than adding to the host's list.
+    for (const [id, c] of this.claims) if (c.status === 'pending' && c.playerId === playerId && c.profileId === profileId) this.claims.delete(id);
     const pending = [...this.claims.values()].filter((c) => c.status === 'pending');
     if (pending.length >= MAX_PENDING_CLAIMS) throw new GameError('busy', 'Too many people are waiting to rejoin. Ask the host to let them in.');
     const claimSecret = randomToken();
@@ -356,7 +386,7 @@ export class Room {
     const claim = this.claims.get(claimId);
     if (!claim || !tokenMatches(secret, claim.secretHash)) return null;
     if (claim.status === 'pending') return { status: 'pending' };
-    this.claims.delete(claimId); // The answer is collected once.
+    // The answer stays until the request expires: a reply lost on the way must not cost the player their new token.
     return claim.status === 'approved' && claim.token ? { status: 'approved', playerId: claim.playerId, token: claim.token } : { status: 'denied' };
   }
 
@@ -393,7 +423,8 @@ export class Room {
   /**
    * Round-trip time is measured by the server: it sends a probe and times the
    * acknowledgement on its own clock. A client can make its connection look
-   * slower by delaying the reply, but never faster.
+   * slower by delaying the reply, but never faster. Slower is worth something
+   * only where buzzes are adjusted for ping, and there the rules cap it.
    */
   private probe(socket: AppSocket, playerId: string) {
     const once = () => {

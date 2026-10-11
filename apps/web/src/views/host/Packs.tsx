@@ -2,7 +2,7 @@
 import type { PackSummary } from '@buzzoff/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { api } from '../../lib/api';
+import { api, ApiFailure } from '../../lib/api';
 import { fmtDay, plural } from '../../lib/format';
 import { Button, toast } from '../../ui/kit';
 import { HostShell, PageHead, useShell } from './HostShell';
@@ -39,7 +39,8 @@ function Library() {
   const reload = useCallback(
     () =>
       api.packs().then(setPacks, (err) => {
-        setPacks([]);
+        // Keep the list that is already on screen; a failed refresh is not an empty library.
+        setPacks((known) => known ?? []);
         setError(fail(err));
       }),
     [fail],
@@ -55,7 +56,8 @@ function Library() {
       if (done) toast(done, 'good');
       await reload();
     } catch (err) {
-      setError(failed ? `${failed}: ${fail(err)}` : fail(err));
+      // `failed` says what was wrong with what was sent; a server that could not be reached or refused us is another matter.
+      setError(failed && err instanceof ApiFailure && err.status === 400 ? `${failed}: ${fail(err)}` : fail(err));
     } finally {
       setBusy(false);
     }
@@ -127,7 +129,7 @@ function Library() {
         <div className="mg-empty">
           <i className="bz-spinner" aria-hidden />
         </div>
-      ) : packs.length === 0 ? (
+      ) : packs.length === 0 && !error ? (
         <div className="bz-card mg-empty bz-rise">
           <span className="mg-empty__icon" aria-hidden>
             🗂️

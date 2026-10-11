@@ -1,5 +1,5 @@
 /*
- * Host management pages: home, new game, packs, pack editor, history.
+ * Host management pages: sign-in, home, new game, packs, pack editor, history, leaderboard, settings.
  * Built on the tokens and `bz-` kit in base.css; everything here is `mg-`.
  */
 
@@ -215,14 +215,6 @@
 .mg-note--act p {
   flex: 1 1 260px;
   margin: 0;
-}
-.mg-note code {
-  padding: 0.1em 0.4em;
-  border-radius: 5px;
-  background: rgb(0 0 0 / 0.35);
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-  overflow-wrap: anywhere;
 }
 
 .mg-empty {
@@ -695,7 +687,6 @@
 }
 @media (max-width: 560px) {
   .mg-fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px 12px;
   }
 }
@@ -1173,6 +1164,9 @@
   display: grid;
   gap: 14px;
   padding: 18px;
+  /* A big pack has a hundred of these, all open. The ones off screen are not laid out or painted until they are scrolled to. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 .mg-survey__head {
   display: flex;
@@ -1420,9 +1414,6 @@
   font-family: var(--font-mono);
   font-size: 0.85em;
   overflow-wrap: anywhere;
-}
-.mg-set .mg-stack > .bz-btn {
-  justify-self: start;
 }
 @media (max-width: 760px) {
   .mg-set {

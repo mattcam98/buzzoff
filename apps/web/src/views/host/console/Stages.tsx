@@ -69,10 +69,30 @@ function Board({ round, secret, players, paused, run }: Pick<StageProps, 'player
   );
 }
 
+/** The host entering a wager for the player. It is on screen only while a wager is being taken, so each one starts empty. */
+function WagerForm({ name, max, run }: { name: string | undefined; max: number; run: StageProps['run'] }) {
+  const [wager, setWager] = useState('');
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    const amount = Number(wager);
+    if (Number.isInteger(amount)) void run({ t: 'wager.set', amount });
+  };
+  return (
+    <form className="hc-wager" onSubmit={submit}>
+      <p>
+        <strong>{name}</strong> is entering a wager on their phone (up to {fmtScore(max)}). The clue stays hidden until it’s locked in. You can also enter it for them:
+      </p>
+      <input className="bz-input" type="number" min={0} max={max} step={1} value={wager} onChange={(e) => setWager(e.target.value)} placeholder="Wager" aria-label="Wager amount" />
+      <Button type="submit" variant="primary" disabled={wager === ''}>
+        Lock wager
+      </Button>
+    </form>
+  );
+}
+
 export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: TriviaSecret }) {
   const { pub, snap, players, run, round, secret } = props;
   const clue = round.clue;
-  const [wager, setWager] = useState('');
 
   if (round.stage === 'roll' && round.roll) return <RollStage {...props} roll={round.roll} />;
 
@@ -104,11 +124,6 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
   const stageLabel = { wager: 'Taking a wager', reading: 'Paused', open: 'Buzzers are open', answering: 'Waiting for your ruling', result: 'Answer revealed' }[clue.stage];
   // What the headline leaves out, in small print beneath it so that it never has to share a line with the clock.
   const stageNote = clue.stage === 'reading' ? 'Buzzers open again when you resume' : clue.stage === 'answering' && clue.held ? 'Question hidden, its timer paused' : null;
-  const submitWager = (e: FormEvent) => {
-    e.preventDefault();
-    const amount = Number(wager);
-    if (Number.isInteger(amount)) void run({ t: 'wager.set', amount }).then((ok) => ok && setWager(''));
-  };
 
   return (
     <section className="hc-card hc-stage hc-clue" data-stage={clue.stage}>
@@ -135,17 +150,7 @@ export function TriviaStage(props: StageProps & { round: TriviaPublic; secret: T
         {secret.clue?.notes && <em>{secret.clue.notes}</em>}
       </div>
 
-      {clue.stage === 'wager' && (
-        <form className="hc-wager" onSubmit={submitWager}>
-          <p>
-            <strong>{wagerer?.name}</strong> is entering a wager on their phone (up to {fmtScore(clue.wager?.max ?? 0)}). The clue stays hidden until it’s locked in. You can also enter it for them:
-          </p>
-          <input className="bz-input" type="number" min={0} max={clue.wager?.max} step={1} value={wager} onChange={(e) => setWager(e.target.value)} placeholder="Wager" aria-label="Wager amount" />
-          <Button type="submit" variant="primary" disabled={wager === ''}>
-            Lock wager
-          </Button>
-        </form>
-      )}
+      {clue.stage === 'wager' && <WagerForm name={wagerer?.name} max={clue.wager?.max ?? 0} run={run} />}
 
       {clue.stage === 'answering' && answerer && (
         <div className="hc-answering">

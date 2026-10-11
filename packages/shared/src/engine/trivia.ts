@@ -265,18 +265,24 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     return true;
   },
 
-  buzz(g, r, playerId, ctx) {
+  buzzRefused(g, r, playerId, now) {
     const c = r.clue;
-    const rules = g.rules.buzzer;
-    const reject = (status: BuzzAck['status']) => ({ ack: { status }, changed: false });
     const player = g.players[playerId];
-    if (!c || !player || c.wager) return reject('closed');
-    if (player.eliminated || c.excluded.includes(playerId)) return reject('excluded');
+    if (!c || !player || c.wager) return 'closed';
+    if (player.eliminated || c.excluded.includes(playerId)) return 'excluded';
 
-    if (c.stage !== 'open' && c.stage !== 'answering') return reject('closed');
-    if (c.answererId === playerId || c.attempts.some((a) => a.playerId === playerId)) return reject('duplicate');
+    if (c.stage !== 'open' && c.stage !== 'answering') return 'closed';
+    if (c.answererId === playerId || c.attempts.some((a) => a.playerId === playerId)) return 'duplicate';
     // Once someone has the floor, a buzz only counts for the record, and only while the grace period lasts.
-    if (c.stage === 'answering' && !(c.graceEndsAt && ctx.now < c.graceEndsAt)) return reject('closed');
+    if (c.stage === 'answering' && !(c.graceEndsAt && now < c.graceEndsAt)) return 'closed';
+    return null;
+  },
+
+  buzz(g, r, playerId, ctx) {
+    const refused = this.buzzRefused!(g, r, playerId, ctx.now);
+    if (refused) return { ack: { status: refused }, changed: false };
+    const c = r.clue!;
+    const rules = g.rules.buzzer;
 
     const ms = round3(ctx.now - c.openedAt!);
     const rttMs = ctx.rtt(playerId);
@@ -361,12 +367,17 @@ export const trivia: Mode<TriviaRound, TriviaPublic, TriviaSecret> = {
     removeFromRoll(r, playerId);
     const c = r.clue;
     if (!c) return;
+    // `decided` counts the buzzes that were in time. Take one of those away and it is one fewer,
+    // or the first late buzz would be shown as having been in time.
+    const at = c.attempts.findIndex((a) => a.playerId === playerId);
     c.attempts = c.attempts.filter((a) => a.playerId !== playerId);
-    if (c.decided !== null) c.decided = Math.min(c.decided, c.attempts.length);
+    if (c.decided !== null) c.decided = Math.min(at !== -1 && at < c.decided ? c.decided - 1 : c.decided, c.attempts.length);
     // A collection window with nothing left in it would never close, and with no first buzz there is no grace period either.
     if (!c.attempts.length) c.windowEndsAt = c.graceEndsAt = null;
-    // Their turn cannot be completed; throw the clue out. A clue that is already settled stays settled.
-    if (c.stage !== 'result' && (c.answererId === playerId || c.wager?.playerId === playerId)) cancelClue(g, r);
+    // Their turn cannot be completed; throw the clue out. A clue that is already settled stays settled,
+    // and so does one left behind by a round or a game that ended while it was in play.
+    const live = g.phase === 'round' && g.rounds[g.roundIndex] === r && r.stage === 'clue';
+    if (live && c.stage !== 'result' && (c.answererId === playerId || c.wager?.playerId === playerId)) cancelClue(g, r);
   },
 
   publicView(g, r) {

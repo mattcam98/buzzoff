@@ -139,6 +139,20 @@ describe('recognising players', () => {
   });
 });
 
+describe('one phone, two seats, and a bad night', () => {
+  it('credits a phone with the seat it played in, even when that seat finished below the one it left behind', () => {
+    const { by, players } = board([
+      game('minus', [
+        { name: 'Bo', profileId: 'b', score: 100 },
+        { name: 'Ann', profileId: 'a', score: 0 },
+        { name: 'Annie', profileId: 'a', score: -200, stats: { buzzes: 2, incorrect: 2 } },
+      ]),
+    ]);
+    expect(players.map((p) => p.name).sort()).toEqual(['Annie', 'Bo']);
+    expect(by('Annie')).toMatchObject({ id: 'a', games: 1, points: -200 });
+  });
+});
+
 describe('the host deciding who is who', () => {
   const results = () => [
     game('1', [{ name: 'Matt', profileId: 'phone', score: 100 }, { name: 'Bo', profileId: 'b', score: 50 }]),

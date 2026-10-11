@@ -11,7 +11,7 @@ import { byScore, fmtScore, joinAddress, placings, playerMap, plural } from '../
 import { useHotkeys } from '../../lib/hooks';
 import { storage } from '../../lib/storage';
 import { roundBlurb, Score } from '../../ui/game';
-import { Avatar, Button, cx, Logo, Modal, Notice, toast } from '../../ui/kit';
+import { Avatar, Button, Connecting, cx, Logo, Modal, Notice, toast } from '../../ui/kit';
 import { FastMoneyStage, FinalStage, TriviaStage } from './console/Stages';
 import { usePeek } from './console/peek';
 import '../../styles/game.css';
@@ -128,9 +128,17 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
       </Notice>
     );
   }
-  if (snap.status === 'ended') return <Notice title="This game was closed" />;
+  if (snap.status === 'ended') {
+    return (
+      <Notice title="This game was closed">
+        <Link className="bz-btn bz-btn--primary" href="/host">
+          Host dashboard
+        </Link>
+      </Notice>
+    );
+  }
   const { pub, host } = snap;
-  if (!pub || !host) return <Notice title="Opening the console…" busy />;
+  if (!pub || !host) return <Connecting title="Opening the console…" />;
 
   const players = playerMap(pub);
   const props: StageProps = { pub, host, snap, players, run };
@@ -170,7 +178,7 @@ function Console({ code, hostKey }: { code: string; hostKey: string }) {
           </nav>
         </header>
         {/* Under the controls rather than above them, so it is never behind the status bar and never scrolls away. */}
-        {snap.status !== 'online' && <div className="bz-banner">Connection lost. Reconnecting… your game is safe.</div>}
+        {snap.status !== 'online' && <div className="bz-banner" role="status">Connection lost. Reconnecting… your game is safe.</div>}
       </div>
 
       <div className="hc-body">
@@ -347,7 +355,7 @@ function IntroCategories({ pub, round }: { pub: PublicView; round: NonNullable<P
       <div className="hc-cats__list">
         <ul aria-label={cats.length > 1 ? 'Categories' : 'Category'}>
           {cats.map((cat, i) => (
-            <li key={cat.title}>
+            <li key={`${i}:${cat.title}`}>
               {cat.blurb ? (
                 <strong {...holdable(i)} aria-description={cat.blurb}>
                   {cat.title}

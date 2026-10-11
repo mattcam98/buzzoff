@@ -310,7 +310,15 @@ describe('a game over the wire', () => {
     expect(first.body.status).toBe('joined');
     expect(second.status).toBe(409);
     if (first.body.status !== 'joined') throw new Error('expected a seat');
-    await h.connect('player', code, first.body.token);
+    const sam = await h.connect('player', code, first.body.token);
+
+    // The same holds for a seat somebody left in the lobby: the first to ask for it has it.
+    const watcher = await h.connect('display', code);
+    sam.socket.disconnect();
+    await until(() => watcher.pub.players[0].connected === false);
+    const [taker, late] = [await join(), await join()];
+    expect(taker.body).toMatchObject({ status: 'joined', playerId: first.body.playerId });
+    expect(late.status).toBe(409);
   });
 
   it('leaves Socket.IO its own path and answers bad uploads and ranges with the right status', async () => {
@@ -328,6 +336,9 @@ describe('a game over the wire', () => {
     const stray = new FormData();
     stray.append('wrong-field', new Blob(['x']), 'x.png');
     expect((await fetch(`${h.url}/api/media`, { method: 'POST', body: stray })).status).toBe(400);
+    // A body cut off part-way is the sender's problem, not a server error.
+    const cut = '--x\r\nContent-Disposition: form-data; name="file"; filename="a.png"\r\n\r\nabc';
+    expect((await fetch(`${h.url}/api/media`, { method: 'POST', body: cut, headers: { 'content-type': 'multipart/form-data; boundary=x' } })).status).toBe(400);
   });
 
   it('measures round-trip time on the server and reports it', async () => {
@@ -481,6 +492,13 @@ describe('settings and sign-in', () => {
         maxUploadMb: { from: 25, to: 1 }, sessionDays: { from: 30, to: 7 },
       },
     });
+
+    // Deleting the format that new games open on puts the setting back to "last played", and later saves still work.
+    const mine = (await h.api<{ id: string }>('POST', '/presets', { name: 'House rules', rules: RULES }, auth)).body;
+    expect((await h.api('PUT', '/settings', { ...next, defaultPresetId: mine.id }, auth)).status).toBe(200);
+    expect((await h.api('DELETE', `/presets/${mine.id}`, undefined, auth)).status).toBe(204);
+    expect((await h.api<ServerInfo>('GET', '/info')).body.defaultPresetId).toBeNull();
+    expect((await h.api('PUT', '/settings', next, auth)).status).toBe(200);
   });
 
   it('sets, changes and protects the password, storing nothing that could be used to sign in', async () => {
@@ -552,10 +570,14 @@ describe('reconnection and recovery', () => {
     ann.client.socket.disconnect();
     await until(() => host.pub.players[0].connected === false);
 
-    const request = await h.api<JoinResponse>('POST', `/games/${code}/join`, { name: 'ann', avatar: AVATAR });
-    if (request.body.status !== 'pending') throw new Error('expected a pending claim');
+    // Asking twice (the page was reloaded while waiting) leaves the host one request to answer, the later one.
+    const ask = (cookie?: string) => h.api<JoinResponse>('POST', `/games/${code}/join`, { name: 'ann', avatar: AVATAR }, cookie ? { cookie } : {});
+    const earlier = await ask();
+    const request = await ask(earlier.cookie!);
+    if (earlier.body.status !== 'pending' || request.body.status !== 'pending') throw new Error('expected a pending claim');
     const { claimId, claimSecret } = request.body;
-    await until(() => host.hostView!.claims.length === 1, 'claim shown to host');
+    await until(() => host.hostView!.claims.length === 1 && host.hostView!.claims[0].id === claimId, 'claim shown to host');
+    expect((await h.api('GET', `/games/${code}/claims/${earlier.body.claimId}?secret=${earlier.body.claimSecret}`)).status).toBe(404);
     const statusUrl = `/games/${code}/claims/${claimId}?secret=${claimSecret}`;
     expect((await h.api('GET', statusUrl)).body).toEqual({ status: 'pending' });
     expect((await h.api('GET', `/games/${code}/claims/${claimId}?secret=wrong`)).status).toBe(404);
@@ -563,6 +585,8 @@ describe('reconnection and recovery', () => {
     await host.host({ t: 'claim.resolve', claimId, approve: true });
     const approved = (await h.api<{ status: string; playerId: string; token: string }>('GET', statusUrl)).body;
     expect(approved).toMatchObject({ status: 'approved', playerId: ann.playerId });
+    // The answer can be asked for again: a reply lost on the way must not cost the player the seat.
+    expect((await h.api('GET', statusUrl)).body).toEqual(approved);
     // The old phone's token no longer works; the new one does.
     await expect(h.connect('player', code, ann.token)).rejects.toThrow('unauthorized');
     const back = await h.connect('player', code, approved.token);
@@ -719,6 +743,10 @@ describe('content and results', () => {
     const history = (await h.api<{ players: { name: string; score: number; champion: boolean }[] }[]>('GET', '/history')).body;
     expect(history).toHaveLength(1);
     expect(history[0].players[0]).toMatchObject({ name: 'Ann', score: 400, champion: true });
+    // A score put right after the end reaches the record too, as the same game.
+    await host.host({ t: 'score.adjust', id: ann.playerId, delta: 100 });
+    await until(async () => (await h.api<typeof history>('GET', '/history')).body[0].players[0].score === 500, 'the corrected score in History');
+    expect((await h.api<typeof history>('GET', '/history')).body).toHaveLength(1);
 
     const packs = (await h.api<PackSummary[]>('GET', '/packs')).body;
     const body = { packIds: [packs[0].id], rules: RULES };

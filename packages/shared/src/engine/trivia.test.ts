@@ -264,6 +264,24 @@ describe('buzzers open by themselves', () => {
   });
 });
 
+describe('a round that is over', () => {
+  it('keeps its scores when someone who was answering as it ended is removed later', () => {
+    const s = new Sim({ rounds: [TRIVIA, TRIVIA] }).start().open();
+    s.buzz('bob');
+    s.host({ t: 'judge', correct: false });
+    s.advance(400);
+    s.buzz('cat');
+    expect(s.trivia.clue).toMatchObject({ stage: 'answering', answererId: 'cat' });
+    s.host({ t: 'round.end' });
+    const [score, wrong] = [s.score('bob'), s.state.stats.bob.incorrect];
+    expect(score).toBeLessThan(0);
+
+    s.host({ t: 'player.kick', id: 'cat' });
+    expect([s.score('bob'), s.state.stats.bob.incorrect]).toEqual([score, wrong]);
+    expect(s.state.rounds[0].stage).toBe('done');
+  });
+});
+
 describe('hiding the question while an answer is judged', () => {
   const question = 'Question 0.1?';
 

@@ -14,7 +14,7 @@ import { fmtDay, fmtDayTime, plural } from '../../lib/format';
 import { storage } from '../../lib/storage';
 import { Button, cx, toast } from '../../ui/kit';
 import { NumField, SelectField, ToggleField } from './fields';
-import { HostShell, PageHead, useShell } from './HostShell';
+import { HostShell, PageHead, useShell, useUnsavedWork } from './HostShell';
 
 export function Settings() {
   return (
@@ -110,12 +110,7 @@ function SettingsPage() {
   const pending = draft && { ...draft, publicUrl: origin };
   const dirty = !!view && !!pending && (!addressOk || JSON.stringify(pending) !== JSON.stringify(view.settings));
 
-  useEffect(() => {
-    if (!dirty) return;
-    const onUnload = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener('beforeunload', onUnload);
-    return () => window.removeEventListener('beforeunload', onUnload);
-  }, [dirty]);
+  useUnsavedWork(dirty);
 
   if (loadError) {
     return (

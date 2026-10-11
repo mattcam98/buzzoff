@@ -96,6 +96,8 @@ function draw<T extends { id: string }>(
   if (chosen.length > count) fail('content', `Too many ${what} selections for one round`);
   for (const item of freshest(all.filter((x) => !used.has(x.id) && !reserved.has(x.id)), played, rand)) {
     if (chosen.length === count) break;
+    // The same pack chosen twice offers everything twice.
+    if (used.has(item.id)) continue;
     used.add(item.id);
     chosen.push(item);
   }
@@ -215,18 +217,29 @@ function finishGame(g: GameState, ctx: Ctx): void {
   g.paused = false;
   g.pausedAt = null;
   g.finishedAt = ctx.now;
-  if (!g.champions) {
-    const teams = teamViews(g)?.filter((t) => t.playerIds.length);
-    if (teams) {
-      const best = Math.max(...teams.map((t) => t.score));
-      g.champions = teams.filter((t) => t.score === best).flatMap((t) => t.playerIds);
-    } else {
-      const players = activePlayers(g);
-      const best = Math.max(...players.map((p) => p.score));
-      g.champions = players.filter((p) => p.score === best).map((p) => p.id);
-    }
-  }
+  // A decider may have named the winners already. If none of them is still in the game, the scores decide.
+  if (!g.champions?.length) g.champions = leaders(g);
   ctx.events.push({ type: 'game.finished' });
+}
+
+/** Who wins on the scores as they stand: everyone on the leading team, or whoever has the top score. */
+function leaders(g: GameState): string[] {
+  const teams = teamViews(g)?.filter((t) => t.playerIds.length);
+  if (teams?.length) {
+    const best = Math.max(...teams.map((t) => t.score));
+    return teams.filter((t) => t.score === best).flatMap((t) => t.playerIds);
+  }
+  const players = activePlayers(g);
+  const best = Math.max(...players.map((p) => p.score));
+  return players.filter((p) => p.score === best).map((p) => p.id);
+}
+
+/** A score put right after the end can change who won, unless a decider settled that outright. */
+function recrown(g: GameState): void {
+  if (g.phase !== 'finished') return;
+  const last = g.rounds.at(-1);
+  if (last?.mode === 'fastMoney' && last.def.stakes === 'decider' && last.outcome?.winners.some((id) => g.players[id])) return;
+  g.champions = leaders(g);
 }
 
 function endRound(g: GameState, ctx: Ctx): void {
@@ -339,12 +352,15 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
       }
       case 'score.adjust':
         requirePlayer(g, action.id).score += action.delta;
+        recrown(g);
         return;
       case 'score.set':
         requirePlayer(g, action.id).score = action.score;
+        recrown(g);
         return;
       case 'game.end':
         if (g.phase === 'finished') fail('bad_stage', 'The game is already over');
+        if (g.phase === 'lobby') fail('bad_stage', 'The game has not started yet');
         finishGame(g, ctx);
         return;
       case 'round.next':
@@ -426,6 +442,10 @@ export function applyBuzz(state: GameState, playerId: string, env: Env): Outcome
   const round = currentRound(state);
   const mode = round ? modeOf(round) : null;
   if (!round || !mode?.buzz || state.paused) return { state, events: [], ack: { status: 'closed' } };
+  // A buzz that will not count is turned away before the state is copied: copying is most of the
+  // work, and a late or repeated buzz must not hold up the timestamp of the one behind it.
+  const refused = mode.buzzRefused?.(state, round, playerId, env.now);
+  if (refused) return { state, events: [], ack: { status: refused } };
   let ack: BuzzAck = { status: 'closed' };
   let changed = false;
   const out = run(state, env, (g, ctx) => {
@@ -557,9 +577,10 @@ export function restoreSnapshot(current: GameState, snapshot: GameState, takenAt
     }
   }
   for (const id of current.order) {
+    // Someone who joined after the snapshot keeps their seat, but not what they have scored since: that is being undone.
     if (!g.players[id]) {
-      g.players[id] = { ...current.players[id] };
-      g.stats[id] = current.stats[id] ?? emptyStats();
+      g.players[id] = { ...current.players[id], score: 0, eliminated: false };
+      g.stats[id] = emptyStats();
     }
   }
   g.order = current.order.filter((id) => g.players[id]);

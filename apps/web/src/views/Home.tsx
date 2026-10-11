@@ -75,10 +75,11 @@ export function IdentityFields({ name, avatar, onName, onAvatar, nameRef }: {
 
 export function Home({ code: initialCode = '' }: { code?: string }) {
   const [, navigate] = useLocation();
-  const saved = useRef(storage.profile()).current;
+  const [saved] = useState(storage.profile);
   // Arriving with no code, a phone that still holds a seat is shown the room it is in: one tap and it is back.
-  const resumed = useRef(initialCode ? null : storage.room());
-  const [code, setCode] = useState(normalizeRoomCode(initialCode || resumed.current || ''));
+  const [arrivedIn] = useState(() => (initialCode ? null : storage.room()));
+  const resumed = useRef(arrivedIn);
+  const [code, setCode] = useState(normalizeRoomCode(initialCode || arrivedIn || ''));
   const [name, setName] = useState(saved?.name ?? '');
   const [avatar, setAvatar] = useState<AvatarData>(saved?.avatar ?? randomAvatar);
   const [lookup, setLookup] = useState<Lookup>({ state: 'idle' });
@@ -178,7 +179,10 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
   }
 
   const game = lookup.state === 'found' ? lookup.game : null;
-  const closed = !!game && !game.joinable && !seat;
+  // A finished game takes nobody. One that is not taking new players (it has started, the room is
+  // locked or full) still lets someone who was in it have their seat back by giving their name.
+  const over = game?.phase === 'finished' && !seat;
+  const returning = !!game && !game.joinable && !over;
   const step = claim ? 'claim' : game && !changingCode ? 'who' : 'code';
   const status = game && (
     <>
@@ -245,7 +249,7 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
           <form className="bz-card home__card bz-rise" onSubmit={join}>
             <button type="button" className="home__room" onClick={() => setChangingCode(true)}>
               <b>{code}</b>
-              <span id="room-status" data-state="found">
+              <span id="room-status">
                 {status}
               </span>
               <i>Change</i>
@@ -268,10 +272,10 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
                 </button>
               </div>
             ) : (
-              <fieldset className="home__who" disabled={closed}>
+              <fieldset className="home__who" disabled={over}>
                 <IdentityFields name={name} avatar={avatar} onName={setName} onAvatar={setAvatar} />
                 <Button type="submit" variant="primary" size="l" block disabled={!name.trim() || busy}>
-                  {busy ? 'Joining…' : closed ? 'This game is closed' : 'Join game'}
+                  {busy ? 'Joining…' : over ? 'This game is over' : returning ? 'Take your seat back' : 'Join game'}
                 </Button>
               </fieldset>
             )}

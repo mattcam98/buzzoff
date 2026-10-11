@@ -98,7 +98,12 @@ After every change the room computes three things from the state
 - `HostView` → the host socket only: answers, typed Fast Money responses,
   which clues hide wagers.
 - `PlayerView` → one phone: whether *this* player may buzz and why not, their
-  wager prompt, their own typed answers. Resent only when it changes.
+  wager prompt, their own typed answers.
+
+A view is sent only when it differs from the last one sent. Most of what
+happens while people are writing (a final answer saved as it is typed, a
+wager) changes one player's view and nobody else's, so the TV and the other
+phones are not made to draw the same screen again.
 
 Views are full snapshots with a sequence number, not patches. A board of fifty
 clues is a few kilobytes, a reconnecting client needs no replay, and a client
@@ -123,8 +128,9 @@ drive sound and animation only; missing one never leaves a screen wrong.
   takeover is approved) invalidates the old one.
 - Room codes are four letters from a twenty-letter alphabet with no vowels and
   no look-alikes (160,000 codes), checked against live rooms. Joining and
-  password attempts are rate-limited per address; each socket has its own
-  message budget.
+  password attempts are rate-limited per address; password attempts are also
+  capped for the server as a whole, because addresses are cheap to come by.
+  Each socket has its own message budget.
 - Uploads are identified by their leading bytes, not their name, and stored
   under random names. SVG and HTML are not accepted. A content security policy
   allows scripts from the server itself only.
@@ -230,7 +236,9 @@ top value. A category with one clue per value deals exactly as it always did.
 
 When a game finishes, the room writes one `GameResult` document (`stats.ts`):
 who played, their scores, who won and each player's buzzer and answer
-statistics. History shows those documents as they are. The leaderboard is the
+statistics. If the host corrects a score or a name after the end, the same
+document is written again, so the record says what the screens say. History
+shows those documents as they are. The leaderboard is the
 same documents added up by a pure function, `buildLeaderboard` in
 `packages/shared/src/leaderboard.ts`; nothing about it is stored, so there is
 no second record to drift from the first. Removing a result, or undoing the

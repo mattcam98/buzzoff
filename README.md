@@ -136,7 +136,7 @@ Things that go wrong at a party, and what to do:
 | Start is greyed out | Someone has not tapped ready; the console names them. Remove them from the player list if they are not playing after all. |
 | A buzz is disputed | **Re-do the buzz** discards it and opens the buzzers again for everyone still in. |
 | A clue was bad | **Throw out clue** reverses its scoring and puts it back on the board. |
-| A score needs correcting | `−` / `+` next to the player, or click the player to type a score. |
+| A score needs correcting | `−` / `+` next to the player, or click the player to type a score. After the game has ended this corrects History and the leaderboard too, including who won (unless a Fast Money decider settled that). |
 | Someone forgot to save their final answer | Nothing to do. Answers are saved as they are typed, within half a second, so what they had written when the clock stopped is what counts. |
 | A phone dies or a browser closes | Reopening the page puts them straight back in their seat. So does opening the site's front page: it shows the room they are in. |
 | Someone switches to a different phone | They join again under the same name; you get a prompt to let them take over the seat. |

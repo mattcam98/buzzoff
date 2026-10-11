@@ -111,6 +111,23 @@ describe('rolling for the first pick', () => {
     expect(s.trivia.roll).toMatchObject({ phase: 'won', winnerId: 'ann' });
   });
 
+  it('does not wait for someone who has left the game', () => {
+    const s = atTheRoll([3, 5]);
+    s.player('ann', { t: 'roll' }).player('bob', { t: 'roll' });
+    // Cat was the only one still to roll. With her gone the roll is complete, and carries on by itself.
+    s.host({ t: 'player.kick', id: 'cat' });
+    s.advance(0);
+    expect(s.trivia.roll).toMatchObject({ phase: 'landing', contenders: ['ann', 'bob'] });
+    settle(s);
+    expect(s.trivia).toMatchObject({ controlId: 'bob', roll: { phase: 'won', winnerId: 'bob' } });
+
+    // A roll that everybody has left gives way to the board, for the host to hand to someone.
+    const empty = atTheRoll([]);
+    for (const id of ['ann', 'bob', 'cat']) empty.host({ t: 'player.kick', id });
+    empty.advance(0);
+    expect(empty.trivia).toMatchObject({ stage: 'board', roll: null });
+  });
+
   it('is fair: over many rolls every face and every seat comes up about as often', () => {
     const faces = [0, 0, 0, 0, 0, 0];
     const wins: Record<string, number> = { ann: 0, bob: 0, cat: 0 };

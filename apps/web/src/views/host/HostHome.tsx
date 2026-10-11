@@ -16,14 +16,14 @@ export function HostHome() {
   );
 }
 
-export interface LiveGame extends HostedGame {
+interface LiveGame extends HostedGame {
   info: GameInfo;
 }
 
 const PHASE_LABEL: Record<GameInfo['phase'], string> = { lobby: 'In the lobby', round: 'In play', standings: 'Between rounds', finished: 'Finished' };
 
 /** Keep only the games this browser still holds a working host key for. */
-export async function loadGames(): Promise<LiveGame[]> {
+async function loadGames(): Promise<LiveGame[]> {
   const checked = await Promise.all(
     storage.hostedGames().map(async (game) => {
       try {
@@ -63,7 +63,6 @@ function Dashboard() {
     try {
       await api.deleteGame(game.code);
       storage.removeHostedGame(game.code);
-      storage.setGameSetup(game.code, null);
       setGames((list) => list?.filter((g) => g.code !== game.code) ?? null);
     } catch (err) {
       toast(fail(err), 'error');
@@ -79,6 +78,8 @@ function Dashboard() {
     } catch (err) {
       toast(fail(err), 'error');
       setBusy(false);
+      // A pack that has since been deleted is the one thing only the setup page can put right.
+      if (err instanceof ApiFailure && err.code === 'content') navigate(`/host/new?rematch=${game.code}`);
     }
   }
 

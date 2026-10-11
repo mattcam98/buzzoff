@@ -37,7 +37,7 @@ export interface TeamView {
 
 export interface PublicAttempt {
   playerId: string;
-  /** Server-recorded ms from buzzers armed to buzz received. */
+  /** Server-recorded ms from buzzers opening to buzz received. */
   ms: number;
   rttMs: number | null;
   adjustedMs: number | null;

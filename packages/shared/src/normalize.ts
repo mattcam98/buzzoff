@@ -15,6 +15,8 @@ const NUMBER_WORDS: Record<string, string> = {
 };
 
 function singular(word: string): string {
+  // "cookies" becomes "cooky" below, so "cookie" has to as well.
+  if (word.length >= 3 && word.endsWith('ie')) return word.slice(0, -2) + 'y';
   if (word.length <= 3) return word;
   if (word.endsWith('ies')) return word.slice(0, -3) + 'y';
   if (/(ch|sh|ss|x|z)es$/.test(word)) return word.slice(0, -2);
@@ -31,7 +33,8 @@ export function normalizeAnswer(input: string): string {
     .toLowerCase()
     .replace(/&/g, ' and ')
     .replace(/['’`]/g, '')
-    .replace(/[^a-z0-9]+/g, ' ')
+    // Letters and digits of any script are kept, so an answer in Greek or Japanese can match too.
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
     .trim();
   if (!cleaned) return '';
   const words = cleaned.split(' ').map((w) => NUMBER_WORDS[w] ?? w);

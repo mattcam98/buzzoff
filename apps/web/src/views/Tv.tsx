@@ -13,7 +13,7 @@ import { useFullscreen, useGameEvents, useHotkeys, useRecentInput, useWakeLock }
 import { duckMusic, moodFor, setMusic } from '../lib/music';
 import { audioReady, play, soundFor, unlockAudio } from '../lib/sound';
 import { FinalSecondsTick, roundBlurb, Score } from '../ui/game';
-import { Avatar, Button, Confetti, cx, Logo, Notice } from '../ui/kit';
+import { Avatar, Button, Confetti, Connecting, cx, Logo, Notice } from '../ui/kit';
 import { columnsFor, FastMoneyScene, FinalScene, inRows, rowsOf, TriviaScene, useFit } from './tv/Scenes';
 import '../styles/game.css';
 import '../styles/tv.css';
@@ -91,7 +91,7 @@ export function Tv({ code }: { code: string }) {
     );
   }
   if (snap.status === 'ended') return <Notice title="This game has ended" />;
-  if (!pub) return <Notice title="Tuning in…" busy />;
+  if (!pub) return <Connecting title="Tuning in…" />;
 
   const enableSound = () => {
     void unlockAudio().then(() => play('join'));
@@ -110,7 +110,7 @@ export function Tv({ code }: { code: string }) {
           </div>
         </div>
       )}
-      {snap.status !== 'online' && <div className="tv-offline">Reconnecting…</div>}
+      {snap.status !== 'online' && <div className="tv-offline" role="status">Reconnecting…</div>}
       {/* The screen itself takes the click; the button says so, and gives the keyboard something to press. */}
       {!sound && <button className="tv-sound">🔊 Click anywhere to turn sound on</button>}
       {/* Offered while someone is at the mouse or keyboard, and until the screen has had its first click; then it gets out of the way. */}
@@ -261,7 +261,7 @@ function RoundIntro({ pub }: { pub: PublicView }) {
         <ul className="tv-intro__cats">
           {round.board.map((cat, i) => (
             // Keyed by its title, so a category the host swaps for another flips in the way the first ones did.
-            <li key={cat.title} style={{ animationDelay: `${swapped ? 0 : 500 + i * 160}ms` }}>
+            <li key={`${i}:${cat.title}`} style={{ animationDelay: `${swapped ? 0 : 500 + i * 160}ms` }}>
               {cat.title}
             </li>
           ))}

@@ -412,6 +412,20 @@ html.kb-open .play__main {
   --face: var(--bad);
   --edge: #8f1626;
   --fg: #fff;
+}
+/*
+ * The pulse while the buzzers are open is a glow laid over the button and faded in and out. Only its
+ * opacity moves, so the phone has nothing to repaint in the very moment a touch has to register.
+ */
+.play__buzzer[data-state='open']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  box-shadow: 0 0 30px 4px rgb(255 92 108 / 0.7);
+  opacity: 0;
+  pointer-events: none;
   animation: play-ready 0.9s ease-in-out infinite;
 }
 .play__buzzer[data-state='buzzed'] { --face: var(--buzz); --edge: var(--buzz-deep); --fg: var(--buzz-ink); }
@@ -437,8 +451,7 @@ html.kb-open .play__main {
   color: var(--text);
 }
 @keyframes play-ready {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.18) drop-shadow(0 0 22px rgb(255 92 108 / 0.7)); }
+  50% { opacity: 1; }
 }
 /* Two lines are reserved so the buzzer does not jump when the text changes. */
 .play__readout {
@@ -559,10 +572,6 @@ html.kb-open .play__main {
 @keyframes play-dice-wait {
   0%, 100% { transform: translateY(2px) rotate(-3deg); }
   50% { transform: translateY(-2px) rotate(3deg); }
-}
-.play__roll .play__hint .bz-num {
-  margin-left: 4px;
-  color: var(--text);
 }
 /* Everyone's dice, as chips; the row wraps and, in a crowded room, scrolls inside itself. */
 .play__rolls {
@@ -766,9 +775,10 @@ html.kb-open .play__main {
   display: flex;
   gap: 6px;
 }
+/* Ten questions on the narrowest phone leave under 18px a dot: they shrink rather than run into the clock. */
 .play__dots button {
   flex: 0 1 30px;
-  min-width: 18px;
+  min-width: 0;
   aspect-ratio: 1;
   padding: 0;
   border: 1.5px solid var(--line-strong);

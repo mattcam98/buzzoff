@@ -294,8 +294,9 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
       target: r.def.target,
       multiplier: r.def.pointMultiplier,
       blockDuplicates: r.def.blockDuplicates,
-      // Questions stay hidden until the round is under way.
-      questions: r.stage === 'intro' ? [] : r.surveys.map((s) => s.question),
+      // Questions stay hidden until the round is under way: none during the intro, and only how many
+      // there are until the first clock starts, so that no screen can show one early.
+      questions: r.stage === 'intro' ? [] : r.surveys.map((s) => (r.stage === 'ready' && r.turn === 0 ? '' : s.question)),
       turns: r.turns,
       turn: r.turn,
       timer: timerView(r),

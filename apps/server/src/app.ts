@@ -16,8 +16,6 @@ import { clientAddress, Limiter, log, randomId } from './util';
 
 export interface App {
   server: HttpServer;
-  io: AppServer;
-  rooms: Rooms;
   close(): Promise<void>;
 }
 
@@ -96,13 +94,14 @@ export async function createApp(config: Config, store: Store): Promise<App> {
 
   return {
     server,
-    io,
-    rooms,
     async close() {
       // Hang up first, so nothing can be acknowledged after the final save.
       const hungUp = io.close();
       await rooms.shutdown();
       await playLog.flush();
+      // Everything is saved. A request still in flight (a long upload, a video being watched) is cut off
+      // rather than waited for, or one of them would hold a restart up until it was killed.
+      server.closeAllConnections();
       await hungUp;
       await store.close();
     },

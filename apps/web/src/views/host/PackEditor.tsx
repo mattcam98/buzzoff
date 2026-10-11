@@ -2,14 +2,14 @@
  * The pack editor. Edits are held locally and written with an explicit Save,
  * so a half-typed clue never reaches a game.
  */
-import { MAX_CLUES_PER_CATEGORY, PackContentSchema, type Category, type Clue, type Media, type PackContent, type Survey, type SurveyAnswer } from '@buzzoff/shared';
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { MAX_CATEGORIES_PER_PACK, MAX_CLUES_PER_CATEGORY, MAX_SURVEYS_PER_PACK, PackContentSchema, type Category, type Clue, type Media, type PackContent, type Survey, type SurveyAnswer } from '@buzzoff/shared';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { Link } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
 import { plural } from '../../lib/format';
 import { Button, cx, toast } from '../../ui/kit';
 import { ListField, move, NumField, RowTools, shortId, ToggleField } from './fields';
-import { HostShell, useShell } from './HostShell';
+import { HostShell, useShell, useUnsavedWork } from './HostShell';
 
 export function PackEditor({ id }: { id: string }) {
   return (
@@ -60,7 +60,7 @@ function Editor({ id }: { id: string }) {
   const { fail } = useShell();
   const [draft, setDraft] = useState<PackContent | null>(null);
   const [saved, setSaved] = useState('');
-  const [missing, setMissing] = useState<string | null>(null);
+  const [missing, setMissing] = useState<{ title: string; message: string } | null>(null);
   const [tab, setTab] = useState<'categories' | 'surveys'>('categories');
   const [open, setOpen] = useState<string | null>(null);
   const [focus, setFocus] = useState<string | null>(null);
@@ -76,14 +76,19 @@ function Editor({ id }: { id: string }) {
         setSaved(JSON.stringify(content));
         setOpen(content.categories.length === 1 ? content.categories[0].id : null);
       },
-      (err) => !cancelled && setMissing(err instanceof ApiFailure && err.status === 404 ? 'That pack no longer exists.' : fail(err)),
+      (err) => {
+        if (cancelled) return;
+        const gone = err instanceof ApiFailure && err.status === 404;
+        setMissing(gone ? { title: 'Pack not found', message: 'That pack no longer exists.' } : { title: 'Couldn’t load the pack', message: fail(err) });
+      },
     );
     return () => {
       cancelled = true;
     };
   }, [id, fail]);
 
-  const dirty = !!draft && JSON.stringify(draft) !== saved;
+  // A big pack is half a megabyte of JSON: compare it when it changes, not on every render.
+  const dirty = useMemo(() => !!draft && JSON.stringify(draft) !== saved, [draft, saved]);
 
   const save = useCallback(async () => {
     if (!draft || saving) return;
@@ -114,7 +119,6 @@ function Editor({ id }: { id: string }) {
     }
   }, [draft, saving, id, fail]);
 
-  // Guard unsaved work: closing the tab, following a link, and Ctrl/Cmd+S to save.
   useEffect(() => {
     const onKey = (e: globalThis.KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
@@ -126,35 +130,17 @@ function Editor({ id }: { id: string }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [save]);
 
-  useEffect(() => {
-    if (!dirty) return;
-    const onUnload = (e: BeforeUnloadEvent) => e.preventDefault();
-    const onClick = (e: MouseEvent) => {
-      const link = (e.target as HTMLElement | null)?.closest?.('a[href]');
-      if (!link || link.hasAttribute('download') || link.getAttribute('target') === '_blank') return;
-      if (!window.confirm('Leave without saving? Your changes to this pack will be lost.')) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-    window.addEventListener('beforeunload', onUnload);
-    document.addEventListener('click', onClick, true);
-    return () => {
-      window.removeEventListener('beforeunload', onUnload);
-      document.removeEventListener('click', onClick, true);
-    };
-  }, [dirty]);
+  useUnsavedWork(dirty);
 
-  const counts = useMemo(
-    () => (draft ? { clues: draft.categories.reduce((n, c) => n + c.clues.length, 0) } : { clues: 0 }),
-    [draft],
-  );
+  const clueCount = useMemo(() => draft?.categories.reduce((n, c) => n + c.clues.length, 0) ?? 0, [draft]);
+  const clearFocus = useCallback(() => setFocus(null), []);
+  const editSurveys = useCallback((change: (list: Survey[]) => Survey[]) => setDraft((d) => d && { ...d, surveys: change(d.surveys) }), []);
 
   if (missing) {
     return (
       <div className="mg-empty" role="alert">
-        <h1>Pack not found</h1>
-        <p>{missing}</p>
+        <h1>{missing.title}</h1>
+        <p>{missing.message}</p>
         <Link href="/host/packs" className="bz-btn bz-btn--primary">
           Back to packs
         </Link>
@@ -171,7 +157,6 @@ function Editor({ id }: { id: string }) {
 
   const patch = (p: Partial<PackContent>) => setDraft({ ...draft, ...p });
   const setCategory = (i: number, c: Category) => patch({ categories: draft.categories.map((x, k) => (k === i ? c : x)) });
-  const setSurvey = (i: number, s: Survey) => patch({ surveys: draft.surveys.map((x, k) => (k === i ? s : x)) });
 
   function addCategory() {
     const cat = blankCategory();
@@ -221,7 +206,7 @@ function Editor({ id }: { id: string }) {
 
       <div className="mg-tabs" role="tablist" aria-label="Pack contents">
         <button type="button" role="tab" aria-selected={tab === 'categories'} onClick={() => setTab('categories')}>
-          Trivia <span>{plural(draft.categories.length, 'category', 'categories')} · {plural(counts.clues, 'clue')}</span>
+          Trivia <span>{plural(draft.categories.length, 'category', 'categories')} · {plural(clueCount, 'clue')}</span>
         </button>
         <button type="button" role="tab" aria-selected={tab === 'surveys'} onClick={() => setTab('surveys')}>
           Surveys <span>{plural(draft.surveys.length, 'question')}</span>
@@ -246,7 +231,7 @@ function Editor({ id }: { id: string }) {
               count={draft.categories.length}
               open={open === cat.id}
               focus={focus}
-              onFocusDone={() => setFocus(null)}
+              onFocusDone={clearFocus}
               onToggle={() => setOpen(open === cat.id ? null : cat.id)}
               onChange={(c) => setCategory(i, c)}
               onMove={(to) => patch({ categories: move(draft.categories, i, to) })}
@@ -257,7 +242,7 @@ function Editor({ id }: { id: string }) {
               requestFocus={setFocus}
             />
           ))}
-          {draft.categories.length < 80 && (
+          {draft.categories.length < MAX_CATEGORIES_PER_PACK && (
             <Button variant="primary" onClick={addCategory}>
               + Add a category
             </Button>
@@ -273,22 +258,9 @@ function Editor({ id }: { id: string }) {
             </div>
           )}
           {draft.surveys.map((survey, i) => (
-            <SurveyCard
-              key={survey.id}
-              survey={survey}
-              index={i}
-              count={draft.surveys.length}
-              autoFocus={focus === survey.id}
-              onFocusDone={() => setFocus(null)}
-              onChange={(s) => setSurvey(i, s)}
-              onMove={(to) => patch({ surveys: move(draft.surveys, i, to) })}
-              onRemove={() => {
-                if (survey.question.trim() && !window.confirm('Remove this survey question?')) return;
-                patch({ surveys: draft.surveys.filter((_, k) => k !== i) });
-              }}
-            />
+            <SurveyCard key={survey.id} survey={survey} index={i} count={draft.surveys.length} autoFocus={focus === survey.id} onFocusDone={clearFocus} edit={editSurveys} />
           ))}
-          {draft.surveys.length < 80 && (
+          {draft.surveys.length < MAX_SURVEYS_PER_PACK && (
             <Button variant="primary" onClick={addSurvey}>
               + Add a survey question
             </Button>
@@ -381,7 +353,10 @@ function CategoryCard({ category: cat, index, count, open, focus, onFocusDone, r
                 onFocusDone={onFocusDone}
                 onChange={(c) => setClue(i, c)}
                 onMove={(to) => onChange({ ...cat, clues: move(cat.clues, i, to) })}
-                onRemove={() => onChange({ ...cat, clues: cat.clues.filter((_, k) => k !== i) })}
+                onRemove={() => {
+                  if ((clue.question.trim() || clue.answer.trim()) && !window.confirm(`Remove clue ${i + 1} and what is written in it?`)) return;
+                  onChange({ ...cat, clues: cat.clues.filter((_, k) => k !== i) });
+                }}
                 onNext={() => {
                   const next = cat.clues[i + 1];
                   if (next) requestFocus(next.id);
@@ -520,6 +495,7 @@ function MediaField({ media, onChange }: { media: Media | undefined; onChange: (
     try {
       const uploaded = await api.uploadMedia(f);
       if (mounted.current) latest.current(uploaded);
+      else toast('That upload finished after its question was closed. Open the question and add the file again.', 'error');
     } catch (err) {
       setError(fail(err));
     } finally {
@@ -604,12 +580,17 @@ interface SurveyProps {
   count: number;
   autoFocus: boolean;
   onFocusDone: () => void;
-  onChange: (s: Survey) => void;
-  onMove: (to: number) => void;
-  onRemove: () => void;
+  /** Change the list of surveys. It is the same function on every render, so only the card being typed in is drawn again. */
+  edit: (change: (list: Survey[]) => Survey[]) => void;
 }
 
-function SurveyCard({ survey, index, count, autoFocus, onFocusDone, onChange, onMove, onRemove }: SurveyProps) {
+const SurveyCard = memo(function SurveyCard({ survey, index, count, autoFocus, onFocusDone, edit }: SurveyProps) {
+  const onChange = (s: Survey) => edit((list) => list.map((x) => (x.id === survey.id ? s : x)));
+  const onMove = (to: number) => edit((list) => move(list, index, to));
+  const onRemove = () => {
+    if (survey.question.trim() && !window.confirm('Remove this survey question?')) return;
+    edit((list) => list.filter((x) => x.id !== survey.id));
+  };
   const question = useRef<HTMLInputElement>(null);
   const [focusAnswer, setFocusAnswer] = useState<number | null>(null);
   useEffect(() => {
@@ -643,7 +624,7 @@ function SurveyCard({ survey, index, count, autoFocus, onFocusDone, onChange, on
             <span className="mg-answer__rank bz-num" aria-hidden>
               {i + 1}
             </span>
-            <label className="bz-field mg-answer__text">
+            <label className="bz-field">
               <span>Answer</span>
               <input
                 className="bz-input"
@@ -669,7 +650,10 @@ function SurveyCard({ survey, index, count, autoFocus, onFocusDone, onChange, on
               aria-label={`Remove answer ${i + 1}`}
               title="Remove answer"
               disabled={survey.answers.length <= 1}
-              onClick={() => onChange({ ...survey, answers: survey.answers.filter((_, k) => k !== i) })}
+              onClick={() => {
+                if (a.text.trim() && !window.confirm(`Remove “${a.text.trim()}”?`)) return;
+                onChange({ ...survey, answers: survey.answers.filter((_, k) => k !== i) });
+              }}
             >
               ✕
             </button>
@@ -688,4 +672,4 @@ function SurveyCard({ survey, index, count, autoFocus, onFocusDone, onChange, on
       </footer>
     </article>
   );
-}
+});

@@ -80,10 +80,14 @@ test('an administrator runs the server from the Settings page', async ({ browser
   await stranger.getByLabel('Host password').fill('correct horse');
   await stranger.getByRole('button', { name: 'Sign in' }).click();
   await expect(stranger.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+  // The second device starts a change and does not save it.
+  await stranger.getByLabel('Keep idle games (hours)').fill('72');
+  await expect(stranger.getByText('Unsaved changes')).toBeVisible();
 
   // --- changing it needs the current one, and signs every other device out
   await page.reload();
   await expect(page.locator('.mg-devices li')).toHaveCount(2);
+  await page.getByLabel('Keep finished games (hours)').fill('5');
   await page.getByLabel('Current password').fill('wrong guess');
   await page.getByLabel('New password').fill('battery staple');
   await page.getByLabel('Type it again').fill('battery staple');
@@ -93,9 +97,22 @@ test('an administrator runs the server from the Settings page', async ({ browser
   await page.getByRole('button', { name: 'Change password' }).click();
   await expect(page.locator('.mg-devices li')).toHaveCount(1);
   await expect(page.getByRole('cell', { name: /Host password changed/ })).toBeVisible();
+  // A setting that was being edited when the password changed is still being edited.
+  await expect(page.getByLabel('Keep finished games (hours)')).toHaveValue('5');
+  await page.getByRole('button', { name: 'Discard' }).click();
+  await expect(page.getByText('All changes saved')).toBeVisible();
   await page.screenshot({ path: `${SHOTS}/settings-locked.png`, fullPage: true });
-  await stranger.reload();
+
+  // The other device finds out when it saves. It is asked to sign in again, and its change is still there.
+  await stranger.getByRole('button', { name: 'Save changes' }).click();
   await expect(stranger.getByRole('heading', { name: 'Host sign-in' })).toBeVisible();
+  await stranger.screenshot({ path: `${SHOTS}/settings-signed-out.png`, fullPage: true });
+  await stranger.getByLabel('Host password').fill('battery staple');
+  await stranger.getByRole('button', { name: 'Sign in' }).click();
+  await expect(stranger.getByRole('heading', { name: 'Host sign-in' })).toHaveCount(0);
+  await expect(stranger.getByLabel('Keep idle games (hours)')).toHaveValue('72');
+  await stranger.getByRole('button', { name: 'Save changes' }).click();
+  await expect(stranger.getByText('All changes saved')).toBeVisible();
 
   // Nothing secret reaches the browser: not the hash, not other devices' tokens.
   const token = await page.evaluate(() => JSON.parse(localStorage.getItem('buzzoff.admin')!) as string);
@@ -103,11 +120,10 @@ test('an administrator runs the server from the Settings page', async ({ browser
   expect(seen).not.toMatch(/scrypt|battery staple|tokenHash/);
   expect(seen).not.toContain(token);
 
-  // --- signing out
+  // --- signing out. (Signing in with the new password was shown above; another attempt here would
+  // be this address's seventh in a few seconds, which the server rightly refuses.)
   await page.getByRole('button', { name: 'Sign out here' }).click();
   await expect(page.getByRole('heading', { name: 'Host sign-in' })).toBeVisible();
-  await page.getByLabel('Host password').fill('battery staple');
-  await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toHaveCount(0);
   expect(errors).toEqual([]);
 });

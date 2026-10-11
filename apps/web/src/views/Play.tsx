@@ -19,7 +19,7 @@ import { useFixedViewport } from '../lib/viewport';
 import { haptic, play, unlockAudio } from '../lib/sound';
 import { storage } from '../lib/storage';
 import { BuzzLadder, Die, MediaView, rollLeaders, roundBlurb, Score, Seconds, textScale } from '../ui/game';
-import { Avatar, Button, Modal, Notice, TimerBar, toast } from '../ui/kit';
+import { Avatar, Button, Connecting, Modal, Notice, TimerBar, toast } from '../ui/kit';
 import { IdentityFields } from './Home';
 import '../styles/game.css';
 import '../styles/home.css';
@@ -95,6 +95,8 @@ function Session({ code, token, playerId }: { code: string; token: string | null
     );
   }
   if (snap.status === 'ended') {
+    // A seat the host took away is not one to offer the way back to.
+    if (snap.reason === 'kicked') storage.setSeat(code, null);
     const title = snap.reason === 'kicked' ? 'The host removed you' : snap.reason === 'replaced' ? 'Opened somewhere else' : 'This game has ended';
     return (
       <Notice title={title}>
@@ -106,7 +108,7 @@ function Session({ code, token, playerId }: { code: string; token: string | null
     );
   }
   const { pub } = snap;
-  if (!pub || (playerId && !snap.you)) return <Notice title="Joining…" busy />;
+  if (!pub || (playerId && !snap.you)) return <Connecting title="Joining…" />;
 
   const players = playerMap(pub);
   const ctx: Ctx = { conn, snap, pub, you: snap.you, me: playerId ? (players[playerId] ?? null) : null, players };
@@ -114,7 +116,11 @@ function Session({ code, token, playerId }: { code: string; token: string | null
   return (
     // Lifting a finger counts as a gesture that may start audio; touching down does not.
     <div className="bz-stage bz-app play" data-phase={pub.phase} onPointerUp={unlockAudio}>
-      {snap.status !== 'online' && <div className="bz-banner">Reconnecting… your seat is safe</div>}
+      {snap.status !== 'online' && (
+        <div className="bz-banner" role="status">
+          {playerId ? 'Reconnecting… your seat is safe' : 'Reconnecting…'}
+        </div>
+      )}
       <Header {...ctx} />
       <main className="play__main">
         {pub.paused ? (
@@ -330,7 +336,7 @@ function TriviaPanel(ctx: Ctx & { round: TriviaPublic }) {
             <div key={c} className="play__col">
               <span>{cat.title}</span>
               {cat.clues.map((cl, k) => (
-                <b key={k} className="bz-num" data-used={cl.used || undefined} aria-label={cl.used ? `${cat.title}, ${cl.value}: played` : `${cat.title} for ${cl.value}`}>
+                <b key={k} className="bz-num" role="img" data-used={cl.used || undefined} aria-label={cl.used ? `${cat.title}, ${cl.value}: played` : `${cat.title} for ${cl.value}`}>
                   {cl.value}
                 </b>
               ))}
@@ -455,6 +461,8 @@ function RollPanel({ conn, pub, me, players, roll }: Ctx & { roll: NonNullable<T
             e.preventDefault();
             void tap();
           }}
+          // A click with no pointer behind it: the keyboard, or assistive technology.
+          onClick={(e) => e.detail === 0 && void tap()}
           aria-label={canRoll ? 'Roll the die' : `Your die: ${mine ?? 'not rolled'}`}
         >
           <Die value={mine} />
@@ -536,6 +544,8 @@ function Buzzer({ conn, snap, pub, you, players, round }: Ctx & { you: PlayerVie
             e.preventDefault();
             void press();
           }}
+          // A click with no pointer behind it: the keyboard, or assistive technology.
+          onClick={(e) => e.detail === 0 && void press()}
           aria-label={state === 'open' ? 'Buzz' : `${big}. ${small}`}
         >
           <span>{big}</span>
@@ -576,6 +586,7 @@ function WagerPanel({ conn, wager, title, hint }: { conn: Connection; wager: Non
   };
   // The +/− buttons and slider mean a wager can be set without ever opening the keyboard.
   const step = wager.max <= 1000 ? 50 : wager.max <= 5000 ? 100 : 500;
+  const slide = Math.max(1, Math.round(wager.max / 100));
   if (wager.amount !== null) {
     return (
       <Panel eyebrow="Wager locked" title={fmtScore(wager.amount)} tone="good">
@@ -599,7 +610,17 @@ function WagerPanel({ conn, wager, title, hint }: { conn: Connection; wager: Non
           +
         </button>
       </div>
-      <input type="range" className="play__range play__nokb" min={wager.min} max={wager.max} step={Math.max(1, Math.round(wager.max / 100))} value={amount} onChange={(e) => setAmount(Number(e.target.value))} aria-label="Wager slider" />
+      <input
+        type="range"
+        className="play__range play__nokb"
+        min={wager.min}
+        max={wager.max}
+        step={slide}
+        value={amount}
+        // The steps rarely divide the range exactly: the last one goes all the way.
+        onChange={(e) => setAmount(Number(e.target.value) + slide > wager.max ? wager.max : Number(e.target.value))}
+        aria-label="Wager slider"
+      />
       <div className="play__chips play__nokb">
         <button type="button" onClick={() => setAmount(wager.min)}>{fmtScore(wager.min)}</button>
         <button type="button" onClick={() => setAmount(wager.max / 4)}>¼</button>
@@ -825,8 +846,9 @@ const AUTOSAVE_MS = 400;
 
 function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round: FinalPublic }) {
   const [text, setText] = useState(you?.final?.answer ?? '');
-  // What the server is known to hold.
-  const [kept, setKept] = useState(you?.final?.answer ?? '');
+  // What the server holds, as it last said: not what this phone believes it sent.
+  const kept = you?.final?.answer ?? '';
+  const [retry, setRetry] = useState(0);
   const myReveal = me ? round.reveals.find((r) => r.playerId === me.id) : undefined;
   const answering = round.stage === 'answering' && !!you?.final?.canAnswer;
   const draft = text.trim();
@@ -835,11 +857,13 @@ function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round:
 
   // An answer is saved as it is written: whatever is in the box when the clock stops is what counts,
   // whether or not anyone remembered to press Save.
+  // A save that did not get through (the connection dropped, the server was slow) is sent again.
+  const online = snap.status === 'online';
   useEffect(() => {
-    if (!answering || inSync) return;
-    const timer = window.setTimeout(() => void conn.act({ t: 'final.answer', text: draft }).then((ack) => ack.ok && setKept(draft)), AUTOSAVE_MS);
+    if (!answering || inSync || !online) return;
+    const timer = window.setTimeout(() => void conn.act({ t: 'final.answer', text: draft }).then((ack) => ack.ok || setRetry((n) => n + 1)), AUTOSAVE_MS);
     return () => window.clearTimeout(timer);
-  }, [answering, draft, inSync, conn]);
+  }, [answering, draft, inSync, online, retry, conn]);
 
   if (round.stage === 'wager') {
     if (you?.wager) return <WagerPanel conn={conn} wager={you.wager} title={round.title} hint={`The category is “${round.category}”. Everyone wagers before seeing the question.`} />;
@@ -854,7 +878,7 @@ function FinalPanel({ conn, pub, snap, you, me, players, round }: Ctx & { round:
   if (answering) {
     const save = async (e: FormEvent) => {
       e.preventDefault();
-      if (draft && (await send(conn, { t: 'final.answer', text: draft }))) setKept(draft);
+      if (draft) await send(conn, { t: 'final.answer', text: draft });
     };
     return (
       <form className="play__panel play__fm" onSubmit={save}>

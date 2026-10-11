@@ -17,6 +17,11 @@ describe('normalizeAnswer', () => {
     ['Cats & Dogs', 'cat and dog'],
     ['boxes', 'box'],
     ['parties', 'party'],
+    ['cookies', 'cooky'],
+    ['cookie', 'cooky'],
+    ['Straße', 'straße'],
+    ['Пицца', 'пицца'],
+    ['東京', '東京'],
     ['glass', 'glass'],
     ['three wishes', '3 wish'],
     ['The', 'the'],
@@ -36,6 +41,13 @@ describe('matchSurvey', () => {
   ] as const)('%s → answer %i (%s)', (input, index, kind) => expect(matchSurvey(input, answers)).toEqual({ index, kind }));
 
   it.each(['red', 'bad', 'tea', '', '   ', 'shower'])('does not match %j', (input) => expect(matchSurvey(input, answers)).toBeNull());
+
+  it('matches one of something to several of it, and an answer written in another script', () => {
+    const snacks = [{ text: 'Cookies', points: 40, aliases: [] }, { text: 'A movie', points: 30, aliases: [] }, { text: 'Пицца', points: 20, aliases: [] }];
+    expect(matchSurvey('a cookie', snacks)).toEqual({ index: 0, kind: 'exact' });
+    expect(matchSurvey('movies', snacks)).toEqual({ index: 1, kind: 'exact' });
+    expect(matchSurvey('пицца', snacks)).toEqual({ index: 2, kind: 'exact' });
+  });
 });
 
 describe('helpers', () => {

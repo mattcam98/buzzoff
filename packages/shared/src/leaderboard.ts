@@ -93,7 +93,9 @@ interface Seat {
 function seatsOf(result: GameResult): Seat[] {
   const taken = new Set<string>();
   const seats: Seat[] = [];
-  for (const player of result.players) {
+  // Seats that played come first: a phone's profile belongs to the seat it played in, wherever an
+  // abandoned one finished in the scores.
+  for (const player of [...result.players].sort((a, b) => Number(idle(a)) - Number(idle(b)))) {
     let raw = player.profileId ?? nameIdentity(player.name);
     if (taken.has(raw)) {
       // One phone, two seats. A seat that did nothing is one somebody joined and then left behind

@@ -100,6 +100,15 @@ describe('round flow', () => {
     expect(s.buzz('cat').status).toBe('registered');
   });
 
+  it('lets a score put right after the end change who won', () => {
+    const s = new Sim().start();
+    s.host({ t: 'score.set', id: 'ann', score: 500 }).host({ t: 'game.end' });
+    expect(s.pub.champions).toEqual(['ann']);
+    s.host({ t: 'score.adjust', id: 'bob', delta: 2000 });
+    expect(s.pub.champions).toEqual(['bob']);
+    expect(buildResult(s.state, 'r').players[0]).toMatchObject({ name: 'bob', champion: true, score: 2000 });
+  });
+
   it('crowns the leading team when teams are on', () => {
     const s = new Sim({ rules: { teams: { enabled: true, names: ['Red', 'Blue'] } }, players: ['a1', 'b1', 'a2', 'b2'] }).start();
     s.host({ t: 'score.set', id: 'b1', score: 500 }).host({ t: 'score.set', id: 'a1', score: 300 }).host({ t: 'score.set', id: 'a2', score: 300 });
@@ -217,6 +226,22 @@ describe('pause, undo and recovery', () => {
     expect(s.score('ann')).toBe(200);
   });
 
+  it('takes back what someone who joined later has scored since, but not their seat', () => {
+    const s = new Sim().start();
+    const snapshot = s.state;
+    const takenAt = s.now;
+    s.open();
+    s.join('zed');
+    s.buzz('zed');
+    s.host({ t: 'judge', correct: true });
+    expect([s.score('zed'), s.state.stats.zed.correct]).toEqual([100, 1]);
+
+    s.state = restoreSnapshot(s.state, snapshot, takenAt, s.now);
+    expect(s.state.order).toContain('zed');
+    expect([s.score('zed'), s.state.stats.zed.correct]).toEqual([0, 0]);
+    expect(s.trivia.board[0].clues[0].used).toBe(false);
+  });
+
   it('keeps a paused game paused, and a running game running, through an undo', () => {
     const s = new Sim({ buzzer: { answerSec: 10 } }).start().open();
     s.buzz('ann');
@@ -314,6 +339,13 @@ describe('assembling rounds', () => {
     expect(new Set(titles).size).toBe(11);
     expect(rounds[1].mode === 'trivia' && rounds[1].board[0].clues.map((c) => c.value)).toEqual([200, 400, 600, 800, 1000]);
     expect(rounds[0].mode === 'trivia' && rounds[0].board.flatMap((c) => c.clues).filter((c) => c.wager)).toHaveLength(1);
+  });
+
+  it('deals a category once even when the same pack is chosen twice', () => {
+    const rules = { ...BUILTIN_PRESETS[0].rules, rounds: [{ ...TRIVIA, categories: 3 }] };
+    const pool = { categories: [...categories(3), ...categories(3)], surveys: [] };
+    const [round] = assembleRounds(rules, pool, undefined, Math.random);
+    expect(round.mode === 'trivia' && round.board.map((c) => c.id).sort()).toEqual(['cat0', 'cat1', 'cat2']);
   });
 
   it('honours explicit picks and reports a shortage clearly', () => {

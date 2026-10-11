@@ -44,6 +44,8 @@ export interface Mode<R extends RoundState, Pub, Secret> {
   player(g: GameState, r: R, playerId: string, action: PlayerAction, ctx: Ctx): boolean;
   /** Only modes with a buzzer implement this. Returns whether state changed. */
   buzz?(g: GameState, r: R, playerId: string, ctx: Ctx): { ack: BuzzAck; changed: boolean };
+  /** Why a buzz would be turned away, or null if it would count. It reads the state and changes nothing. */
+  buzzRefused?(g: GameState, r: R, playerId: string, now: number): BuzzAck['status'] | null;
   /** Fire anything whose deadline has passed. */
   tick(g: GameState, r: R, ctx: Ctx): void;
   /** Every server time at which `tick` needs to run. */
