@@ -692,53 +692,59 @@
         "id": "sv-01",
         "question": "Name something people do as soon as they wake up.",
         "answers": [
-          { "text": "Check their phone", "points": 34, "aliases": ["phone", "look at phone", "scroll", "check messages", "check notifications"] },
+          { "text": "Check their phone", "points": 36, "aliases": ["phone", "look at phone", "scroll", "check messages", "check notifications"] },
           { "text": "Use the bathroom", "points": 22, "aliases": ["pee", "toilet", "go to the loo", "bathroom", "wee"] },
-          { "text": "Hit snooze", "points": 14, "aliases": ["snooze", "go back to sleep", "snooze the alarm", "sleep more"] },
-          { "text": "Brush their teeth", "points": 10, "aliases": ["brush teeth", "teeth", "clean teeth"] },
-          { "text": "Make coffee", "points": 9, "aliases": ["coffee", "drink coffee", "tea", "make tea", "put the kettle on"] },
+          { "text": "Hit snooze", "points": 12, "aliases": ["snooze", "go back to sleep", "snooze the alarm", "sleep more"] },
+          { "text": "Brush their teeth", "points": 9, "aliases": ["brush teeth", "teeth", "clean teeth"] },
+          { "text": "Make coffee", "points": 8, "aliases": ["coffee", "drink coffee", "tea", "make tea", "put the kettle on"] },
+          { "text": "Drink water", "points": 5, "aliases": ["water", "a glass of water", "glass of water", "drink some water", "have a drink"] },
           { "text": "Stretch", "points": 5, "aliases": ["yawn", "stretching", "stretch and yawn"] },
-          { "text": "Take a shower", "points": 4, "aliases": ["shower", "wash", "have a shower", "bath"] }
+          { "text": "Take a shower", "points": 3, "aliases": ["shower", "wash", "have a shower", "bath"] }
         ]
       },
       {
         "id": "sv-02",
-        "question": "Name something you'd find in the kitchen drawer where odds and ends go.",
+        "question": "Name something found in the kitchen drawer where odds and ends go.",
         "answers": [
-          { "text": "Batteries", "points": 28, "aliases": ["battery", "dead batteries", "old batteries", "aa batteries"] },
-          { "text": "Pens", "points": 20, "aliases": ["pen", "pencils", "pens and pencils", "markers", "biros"] },
-          { "text": "Scissors", "points": 14, "aliases": ["pair of scissors", "shears"] },
+          { "text": "Batteries", "points": 22, "aliases": ["battery", "dead batteries", "old batteries", "aa batteries"] },
+          { "text": "Pens", "points": 22, "aliases": ["pen", "pencils", "pens and pencils", "markers", "biros"] },
           { "text": "Tape", "points": 12, "aliases": ["sticky tape", "sellotape", "scotch tape", "duct tape", "masking tape"] },
-          { "text": "Rubber bands", "points": 9, "aliases": ["elastic bands", "rubber band", "elastics", "hair ties"] },
+          { "text": "Scissors", "points": 10, "aliases": ["pair of scissors", "shears"] },
+          { "text": "Cables", "points": 9, "aliases": ["chargers", "charger", "old cables", "cords", "phone charger"] },
           { "text": "Takeaway menus", "points": 7, "aliases": ["menus", "takeout menus", "menu", "coupons", "flyers"] },
-          { "text": "Keys", "points": 5, "aliases": ["spare keys", "old keys", "mystery keys", "key"] },
-          { "text": "Cables", "points": 4, "aliases": ["chargers", "charger", "old cables", "cords", "phone charger"] }
+          { "text": "Keys", "points": 6, "aliases": ["spare keys", "old keys", "mystery keys", "key"] },
+          { "text": "Measuring tape", "points": 5, "aliases": ["tape measure", "a tape measure", "measure", "ruler"] },
+          { "text": "Rubber bands", "points": 4, "aliases": ["elastic bands", "rubber band", "elastics", "hair ties"] },
+          { "text": "Screwdrivers", "points": 3, "aliases": ["screwdriver", "a screwdriver", "tools", "allen keys", "allen key"] }
         ]
       },
       {
         "id": "sv-03",
         "question": "Name a popular pizza topping.",
         "answers": [
-          { "text": "Pepperoni", "points": 36, "aliases": ["peperoni", "salami", "pepperonis"] },
+          { "text": "Pepperoni", "points": 32, "aliases": ["peperoni", "salami", "pepperonis"] },
           { "text": "Mushrooms", "points": 18, "aliases": ["mushroom", "shrooms"] },
-          { "text": "Extra cheese", "points": 12, "aliases": ["cheese", "mozzarella", "more cheese"] },
-          { "text": "Ham", "points": 10, "aliases": ["prosciutto", "cooked ham", "ham and mushroom"] },
+          { "text": "Ham", "points": 11, "aliases": ["prosciutto", "cooked ham", "ham and mushroom"] },
+          { "text": "Extra cheese", "points": 10, "aliases": ["cheese", "mozzarella", "more cheese"] },
           { "text": "Pineapple", "points": 9, "aliases": ["hawaiian", "ham and pineapple", "pineapples"] },
           { "text": "Onions", "points": 6, "aliases": ["onion", "red onion", "red onions"] },
-          { "text": "Olives", "points": 5, "aliases": ["olive", "black olives", "green olives"] },
-          { "text": "Peppers", "points": 3, "aliases": ["bell peppers", "green peppers", "capsicum", "jalapenos", "pepper"] }
+          { "text": "Peppers", "points": 5, "aliases": ["bell peppers", "green peppers", "capsicum", "jalapenos", "pepper"] },
+          { "text": "Olives", "points": 4, "aliases": ["olive", "black olives", "green olives"] },
+          { "text": "Chicken", "points": 3, "aliases": ["bbq chicken", "grilled chicken"] },
+          { "text": "Sausage", "points": 2, "aliases": ["sausages", "italian sausage", "chorizo", "meatballs"] }
         ]
       },
       {
         "id": "sv-04",
         "question": "Name an excuse people give for being late to work.",
         "answers": [
-          { "text": "Traffic", "points": 38, "aliases": ["stuck in traffic", "traffic jam", "roadworks", "accident on the road", "bad traffic"] },
-          { "text": "Overslept", "points": 26, "aliases": ["slept in", "alarm didn't go off", "oversleeping", "slept through my alarm", "woke up late"] },
-          { "text": "Car trouble", "points": 12, "aliases": ["car broke down", "car wouldn't start", "flat tyre", "flat tire", "car problems"] },
-          { "text": "Train or bus was late", "points": 9, "aliases": ["train was late", "bus was late", "missed the bus", "missed the train", "public transport", "train delay"] },
-          { "text": "The kids", "points": 6, "aliases": ["kids", "school run", "child was sick", "dropping off the kids", "childcare"] },
-          { "text": "Bad weather", "points": 5, "aliases": ["weather", "snow", "rain", "storm", "ice"] },
+          { "text": "Traffic", "points": 36, "aliases": ["stuck in traffic", "traffic jam", "roadworks", "accident on the road", "bad traffic"] },
+          { "text": "Overslept", "points": 24, "aliases": ["slept in", "alarm didn't go off", "oversleeping", "slept through my alarm", "woke up late"] },
+          { "text": "Train or bus was late", "points": 10, "aliases": ["train was late", "bus was late", "missed the bus", "missed the train", "public transport", "train delay"] },
+          { "text": "Bad weather", "points": 10, "aliases": ["weather", "snow", "rain", "storm", "ice"] },
+          { "text": "Car trouble", "points": 8, "aliases": ["car broke down", "car wouldn't start", "flat tyre", "flat tire", "car problems"] },
+          { "text": "The kids", "points": 5, "aliases": ["kids", "school run", "child was sick", "dropping off the kids", "childcare"] },
+          { "text": "Forgot something", "points": 4, "aliases": ["had to go back", "forgot my keys", "forgot my phone", "went back for something"] },
           { "text": "Felt sick", "points": 3, "aliases": ["sick", "ill", "not feeling well", "doctor's appointment", "wasn't well"] }
         ]
       },
@@ -746,40 +752,41 @@
         "id": "sv-05",
         "question": "Name something people are always losing.",
         "answers": [
-          { "text": "Keys", "points": 35, "aliases": ["car keys", "house keys", "key", "my keys"] },
-          { "text": "Phone", "points": 20, "aliases": ["mobile", "cell phone", "mobile phone", "cellphone"] },
-          { "text": "Wallet", "points": 13, "aliases": ["purse", "bank card", "credit card", "money"] },
-          { "text": "Glasses", "points": 11, "aliases": ["sunglasses", "reading glasses", "specs", "spectacles"] },
-          { "text": "TV remote", "points": 9, "aliases": ["remote", "remote control", "the remote", "tv controller"] },
-          { "text": "Socks", "points": 6, "aliases": ["sock", "a sock", "odd socks", "one sock"] },
-          { "text": "Pens", "points": 3, "aliases": ["pen", "pencils", "pencil"] },
-          { "text": "Umbrella", "points": 2, "aliases": ["umbrellas", "brolly", "an umbrella"] }
+          { "text": "Keys", "points": 30, "aliases": ["car keys", "house keys", "key", "my keys"] },
+          { "text": "Phone", "points": 22, "aliases": ["mobile", "cell phone", "mobile phone", "cellphone"] },
+          { "text": "TV remote", "points": 14, "aliases": ["remote", "remote control", "the remote", "tv controller"] },
+          { "text": "Glasses", "points": 13, "aliases": ["sunglasses", "reading glasses", "specs", "spectacles"] },
+          { "text": "Wallet", "points": 8, "aliases": ["purse", "bank card", "credit card", "money"] },
+          { "text": "Pens", "points": 6, "aliases": ["pen", "pencils", "pencil"] },
+          { "text": "Headphones", "points": 4, "aliases": ["earbuds", "earphones", "airpods", "headphone", "ear buds"] },
+          { "text": "Socks", "points": 3, "aliases": ["sock", "a sock", "odd socks", "one sock"] }
         ]
       },
       {
         "id": "sv-06",
-        "question": "Name something you'd bring to a house party.",
+        "question": "Name something people bring to a house party.",
         "answers": [
-          { "text": "Drinks", "points": 40, "aliases": ["alcohol", "beer", "wine", "booze", "a bottle", "bottle of wine"] },
-          { "text": "Snacks", "points": 22, "aliases": ["chips", "crisps", "food", "chips and dip", "nibbles", "dip"] },
-          { "text": "Dessert", "points": 10, "aliases": ["cake", "cookies", "brownies", "sweets", "something sweet"] },
-          { "text": "A game", "points": 8, "aliases": ["board game", "card game", "games", "cards", "party game"] },
-          { "text": "Music", "points": 7, "aliases": ["speaker", "a playlist", "bluetooth speaker", "playlist", "speakers"] },
-          { "text": "Ice", "points": 6, "aliases": ["bag of ice", "ice cubes"] },
-          { "text": "A friend", "points": 4, "aliases": ["friends", "a plus one", "plus one", "a date", "partner"] }
+          { "text": "Drinks", "points": 48, "aliases": ["alcohol", "beer", "wine", "booze", "a bottle", "bottle of wine"] },
+          { "text": "Snacks", "points": 20, "aliases": ["chips", "crisps", "food", "chips and dip", "nibbles", "dip"] },
+          { "text": "Dessert", "points": 9, "aliases": ["cake", "cookies", "brownies", "sweets", "something sweet"] },
+          { "text": "A game", "points": 6, "aliases": ["board game", "card game", "games", "cards", "party game"] },
+          { "text": "Music", "points": 5, "aliases": ["speaker", "a playlist", "bluetooth speaker", "playlist", "speakers"] },
+          { "text": "A friend", "points": 4, "aliases": ["friends", "a plus one", "plus one", "a date", "partner"] },
+          { "text": "A gift for the host", "points": 4, "aliases": ["flowers", "chocolates", "a gift", "gift", "a present", "present", "box of chocolates"] },
+          { "text": "Ice", "points": 4, "aliases": ["bag of ice", "ice cubes"] }
         ]
       },
       {
         "id": "sv-07",
         "question": "Name something people do on their phone when they're bored.",
         "answers": [
-          { "text": "Scroll social media", "points": 38, "aliases": ["social media", "scroll", "scrolling", "doomscroll", "instagram", "tiktok"] },
+          { "text": "Scroll social media", "points": 40, "aliases": ["social media", "scroll", "scrolling", "doomscroll", "instagram", "tiktok"] },
           { "text": "Play games", "points": 20, "aliases": ["games", "play a game", "mobile games", "gaming", "wordle"] },
-          { "text": "Watch videos", "points": 15, "aliases": ["youtube", "videos", "watch youtube", "netflix", "streaming"] },
-          { "text": "Text friends", "points": 10, "aliases": ["text", "message people", "texting", "group chat", "messaging", "whatsapp"] },
+          { "text": "Watch videos", "points": 16, "aliases": ["youtube", "videos", "watch youtube", "netflix", "streaming"] },
+          { "text": "Text friends", "points": 9, "aliases": ["text", "message people", "texting", "group chat", "messaging", "whatsapp"] },
           { "text": "Online shopping", "points": 5, "aliases": ["shopping", "shop", "browse amazon", "window shopping", "buy stuff"] },
-          { "text": "Check email", "points": 5, "aliases": ["email", "emails", "check emails", "inbox"] },
-          { "text": "Read the news", "points": 4, "aliases": ["news", "read news", "read articles", "headlines"] },
+          { "text": "Read the news", "points": 5, "aliases": ["news", "read news", "read articles", "headlines"] },
+          { "text": "Check email", "points": 3, "aliases": ["email", "emails", "check emails", "inbox"] },
           { "text": "Look at old photos", "points": 2, "aliases": ["photos", "camera roll", "look at photos", "old pictures", "pictures"] }
         ]
       },
@@ -787,69 +794,70 @@
         "id": "sv-08",
         "question": "Name a reason someone gives for cancelling plans at the last minute.",
         "answers": [
-          { "text": "Feeling sick", "points": 32, "aliases": ["sick", "ill", "not feeling well", "headache", "unwell", "migraine"] },
+          { "text": "Feeling sick", "points": 34, "aliases": ["sick", "ill", "not feeling well", "headache", "unwell", "migraine"] },
           { "text": "Too tired", "points": 24, "aliases": ["tired", "exhausted", "worn out", "long day", "need sleep"] },
-          { "text": "Work", "points": 14, "aliases": ["working late", "stuck at work", "had to work", "work came up", "deadline"] },
-          { "text": "Bad weather", "points": 10, "aliases": ["weather", "rain", "raining", "snow", "storm"] },
-          { "text": "No money", "points": 7, "aliases": ["broke", "skint", "can't afford it", "money", "short on cash"] },
-          { "text": "Family emergency", "points": 6, "aliases": ["family", "kids", "emergency", "family thing", "no babysitter", "babysitter cancelled"] },
+          { "text": "Work", "points": 13, "aliases": ["working late", "stuck at work", "had to work", "work came up", "deadline"] },
+          { "text": "Family emergency", "points": 9, "aliases": ["family", "kids", "emergency", "family thing", "no babysitter", "babysitter cancelled"] },
+          { "text": "Bad weather", "points": 7, "aliases": ["weather", "rain", "raining", "snow", "storm"] },
+          { "text": "No money", "points": 5, "aliases": ["broke", "skint", "can't afford it", "money", "short on cash"] },
           { "text": "Forgot", "points": 4, "aliases": ["forgot about it", "totally forgot", "slipped my mind"] },
-          { "text": "Double-booked", "points": 2, "aliases": ["double booked", "other plans", "something came up", "already had plans"] }
+          { "text": "Double-booked", "points": 4, "aliases": ["double booked", "other plans", "something came up", "already had plans"] }
         ]
       },
       {
         "id": "sv-09",
         "question": "Name a snack people buy at the cinema.",
         "answers": [
-          { "text": "Popcorn", "points": 45, "aliases": ["pop corn", "buttered popcorn", "sweet popcorn", "salted popcorn"] },
-          { "text": "Sweets", "points": 18, "aliases": ["candy", "chocolate", "pick and mix", "lollies", "gummies", "m&ms"] },
-          { "text": "Nachos", "points": 10, "aliases": ["nachos and cheese", "tortilla chips", "nacho"] },
-          { "text": "Fizzy drink", "points": 9, "aliases": ["soft drink", "soda", "coke", "pop", "slushie", "drink"] },
-          { "text": "Hot dog", "points": 6, "aliases": ["hot dogs", "hotdog", "hotdogs"] },
-          { "text": "Pretzels", "points": 5, "aliases": ["pretzel", "soft pretzel", "pretzel bites"] },
-          { "text": "Ice cream", "points": 4, "aliases": ["icecream", "ice cream tub", "choc ice", "ben and jerry's"] }
+          { "text": "Popcorn", "points": 56, "aliases": ["pop corn", "buttered popcorn", "sweet popcorn", "salted popcorn"] },
+          { "text": "Sweets", "points": 14, "aliases": ["candy", "chocolate", "pick and mix", "lollies", "gummies", "m&ms"] },
+          { "text": "Nachos", "points": 9, "aliases": ["nachos and cheese", "tortilla chips", "nacho"] },
+          { "text": "Fizzy drink", "points": 8, "aliases": ["soft drink", "soda", "coke", "pop", "slushie", "drink"] },
+          { "text": "Ice cream", "points": 6, "aliases": ["icecream", "ice cream tub", "choc ice", "ben and jerry's"] },
+          { "text": "Hot dog", "points": 5, "aliases": ["hot dogs", "hotdog", "hotdogs"] },
+          { "text": "Pretzels", "points": 2, "aliases": ["pretzel", "soft pretzel", "pretzel bites"] }
         ]
       },
       {
         "id": "sv-10",
         "question": "Name a superpower people wish they had.",
         "answers": [
-          { "text": "Flying", "points": 30, "aliases": ["flight", "fly", "to fly", "being able to fly"] },
-          { "text": "Invisibility", "points": 22, "aliases": ["invisible", "being invisible", "turn invisible"] },
-          { "text": "Teleportation", "points": 15, "aliases": ["teleport", "teleporting", "teleporter"] },
+          { "text": "Invisibility", "points": 24, "aliases": ["invisible", "being invisible", "turn invisible"] },
+          { "text": "Flying", "points": 23, "aliases": ["flight", "fly", "to fly", "being able to fly"] },
+          { "text": "Time travel", "points": 13, "aliases": ["time traveling", "stop time", "freeze time", "control time", "go back in time"] },
+          { "text": "Teleportation", "points": 12, "aliases": ["teleport", "teleporting", "teleporter"] },
           { "text": "Mind reading", "points": 11, "aliases": ["read minds", "telepathy", "reading minds", "telepathic"] },
-          { "text": "Time travel", "points": 9, "aliases": ["time traveling", "stop time", "freeze time", "control time", "go back in time"] },
+          { "text": "Healing", "points": 7, "aliases": ["immortality", "live forever", "never get sick", "regeneration", "heal"] },
           { "text": "Super strength", "points": 6, "aliases": ["strength", "super strong", "being strong"] },
-          { "text": "Super speed", "points": 4, "aliases": ["speed", "run fast", "super fast", "being fast"] },
-          { "text": "Healing", "points": 2, "aliases": ["immortality", "live forever", "never get sick", "regeneration", "heal"] }
+          { "text": "Super speed", "points": 4, "aliases": ["speed", "run fast", "super fast", "being fast"] }
         ]
       },
       {
         "id": "sv-11",
         "question": "Name something that's almost always in the fridge.",
         "answers": [
-          { "text": "Milk", "points": 26, "aliases": ["oat milk", "carton of milk", "almond milk"] },
-          { "text": "Eggs", "points": 18, "aliases": ["egg", "carton of eggs"] },
+          { "text": "Milk", "points": 30, "aliases": ["oat milk", "carton of milk", "almond milk"] },
+          { "text": "Eggs", "points": 16, "aliases": ["egg", "carton of eggs"] },
           { "text": "Butter", "points": 13, "aliases": ["margarine", "spread", "marg"] },
           { "text": "Cheese", "points": 12, "aliases": ["cheddar", "block of cheese", "sliced cheese"] },
-          { "text": "Ketchup", "points": 10, "aliases": ["condiments", "sauce", "mustard", "mayo", "tomato sauce", "mayonnaise"] },
-          { "text": "Leftovers", "points": 8, "aliases": ["leftover food", "last night's dinner", "leftover takeaway", "old takeout"] },
-          { "text": "Beer", "points": 6, "aliases": ["beers", "wine", "alcohol", "drinks", "cans"] },
-          { "text": "Vegetables", "points": 4, "aliases": ["veg", "veggies", "salad", "lettuce", "carrots"] }
+          { "text": "Ketchup", "points": 9, "aliases": ["condiments", "sauce", "mustard", "mayo", "tomato sauce", "mayonnaise"] },
+          { "text": "Beer", "points": 7, "aliases": ["beers", "wine", "alcohol", "drinks", "cans"] },
+          { "text": "Vegetables", "points": 7, "aliases": ["veg", "veggies", "salad", "lettuce", "carrots"] },
+          { "text": "Leftovers", "points": 6, "aliases": ["leftover food", "last night's dinner", "leftover takeaway", "old takeout"] }
         ]
       },
       {
         "id": "sv-12",
         "question": "Name a household chore everybody hates.",
         "answers": [
-          { "text": "Washing the dishes", "points": 28, "aliases": ["dishes", "washing up", "doing the dishes", "unloading the dishwasher", "dishwasher"] },
-          { "text": "Cleaning the bathroom", "points": 24, "aliases": ["cleaning the toilet", "toilet", "bathroom", "scrubbing the toilet", "cleaning the shower"] },
-          { "text": "Laundry", "points": 15, "aliases": ["washing clothes", "folding laundry", "folding clothes", "doing the washing", "washing"] },
-          { "text": "Taking out the bins", "points": 11, "aliases": ["bins", "taking the bins out", "rubbish", "taking out the rubbish", "trash", "garbage", "taking out the trash"] },
+          { "text": "Cleaning the bathroom", "points": 22, "aliases": ["cleaning the toilet", "toilet", "bathroom", "scrubbing the toilet", "cleaning the shower"] },
+          { "text": "Ironing", "points": 18, "aliases": ["iron", "ironing clothes", "ironing shirts"] },
+          { "text": "Washing the dishes", "points": 17, "aliases": ["dishes", "washing up", "doing the dishes", "unloading the dishwasher", "dishwasher"] },
+          { "text": "Taking out the bins", "points": 10, "aliases": ["bins", "taking the bins out", "rubbish", "taking out the rubbish", "trash", "garbage", "taking out the trash"] },
+          { "text": "Laundry", "points": 9, "aliases": ["washing clothes", "folding laundry", "folding clothes", "doing the washing", "washing"] },
           { "text": "Vacuuming", "points": 8, "aliases": ["hoovering", "vacuum", "hoover", "mopping", "sweeping"] },
-          { "text": "Ironing", "points": 6, "aliases": ["iron", "ironing clothes", "ironing shirts"] },
-          { "text": "Dusting", "points": 4, "aliases": ["dust", "polishing", "wiping surfaces"] },
-          { "text": "Mowing the lawn", "points": 3, "aliases": ["mowing", "cutting the grass", "gardening", "yard work", "lawn"] }
+          { "text": "Dusting", "points": 7, "aliases": ["dust", "polishing", "wiping surfaces"] },
+          { "text": "Cleaning the oven", "points": 5, "aliases": ["oven", "the oven", "cleaning oven", "scrubbing the oven"] },
+          { "text": "Mowing the lawn", "points": 4, "aliases": ["mowing", "cutting the grass", "gardening", "yard work", "lawn"] }
         ]
       }
     ]

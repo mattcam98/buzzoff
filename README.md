@@ -263,10 +263,18 @@ clue repeats. A pack holds up to 400 categories and 400 surveys.
 
 `packs/buzzoff-the-lot.buzzoff.json` is every question BuzzOff has, in one
 pack to import from the Packs page: 110 categories, each with at least
-twenty clues and four at every value, over 2,200 clues in all, and 98
-surveys. That is ten full shows before a category comes round again, and
-about forty before a clue does. Its survey numbers are illustrative, not from
-real polls, except the few its host notes say come from one.
+twenty clues and four at every value, over 2,200 clues in all, and 71
+surveys. That is ten full shows before a category comes round again, about
+forty before a clue does, and fourteen before a survey does.
+
+Every survey stands for a hundred people: its answers add up to 100 points,
+and an answer's points are how many of the hundred gave it. Where a published
+poll asks the same thing (YouGov, Gallup, Ipsos and the like), the points
+follow it; where none does, they are an estimate of how people would answer.
+They are not the results of a poll BuzzOff ran. A survey asks what people do,
+like, think or say. Questions whose answers are settled by facts or by the
+language (the five largest of something, the rest of a phrase, a rhyme) belong
+on a trivia board instead, and are not in the pack's surveys.
 
 Typed Fast Money answers are matched against the survey after normalising case,
 accents, punctuation, filler words and plurals, then allowing a small typo, then
@@ -311,5 +319,5 @@ No code, artwork or audio from any other project or show is included. Sounds
 and music are synthesised in the browser, and the tunes are BuzzOff's own. Fonts (Bricolage Grotesque, Figtree, JetBrains
 Mono) are bundled under the SIL Open Font License. Runtime dependencies are
 permissively licensed: React, Express, Socket.IO, pg, zod, multer, compression and qrcode
-under MIT, wouter under the Unlicense. The survey numbers in the starter pack
-are invented for illustration; they are not from a real poll.
+under MIT, wouter under the Unlicense. Survey points are informed by published
+polls where one exists and estimated otherwise; no poll's wording or data is reproduced.

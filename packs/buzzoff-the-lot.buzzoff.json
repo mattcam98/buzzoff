@@ -3,7 +3,7 @@
   "version": 1,
   "pack": {
     "title": "BuzzOff: The Lot",
-    "description": "Every BuzzOff question in one pack. Most categories hold several clues at each value and a game is dealt one of them, so a question takes a long time to come round again. Distances are in kilometres and prices in euros. Survey numbers are illustrative, not from real polls, except where a host note says otherwise.",
+    "description": "Every BuzzOff question in one pack. Most categories hold several clues at each value and a game is dealt one of them, so a question takes a long time to come round again. Distances are in kilometres and prices in euros. Each survey stands for a hundred people: its answers add up to 100, following published polls where there is one and estimated where there is not.",
     "author": "BuzzOff",
     "categories": [
       {
@@ -20391,7 +20391,7 @@
           },
           {
             "text": "Chocolate",
-            "points": 26,
+            "points": 24,
             "aliases": [
               "choc",
               "double chocolate",
@@ -20400,14 +20400,14 @@
           },
           {
             "text": "Strawberry",
-            "points": 12,
+            "points": 15,
             "aliases": [
               "strawberries and cream"
             ]
           },
           {
             "text": "Mint chocolate chip",
-            "points": 10,
+            "points": 11,
             "aliases": [
               "mint",
               "mint choc chip",
@@ -20417,8 +20417,25 @@
             ]
           },
           {
+            "text": "Pistachio",
+            "points": 5,
+            "aliases": [
+              "pistachio nut"
+            ]
+          },
+          {
+            "text": "Salted caramel",
+            "points": 5,
+            "aliases": [
+              "caramel",
+              "salt caramel",
+              "salted caramel swirl",
+              "dulce de leche"
+            ]
+          },
+          {
             "text": "Cookie dough",
-            "points": 8,
+            "points": 4,
             "aliases": [
               "chocolate chip cookie dough",
               "double dough"
@@ -20426,7 +20443,7 @@
           },
           {
             "text": "Cookies and cream",
-            "points": 6,
+            "points": 3,
             "aliases": [
               "cookies n cream",
               "oreo",
@@ -20434,18 +20451,12 @@
             ]
           },
           {
-            "text": "Chocolate chip",
-            "points": 4,
-            "aliases": [
-              "choc chip",
-              "chocolate chips"
-            ]
-          },
-          {
-            "text": "Pistachio",
+            "text": "Rum and raisin",
             "points": 3,
             "aliases": [
-              "pistachio nut"
+              "rum raisin",
+              "rum & raisin",
+              "rum n raisin"
             ]
           }
         ],
@@ -20456,7 +20467,7 @@
         "answers": [
           {
             "text": "10%",
-            "points": 40,
+            "points": 44,
             "aliases": [
               "10 percent",
               "10 per cent",
@@ -20465,19 +20476,8 @@
             ]
           },
           {
-            "text": "15%",
-            "points": 18,
-            "aliases": [
-              "15 percent",
-              "15 per cent",
-              "fifteen percent",
-              "fifteen per cent",
-              "fifteen"
-            ]
-          },
-          {
             "text": "5%",
-            "points": 12,
+            "points": 20,
             "aliases": [
               "5 percent",
               "5 per cent",
@@ -20486,29 +20486,8 @@
             ]
           },
           {
-            "text": "Round up the bill",
-            "points": 10,
-            "aliases": [
-              "round up",
-              "rounding up",
-              "round it up",
-              "keep the change",
-              "the change"
-            ]
-          },
-          {
-            "text": "20%",
-            "points": 10,
-            "aliases": [
-              "20 percent",
-              "20 per cent",
-              "twenty percent",
-              "twenty per cent"
-            ]
-          },
-          {
             "text": "Nothing",
-            "points": 7,
+            "points": 14,
             "aliases": [
               "0%",
               "0 percent",
@@ -20519,8 +20498,40 @@
             ]
           },
           {
+            "text": "Round up the bill",
+            "points": 9,
+            "aliases": [
+              "round up",
+              "rounding up",
+              "round it up",
+              "keep the change",
+              "the change"
+            ]
+          },
+          {
+            "text": "15%",
+            "points": 8,
+            "aliases": [
+              "15 percent",
+              "15 per cent",
+              "fifteen percent",
+              "fifteen per cent",
+              "fifteen"
+            ]
+          },
+          {
+            "text": "20%",
+            "points": 4,
+            "aliases": [
+              "20 percent",
+              "20 per cent",
+              "twenty percent",
+              "twenty per cent"
+            ]
+          },
+          {
             "text": "25%",
-            "points": 3,
+            "points": 1,
             "aliases": [
               "25 percent",
               "25 per cent",
@@ -20530,23 +20541,14 @@
             ]
           }
         ],
-        "question": "What percentage would you tip for good service?"
+        "question": "What percentage do people tip for good service?"
       },
       {
         "id": "pm-sv-3",
         "answers": [
           {
-            "text": "4 times",
-            "points": 27,
-            "aliases": [
-              "4",
-              "four times",
-              "4x"
-            ]
-          },
-          {
             "text": "5 times",
-            "points": 24,
+            "points": 22,
             "aliases": [
               "5",
               "five times",
@@ -20554,18 +20556,8 @@
             ]
           },
           {
-            "text": "3 times",
-            "points": 18,
-            "aliases": [
-              "3",
-              "three times",
-              "3x",
-              "thrice"
-            ]
-          },
-          {
             "text": "6 times",
-            "points": 14,
+            "points": 22,
             "aliases": [
               "6",
               "six times",
@@ -20573,18 +20565,17 @@
             ]
           },
           {
-            "text": "2 times",
-            "points": 6,
+            "text": "4 times",
+            "points": 16,
             "aliases": [
-              "2",
-              "two times",
-              "2x",
-              "twice"
+              "4",
+              "four times",
+              "4x"
             ]
           },
           {
             "text": "7 times",
-            "points": 5,
+            "points": 13,
             "aliases": [
               "7",
               "seven times",
@@ -20593,7 +20584,7 @@
           },
           {
             "text": "8 times",
-            "points": 3,
+            "points": 10,
             "aliases": [
               "8",
               "eight times",
@@ -20601,115 +20592,43 @@
             ]
           },
           {
+            "text": "3 times",
+            "points": 8,
+            "aliases": [
+              "3",
+              "three times",
+              "3x",
+              "thrice"
+            ]
+          },
+          {
             "text": "10 times",
-            "points": 2,
+            "points": 6,
             "aliases": [
               "10",
               "ten times",
               "10x"
             ]
-          }
-        ],
-        "question": "How many times a day do you go to the toilet?"
-      },
-      {
-        "id": "pm-sv-4",
-        "answers": [
-          {
-            "text": "A lie",
-            "points": 38,
-            "aliases": [
-              "lie",
-              "lying",
-              "a web of lies",
-              "fib"
-            ]
           },
           {
-            "text": "The rain",
-            "points": 24,
-            "aliases": [
-              "rain",
-              "storm",
-              "a storm",
-              "downpour",
-              "bad weather",
-              "weather",
-              "thunderstorm"
-            ]
-          },
-          {
-            "text": "Traffic",
-            "points": 12,
-            "aliases": [
-              "traffic jam",
-              "a traffic jam",
-              "rush hour",
-              "a jam"
-            ]
-          },
-          {
-            "text": "A trap",
-            "points": 9,
-            "aliases": [
-              "trap",
-              "snare",
-              "a bear trap",
-              "mousetrap"
-            ]
-          },
-          {
-            "text": "The act",
-            "points": 6,
-            "aliases": [
-              "act",
-              "in the act",
-              "red-handed",
-              "cheating",
-              "an affair"
-            ]
-          },
-          {
-            "text": "A door",
-            "points": 5,
-            "aliases": [
-              "door",
-              "doorway",
-              "lift doors",
-              "elevator doors",
-              "revolving door"
-            ]
-          },
-          {
-            "text": "A net",
+            "text": "2 times",
             "points": 3,
             "aliases": [
-              "net",
-              "web",
-              "a spider's web",
-              "spider web",
-              "fishing net"
+              "2",
+              "two times",
+              "2x",
+              "twice"
             ]
           }
         ],
-        "question": "Name something a person might get caught in."
+        "question": "How many times a day do people say they go to the toilet?"
       },
       {
         "id": "pm-sv-5",
         "answers": [
           {
-            "text": "A tooth",
-            "points": 26,
-            "aliases": [
-              "tooth",
-              "teeth",
-              "wisdom tooth",
-              "wisdom teeth"
-            ]
-          },
-          {
             "text": "Appendix",
-            "points": 22,
+            "points": 28,
             "aliases": [
               "the appendix",
               "their appendix"
@@ -20717,7 +20636,7 @@
           },
           {
             "text": "Tonsils",
-            "points": 14,
+            "points": 20,
             "aliases": [
               "tonsil",
               "the tonsils",
@@ -20726,7 +20645,7 @@
           },
           {
             "text": "Stitches",
-            "points": 10,
+            "points": 12,
             "aliases": [
               "sutures",
               "staples",
@@ -20734,8 +20653,31 @@
             ]
           },
           {
-            "text": "A mole",
+            "text": "A tooth",
+            "points": 10,
+            "aliases": [
+              "tooth",
+              "teeth",
+              "wisdom tooth",
+              "wisdom teeth"
+            ]
+          },
+          {
+            "text": "A tumour",
             "points": 8,
+            "aliases": [
+              "tumour",
+              "tumor",
+              "a tumor",
+              "cancer",
+              "a growth",
+              "cyst",
+              "a cyst"
+            ]
+          },
+          {
+            "text": "A mole",
+            "points": 7,
             "aliases": [
               "mole",
               "wart",
@@ -20764,21 +20706,8 @@
             ]
           },
           {
-            "text": "A tumour",
-            "points": 4,
-            "aliases": [
-              "tumour",
-              "tumor",
-              "a tumor",
-              "cancer",
-              "a growth",
-              "cyst",
-              "a cyst"
-            ]
-          },
-          {
             "text": "A cast",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "cast",
               "plaster cast",
@@ -20790,204 +20719,34 @@
         "question": "Name something a doctor might remove from somebody."
       },
       {
-        "id": "pw-sv-1",
-        "answers": [
-          {
-            "text": "Attack",
-            "points": 26,
-            "aliases": [
-              "heart attack",
-              "attacks"
-            ]
-          },
-          {
-            "text": "Break",
-            "points": 22,
-            "aliases": [
-              "heartbreak",
-              "heart break",
-              "broken",
-              "heartbroken",
-              "breaker",
-              "heartbreaker"
-            ]
-          },
-          {
-            "text": "Beat",
-            "points": 16,
-            "aliases": [
-              "heartbeat",
-              "heart beat",
-              "beats"
-            ]
-          },
-          {
-            "text": "Burn",
-            "points": 9,
-            "aliases": [
-              "heartburn",
-              "heart burn"
-            ]
-          },
-          {
-            "text": "Shaped",
-            "points": 7,
-            "aliases": [
-              "heart shaped",
-              "shape",
-              "heart shape"
-            ]
-          },
-          {
-            "text": "Felt",
-            "points": 6,
-            "aliases": [
-              "heartfelt",
-              "heart felt"
-            ]
-          },
-          {
-            "text": "Ache",
-            "points": 5,
-            "aliases": [
-              "heartache",
-              "heart ache"
-            ]
-          },
-          {
-            "text": "Rate",
-            "points": 4,
-            "aliases": [
-              "heart rate",
-              "heartrate"
-            ]
-          },
-          {
-            "text": "Less",
-            "points": 2,
-            "aliases": [
-              "heartless",
-              "heart less"
-            ]
-          },
-          {
-            "text": "You",
-            "points": 2,
-            "aliases": [
-              "heart you",
-              "heart u",
-              "i heart you"
-            ]
-          }
-        ],
-        "question": "Complete the phrase: \"Heart ___.\""
-      },
-      {
-        "id": "pw-sv-2",
-        "answers": [
-          {
-            "text": "Dream",
-            "points": 24,
-            "aliases": [
-              "dreams"
-            ]
-          },
-          {
-            "text": "Cream",
-            "points": 18,
-            "aliases": [
-              "ice cream"
-            ]
-          },
-          {
-            "text": "Steam",
-            "points": 14,
-            "aliases": [
-              "esteem"
-            ]
-          },
-          {
-            "text": "Stream",
-            "points": 12,
-            "aliases": [
-              "streams",
-              "livestream"
-            ]
-          },
-          {
-            "text": "Beam",
-            "points": 9,
-            "aliases": [
-              "beams"
-            ]
-          },
-          {
-            "text": "Scream",
-            "points": 8,
-            "aliases": [
-              "screams"
-            ]
-          },
-          {
-            "text": "Seam",
-            "points": 7,
-            "aliases": [
-              "seem",
-              "seams",
-              "seems"
-            ]
-          },
-          {
-            "text": "Meme",
-            "points": 4,
-            "aliases": [
-              "memes"
-            ]
-          },
-          {
-            "text": "Gleam",
-            "points": 4,
-            "aliases": [
-              "gleams"
-            ]
-          }
-        ],
-        "question": "Name a word that rhymes with \"team\"."
-      },
-      {
         "id": "pw-sv-3",
         "answers": [
           {
             "text": "Mario",
-            "points": 34,
+            "points": 45,
             "aliases": [
               "super mario"
             ]
           },
           {
             "text": "Sonic",
-            "points": 16,
+            "points": 15,
             "aliases": [
               "sonic the hedgehog"
             ]
           },
           {
-            "text": "Pikachu",
-            "points": 10,
+            "text": "Pac-Man",
+            "points": 8,
             "aliases": [
-              "pika"
+              "pacman"
             ]
           },
           {
-            "text": "Luigi",
-            "points": 8,
-            "aliases": []
-          },
-          {
-            "text": "Link",
+            "text": "Pikachu",
             "points": 7,
             "aliases": [
-              "zelda"
+              "pika"
             ]
           },
           {
@@ -20999,15 +20758,20 @@
             ]
           },
           {
-            "text": "Pac-Man",
-            "points": 6,
+            "text": "Luigi",
+            "points": 5,
+            "aliases": []
+          },
+          {
+            "text": "Link",
+            "points": 5,
             "aliases": [
-              "pacman"
+              "zelda"
             ]
           },
           {
             "text": "Donkey Kong",
-            "points": 4,
+            "points": 3,
             "aliases": [
               "dk",
               "d.k."
@@ -21015,16 +20779,9 @@
           },
           {
             "text": "Crash Bandicoot",
-            "points": 3,
-            "aliases": [
-              "crash"
-            ]
-          },
-          {
-            "text": "Kratos",
             "points": 2,
             "aliases": [
-              "god of war"
+              "crash"
             ]
           },
           {
@@ -21036,8 +20793,15 @@
             ]
           },
           {
+            "text": "Kratos",
+            "points": 1,
+            "aliases": [
+              "god of war"
+            ]
+          },
+          {
             "text": "Steve",
-            "points": 2,
+            "points": 1,
             "aliases": [
               "minecraft steve",
               "steve from minecraft"
@@ -21059,14 +20823,14 @@
           },
           {
             "text": "Elephant",
-            "points": 15,
+            "points": 17,
             "aliases": [
               "elephants"
             ]
           },
           {
             "text": "Monkey",
-            "points": 14,
+            "points": 15,
             "aliases": [
               "monkeys",
               "ape",
@@ -21078,7 +20842,7 @@
           },
           {
             "text": "Giraffe",
-            "points": 13,
+            "points": 14,
             "aliases": [
               "giraffes"
             ]
@@ -21091,17 +20855,17 @@
             ]
           },
           {
-            "text": "Zebra",
+            "text": "Penguin",
             "points": 7,
             "aliases": [
-              "zebras"
+              "penguins"
             ]
           },
           {
-            "text": "Penguin",
+            "text": "Zebra",
             "points": 5,
             "aliases": [
-              "penguins"
+              "zebras"
             ]
           },
           {
@@ -21116,7 +20880,7 @@
           },
           {
             "text": "Panda",
-            "points": 3,
+            "points": 2,
             "aliases": [
               "pandas",
               "giant panda",
@@ -21139,25 +20903,25 @@
         "answers": [
           {
             "text": "Macarena",
-            "points": 24,
+            "points": 28,
             "aliases": [
               "the macarena"
             ]
           },
           {
-            "text": "Waltz",
-            "points": 14,
+            "text": "YMCA",
+            "points": 13,
             "aliases": [
-              "the waltz",
-              "viennese waltz"
+              "y.m.c.a.",
+              "the ymca"
             ]
           },
           {
-            "text": "Moonwalk",
+            "text": "Waltz",
             "points": 12,
             "aliases": [
-              "the moonwalk",
-              "moon walk"
+              "the waltz",
+              "viennese waltz"
             ]
           },
           {
@@ -21169,16 +20933,16 @@
             ]
           },
           {
-            "text": "YMCA",
-            "points": 10,
+            "text": "Moonwalk",
+            "points": 9,
             "aliases": [
-              "y.m.c.a.",
-              "the ymca"
+              "the moonwalk",
+              "moon walk"
             ]
           },
           {
             "text": "Tango",
-            "points": 9,
+            "points": 7,
             "aliases": [
               "the tango",
               "argentine tango"
@@ -21186,29 +20950,29 @@
           },
           {
             "text": "Salsa",
-            "points": 7,
+            "points": 6,
             "aliases": [
               "salsa dancing"
             ]
           },
           {
-            "text": "Twist",
-            "points": 5,
-            "aliases": [
-              "the twist"
-            ]
-          },
-          {
             "text": "Floss",
-            "points": 4,
+            "points": 5,
             "aliases": [
               "the floss",
               "flossing"
             ]
           },
           {
+            "text": "Twist",
+            "points": 4,
+            "aliases": [
+              "the twist"
+            ]
+          },
+          {
             "text": "Gangnam Style",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "gangnam"
             ]
@@ -21228,7 +20992,7 @@
         "answers": [
           {
             "text": "PlayStation",
-            "points": 38,
+            "points": 42,
             "aliases": [
               "ps5",
               "ps4",
@@ -21261,7 +21025,7 @@
           },
           {
             "text": "Wii",
-            "points": 8,
+            "points": 7,
             "aliases": [
               "nintendo wii",
               "wii u"
@@ -21269,28 +21033,11 @@
           },
           {
             "text": "Game Boy",
-            "points": 5,
+            "points": 4,
             "aliases": [
               "gameboy",
               "game boy advance",
               "game boy color"
-            ]
-          },
-          {
-            "text": "Nintendo 64",
-            "points": 3,
-            "aliases": [
-              "n64"
-            ]
-          },
-          {
-            "text": "Sega Mega Drive",
-            "points": 3,
-            "aliases": [
-              "mega drive",
-              "megadrive",
-              "sega genesis",
-              "sega"
             ]
           },
           {
@@ -21301,6 +21048,23 @@
               "3ds",
               "nintendo 3ds"
             ]
+          },
+          {
+            "text": "Nintendo 64",
+            "points": 2,
+            "aliases": [
+              "n64"
+            ]
+          },
+          {
+            "text": "Sega Mega Drive",
+            "points": 2,
+            "aliases": [
+              "mega drive",
+              "megadrive",
+              "sega genesis",
+              "sega"
+            ]
           }
         ],
         "question": "Name a games console."
@@ -21310,7 +21074,7 @@
         "answers": [
           {
             "text": "7 days",
-            "points": 30,
+            "points": 55,
             "aliases": [
               "7",
               "seven days",
@@ -21321,43 +21085,43 @@
             ]
           },
           {
-            "text": "5 days",
-            "points": 18,
-            "aliases": [
-              "5",
-              "five days"
-            ]
-          },
-          {
-            "text": "6 days",
-            "points": 14,
-            "aliases": [
-              "6",
-              "six days"
-            ]
-          },
-          {
-            "text": "4 days",
-            "points": 13,
-            "aliases": [
-              "4",
-              "four days"
-            ]
-          },
-          {
             "text": "3 days",
-            "points": 12,
+            "points": 11,
             "aliases": [
               "3",
               "three days"
             ]
           },
           {
+            "text": "5 days",
+            "points": 9,
+            "aliases": [
+              "5",
+              "five days"
+            ]
+          },
+          {
             "text": "2 days",
-            "points": 6,
+            "points": 8,
             "aliases": [
               "2",
               "two days"
+            ]
+          },
+          {
+            "text": "4 days",
+            "points": 7,
+            "aliases": [
+              "4",
+              "four days"
+            ]
+          },
+          {
+            "text": "6 days",
+            "points": 5,
+            "aliases": [
+              "6",
+              "six days"
             ]
           },
           {
@@ -21371,7 +21135,7 @@
           },
           {
             "text": "0 days",
-            "points": 2,
+            "points": 1,
             "aliases": [
               "0",
               "zero days",
@@ -21380,14 +21144,14 @@
             ]
           }
         ],
-        "question": "How many days a week do you shower?"
+        "question": "How many days a week do people say they shower?"
       },
       {
         "id": "gn-sv-3",
         "answers": [
           {
             "text": "€3",
-            "points": 30,
+            "points": 36,
             "aliases": [
               "3 euros",
               "three euros",
@@ -21397,7 +21161,7 @@
           },
           {
             "text": "€2",
-            "points": 24,
+            "points": 30,
             "aliases": [
               "2 euros",
               "two euros",
@@ -21416,18 +21180,8 @@
             ]
           },
           {
-            "text": "€1",
-            "points": 10,
-            "aliases": [
-              "1 euro",
-              "one euro",
-              "a euro",
-              "1.00"
-            ]
-          },
-          {
             "text": "€5",
-            "points": 10,
+            "points": 8,
             "aliases": [
               "5 euros",
               "five euros",
@@ -21436,23 +21190,13 @@
             ]
           },
           {
-            "text": "€6",
-            "points": 4,
+            "text": "€1",
+            "points": 6,
             "aliases": [
-              "6 euros",
-              "six euros",
-              "6 euro",
-              "6.00"
-            ]
-          },
-          {
-            "text": "€7",
-            "points": 2,
-            "aliases": [
-              "7 euros",
-              "seven euros",
-              "7 euro",
-              "7.00"
+              "1 euro",
+              "one euro",
+              "a euro",
+              "1.00"
             ]
           }
         ],
@@ -21463,24 +21207,26 @@
         "answers": [
           {
             "text": "Yoshi",
-            "points": 26,
+            "points": 22,
             "aliases": []
           },
           {
             "text": "Luigi",
-            "points": 14,
-            "aliases": []
-          },
-          {
-            "text": "Waluigi",
-            "points": 12,
+            "points": 15,
             "aliases": []
           },
           {
             "text": "Mario",
-            "points": 10,
+            "points": 13,
             "aliases": [
               "super mario"
+            ]
+          },
+          {
+            "text": "Toad",
+            "points": 10,
+            "aliases": [
+              "toadette"
             ]
           },
           {
@@ -21491,38 +21237,45 @@
             ]
           },
           {
-            "text": "Toad",
-            "points": 8,
-            "aliases": [
-              "toadette"
-            ]
-          },
-          {
             "text": "Daisy",
-            "points": 6,
+            "points": 7,
             "aliases": [
               "princess daisy"
             ]
           },
           {
+            "text": "Waluigi",
+            "points": 7,
+            "aliases": []
+          },
+          {
+            "text": "Boo",
+            "points": 6,
+            "aliases": [
+              "king boo",
+              "boo the ghost",
+              "the ghost"
+            ]
+          },
+          {
             "text": "Wario",
-            "points": 5,
+            "points": 4,
             "aliases": []
           },
           {
             "text": "Donkey Kong",
-            "points": 4,
+            "points": 3,
             "aliases": [
               "dk",
               "d.k."
             ]
           },
           {
-            "text": "Monty Mole",
+            "text": "Rosalina",
             "points": 3,
             "aliases": [
-              "monty",
-              "mole"
+              "rosalina and luma",
+              "princess rosalina"
             ]
           },
           {
@@ -21534,7 +21287,7 @@
             ]
           }
         ],
-        "question": "Who is the best character in Mario Party?"
+        "question": "Which Mario Party character do people call the best?"
       },
       {
         "id": "gn-sv-5",
@@ -21637,24 +21390,14 @@
             "aliases": []
           }
         ],
-        "question": "Which video game are you best at?"
+        "question": "Name a video game people say they are best at."
       },
       {
         "id": "os-sv-1",
         "answers": [
           {
-            "text": "5,000",
-            "points": 22,
-            "aliases": [
-              "5k",
-              "five thousand",
-              "5000 steps",
-              "5 thousand"
-            ]
-          },
-          {
             "text": "10,000",
-            "points": 16,
+            "points": 24,
             "aliases": [
               "10k",
               "ten thousand",
@@ -21663,23 +21406,33 @@
             ]
           },
           {
-            "text": "6,000",
-            "points": 12,
+            "text": "5,000",
+            "points": 18,
             "aliases": [
-              "6k",
-              "six thousand",
-              "6000 steps",
-              "6 thousand"
+              "5k",
+              "five thousand",
+              "5000 steps",
+              "5 thousand"
             ]
           },
           {
             "text": "8,000",
-            "points": 11,
+            "points": 12,
             "aliases": [
               "8k",
               "eight thousand",
               "8000 steps",
               "8 thousand"
+            ]
+          },
+          {
+            "text": "6,000",
+            "points": 10,
+            "aliases": [
+              "6k",
+              "six thousand",
+              "6000 steps",
+              "6 thousand"
             ]
           },
           {
@@ -21694,7 +21447,7 @@
           },
           {
             "text": "4,000",
-            "points": 9,
+            "points": 7,
             "aliases": [
               "4k",
               "four thousand",
@@ -21704,7 +21457,7 @@
           },
           {
             "text": "3,000",
-            "points": 8,
+            "points": 6,
             "aliases": [
               "3k",
               "three thousand",
@@ -21713,8 +21466,18 @@
             ]
           },
           {
-            "text": "2,000",
+            "text": "12,000",
             "points": 5,
+            "aliases": [
+              "12k",
+              "twelve thousand",
+              "12000 steps",
+              "12 thousand"
+            ]
+          },
+          {
+            "text": "2,000",
+            "points": 4,
             "aliases": [
               "2k",
               "two thousand",
@@ -21724,48 +21487,38 @@
           },
           {
             "text": "9,000",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "9k",
               "nine thousand",
               "9000 steps",
               "9 thousand"
             ]
-          },
-          {
-            "text": "12,000",
-            "points": 3,
-            "aliases": [
-              "12k",
-              "twelve thousand",
-              "12000 steps",
-              "12 thousand"
-            ]
           }
         ],
-        "question": "About how many steps do you walk a day, to the nearest thousand?"
+        "question": "About how many steps a day do people say they walk, to the nearest thousand?"
       },
       {
         "id": "os-sv-2",
         "answers": [
           {
-            "text": "Michael Phelps",
-            "points": 39,
-            "aliases": [
-              "phelps"
-            ]
-          },
-          {
             "text": "Usain Bolt",
-            "points": 32,
+            "points": 40,
             "aliases": [
               "bolt",
               "usain"
             ]
           },
           {
+            "text": "Michael Phelps",
+            "points": 28,
+            "aliases": [
+              "phelps"
+            ]
+          },
+          {
             "text": "Simone Biles",
-            "points": 9,
+            "points": 10,
             "aliases": [
               "biles",
               "simone"
@@ -21773,7 +21526,7 @@
           },
           {
             "text": "Mo Farah",
-            "points": 5,
+            "points": 6,
             "aliases": [
               "farah",
               "mohamed farah",
@@ -21793,20 +21546,28 @@
             "aliases": []
           },
           {
-            "text": "Nadia Comăneci",
+            "text": "Muhammad Ali",
             "points": 3,
+            "aliases": [
+              "ali",
+              "cassius clay",
+              "mohammed ali"
+            ]
+          },
+          {
+            "text": "Nadia Comăneci",
+            "points": 2,
             "aliases": [
               "comaneci",
               "nadia"
             ]
           },
           {
-            "text": "Muhammad Ali",
+            "text": "Chris Hoy",
             "points": 2,
             "aliases": [
-              "ali",
-              "cassius clay",
-              "mohammed ali"
+              "hoy",
+              "sir chris hoy"
             ]
           },
           {
@@ -21817,128 +21578,16 @@
               "mondo duplantis",
               "mondo"
             ]
-          },
-          {
-            "text": "Chris Hoy",
-            "points": 1,
-            "aliases": [
-              "hoy",
-              "sir chris hoy"
-            ]
           }
         ],
         "question": "Name a famous Olympic athlete."
-      },
-      {
-        "id": "os-sv-3",
-        "answers": [
-          {
-            "text": "Fridge",
-            "points": 30,
-            "aliases": [
-              "refrigerator",
-              "freezer",
-              "a fridge"
-            ]
-          },
-          {
-            "text": "Car",
-            "points": 25,
-            "aliases": [
-              "a car",
-              "vehicle",
-              "truck",
-              "automobile"
-            ]
-          },
-          {
-            "text": "Water",
-            "points": 12,
-            "aliases": [
-              "tap",
-              "faucet",
-              "running water",
-              "a tap",
-              "bath"
-            ]
-          },
-          {
-            "text": "Nose",
-            "points": 10,
-            "aliases": [
-              "runny nose",
-              "your nose",
-              "a nose"
-            ]
-          },
-          {
-            "text": "Engine",
-            "points": 6,
-            "aliases": [
-              "motor",
-              "an engine",
-              "machine",
-              "generator"
-            ]
-          },
-          {
-            "text": "Clock",
-            "points": 5,
-            "aliases": [
-              "time",
-              "watch",
-              "a clock",
-              "timer"
-            ]
-          },
-          {
-            "text": "River",
-            "points": 4,
-            "aliases": [
-              "a river",
-              "stream",
-              "creek"
-            ]
-          },
-          {
-            "text": "Computer",
-            "points": 3,
-            "aliases": [
-              "program",
-              "software",
-              "code",
-              "an app",
-              "a computer"
-            ]
-          },
-          {
-            "text": "Dog",
-            "points": 3,
-            "aliases": [
-              "a dog",
-              "animal",
-              "horse",
-              "cheetah"
-            ]
-          },
-          {
-            "text": "Tights",
-            "points": 1,
-            "aliases": [
-              "stockings",
-              "pantyhose",
-              "nylons"
-            ]
-          }
-        ],
-        "question": "Besides feet, name something that runs."
       },
       {
         "id": "os-sv-4",
         "answers": [
           {
             "text": "3",
-            "points": 38,
+            "points": 36,
             "aliases": [
               "three",
               "3 out of 5",
@@ -21958,7 +21607,7 @@
           },
           {
             "text": "2",
-            "points": 17,
+            "points": 15,
             "aliases": [
               "two",
               "2 out of 5",
@@ -21967,34 +21616,34 @@
             ]
           },
           {
-            "text": "1",
-            "points": 8,
-            "aliases": [
-              "one",
-              "1 out of 5",
-              "1/5",
-              "1 star"
-            ]
-          },
-          {
             "text": "5",
-            "points": 6,
+            "points": 10,
             "aliases": [
               "five",
               "5 out of 5",
               "5/5",
               "5 stars"
             ]
+          },
+          {
+            "text": "1",
+            "points": 9,
+            "aliases": [
+              "one",
+              "1 out of 5",
+              "1/5",
+              "1 star"
+            ]
           }
         ],
-        "question": "Rate McDonald's on a scale of one to five."
+        "question": "What score out of five do people give McDonald's?"
       },
       {
         "id": "os-sv-5",
         "answers": [
           {
             "text": "Chewing gum",
-            "points": 26,
+            "points": 22,
             "aliases": [
               "gum",
               "a pack of gum",
@@ -22005,7 +21654,7 @@
           },
           {
             "text": "A chocolate bar",
-            "points": 22,
+            "points": 20,
             "aliases": [
               "chocolate",
               "chocolate bar",
@@ -22015,21 +21664,21 @@
             ]
           },
           {
-            "text": "Nothing",
-            "points": 16,
-            "aliases": [
-              "nothing anymore",
-              "not much",
-              "nothing these days"
-            ]
-          },
-          {
             "text": "A bottle of water",
-            "points": 10,
+            "points": 16,
             "aliases": [
               "water",
               "bottled water",
               "water bottle"
+            ]
+          },
+          {
+            "text": "Nothing",
+            "points": 12,
+            "aliases": [
+              "nothing anymore",
+              "not much",
+              "nothing these days"
             ]
           },
           {
@@ -22045,8 +21694,17 @@
             ]
           },
           {
+            "text": "A bag of crisps",
+            "points": 7,
+            "aliases": [
+              "crisps",
+              "chips",
+              "bag of crisps"
+            ]
+          },
+          {
             "text": "A scratch card",
-            "points": 6,
+            "points": 5,
             "aliases": [
               "scratch card",
               "scratchcard",
@@ -22056,31 +21714,22 @@
             ]
           },
           {
-            "text": "A bag of crisps",
-            "points": 5,
-            "aliases": [
-              "crisps",
-              "chips",
-              "bag of crisps"
-            ]
-          },
-          {
-            "text": "A lollipop",
-            "points": 3,
-            "aliases": [
-              "lollipop",
-              "lolly"
-            ]
-          },
-          {
             "text": "A bread roll",
-            "points": 2,
+            "points": 4,
             "aliases": [
               "bread",
               "a roll",
               "a baguette",
               "baguette",
               "a croissant"
+            ]
+          },
+          {
+            "text": "A lollipop",
+            "points": 4,
+            "aliases": [
+              "lollipop",
+              "lolly"
             ]
           },
           {
@@ -22094,14 +21743,14 @@
             ]
           }
         ],
-        "question": "Name something you can buy for one euro."
+        "question": "Name something that can be bought for one euro."
       },
       {
         "id": "sv-01",
         "answers": [
           {
             "text": "Check their phone",
-            "points": 34,
+            "points": 36,
             "aliases": [
               "phone",
               "look at phone",
@@ -22123,7 +21772,7 @@
           },
           {
             "text": "Hit snooze",
-            "points": 14,
+            "points": 12,
             "aliases": [
               "snooze",
               "go back to sleep",
@@ -22133,7 +21782,7 @@
           },
           {
             "text": "Brush their teeth",
-            "points": 10,
+            "points": 9,
             "aliases": [
               "brush teeth",
               "teeth",
@@ -22142,13 +21791,24 @@
           },
           {
             "text": "Make coffee",
-            "points": 9,
+            "points": 8,
             "aliases": [
               "coffee",
               "drink coffee",
               "tea",
               "make tea",
               "put the kettle on"
+            ]
+          },
+          {
+            "text": "Drink water",
+            "points": 5,
+            "aliases": [
+              "water",
+              "a glass of water",
+              "glass of water",
+              "drink some water",
+              "have a drink"
             ]
           },
           {
@@ -22162,7 +21822,7 @@
           },
           {
             "text": "Take a shower",
-            "points": 4,
+            "points": 3,
             "aliases": [
               "shower",
               "wash",
@@ -22178,7 +21838,7 @@
         "answers": [
           {
             "text": "Batteries",
-            "points": 28,
+            "points": 22,
             "aliases": [
               "battery",
               "dead batteries",
@@ -22188,21 +21848,13 @@
           },
           {
             "text": "Pens",
-            "points": 20,
+            "points": 22,
             "aliases": [
               "pen",
               "pencils",
               "pens and pencils",
               "markers",
               "biros"
-            ]
-          },
-          {
-            "text": "Scissors",
-            "points": 14,
-            "aliases": [
-              "pair of scissors",
-              "shears"
             ]
           },
           {
@@ -22217,13 +21869,22 @@
             ]
           },
           {
-            "text": "Rubber bands",
+            "text": "Scissors",
+            "points": 10,
+            "aliases": [
+              "pair of scissors",
+              "shears"
+            ]
+          },
+          {
+            "text": "Cables",
             "points": 9,
             "aliases": [
-              "elastic bands",
-              "rubber band",
-              "elastics",
-              "hair ties"
+              "chargers",
+              "charger",
+              "old cables",
+              "cords",
+              "phone charger"
             ]
           },
           {
@@ -22239,7 +21900,7 @@
           },
           {
             "text": "Keys",
-            "points": 5,
+            "points": 6,
             "aliases": [
               "spare keys",
               "old keys",
@@ -22248,25 +21909,45 @@
             ]
           },
           {
-            "text": "Cables",
+            "text": "Measuring tape",
+            "points": 5,
+            "aliases": [
+              "tape measure",
+              "a tape measure",
+              "measure",
+              "ruler"
+            ]
+          },
+          {
+            "text": "Rubber bands",
             "points": 4,
             "aliases": [
-              "chargers",
-              "charger",
-              "old cables",
-              "cords",
-              "phone charger"
+              "elastic bands",
+              "rubber band",
+              "elastics",
+              "hair ties"
+            ]
+          },
+          {
+            "text": "Screwdrivers",
+            "points": 3,
+            "aliases": [
+              "screwdriver",
+              "a screwdriver",
+              "tools",
+              "allen keys",
+              "allen key"
             ]
           }
         ],
-        "question": "Name something you'd find in the kitchen drawer where odds and ends go."
+        "question": "Name something found in the kitchen drawer where odds and ends go."
       },
       {
         "id": "sv-03",
         "answers": [
           {
             "text": "Pepperoni",
-            "points": 36,
+            "points": 32,
             "aliases": [
               "peperoni",
               "salami",
@@ -22282,21 +21963,21 @@
             ]
           },
           {
-            "text": "Extra cheese",
-            "points": 12,
-            "aliases": [
-              "cheese",
-              "mozzarella",
-              "more cheese"
-            ]
-          },
-          {
             "text": "Ham",
-            "points": 10,
+            "points": 11,
             "aliases": [
               "prosciutto",
               "cooked ham",
               "ham and mushroom"
+            ]
+          },
+          {
+            "text": "Extra cheese",
+            "points": 10,
+            "aliases": [
+              "cheese",
+              "mozzarella",
+              "more cheese"
             ]
           },
           {
@@ -22318,17 +21999,8 @@
             ]
           },
           {
-            "text": "Olives",
-            "points": 5,
-            "aliases": [
-              "olive",
-              "black olives",
-              "green olives"
-            ]
-          },
-          {
             "text": "Peppers",
-            "points": 3,
+            "points": 5,
             "aliases": [
               "bell peppers",
               "green peppers",
@@ -22338,11 +22010,30 @@
             ]
           },
           {
+            "text": "Olives",
+            "points": 4,
+            "aliases": [
+              "olive",
+              "black olives",
+              "green olives"
+            ]
+          },
+          {
             "text": "Chicken",
-            "points": 2,
+            "points": 3,
             "aliases": [
               "bbq chicken",
               "grilled chicken"
+            ]
+          },
+          {
+            "text": "Sausage",
+            "points": 2,
+            "aliases": [
+              "sausages",
+              "italian sausage",
+              "chorizo",
+              "meatballs"
             ]
           }
         ],
@@ -22353,7 +22044,7 @@
         "answers": [
           {
             "text": "Traffic",
-            "points": 38,
+            "points": 36,
             "aliases": [
               "stuck in traffic",
               "traffic jam",
@@ -22364,7 +22055,7 @@
           },
           {
             "text": "Overslept",
-            "points": 26,
+            "points": 24,
             "aliases": [
               "slept in",
               "alarm didn't go off",
@@ -22374,19 +22065,8 @@
             ]
           },
           {
-            "text": "Car trouble",
-            "points": 12,
-            "aliases": [
-              "car broke down",
-              "car wouldn't start",
-              "flat tyre",
-              "flat tire",
-              "car problems"
-            ]
-          },
-          {
             "text": "Train or bus was late",
-            "points": 9,
+            "points": 10,
             "aliases": [
               "train was late",
               "bus was late",
@@ -22397,8 +22077,30 @@
             ]
           },
           {
+            "text": "Bad weather",
+            "points": 10,
+            "aliases": [
+              "weather",
+              "snow",
+              "rain",
+              "storm",
+              "ice"
+            ]
+          },
+          {
+            "text": "Car trouble",
+            "points": 8,
+            "aliases": [
+              "car broke down",
+              "car wouldn't start",
+              "flat tyre",
+              "flat tire",
+              "car problems"
+            ]
+          },
+          {
             "text": "The kids",
-            "points": 6,
+            "points": 5,
             "aliases": [
               "kids",
               "school run",
@@ -22408,14 +22110,13 @@
             ]
           },
           {
-            "text": "Bad weather",
-            "points": 5,
+            "text": "Forgot something",
+            "points": 4,
             "aliases": [
-              "weather",
-              "snow",
-              "rain",
-              "storm",
-              "ice"
+              "had to go back",
+              "forgot my keys",
+              "forgot my phone",
+              "went back for something"
             ]
           },
           {
@@ -22428,16 +22129,6 @@
               "doctor's appointment",
               "wasn't well"
             ]
-          },
-          {
-            "text": "Forgot something",
-            "points": 2,
-            "aliases": [
-              "had to go back",
-              "forgot my keys",
-              "forgot my phone",
-              "went back for something"
-            ]
           }
         ],
         "question": "Name an excuse people give for being late to work."
@@ -22447,7 +22138,7 @@
         "answers": [
           {
             "text": "Keys",
-            "points": 35,
+            "points": 30,
             "aliases": [
               "car keys",
               "house keys",
@@ -22457,7 +22148,7 @@
           },
           {
             "text": "Phone",
-            "points": 20,
+            "points": 22,
             "aliases": [
               "mobile",
               "cell phone",
@@ -22466,28 +22157,8 @@
             ]
           },
           {
-            "text": "Wallet",
-            "points": 13,
-            "aliases": [
-              "purse",
-              "bank card",
-              "credit card",
-              "money"
-            ]
-          },
-          {
-            "text": "Glasses",
-            "points": 11,
-            "aliases": [
-              "sunglasses",
-              "reading glasses",
-              "specs",
-              "spectacles"
-            ]
-          },
-          {
             "text": "TV remote",
-            "points": 9,
+            "points": 14,
             "aliases": [
               "remote",
               "remote control",
@@ -22496,18 +22167,28 @@
             ]
           },
           {
-            "text": "Socks",
-            "points": 6,
+            "text": "Glasses",
+            "points": 13,
             "aliases": [
-              "sock",
-              "a sock",
-              "odd socks",
-              "one sock"
+              "sunglasses",
+              "reading glasses",
+              "specs",
+              "spectacles"
+            ]
+          },
+          {
+            "text": "Wallet",
+            "points": 8,
+            "aliases": [
+              "purse",
+              "bank card",
+              "credit card",
+              "money"
             ]
           },
           {
             "text": "Pens",
-            "points": 3,
+            "points": 6,
             "aliases": [
               "pen",
               "pencils",
@@ -22515,12 +22196,24 @@
             ]
           },
           {
-            "text": "Umbrella",
-            "points": 2,
+            "text": "Headphones",
+            "points": 4,
             "aliases": [
-              "umbrellas",
-              "brolly",
-              "an umbrella"
+              "earbuds",
+              "earphones",
+              "airpods",
+              "headphone",
+              "ear buds"
+            ]
+          },
+          {
+            "text": "Socks",
+            "points": 3,
+            "aliases": [
+              "sock",
+              "a sock",
+              "odd socks",
+              "one sock"
             ]
           }
         ],
@@ -22531,7 +22224,7 @@
         "answers": [
           {
             "text": "Drinks",
-            "points": 40,
+            "points": 48,
             "aliases": [
               "alcohol",
               "beer",
@@ -22543,7 +22236,7 @@
           },
           {
             "text": "Snacks",
-            "points": 22,
+            "points": 20,
             "aliases": [
               "chips",
               "crisps",
@@ -22555,7 +22248,7 @@
           },
           {
             "text": "Dessert",
-            "points": 10,
+            "points": 9,
             "aliases": [
               "cake",
               "cookies",
@@ -22566,7 +22259,7 @@
           },
           {
             "text": "A game",
-            "points": 8,
+            "points": 6,
             "aliases": [
               "board game",
               "card game",
@@ -22577,21 +22270,13 @@
           },
           {
             "text": "Music",
-            "points": 7,
+            "points": 5,
             "aliases": [
               "speaker",
               "a playlist",
               "bluetooth speaker",
               "playlist",
               "speakers"
-            ]
-          },
-          {
-            "text": "Ice",
-            "points": 6,
-            "aliases": [
-              "bag of ice",
-              "ice cubes"
             ]
           },
           {
@@ -22604,16 +22289,37 @@
               "a date",
               "partner"
             ]
+          },
+          {
+            "text": "A gift for the host",
+            "points": 4,
+            "aliases": [
+              "flowers",
+              "chocolates",
+              "a gift",
+              "gift",
+              "a present",
+              "present",
+              "box of chocolates"
+            ]
+          },
+          {
+            "text": "Ice",
+            "points": 4,
+            "aliases": [
+              "bag of ice",
+              "ice cubes"
+            ]
           }
         ],
-        "question": "Name something you'd bring to a house party."
+        "question": "Name something people bring to a house party."
       },
       {
         "id": "sv-07",
         "answers": [
           {
             "text": "Scroll social media",
-            "points": 38,
+            "points": 40,
             "aliases": [
               "social media",
               "scroll",
@@ -22636,7 +22342,7 @@
           },
           {
             "text": "Watch videos",
-            "points": 15,
+            "points": 16,
             "aliases": [
               "youtube",
               "videos",
@@ -22647,7 +22353,7 @@
           },
           {
             "text": "Text friends",
-            "points": 10,
+            "points": 9,
             "aliases": [
               "text",
               "message people",
@@ -22669,23 +22375,23 @@
             ]
           },
           {
-            "text": "Check email",
-            "points": 5,
-            "aliases": [
-              "email",
-              "emails",
-              "check emails",
-              "inbox"
-            ]
-          },
-          {
             "text": "Read the news",
-            "points": 4,
+            "points": 5,
             "aliases": [
               "news",
               "read news",
               "read articles",
               "headlines"
+            ]
+          },
+          {
+            "text": "Check email",
+            "points": 3,
+            "aliases": [
+              "email",
+              "emails",
+              "check emails",
+              "inbox"
             ]
           },
           {
@@ -22707,7 +22413,7 @@
         "answers": [
           {
             "text": "Feeling sick",
-            "points": 32,
+            "points": 34,
             "aliases": [
               "sick",
               "ill",
@@ -22730,7 +22436,7 @@
           },
           {
             "text": "Work",
-            "points": 14,
+            "points": 13,
             "aliases": [
               "working late",
               "stuck at work",
@@ -22740,8 +22446,20 @@
             ]
           },
           {
+            "text": "Family emergency",
+            "points": 9,
+            "aliases": [
+              "family",
+              "kids",
+              "emergency",
+              "family thing",
+              "no babysitter",
+              "babysitter cancelled"
+            ]
+          },
+          {
             "text": "Bad weather",
-            "points": 10,
+            "points": 7,
             "aliases": [
               "weather",
               "rain",
@@ -22752,25 +22470,13 @@
           },
           {
             "text": "No money",
-            "points": 7,
+            "points": 5,
             "aliases": [
               "broke",
               "skint",
               "can't afford it",
               "money",
               "short on cash"
-            ]
-          },
-          {
-            "text": "Family emergency",
-            "points": 6,
-            "aliases": [
-              "family",
-              "kids",
-              "emergency",
-              "family thing",
-              "no babysitter",
-              "babysitter cancelled"
             ]
           },
           {
@@ -22784,7 +22490,7 @@
           },
           {
             "text": "Double-booked",
-            "points": 2,
+            "points": 4,
             "aliases": [
               "double booked",
               "other plans",
@@ -22800,7 +22506,7 @@
         "answers": [
           {
             "text": "Popcorn",
-            "points": 45,
+            "points": 56,
             "aliases": [
               "pop corn",
               "buttered popcorn",
@@ -22810,7 +22516,7 @@
           },
           {
             "text": "Sweets",
-            "points": 18,
+            "points": 14,
             "aliases": [
               "candy",
               "chocolate",
@@ -22822,7 +22528,7 @@
           },
           {
             "text": "Nachos",
-            "points": 10,
+            "points": 9,
             "aliases": [
               "nachos and cheese",
               "tortilla chips",
@@ -22831,7 +22537,7 @@
           },
           {
             "text": "Fizzy drink",
-            "points": 9,
+            "points": 8,
             "aliases": [
               "soft drink",
               "soda",
@@ -22842,8 +22548,18 @@
             ]
           },
           {
-            "text": "Hot dog",
+            "text": "Ice cream",
             "points": 6,
+            "aliases": [
+              "icecream",
+              "ice cream tub",
+              "choc ice",
+              "ben and jerry's"
+            ]
+          },
+          {
+            "text": "Hot dog",
+            "points": 5,
             "aliases": [
               "hot dogs",
               "hotdog",
@@ -22852,21 +22568,11 @@
           },
           {
             "text": "Pretzels",
-            "points": 5,
+            "points": 2,
             "aliases": [
               "pretzel",
               "soft pretzel",
               "pretzel bites"
-            ]
-          },
-          {
-            "text": "Ice cream",
-            "points": 4,
-            "aliases": [
-              "icecream",
-              "ice cream tub",
-              "choc ice",
-              "ben and jerry's"
             ]
           }
         ],
@@ -22876,8 +22582,17 @@
         "id": "sv-10",
         "answers": [
           {
+            "text": "Invisibility",
+            "points": 24,
+            "aliases": [
+              "invisible",
+              "being invisible",
+              "turn invisible"
+            ]
+          },
+          {
             "text": "Flying",
-            "points": 30,
+            "points": 23,
             "aliases": [
               "flight",
               "fly",
@@ -22886,17 +22601,19 @@
             ]
           },
           {
-            "text": "Invisibility",
-            "points": 22,
+            "text": "Time travel",
+            "points": 13,
             "aliases": [
-              "invisible",
-              "being invisible",
-              "turn invisible"
+              "time traveling",
+              "stop time",
+              "freeze time",
+              "control time",
+              "go back in time"
             ]
           },
           {
             "text": "Teleportation",
-            "points": 15,
+            "points": 12,
             "aliases": [
               "teleport",
               "teleporting",
@@ -22914,14 +22631,14 @@
             ]
           },
           {
-            "text": "Time travel",
-            "points": 9,
+            "text": "Healing",
+            "points": 7,
             "aliases": [
-              "time traveling",
-              "stop time",
-              "freeze time",
-              "control time",
-              "go back in time"
+              "immortality",
+              "live forever",
+              "never get sick",
+              "regeneration",
+              "heal"
             ]
           },
           {
@@ -22942,17 +22659,6 @@
               "super fast",
               "being fast"
             ]
-          },
-          {
-            "text": "Healing",
-            "points": 2,
-            "aliases": [
-              "immortality",
-              "live forever",
-              "never get sick",
-              "regeneration",
-              "heal"
-            ]
           }
         ],
         "question": "Name a superpower people wish they had."
@@ -22962,7 +22668,7 @@
         "answers": [
           {
             "text": "Milk",
-            "points": 26,
+            "points": 30,
             "aliases": [
               "oat milk",
               "carton of milk",
@@ -22971,7 +22677,7 @@
           },
           {
             "text": "Eggs",
-            "points": 18,
+            "points": 16,
             "aliases": [
               "egg",
               "carton of eggs"
@@ -22997,7 +22703,7 @@
           },
           {
             "text": "Ketchup",
-            "points": 10,
+            "points": 9,
             "aliases": [
               "condiments",
               "sauce",
@@ -23008,18 +22714,8 @@
             ]
           },
           {
-            "text": "Leftovers",
-            "points": 8,
-            "aliases": [
-              "leftover food",
-              "last night's dinner",
-              "leftover takeaway",
-              "old takeout"
-            ]
-          },
-          {
             "text": "Beer",
-            "points": 6,
+            "points": 7,
             "aliases": [
               "beers",
               "wine",
@@ -23030,13 +22726,23 @@
           },
           {
             "text": "Vegetables",
-            "points": 4,
+            "points": 7,
             "aliases": [
               "veg",
               "veggies",
               "salad",
               "lettuce",
               "carrots"
+            ]
+          },
+          {
+            "text": "Leftovers",
+            "points": 6,
+            "aliases": [
+              "leftover food",
+              "last night's dinner",
+              "leftover takeaway",
+              "old takeout"
             ]
           }
         ],
@@ -23046,19 +22752,8 @@
         "id": "sv-12",
         "answers": [
           {
-            "text": "Washing the dishes",
-            "points": 28,
-            "aliases": [
-              "dishes",
-              "washing up",
-              "doing the dishes",
-              "unloading the dishwasher",
-              "dishwasher"
-            ]
-          },
-          {
             "text": "Cleaning the bathroom",
-            "points": 24,
+            "points": 22,
             "aliases": [
               "cleaning the toilet",
               "toilet",
@@ -23068,19 +22763,28 @@
             ]
           },
           {
-            "text": "Laundry",
-            "points": 15,
+            "text": "Ironing",
+            "points": 18,
             "aliases": [
-              "washing clothes",
-              "folding laundry",
-              "folding clothes",
-              "doing the washing",
-              "washing"
+              "iron",
+              "ironing clothes",
+              "ironing shirts"
+            ]
+          },
+          {
+            "text": "Washing the dishes",
+            "points": 17,
+            "aliases": [
+              "dishes",
+              "washing up",
+              "doing the dishes",
+              "unloading the dishwasher",
+              "dishwasher"
             ]
           },
           {
             "text": "Taking out the bins",
-            "points": 11,
+            "points": 10,
             "aliases": [
               "bins",
               "taking the bins out",
@@ -23089,6 +22793,17 @@
               "trash",
               "garbage",
               "taking out the trash"
+            ]
+          },
+          {
+            "text": "Laundry",
+            "points": 9,
+            "aliases": [
+              "washing clothes",
+              "folding laundry",
+              "folding clothes",
+              "doing the washing",
+              "washing"
             ]
           },
           {
@@ -23103,17 +22818,8 @@
             ]
           },
           {
-            "text": "Ironing",
-            "points": 6,
-            "aliases": [
-              "iron",
-              "ironing clothes",
-              "ironing shirts"
-            ]
-          },
-          {
             "text": "Dusting",
-            "points": 4,
+            "points": 7,
             "aliases": [
               "dust",
               "polishing",
@@ -23121,8 +22827,18 @@
             ]
           },
           {
+            "text": "Cleaning the oven",
+            "points": 5,
+            "aliases": [
+              "oven",
+              "the oven",
+              "cleaning oven",
+              "scrubbing the oven"
+            ]
+          },
+          {
             "text": "Mowing the lawn",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "mowing",
               "cutting the grass",
@@ -23140,7 +22856,7 @@
         "answers": [
           {
             "text": "Tent",
-            "points": 38,
+            "points": 42,
             "aliases": [
               "a tent",
               "tents"
@@ -23168,23 +22884,15 @@
           },
           {
             "text": "Food",
-            "points": 8,
+            "points": 7,
             "aliases": [
               "snacks",
               "marshmallows"
             ]
           },
           {
-            "text": "Water",
-            "points": 6,
-            "aliases": [
-              "water bottle",
-              "drinks"
-            ]
-          },
-          {
             "text": "Matches",
-            "points": 6,
+            "points": 5,
             "aliases": [
               "lighter",
               "firelighter",
@@ -23193,8 +22901,16 @@
             ]
           },
           {
-            "text": "Camping stove",
+            "text": "Water",
             "points": 5,
+            "aliases": [
+              "water bottle",
+              "drinks"
+            ]
+          },
+          {
+            "text": "Camping stove",
+            "points": 4,
             "aliases": [
               "stove",
               "gas stove",
@@ -23212,20 +22928,20 @@
             ]
           },
           {
-            "text": "Toilet paper",
-            "points": 2,
-            "aliases": [
-              "toilet roll",
-              "loo roll"
-            ]
-          },
-          {
             "text": "Knife",
             "points": 2,
             "aliases": [
               "pocket knife",
               "penknife",
               "swiss army knife"
+            ]
+          },
+          {
+            "text": "Toilet paper",
+            "points": 2,
+            "aliases": [
+              "toilet roll",
+              "loo roll"
             ]
           }
         ]
@@ -23236,7 +22952,7 @@
         "answers": [
           {
             "text": "Rose",
-            "points": 25,
+            "points": 34,
             "aliases": [
               "roses",
               "red rose"
@@ -23244,21 +22960,21 @@
           },
           {
             "text": "Tulip",
-            "points": 16,
+            "points": 14,
             "aliases": [
               "tulips"
             ]
           },
           {
             "text": "Daisy",
-            "points": 12,
+            "points": 11,
             "aliases": [
               "daisies"
             ]
           },
           {
             "text": "Sunflower",
-            "points": 9,
+            "points": 10,
             "aliases": [
               "sunflowers"
             ]
@@ -23272,36 +22988,36 @@
           },
           {
             "text": "Daffodil",
-            "points": 8,
+            "points": 7,
             "aliases": [
               "daffodils"
             ]
           },
           {
             "text": "Orchid",
-            "points": 6,
+            "points": 5,
             "aliases": [
               "orchids"
             ]
           },
           {
             "text": "Poppy",
-            "points": 5,
+            "points": 3,
             "aliases": [
               "poppies"
             ]
           },
           {
+            "text": "Lavender",
+            "points": 2,
+            "aliases": []
+          },
+          {
             "text": "Carnation",
-            "points": 4,
+            "points": 2,
             "aliases": [
               "carnations"
             ]
-          },
-          {
-            "text": "Lavender",
-            "points": 3,
-            "aliases": []
           },
           {
             "text": "Dandelion",
@@ -23321,11 +23037,11 @@
       },
       {
         "id": "fm-03",
-        "question": "How many children would you like to have?",
+        "question": "How many children do people say they would like to have?",
         "answers": [
           {
             "text": "2",
-            "points": 40,
+            "points": 54,
             "aliases": [
               "two",
               "two kids",
@@ -23334,7 +23050,7 @@
           },
           {
             "text": "3",
-            "points": 20,
+            "points": 22,
             "aliases": [
               "three",
               "three kids",
@@ -23343,7 +23059,7 @@
           },
           {
             "text": "1",
-            "points": 12,
+            "points": 9,
             "aliases": [
               "one",
               "one kid",
@@ -23351,17 +23067,8 @@
             ]
           },
           {
-            "text": "0",
-            "points": 12,
-            "aliases": [
-              "none",
-              "zero",
-              "no kids"
-            ]
-          },
-          {
             "text": "4",
-            "points": 10,
+            "points": 7,
             "aliases": [
               "four",
               "four kids",
@@ -23369,15 +23076,24 @@
             ]
           },
           {
+            "text": "0",
+            "points": 5,
+            "aliases": [
+              "none",
+              "zero",
+              "no kids"
+            ]
+          },
+          {
             "text": "5",
-            "points": 4,
+            "points": 2,
             "aliases": [
               "five"
             ]
           },
           {
             "text": "6",
-            "points": 2,
+            "points": 1,
             "aliases": [
               "six"
             ]
@@ -23385,105 +23101,12 @@
         ]
       },
       {
-        "id": "fm-04",
-        "question": "Complete the phrase \"Break ___.\"",
-        "answers": [
-          {
-            "text": "A leg",
-            "points": 34,
-            "aliases": [
-              "leg",
-              "break a leg"
-            ]
-          },
-          {
-            "text": "Up",
-            "points": 18,
-            "aliases": [
-              "break up",
-              "breakup"
-            ]
-          },
-          {
-            "text": "Down",
-            "points": 14,
-            "aliases": [
-              "breakdown",
-              "break down"
-            ]
-          },
-          {
-            "text": "Fast",
-            "points": 10,
-            "aliases": [
-              "breakfast"
-            ]
-          },
-          {
-            "text": "Dance",
-            "points": 8,
-            "aliases": [
-              "breakdance",
-              "dancing",
-              "breakdancing"
-            ]
-          },
-          {
-            "text": "Time",
-            "points": 6,
-            "aliases": [
-              "break time",
-              "breaktime"
-            ]
-          },
-          {
-            "text": "Through",
-            "points": 4,
-            "aliases": [
-              "breakthrough"
-            ]
-          },
-          {
-            "text": "The ice",
-            "points": 3,
-            "aliases": [
-              "ice",
-              "break the ice"
-            ]
-          },
-          {
-            "text": "In",
-            "points": 2,
-            "aliases": [
-              "break in",
-              "break-in"
-            ]
-          },
-          {
-            "text": "Even",
-            "points": 1,
-            "aliases": [
-              "break even"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-05",
-        "question": "How many hours a day do you spend on social media?",
+        "question": "How many hours a day do people say they spend on social media?",
         "answers": [
-          {
-            "text": "3 hours",
-            "points": 26,
-            "aliases": [
-              "3",
-              "three",
-              "three hours"
-            ]
-          },
           {
             "text": "2 hours",
-            "points": 24,
+            "points": 30,
             "aliases": [
               "2",
               "two",
@@ -23491,17 +23114,17 @@
             ]
           },
           {
-            "text": "4 hours",
-            "points": 16,
+            "text": "3 hours",
+            "points": 22,
             "aliases": [
-              "4",
-              "four",
-              "four hours"
+              "3",
+              "three",
+              "three hours"
             ]
           },
           {
             "text": "1 hour",
-            "points": 12,
+            "points": 16,
             "aliases": [
               "1",
               "one",
@@ -23510,8 +23133,17 @@
             ]
           },
           {
+            "text": "4 hours",
+            "points": 12,
+            "aliases": [
+              "4",
+              "four",
+              "four hours"
+            ]
+          },
+          {
             "text": "5 hours",
-            "points": 10,
+            "points": 8,
             "aliases": [
               "5",
               "five",
@@ -23520,7 +23152,7 @@
           },
           {
             "text": "6 hours",
-            "points": 6,
+            "points": 5,
             "aliases": [
               "6",
               "six",
@@ -23529,7 +23161,7 @@
           },
           {
             "text": "8 hours",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "8",
               "eight",
@@ -23549,11 +23181,11 @@
       },
       {
         "id": "fm-06",
-        "question": "Which fingernail do you trim first?",
+        "question": "Which fingernail do people trim first?",
         "answers": [
           {
             "text": "Thumb",
-            "points": 42,
+            "points": 46,
             "aliases": [
               "thumbs",
               "thumbnail",
@@ -23563,7 +23195,7 @@
           },
           {
             "text": "Little finger",
-            "points": 24,
+            "points": 26,
             "aliases": [
               "pinky",
               "pinkie",
@@ -23573,7 +23205,7 @@
           },
           {
             "text": "Index finger",
-            "points": 18,
+            "points": 16,
             "aliases": [
               "index",
               "pointer",
@@ -23584,14 +23216,14 @@
           },
           {
             "text": "Middle finger",
-            "points": 10,
+            "points": 7,
             "aliases": [
               "middle"
             ]
           },
           {
             "text": "Ring finger",
-            "points": 6,
+            "points": 5,
             "aliases": [
               "ring"
             ]
@@ -23600,40 +23232,32 @@
       },
       {
         "id": "fm-07",
-        "question": "Which country is best at football?",
+        "question": "Which country do people say is the best at football?",
         "answers": [
           {
             "text": "Brazil",
-            "points": 29,
-            "aliases": []
-          },
-          {
-            "text": "Argentina",
-            "points": 18,
+            "points": 30,
             "aliases": []
           },
           {
             "text": "Spain",
-            "points": 14,
+            "points": 22,
             "aliases": []
           },
           {
-            "text": "France",
-            "points": 12,
+            "text": "Argentina",
+            "points": 16,
             "aliases": []
           },
           {
             "text": "Germany",
-            "points": 10,
+            "points": 9,
             "aliases": []
           },
           {
-            "text": "England",
-            "points": 6,
-            "aliases": [
-              "uk",
-              "britain"
-            ]
+            "text": "France",
+            "points": 9,
+            "aliases": []
           },
           {
             "text": "Italy",
@@ -23641,14 +23265,25 @@
             "aliases": []
           },
           {
-            "text": "Mexico",
+            "text": "England",
             "points": 5,
-            "aliases": []
+            "aliases": [
+              "uk",
+              "britain"
+            ]
           },
           {
             "text": "Portugal",
-            "points": 1,
+            "points": 3,
             "aliases": []
+          },
+          {
+            "text": "Netherlands",
+            "points": 1,
+            "aliases": [
+              "holland",
+              "the netherlands"
+            ]
           }
         ]
       },
@@ -23658,7 +23293,7 @@
         "answers": [
           {
             "text": "Too tired",
-            "points": 34,
+            "points": 30,
             "aliases": [
               "tired",
               "exhausted",
@@ -23677,7 +23312,7 @@
           },
           {
             "text": "Bad weather",
-            "points": 12,
+            "points": 13,
             "aliases": [
               "weather",
               "rain",
@@ -23687,8 +23322,33 @@
             ]
           },
           {
+            "text": "Can't be bothered",
+            "points": 9,
+            "aliases": [
+              "no motivation",
+              "not motivated",
+              "lazy",
+              "laziness",
+              "not in the mood",
+              "couldn't be bothered",
+              "cba",
+              "boring",
+              "bored"
+            ]
+          },
+          {
+            "text": "Feeling ill",
+            "points": 8,
+            "aliases": [
+              "sick",
+              "ill",
+              "not feeling well",
+              "headache"
+            ]
+          },
+          {
             "text": "Still sore",
-            "points": 10,
+            "points": 7,
             "aliases": [
               "sore",
               "aching",
@@ -23699,7 +23359,7 @@
           },
           {
             "text": "Too expensive",
-            "points": 8,
+            "points": 4,
             "aliases": [
               "expensive",
               "can't afford it",
@@ -23708,18 +23368,8 @@
             ]
           },
           {
-            "text": "Feeling ill",
-            "points": 6,
-            "aliases": [
-              "sick",
-              "ill",
-              "not feeling well",
-              "headache"
-            ]
-          },
-          {
             "text": "Forgot my kit",
-            "points": 4,
+            "points": 3,
             "aliases": [
               "forgot kit",
               "no clean kit",
@@ -23739,79 +23389,12 @@
         ]
       },
       {
-        "id": "fm-09",
-        "question": "Complete the phrase \"Personal ___.\"",
-        "answers": [
-          {
-            "text": "Trainer",
-            "points": 32,
-            "aliases": [
-              "personal trainer",
-              "training"
-            ]
-          },
-          {
-            "text": "Best",
-            "points": 22,
-            "aliases": [
-              "personal best",
-              "pb"
-            ]
-          },
-          {
-            "text": "Space",
-            "points": 16,
-            "aliases": [
-              "personal space"
-            ]
-          },
-          {
-            "text": "Life",
-            "points": 10,
-            "aliases": [
-              "personal life"
-            ]
-          },
-          {
-            "text": "Assistant",
-            "points": 8,
-            "aliases": [
-              "personal assistant",
-              "pa"
-            ]
-          },
-          {
-            "text": "Hygiene",
-            "points": 6,
-            "aliases": [
-              "personal hygiene"
-            ]
-          },
-          {
-            "text": "Details",
-            "points": 4,
-            "aliases": [
-              "personal details",
-              "information",
-              "data"
-            ]
-          },
-          {
-            "text": "Loan",
-            "points": 2,
-            "aliases": [
-              "personal loan"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-10",
         "question": "Name something people always forget to pack.",
         "answers": [
           {
             "text": "Phone charger",
-            "points": 30,
+            "points": 24,
             "aliases": [
               "charger",
               "chargers",
@@ -23821,7 +23404,7 @@
           },
           {
             "text": "Toothbrush",
-            "points": 24,
+            "points": 20,
             "aliases": [
               "toothpaste",
               "tooth brush"
@@ -23829,7 +23412,7 @@
           },
           {
             "text": "Sun cream",
-            "points": 12,
+            "points": 16,
             "aliases": [
               "sunscreen",
               "suncream",
@@ -23839,18 +23422,18 @@
             ]
           },
           {
-            "text": "Plug adapter",
+            "text": "Sunglasses",
             "points": 10,
             "aliases": [
-              "adapter",
-              "adaptor",
-              "travel adapter",
-              "plug"
+              "glasses",
+              "sun glasses",
+              "shades",
+              "reading glasses"
             ]
           },
           {
             "text": "Underwear",
-            "points": 9,
+            "points": 8,
             "aliases": [
               "pants",
               "socks",
@@ -23859,16 +23442,27 @@
             ]
           },
           {
-            "text": "Passport",
-            "points": 6,
+            "text": "Medication",
+            "points": 8,
             "aliases": [
-              "id",
-              "documents"
+              "medicine",
+              "tablets",
+              "pills"
+            ]
+          },
+          {
+            "text": "Plug adapter",
+            "points": 5,
+            "aliases": [
+              "adapter",
+              "adaptor",
+              "travel adapter",
+              "plug"
             ]
           },
           {
             "text": "Swimwear",
-            "points": 4,
+            "points": 5,
             "aliases": [
               "swimming costume",
               "swimsuit",
@@ -23878,12 +23472,11 @@
             ]
           },
           {
-            "text": "Medication",
-            "points": 3,
+            "text": "Passport",
+            "points": 2,
             "aliases": [
-              "medicine",
-              "tablets",
-              "pills"
+              "id",
+              "documents"
             ]
           },
           {
@@ -23898,11 +23491,11 @@
       },
       {
         "id": "fm-11",
-        "question": "How many hours before a flight do you arrive at the airport?",
+        "question": "How many hours before a flight do people get to the airport?",
         "answers": [
           {
             "text": "2 hours",
-            "points": 44,
+            "points": 40,
             "aliases": [
               "2",
               "two",
@@ -23911,7 +23504,7 @@
           },
           {
             "text": "3 hours",
-            "points": 30,
+            "points": 27,
             "aliases": [
               "3",
               "three",
@@ -23919,8 +23512,30 @@
             ]
           },
           {
+            "text": "2.5 hours",
+            "points": 17,
+            "aliases": [
+              "2.5",
+              "two and a half",
+              "two and a half hours",
+              "2 and a half",
+              "2 and a half hours",
+              "150 minutes"
+            ]
+          },
+          {
+            "text": "1.5 hours",
+            "points": 7,
+            "aliases": [
+              "1.5",
+              "an hour and a half",
+              "90 minutes",
+              "one and a half"
+            ]
+          },
+          {
             "text": "1 hour",
-            "points": 12,
+            "points": 4,
             "aliases": [
               "1",
               "one",
@@ -23930,7 +23545,7 @@
           },
           {
             "text": "4 hours",
-            "points": 6,
+            "points": 4,
             "aliases": [
               "4",
               "four",
@@ -23938,18 +23553,8 @@
             ]
           },
           {
-            "text": "1.5 hours",
-            "points": 5,
-            "aliases": [
-              "1.5",
-              "an hour and a half",
-              "90 minutes",
-              "one and a half"
-            ]
-          },
-          {
             "text": "5 hours",
-            "points": 3,
+            "points": 1,
             "aliases": [
               "5",
               "five",
@@ -23959,123 +23564,21 @@
         ]
       },
       {
-        "id": "fm-12",
-        "question": "Complete the phrase \"Lost ___.\"",
-        "answers": [
-          {
-            "text": "Luggage",
-            "points": 26,
-            "aliases": [
-              "lost luggage",
-              "baggage",
-              "bags"
-            ]
-          },
-          {
-            "text": "Property",
-            "points": 22,
-            "aliases": [
-              "lost property"
-            ]
-          },
-          {
-            "text": "Cause",
-            "points": 14,
-            "aliases": [
-              "lost cause"
-            ]
-          },
-          {
-            "text": "In translation",
-            "points": 12,
-            "aliases": [
-              "lost in translation",
-              "translation"
-            ]
-          },
-          {
-            "text": "And found",
-            "points": 10,
-            "aliases": [
-              "lost and found",
-              "found"
-            ]
-          },
-          {
-            "text": "Soul",
-            "points": 6,
-            "aliases": [
-              "lost soul",
-              "souls"
-            ]
-          },
-          {
-            "text": "Boys",
-            "points": 4,
-            "aliases": [
-              "the lost boys",
-              "lost boys"
-            ]
-          },
-          {
-            "text": "Dog",
-            "points": 3,
-            "aliases": [
-              "lost dog",
-              "cat",
-              "pet"
-            ]
-          },
-          {
-            "text": "Time",
-            "points": 3,
-            "aliases": [
-              "lost time"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-13",
         "question": "Name something annoying other passengers do on a plane.",
         "answers": [
           {
-            "text": "Get drunk",
-            "points": 24,
+            "text": "Kick the seat",
+            "points": 20,
             "aliases": [
-              "getting drunk",
-              "drinking",
-              "drunk",
-              "drink too much"
-            ]
-          },
-          {
-            "text": "Play audio out loud",
-            "points": 21,
-            "aliases": [
-              "no headphones",
-              "playing music",
-              "loud music",
-              "watching videos out loud",
-              "playing audio without headphones",
-              "loud phone"
-            ]
-          },
-          {
-            "text": "Personal grooming",
-            "points": 16,
-            "aliases": [
-              "grooming",
-              "clipping nails",
-              "cutting nails",
-              "brushing hair",
-              "doing makeup",
-              "painting nails"
+              "kicking your seat",
+              "kicking the seat",
+              "kick your seat"
             ]
           },
           {
             "text": "Let their children be loud",
-            "points": 14,
+            "points": 18,
             "aliases": [
               "loud children",
               "crying baby",
@@ -24086,8 +23589,39 @@
             ]
           },
           {
+            "text": "Recline their seat",
+            "points": 14,
+            "aliases": [
+              "reclining",
+              "recline",
+              "putting their seat back"
+            ]
+          },
+          {
+            "text": "Play audio out loud",
+            "points": 13,
+            "aliases": [
+              "no headphones",
+              "playing music",
+              "loud music",
+              "watching videos out loud",
+              "playing audio without headphones",
+              "loud phone"
+            ]
+          },
+          {
+            "text": "Get drunk",
+            "points": 12,
+            "aliases": [
+              "getting drunk",
+              "drinking",
+              "drunk",
+              "drink too much"
+            ]
+          },
+          {
             "text": "Take their shoes off",
-            "points": 11,
+            "points": 9,
             "aliases": [
               "shoes off",
               "bare feet",
@@ -24097,30 +23631,37 @@
             ]
           },
           {
-            "text": "Kick the seat",
-            "points": 6,
-            "aliases": [
-              "kicking your seat",
-              "kicking the seat",
-              "kick your seat"
-            ]
-          },
-          {
-            "text": "Recline their seat",
-            "points": 5,
-            "aliases": [
-              "reclining",
-              "recline",
-              "putting their seat back"
-            ]
-          },
-          {
             "text": "Hog the armrest",
-            "points": 3,
+            "points": 6,
             "aliases": [
               "armrest",
               "hogging the armrest",
               "elbows"
+            ]
+          },
+          {
+            "text": "Personal grooming",
+            "points": 4,
+            "aliases": [
+              "grooming",
+              "clipping nails",
+              "cutting nails",
+              "brushing hair",
+              "doing makeup",
+              "painting nails"
+            ]
+          },
+          {
+            "text": "Talk too much",
+            "points": 4,
+            "aliases": [
+              "talking",
+              "chatty",
+              "talk loudly",
+              "talking loudly",
+              "talk to you",
+              "won't stop talking",
+              "chatting"
             ]
           }
         ]
@@ -24154,7 +23695,7 @@
           },
           {
             "text": "Strike",
-            "points": 14,
+            "points": 12,
             "aliases": [
               "strikes",
               "staff strike",
@@ -24173,7 +23714,7 @@
           },
           {
             "text": "Air traffic control",
-            "points": 8,
+            "points": 9,
             "aliases": [
               "atc",
               "air traffic",
@@ -24182,22 +23723,22 @@
             ]
           },
           {
-            "text": "Late passengers",
-            "points": 5,
-            "aliases": [
-              "missing passenger",
-              "waiting for passengers",
-              "passengers"
-            ]
-          },
-          {
             "text": "Staff shortage",
-            "points": 3,
+            "points": 5,
             "aliases": [
               "no crew",
               "crew late",
               "missing crew",
               "no pilot"
+            ]
+          },
+          {
+            "text": "Late passengers",
+            "points": 4,
+            "aliases": [
+              "missing passenger",
+              "waiting for passengers",
+              "passengers"
             ]
           },
           {
@@ -24212,11 +23753,11 @@
       },
       {
         "id": "fm-15",
-        "question": "Name something a grandmother says when you arrive.",
+        "question": "Name something a grandmother says when her grandchildren arrive.",
         "answers": [
           {
             "text": "Have you eaten?",
-            "points": 34,
+            "points": 32,
             "aliases": [
               "are you hungry",
               "eat something",
@@ -24226,18 +23767,8 @@
             ]
           },
           {
-            "text": "You've lost weight",
-            "points": 20,
-            "aliases": [
-              "you're too thin",
-              "you look thin",
-              "lost weight",
-              "you need feeding"
-            ]
-          },
-          {
             "text": "You've grown",
-            "points": 18,
+            "points": 22,
             "aliases": [
               "haven't you grown",
               "look how big you are",
@@ -24246,17 +23777,18 @@
             ]
           },
           {
-            "text": "Sit down",
-            "points": 10,
+            "text": "You've lost weight",
+            "points": 16,
             "aliases": [
-              "come in sit down",
-              "sit",
-              "take a seat"
+              "you're too thin",
+              "you look thin",
+              "lost weight",
+              "you need feeding"
             ]
           },
           {
             "text": "Give me a kiss",
-            "points": 8,
+            "points": 12,
             "aliases": [
               "give me a hug",
               "come here",
@@ -24265,21 +23797,30 @@
             ]
           },
           {
-            "text": "Put a jumper on",
-            "points": 5,
+            "text": "Sit down",
+            "points": 8,
             "aliases": [
-              "aren't you cold",
-              "you'll catch a cold",
-              "where's your coat"
+              "come in sit down",
+              "sit",
+              "take a seat"
             ]
           },
           {
             "text": "Are you seeing anyone?",
-            "points": 5,
+            "points": 6,
             "aliases": [
               "when are you getting married",
               "got a girlfriend",
               "got a boyfriend"
+            ]
+          },
+          {
+            "text": "Put a jumper on",
+            "points": 4,
+            "aliases": [
+              "aren't you cold",
+              "you'll catch a cold",
+              "where's your coat"
             ]
           }
         ]
@@ -24289,31 +23830,38 @@
         "question": "How many people sit down to a big family lunch?",
         "answers": [
           {
-            "text": "8",
-            "points": 26,
-            "aliases": [
-              "eight"
-            ]
-          },
-          {
             "text": "10",
-            "points": 24,
+            "points": 28,
             "aliases": [
               "ten"
             ]
           },
           {
-            "text": "6",
+            "text": "8",
+            "points": 22,
+            "aliases": [
+              "eight"
+            ]
+          },
+          {
+            "text": "12",
             "points": 16,
+            "aliases": [
+              "twelve"
+            ]
+          },
+          {
+            "text": "6",
+            "points": 12,
             "aliases": [
               "six"
             ]
           },
           {
-            "text": "12",
-            "points": 14,
+            "text": "20",
+            "points": 9,
             "aliases": [
-              "twelve"
+              "twenty"
             ]
           },
           {
@@ -24321,13 +23869,6 @@
             "points": 8,
             "aliases": [
               "fifteen"
-            ]
-          },
-          {
-            "text": "20",
-            "points": 7,
-            "aliases": [
-              "twenty"
             ]
           },
           {
@@ -24347,76 +23888,12 @@
         ]
       },
       {
-        "id": "fm-17",
-        "question": "Complete the phrase \"Grandma's ___.\"",
-        "answers": [
-          {
-            "text": "House",
-            "points": 34,
-            "aliases": [
-              "grandma's house"
-            ]
-          },
-          {
-            "text": "Cooking",
-            "points": 26,
-            "aliases": [
-              "food",
-              "dinner"
-            ]
-          },
-          {
-            "text": "Recipe",
-            "points": 14,
-            "aliases": [
-              "recipes",
-              "secret recipe"
-            ]
-          },
-          {
-            "text": "Kitchen",
-            "points": 10,
-            "aliases": []
-          },
-          {
-            "text": "Cookies",
-            "points": 6,
-            "aliases": [
-              "biscuits",
-              "cake",
-              "pie",
-              "apple pie"
-            ]
-          },
-          {
-            "text": "Boy",
-            "points": 4,
-            "aliases": [
-              "grandma's boy"
-            ]
-          },
-          {
-            "text": "Garden",
-            "points": 3,
-            "aliases": []
-          },
-          {
-            "text": "Knitting",
-            "points": 3,
-            "aliases": [
-              "jumper",
-              "sweater"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-18",
         "question": "Name a topic that starts an argument at a family lunch.",
         "answers": [
           {
             "text": "Politics",
-            "points": 38,
+            "points": 32,
             "aliases": [
               "elections",
               "the government",
@@ -24433,16 +23910,32 @@
             ]
           },
           {
+            "text": "Old family feuds",
+            "points": 14,
+            "aliases": [
+              "old arguments",
+              "the past",
+              "grudges"
+            ]
+          },
+          {
             "text": "Football",
-            "points": 12,
+            "points": 9,
             "aliases": [
               "sport",
               "sports"
             ]
           },
           {
+            "text": "Religion",
+            "points": 8,
+            "aliases": [
+              "church"
+            ]
+          },
+          {
             "text": "When are you getting married?",
-            "points": 10,
+            "points": 7,
             "aliases": [
               "marriage",
               "relationships",
@@ -24453,76 +23946,67 @@
           },
           {
             "text": "Inheritance",
-            "points": 8,
+            "points": 6,
             "aliases": [
               "the will",
               "who gets the house"
             ]
           },
           {
-            "text": "Religion",
-            "points": 6,
-            "aliases": [
-              "church"
-            ]
-          },
-          {
             "text": "The washing up",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "dishes",
               "who does the washing up",
               "chores"
-            ]
-          },
-          {
-            "text": "Old family feuds",
-            "points": 3,
-            "aliases": [
-              "old arguments",
-              "the past",
-              "grudges"
             ]
           }
         ]
       },
       {
         "id": "fm-19",
-        "question": "Which country has the best cuisine?",
+        "question": "Which country do people say has the best cuisine?",
         "answers": [
           {
             "text": "Italy",
-            "points": 34,
+            "points": 38,
             "aliases": [
               "italian"
             ]
           },
           {
-            "text": "China",
-            "points": 16,
-            "aliases": [
-              "chinese"
-            ]
-          },
-          {
-            "text": "Japan",
-            "points": 14,
-            "aliases": [
-              "japanese"
-            ]
-          },
-          {
             "text": "France",
-            "points": 10,
+            "points": 12,
             "aliases": [
               "french"
             ]
           },
           {
+            "text": "Japan",
+            "points": 12,
+            "aliases": [
+              "japanese"
+            ]
+          },
+          {
+            "text": "China",
+            "points": 9,
+            "aliases": [
+              "chinese"
+            ]
+          },
+          {
             "text": "Spain",
-            "points": 8,
+            "points": 7,
             "aliases": [
               "spanish"
+            ]
+          },
+          {
+            "text": "India",
+            "points": 6,
+            "aliases": [
+              "indian"
             ]
           },
           {
@@ -24533,24 +24017,17 @@
             ]
           },
           {
-            "text": "India",
+            "text": "Greece",
             "points": 5,
             "aliases": [
-              "indian"
+              "greek"
             ]
           },
           {
             "text": "Thailand",
-            "points": 4,
+            "points": 5,
             "aliases": [
               "thai"
-            ]
-          },
-          {
-            "text": "Greece",
-            "points": 3,
-            "aliases": [
-              "greek"
             ]
           }
         ]
@@ -24561,7 +24038,7 @@
         "answers": [
           {
             "text": "Experience",
-            "points": 30,
+            "points": 28,
             "aliases": [
               "work experience",
               "years of experience",
@@ -24569,17 +24046,16 @@
             ]
           },
           {
-            "text": "Languages",
-            "points": 20,
+            "text": "Skills",
+            "points": 18,
             "aliases": [
-              "language skills",
-              "speaking a language",
-              "fluent in"
+              "computer skills",
+              "excel"
             ]
           },
           {
             "text": "Grades",
-            "points": 16,
+            "points": 17,
             "aliases": [
               "qualifications",
               "degree",
@@ -24588,15 +24064,8 @@
             ]
           },
           {
-            "text": "Hobbies",
-            "points": 10,
-            "aliases": [
-              "interests"
-            ]
-          },
-          {
             "text": "Job title",
-            "points": 8,
+            "points": 12,
             "aliases": [
               "job titles",
               "position",
@@ -24604,28 +24073,40 @@
             ]
           },
           {
-            "text": "Skills",
-            "points": 8,
+            "text": "Hobbies",
+            "points": 9,
             "aliases": [
-              "computer skills",
-              "excel"
+              "interests"
             ]
           },
           {
-            "text": "Why they left a job",
-            "points": 4,
+            "text": "Dates and gaps",
+            "points": 7,
             "aliases": [
-              "reason for leaving",
+              "dates",
               "gaps",
-              "dates"
+              "employment dates",
+              "gaps in employment",
+              "how long they worked somewhere",
+              "reason for leaving",
+              "why they left a job"
             ]
           },
           {
             "text": "Salary",
-            "points": 4,
+            "points": 5,
             "aliases": [
               "pay",
               "previous salary"
+            ]
+          },
+          {
+            "text": "Languages",
+            "points": 4,
+            "aliases": [
+              "language skills",
+              "speaking a language",
+              "fluent in"
             ]
           }
         ]
@@ -24636,15 +24117,24 @@
         "answers": [
           {
             "text": "Age",
-            "points": 28,
+            "points": 24,
             "aliases": [
               "their age",
               "how old they are"
             ]
           },
           {
+            "text": "Exes",
+            "points": 18,
+            "aliases": [
+              "their ex",
+              "past relationships",
+              "how many exes"
+            ]
+          },
+          {
             "text": "Job",
-            "points": 22,
+            "points": 15,
             "aliases": [
               "their job",
               "work",
@@ -24653,36 +24143,35 @@
             ]
           },
           {
+            "text": "Money",
+            "points": 14,
+            "aliases": [
+              "salary",
+              "how much they earn",
+              "income"
+            ]
+          },
+          {
             "text": "Height",
-            "points": 16,
+            "points": 11,
             "aliases": [
               "their height",
               "how tall they are"
             ]
           },
           {
-            "text": "Exes",
-            "points": 10,
-            "aliases": [
-              "their ex",
-              "past relationships",
-              "how many exes"
-            ]
-          },
-          {
             "text": "Hobbies",
-            "points": 8,
+            "points": 9,
             "aliases": [
               "interests"
             ]
           },
           {
-            "text": "Money",
-            "points": 8,
+            "text": "Being single",
+            "points": 5,
             "aliases": [
-              "salary",
-              "how much they earn",
-              "income"
+              "relationship status",
+              "married"
             ]
           },
           {
@@ -24691,40 +24180,39 @@
             "aliases": [
               "their weight"
             ]
-          },
-          {
-            "text": "Being single",
-            "points": 4,
-            "aliases": [
-              "relationship status",
-              "married"
-            ]
           }
         ]
       },
       {
         "id": "fm-22",
-        "question": "On a scale of one to ten, how honest are you?",
+        "question": "On a scale of one to ten, how honest do people say they are?",
         "answers": [
           {
             "text": "8",
-            "points": 34,
+            "points": 30,
             "aliases": [
               "eight"
             ]
           },
           {
             "text": "7",
-            "points": 24,
+            "points": 20,
             "aliases": [
               "seven"
             ]
           },
           {
             "text": "9",
-            "points": 18,
+            "points": 16,
             "aliases": [
               "nine"
+            ]
+          },
+          {
+            "text": "6",
+            "points": 12,
+            "aliases": [
+              "six"
             ]
           },
           {
@@ -24735,22 +24223,15 @@
             ]
           },
           {
-            "text": "6",
-            "points": 8,
-            "aliases": [
-              "six"
-            ]
-          },
-          {
             "text": "5",
-            "points": 4,
+            "points": 9,
             "aliases": [
               "five"
             ]
           },
           {
             "text": "4",
-            "points": 2,
+            "points": 3,
             "aliases": [
               "four"
             ]
@@ -24758,76 +24239,12 @@
         ]
       },
       {
-        "id": "fm-23",
-        "question": "Complete the phrase \"White ___.\"",
-        "answers": [
-          {
-            "text": "Lie",
-            "points": 28,
-            "aliases": [
-              "white lie",
-              "lies"
-            ]
-          },
-          {
-            "text": "Wine",
-            "points": 22,
-            "aliases": [
-              "white wine"
-            ]
-          },
-          {
-            "text": "Christmas",
-            "points": 16,
-            "aliases": [
-              "white christmas"
-            ]
-          },
-          {
-            "text": "House",
-            "points": 14,
-            "aliases": [
-              "the white house",
-              "white house"
-            ]
-          },
-          {
-            "text": "Chocolate",
-            "points": 8,
-            "aliases": [
-              "white chocolate"
-            ]
-          },
-          {
-            "text": "Noise",
-            "points": 5,
-            "aliases": [
-              "white noise"
-            ]
-          },
-          {
-            "text": "Bread",
-            "points": 4,
-            "aliases": [
-              "white bread"
-            ]
-          },
-          {
-            "text": "Flag",
-            "points": 3,
-            "aliases": [
-              "white flag"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-24",
-        "question": "How many times do you hit snooze?",
+        "question": "How many times do people hit snooze before getting up?",
         "answers": [
           {
             "text": "0",
-            "points": 38,
+            "points": 53,
             "aliases": [
               "none",
               "zero",
@@ -24837,7 +24254,7 @@
           },
           {
             "text": "1",
-            "points": 22,
+            "points": 21,
             "aliases": [
               "once",
               "one"
@@ -24845,7 +24262,7 @@
           },
           {
             "text": "2",
-            "points": 18,
+            "points": 13,
             "aliases": [
               "twice",
               "two"
@@ -24853,16 +24270,9 @@
           },
           {
             "text": "3",
-            "points": 12,
+            "points": 7,
             "aliases": [
               "three"
-            ]
-          },
-          {
-            "text": "5",
-            "points": 5,
-            "aliases": [
-              "five"
             ]
           },
           {
@@ -24873,8 +24283,15 @@
             ]
           },
           {
-            "text": "10",
+            "text": "5",
             "points": 2,
+            "aliases": [
+              "five"
+            ]
+          },
+          {
+            "text": "10",
+            "points": 1,
             "aliases": [
               "ten"
             ]
@@ -24882,59 +24299,8 @@
         ]
       },
       {
-        "id": "fm-25",
-        "question": "Complete the phrase \"Monday ___.\"",
-        "answers": [
-          {
-            "text": "Morning",
-            "points": 44,
-            "aliases": [
-              "monday morning",
-              "mornings"
-            ]
-          },
-          {
-            "text": "Blues",
-            "points": 24,
-            "aliases": [
-              "monday blues"
-            ]
-          },
-          {
-            "text": "Night",
-            "points": 14,
-            "aliases": [
-              "monday night",
-              "night football"
-            ]
-          },
-          {
-            "text": "Motivation",
-            "points": 8,
-            "aliases": [
-              "monday motivation"
-            ]
-          },
-          {
-            "text": "Madness",
-            "points": 5,
-            "aliases": [
-              "monday madness"
-            ]
-          },
-          {
-            "text": "Meeting",
-            "points": 5,
-            "aliases": [
-              "meetings",
-              "monday meeting"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-26",
-        "question": "Name what gets you through until lunch.",
+        "question": "Name something that gets people through the morning until lunch.",
         "answers": [
           {
             "text": "Coffee",
@@ -24947,7 +24313,7 @@
           },
           {
             "text": "Snacks",
-            "points": 18,
+            "points": 17,
             "aliases": [
               "a snack",
               "biscuits",
@@ -24957,8 +24323,16 @@
             ]
           },
           {
-            "text": "Music",
+            "text": "Tea",
             "points": 10,
+            "aliases": [
+              "a cup of tea",
+              "cuppa"
+            ]
+          },
+          {
+            "text": "Music",
+            "points": 8,
             "aliases": [
               "radio",
               "a playlist",
@@ -24968,20 +24342,12 @@
           },
           {
             "text": "Colleagues",
-            "points": 8,
+            "points": 6,
             "aliases": [
               "workmates",
               "friends",
               "chatting",
               "gossip"
-            ]
-          },
-          {
-            "text": "Tea",
-            "points": 8,
-            "aliases": [
-              "a cup of tea",
-              "cuppa"
             ]
           },
           {
@@ -24993,59 +24359,52 @@
             ]
           },
           {
+            "text": "Cigarettes",
+            "points": 5,
+            "aliases": [
+              "a cigarette",
+              "smoking",
+              "vape"
+            ]
+          },
+          {
             "text": "The thought of lunch",
             "points": 3,
             "aliases": [
               "thinking about lunch",
               "lunch"
             ]
-          },
-          {
-            "text": "Cigarettes",
-            "points": 2,
-            "aliases": [
-              "a cigarette",
-              "smoking",
-              "vape"
-            ]
           }
         ]
       },
       {
         "id": "fm-27",
-        "question": "What is your favourite day of the week?",
+        "question": "Which day of the week do people call their favourite?",
         "answers": [
           {
             "text": "Saturday",
-            "points": 54,
+            "points": 38,
             "aliases": [
               "sat"
             ]
           },
           {
             "text": "Friday",
-            "points": 24,
+            "points": 28,
             "aliases": [
               "fri"
             ]
           },
           {
             "text": "Sunday",
-            "points": 12,
+            "points": 15,
             "aliases": [
               "sun"
             ]
           },
           {
-            "text": "Monday",
-            "points": 4,
-            "aliases": [
-              "mon"
-            ]
-          },
-          {
             "text": "Thursday",
-            "points": 3,
+            "points": 6,
             "aliases": [
               "thurs",
               "thu"
@@ -25053,14 +24412,21 @@
           },
           {
             "text": "Wednesday",
-            "points": 2,
+            "points": 5,
             "aliases": [
               "wed"
             ]
           },
           {
+            "text": "Monday",
+            "points": 5,
+            "aliases": [
+              "mon"
+            ]
+          },
+          {
             "text": "Tuesday",
-            "points": 1,
+            "points": 3,
             "aliases": [
               "tue",
               "tues"
@@ -25213,7 +24579,7 @@
       },
       {
         "id": "fm-30",
-        "question": "How many goals should a top striker score in a season?",
+        "question": "How many goals do fans expect a top striker to score in a season?",
         "answers": [
           {
             "text": "20",
@@ -25268,82 +24634,12 @@
         ]
       },
       {
-        "id": "fm-31",
-        "question": "Complete the phrase \"Red ___.\"",
-        "answers": [
-          {
-            "text": "Card",
-            "points": 28,
-            "aliases": [
-              "red card"
-            ]
-          },
-          {
-            "text": "Wine",
-            "points": 22,
-            "aliases": [
-              "red wine"
-            ]
-          },
-          {
-            "text": "Bull",
-            "points": 16,
-            "aliases": [
-              "red bull"
-            ]
-          },
-          {
-            "text": "Devils",
-            "points": 8,
-            "aliases": [
-              "red devils"
-            ]
-          },
-          {
-            "text": "Carpet",
-            "points": 8,
-            "aliases": [
-              "red carpet"
-            ]
-          },
-          {
-            "text": "Light",
-            "points": 6,
-            "aliases": [
-              "red light",
-              "lights"
-            ]
-          },
-          {
-            "text": "Sea",
-            "points": 5,
-            "aliases": [
-              "red sea"
-            ]
-          },
-          {
-            "text": "Cross",
-            "points": 4,
-            "aliases": [
-              "red cross"
-            ]
-          },
-          {
-            "text": "Nose",
-            "points": 3,
-            "aliases": [
-              "red nose"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-32",
         "question": "Name something a player does to waste time.",
         "answers": [
           {
             "text": "Fake an injury",
-            "points": 36,
+            "points": 34,
             "aliases": [
               "faking injury",
               "pretend to be injured",
@@ -25354,23 +24650,23 @@
             ]
           },
           {
+            "text": "Take a slow goal kick",
+            "points": 16,
+            "aliases": [
+              "goal kick",
+              "goalkeeper holds the ball",
+              "keeper holding the ball",
+              "slow free kick"
+            ]
+          },
+          {
             "text": "Take a slow throw-in",
-            "points": 18,
+            "points": 14,
             "aliases": [
               "slow throw in",
               "throw-in",
               "throw in",
               "delay a throw"
-            ]
-          },
-          {
-            "text": "Tie their laces",
-            "points": 12,
-            "aliases": [
-              "tying laces",
-              "laces",
-              "shoelaces",
-              "boots"
             ]
           },
           {
@@ -25393,7 +24689,7 @@
           },
           {
             "text": "Take the ball to the corner",
-            "points": 6,
+            "points": 8,
             "aliases": [
               "corner flag",
               "hold it in the corner",
@@ -25401,20 +24697,20 @@
             ]
           },
           {
-            "text": "Take a slow goal kick",
+            "text": "Tie their laces",
             "points": 6,
             "aliases": [
-              "goal kick",
-              "goalkeeper holds the ball",
-              "keeper holding the ball",
-              "slow free kick"
+              "tying laces",
+              "laces",
+              "shoelaces",
+              "boots"
             ]
           }
         ]
       },
       {
         "id": "fm-33",
-        "question": "How many slices of pizza can you eat in one sitting?",
+        "question": "How many slices of pizza do people say they can eat in one sitting?",
         "answers": [
           {
             "text": "4",
@@ -25424,8 +24720,15 @@
             ]
           },
           {
-            "text": "8",
+            "text": "3",
             "points": 22,
+            "aliases": [
+              "three"
+            ]
+          },
+          {
+            "text": "8",
+            "points": 16,
             "aliases": [
               "eight",
               "a whole pizza",
@@ -25435,21 +24738,14 @@
           },
           {
             "text": "6",
-            "points": 18,
+            "points": 14,
             "aliases": [
               "six"
             ]
           },
           {
-            "text": "3",
-            "points": 14,
-            "aliases": [
-              "three"
-            ]
-          },
-          {
             "text": "5",
-            "points": 8,
+            "points": 10,
             "aliases": [
               "five"
             ]
@@ -25478,78 +24774,12 @@
         ]
       },
       {
-        "id": "fm-34",
-        "question": "Complete the phrase \"Extra ___.\"",
-        "answers": [
-          {
-            "text": "Cheese",
-            "points": 32,
-            "aliases": [
-              "extra cheese"
-            ]
-          },
-          {
-            "text": "Time",
-            "points": 24,
-            "aliases": [
-              "extra time"
-            ]
-          },
-          {
-            "text": "Large",
-            "points": 14,
-            "aliases": [
-              "extra large",
-              "xl"
-            ]
-          },
-          {
-            "text": "Virgin",
-            "points": 10,
-            "aliases": [
-              "extra virgin",
-              "virgin olive oil"
-            ]
-          },
-          {
-            "text": "Hot",
-            "points": 6,
-            "aliases": [
-              "extra hot",
-              "spicy"
-            ]
-          },
-          {
-            "text": "Terrestrial",
-            "points": 5,
-            "aliases": [
-              "extraterrestrial",
-              "extra terrestrial"
-            ]
-          },
-          {
-            "text": "Credit",
-            "points": 5,
-            "aliases": [
-              "extra credit"
-            ]
-          },
-          {
-            "text": "Ordinary",
-            "points": 4,
-            "aliases": [
-              "extraordinary"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-35",
         "question": "Name something people argue about when ordering a takeaway.",
         "answers": [
           {
             "text": "What to order",
-            "points": 34,
+            "points": 30,
             "aliases": [
               "what to get",
               "what food",
@@ -25559,23 +24789,24 @@
             ]
           },
           {
+            "text": "Where to order from",
+            "points": 26,
+            "aliases": [
+              "where from",
+              "which restaurant",
+              "which place",
+              "which takeaway"
+            ]
+          },
+          {
             "text": "Who pays",
-            "points": 22,
+            "points": 14,
             "aliases": [
               "who's paying",
               "the bill",
               "splitting the bill",
               "paying",
               "money"
-            ]
-          },
-          {
-            "text": "Pineapple on pizza",
-            "points": 12,
-            "aliases": [
-              "pineapple",
-              "toppings",
-              "pizza toppings"
             ]
           },
           {
@@ -25589,18 +24820,8 @@
             ]
           },
           {
-            "text": "Where to order from",
-            "points": 12,
-            "aliases": [
-              "where from",
-              "which restaurant",
-              "which place",
-              "which takeaway"
-            ]
-          },
-          {
             "text": "Delivery or collection",
-            "points": 5,
+            "points": 8,
             "aliases": [
               "who collects it",
               "who picks it up",
@@ -25608,8 +24829,17 @@
             ]
           },
           {
+            "text": "Pineapple on pizza",
+            "points": 6,
+            "aliases": [
+              "pineapple",
+              "toppings",
+              "pizza toppings"
+            ]
+          },
+          {
             "text": "Sharing",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "sharing food",
               "who shares",
@@ -25624,7 +24854,7 @@
         "answers": [
           {
             "text": "Pasta",
-            "points": 36,
+            "points": 48,
             "aliases": [
               "spaghetti",
               "penne",
@@ -25635,28 +24865,28 @@
           },
           {
             "text": "Lasagne",
-            "points": 20,
+            "points": 18,
             "aliases": [
               "lasagna"
             ]
           },
           {
             "text": "Risotto",
-            "points": 12,
+            "points": 10,
             "aliases": []
           },
           {
-            "text": "Gelato",
-            "points": 10,
+            "text": "Tiramisu",
+            "points": 7,
             "aliases": [
-              "ice cream"
+              "tiramisù"
             ]
           },
           {
-            "text": "Tiramisu",
-            "points": 8,
+            "text": "Gelato",
+            "points": 6,
             "aliases": [
-              "tiramisù"
+              "ice cream"
             ]
           },
           {
@@ -25668,15 +24898,6 @@
             ]
           },
           {
-            "text": "Parmesan",
-            "points": 4,
-            "aliases": [
-              "parmigiano",
-              "mozzarella",
-              "cheese"
-            ]
-          },
-          {
             "text": "Bruschetta",
             "points": 3,
             "aliases": [
@@ -25685,8 +24906,17 @@
             ]
           },
           {
-            "text": "Prosciutto",
+            "text": "Parmesan",
             "points": 2,
+            "aliases": [
+              "parmigiano",
+              "mozzarella",
+              "cheese"
+            ]
+          },
+          {
+            "text": "Prosciutto",
+            "points": 1,
             "aliases": [
               "parma ham",
               "salami"
@@ -25696,11 +24926,11 @@
       },
       {
         "id": "fm-37",
-        "question": "Name something you take to the beach.",
+        "question": "Name something people take to the beach.",
         "answers": [
           {
             "text": "Towel",
-            "points": 32,
+            "points": 34,
             "aliases": [
               "beach towel",
               "towels"
@@ -25708,7 +24938,7 @@
           },
           {
             "text": "Sun cream",
-            "points": 24,
+            "points": 26,
             "aliases": [
               "sunscreen",
               "suncream",
@@ -25717,36 +24947,8 @@
             ]
           },
           {
-            "text": "Umbrella",
-            "points": 10,
-            "aliases": [
-              "parasol",
-              "beach umbrella",
-              "sunshade"
-            ]
-          },
-          {
-            "text": "A book",
-            "points": 8,
-            "aliases": [
-              "book",
-              "magazine",
-              "kindle"
-            ]
-          },
-          {
-            "text": "A ball",
-            "points": 7,
-            "aliases": [
-              "ball",
-              "football",
-              "beach ball",
-              "volleyball"
-            ]
-          },
-          {
             "text": "Swimwear",
-            "points": 7,
+            "points": 9,
             "aliases": [
               "swimsuit",
               "swimming costume",
@@ -25755,11 +24957,39 @@
             ]
           },
           {
+            "text": "Umbrella",
+            "points": 8,
+            "aliases": [
+              "parasol",
+              "beach umbrella",
+              "sunshade"
+            ]
+          },
+          {
             "text": "Sunglasses",
             "points": 6,
             "aliases": [
               "shades",
               "sun glasses"
+            ]
+          },
+          {
+            "text": "A book",
+            "points": 5,
+            "aliases": [
+              "book",
+              "magazine",
+              "kindle"
+            ]
+          },
+          {
+            "text": "A ball",
+            "points": 4,
+            "aliases": [
+              "ball",
+              "football",
+              "beach ball",
+              "volleyball"
             ]
           },
           {
@@ -25772,7 +25002,7 @@
           },
           {
             "text": "Water",
-            "points": 2,
+            "points": 4,
             "aliases": [
               "drinks",
               "a drink",
@@ -25783,11 +25013,11 @@
       },
       {
         "id": "fm-38",
-        "question": "How many days is the perfect holiday?",
+        "question": "How many days do people say the perfect holiday lasts?",
         "answers": [
           {
             "text": "7",
-            "points": 32,
+            "points": 30,
             "aliases": [
               "seven",
               "a week",
@@ -25805,14 +25035,14 @@
           },
           {
             "text": "10",
-            "points": 20,
+            "points": 24,
             "aliases": [
               "ten"
             ]
           },
           {
             "text": "5",
-            "points": 8,
+            "points": 6,
             "aliases": [
               "five"
             ]
@@ -25844,100 +25074,18 @@
         ]
       },
       {
-        "id": "fm-39",
-        "question": "Complete the phrase \"Sun ___.\"",
-        "answers": [
-          {
-            "text": "Cream",
-            "points": 22,
-            "aliases": [
-              "sun cream",
-              "suncream",
-              "screen",
-              "sunscreen"
-            ]
-          },
-          {
-            "text": "Glasses",
-            "points": 20,
-            "aliases": [
-              "sunglasses"
-            ]
-          },
-          {
-            "text": "Set",
-            "points": 16,
-            "aliases": [
-              "sunset"
-            ]
-          },
-          {
-            "text": "Bed",
-            "points": 12,
-            "aliases": [
-              "sunbed",
-              "lounger"
-            ]
-          },
-          {
-            "text": "Burn",
-            "points": 10,
-            "aliases": [
-              "sunburn"
-            ]
-          },
-          {
-            "text": "Shine",
-            "points": 8,
-            "aliases": [
-              "sunshine"
-            ]
-          },
-          {
-            "text": "Rise",
-            "points": 6,
-            "aliases": [
-              "sunrise"
-            ]
-          },
-          {
-            "text": "Flower",
-            "points": 4,
-            "aliases": [
-              "sunflower"
-            ]
-          },
-          {
-            "text": "Day",
-            "points": 2,
-            "aliases": [
-              "sunday"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-40",
         "question": "Name something tourists always do.",
         "answers": [
           {
             "text": "Take photos",
-            "points": 40,
+            "points": 44,
             "aliases": [
               "take pictures",
               "selfies",
               "photos",
               "photographs",
               "take selfies"
-            ]
-          },
-          {
-            "text": "Get lost",
-            "points": 16,
-            "aliases": [
-              "ask for directions",
-              "look at maps",
-              "lost"
             ]
           },
           {
@@ -25951,21 +25099,21 @@
             ]
           },
           {
+            "text": "Get lost",
+            "points": 12,
+            "aliases": [
+              "ask for directions",
+              "look at maps",
+              "lost"
+            ]
+          },
+          {
             "text": "Get sunburnt",
             "points": 10,
             "aliases": [
               "sunburn",
               "get burnt",
               "burn"
-            ]
-          },
-          {
-            "text": "Complain about prices",
-            "points": 8,
-            "aliases": [
-              "complain",
-              "moan about prices",
-              "complaining"
             ]
           },
           {
@@ -25978,8 +25126,17 @@
             ]
           },
           {
+            "text": "Complain about prices",
+            "points": 5,
+            "aliases": [
+              "complain",
+              "moan about prices",
+              "complaining"
+            ]
+          },
+          {
             "text": "Queue for attractions",
-            "points": 4,
+            "points": 5,
             "aliases": [
               "queue",
               "visit museums",
@@ -25988,7 +25145,7 @@
           },
           {
             "text": "Eat at tourist traps",
-            "points": 2,
+            "points": 4,
             "aliases": [
               "eat local food",
               "try the food"
@@ -26002,12 +25159,12 @@
         "answers": [
           {
             "text": "Spain",
-            "points": 38,
+            "points": 40,
             "aliases": []
           },
           {
             "text": "Greece",
-            "points": 18,
+            "points": 16,
             "aliases": []
           },
           {
@@ -26017,19 +25174,19 @@
           },
           {
             "text": "Portugal",
-            "points": 10,
+            "points": 9,
             "aliases": []
           },
           {
             "text": "Turkey",
-            "points": 8,
+            "points": 9,
             "aliases": [
               "türkiye"
             ]
           },
           {
             "text": "Malta",
-            "points": 5,
+            "points": 4,
             "aliases": []
           },
           {
@@ -26044,7 +25201,7 @@
           },
           {
             "text": "Thailand",
-            "points": 2,
+            "points": 3,
             "aliases": []
           }
         ]
@@ -26055,7 +25212,7 @@
         "answers": [
           {
             "text": "Heights",
-            "points": 28,
+            "points": 22,
             "aliases": [
               "height",
               "falling",
@@ -26063,15 +25220,22 @@
             ]
           },
           {
+            "text": "Spiders",
+            "points": 20,
+            "aliases": [
+              "spider"
+            ]
+          },
+          {
             "text": "Snakes",
-            "points": 18,
+            "points": 15,
             "aliases": [
               "snake"
             ]
           },
           {
             "text": "Public speaking",
-            "points": 14,
+            "points": 11,
             "aliases": [
               "speaking in public",
               "speeches",
@@ -26079,15 +25243,8 @@
             ]
           },
           {
-            "text": "Spiders",
-            "points": 13,
-            "aliases": [
-              "spider"
-            ]
-          },
-          {
             "text": "The dark",
-            "points": 9,
+            "points": 8,
             "aliases": [
               "dark",
               "darkness"
@@ -26095,18 +25252,39 @@
           },
           {
             "text": "Death",
-            "points": 6,
+            "points": 7,
             "aliases": [
               "dying"
             ]
           },
           {
-            "text": "Flying",
+            "text": "Enclosed spaces",
             "points": 5,
+            "aliases": [
+              "claustrophobia",
+              "small spaces",
+              "confined spaces",
+              "tight spaces",
+              "lifts",
+              "elevators",
+              "being trapped"
+            ]
+          },
+          {
+            "text": "Flying",
+            "points": 4,
             "aliases": [
               "planes",
               "aeroplanes",
               "airplanes"
+            ]
+          },
+          {
+            "text": "Needles",
+            "points": 4,
+            "aliases": [
+              "injections",
+              "needle"
             ]
           },
           {
@@ -26115,139 +25293,46 @@
             "aliases": [
               "clown"
             ]
-          },
-          {
-            "text": "Needles",
-            "points": 3,
-            "aliases": [
-              "injections",
-              "needle"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "fm-43",
-        "question": "Name something associated with vampires.",
-        "answers": [
-          {
-            "text": "Garlic",
-            "points": 27,
-            "aliases": []
-          },
-          {
-            "text": "Blood",
-            "points": 23,
-            "aliases": [
-              "drinking blood",
-              "blood sucking"
-            ]
-          },
-          {
-            "text": "Fangs",
-            "points": 12,
-            "aliases": [
-              "teeth",
-              "sharp teeth",
-              "fang"
-            ]
-          },
-          {
-            "text": "Twilight",
-            "points": 10,
-            "aliases": [
-              "edward cullen"
-            ]
-          },
-          {
-            "text": "Dracula",
-            "points": 9,
-            "aliases": [
-              "count dracula"
-            ]
-          },
-          {
-            "text": "Bats",
-            "points": 8,
-            "aliases": [
-              "bat"
-            ]
-          },
-          {
-            "text": "Coffins",
-            "points": 5,
-            "aliases": [
-              "coffin"
-            ]
-          },
-          {
-            "text": "Stakes",
-            "points": 3,
-            "aliases": [
-              "stake",
-              "wooden stake"
-            ]
-          },
-          {
-            "text": "Transylvania",
-            "points": 2,
-            "aliases": [
-              "romania"
-            ]
-          },
-          {
-            "text": "Capes",
-            "points": 1,
-            "aliases": [
-              "cape"
-            ]
           }
         ]
       },
       {
         "id": "fm-44",
-        "question": "On a scale of one to ten, how scared are you of spiders?",
+        "question": "On a scale of one to ten, how scared of spiders do people say they are?",
         "answers": [
           {
             "text": "1",
-            "points": 22,
+            "points": 30,
             "aliases": [
               "one"
             ]
           },
           {
+            "text": "2",
+            "points": 12,
+            "aliases": [
+              "two"
+            ]
+          },
+          {
             "text": "5",
-            "points": 16,
+            "points": 10,
             "aliases": [
               "five"
             ]
           },
           {
             "text": "10",
-            "points": 14,
+            "points": 10,
             "aliases": [
               "ten"
             ]
           },
           {
             "text": "3",
-            "points": 10,
-            "aliases": [
-              "three"
-            ]
-          },
-          {
-            "text": "2",
             "points": 9,
             "aliases": [
-              "two"
-            ]
-          },
-          {
-            "text": "7",
-            "points": 8,
-            "aliases": [
-              "seven"
+              "three"
             ]
           },
           {
@@ -26255,6 +25340,13 @@
             "points": 8,
             "aliases": [
               "eight"
+            ]
+          },
+          {
+            "text": "7",
+            "points": 7,
+            "aliases": [
+              "seven"
             ]
           },
           {
@@ -26273,55 +25365,9 @@
           },
           {
             "text": "9",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "nine"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "fm-45",
-        "question": "Complete the phrase \"Haunted ___.\"",
-        "answers": [
-          {
-            "text": "House",
-            "points": 52,
-            "aliases": [
-              "haunted house"
-            ]
-          },
-          {
-            "text": "Mansion",
-            "points": 20,
-            "aliases": [
-              "haunted mansion"
-            ]
-          },
-          {
-            "text": "Castle",
-            "points": 14,
-            "aliases": [
-              "haunted castle"
-            ]
-          },
-          {
-            "text": "Hotel",
-            "points": 6,
-            "aliases": []
-          },
-          {
-            "text": "Forest",
-            "points": 4,
-            "aliases": [
-              "woods"
-            ]
-          },
-          {
-            "text": "Doll",
-            "points": 4,
-            "aliases": [
-              "dolls"
             ]
           }
         ]
@@ -26332,7 +25378,7 @@
         "answers": [
           {
             "text": "Cats",
-            "points": 22,
+            "points": 16,
             "aliases": [
               "cat",
               "a cat",
@@ -26340,44 +25386,8 @@
             ]
           },
           {
-            "text": "The wind",
-            "points": 18,
-            "aliases": [
-              "wind",
-              "storm",
-              "rain"
-            ]
-          },
-          {
-            "text": "Pipes",
-            "points": 12,
-            "aliases": [
-              "the heating",
-              "radiators",
-              "boiler",
-              "plumbing"
-            ]
-          },
-          {
-            "text": "Neighbours",
-            "points": 12,
-            "aliases": [
-              "neighbors",
-              "the neighbours",
-              "people upstairs"
-            ]
-          },
-          {
-            "text": "The fridge",
-            "points": 10,
-            "aliases": [
-              "fridge",
-              "freezer"
-            ]
-          },
-          {
             "text": "Dogs",
-            "points": 8,
+            "points": 14,
             "aliases": [
               "dog",
               "a dog barking",
@@ -26385,8 +25395,34 @@
             ]
           },
           {
+            "text": "The wind",
+            "points": 14,
+            "aliases": [
+              "wind",
+              "storm",
+              "rain"
+            ]
+          },
+          {
+            "text": "Snoring",
+            "points": 12,
+            "aliases": [
+              "someone snoring",
+              "my partner"
+            ]
+          },
+          {
+            "text": "Neighbours",
+            "points": 10,
+            "aliases": [
+              "neighbors",
+              "the neighbours",
+              "people upstairs"
+            ]
+          },
+          {
             "text": "Owls",
-            "points": 6,
+            "points": 9,
             "aliases": [
               "owl",
               "birds",
@@ -26395,16 +25431,8 @@
             ]
           },
           {
-            "text": "Snoring",
-            "points": 6,
-            "aliases": [
-              "someone snoring",
-              "my partner"
-            ]
-          },
-          {
             "text": "Cars",
-            "points": 4,
+            "points": 8,
             "aliases": [
               "traffic",
               "car alarm",
@@ -26412,12 +25440,30 @@
             ]
           },
           {
+            "text": "Pipes",
+            "points": 7,
+            "aliases": [
+              "the heating",
+              "radiators",
+              "boiler",
+              "plumbing"
+            ]
+          },
+          {
             "text": "Floorboards",
-            "points": 2,
+            "points": 6,
             "aliases": [
               "creaking floor",
               "the stairs",
               "the house creaking"
+            ]
+          },
+          {
+            "text": "The fridge",
+            "points": 4,
+            "aliases": [
+              "fridge",
+              "freezer"
             ]
           }
         ]
@@ -26427,17 +25473,17 @@
         "question": "At what age is someone considered old, to the nearest ten?",
         "answers": [
           {
-            "text": "60",
-            "points": 34,
+            "text": "70",
+            "points": 42,
             "aliases": [
-              "sixty"
+              "seventy"
             ]
           },
           {
-            "text": "70",
+            "text": "60",
             "points": 28,
             "aliases": [
-              "seventy"
+              "sixty"
             ]
           },
           {
@@ -26449,21 +25495,21 @@
           },
           {
             "text": "50",
-            "points": 12,
+            "points": 7,
             "aliases": [
               "fifty"
             ]
           },
           {
             "text": "90",
-            "points": 5,
+            "points": 3,
             "aliases": [
               "ninety"
             ]
           },
           {
             "text": "40",
-            "points": 3,
+            "points": 2,
             "aliases": [
               "forty"
             ]
@@ -26484,7 +25530,7 @@
         "answers": [
           {
             "text": "Napping",
-            "points": 22,
+            "points": 20,
             "aliases": [
               "naps",
               "sleeping in the day",
@@ -26501,40 +25547,8 @@
             ]
           },
           {
-            "text": "Gardening",
-            "points": 14,
-            "aliases": [
-              "garden"
-            ]
-          },
-          {
-            "text": "Going to bed early",
-            "points": 12,
-            "aliases": [
-              "early nights",
-              "bed early"
-            ]
-          },
-          {
-            "text": "Repeating stories",
-            "points": 10,
-            "aliases": [
-              "telling the same stories",
-              "repeating themselves",
-              "forgetting things"
-            ]
-          },
-          {
-            "text": "Wearing glasses",
-            "points": 8,
-            "aliases": [
-              "glasses",
-              "reading glasses"
-            ]
-          },
-          {
             "text": "Groaning when they sit down",
-            "points": 6,
+            "points": 14,
             "aliases": [
               "making noises",
               "grunting",
@@ -26542,8 +25556,40 @@
             ]
           },
           {
+            "text": "Repeating stories",
+            "points": 12,
+            "aliases": [
+              "telling the same stories",
+              "repeating themselves",
+              "forgetting things"
+            ]
+          },
+          {
+            "text": "Gardening",
+            "points": 10,
+            "aliases": [
+              "garden"
+            ]
+          },
+          {
+            "text": "Going to bed early",
+            "points": 9,
+            "aliases": [
+              "early nights",
+              "bed early"
+            ]
+          },
+          {
+            "text": "Wearing glasses",
+            "points": 7,
+            "aliases": [
+              "glasses",
+              "reading glasses"
+            ]
+          },
+          {
             "text": "Watching the news",
-            "points": 5,
+            "points": 4,
             "aliases": [
               "reading the paper",
               "watching tv"
@@ -26551,7 +25597,7 @@
           },
           {
             "text": "Playing bingo",
-            "points": 3,
+            "points": 4,
             "aliases": [
               "bingo",
               "bowls",
@@ -26569,95 +25615,21 @@
         ]
       },
       {
-        "id": "fm-49",
-        "question": "Complete the phrase \"Old ___.\"",
-        "answers": [
-          {
-            "text": "Man",
-            "points": 24,
-            "aliases": [
-              "old man",
-              "men"
-            ]
-          },
-          {
-            "text": "Age",
-            "points": 20,
-            "aliases": [
-              "old age"
-            ]
-          },
-          {
-            "text": "School",
-            "points": 18,
-            "aliases": [
-              "old school"
-            ]
-          },
-          {
-            "text": "Trafford",
-            "points": 10,
-            "aliases": [
-              "old trafford"
-            ]
-          },
-          {
-            "text": "Friend",
-            "points": 8,
-            "aliases": [
-              "old friend",
-              "friends"
-            ]
-          },
-          {
-            "text": "Town",
-            "points": 6,
-            "aliases": [
-              "old town"
-            ]
-          },
-          {
-            "text": "Lady",
-            "points": 6,
-            "aliases": [
-              "old lady",
-              "woman"
-            ]
-          },
-          {
-            "text": "Testament",
-            "points": 4,
-            "aliases": [
-              "old testament"
-            ]
-          },
-          {
-            "text": "Fashioned",
-            "points": 4,
-            "aliases": [
-              "old fashioned",
-              "old-fashioned"
-            ]
-          }
-        ]
-      },
-      {
         "id": "fm-50",
         "question": "Name something grandparents struggle with on a phone.",
         "answers": [
           {
-            "text": "Video calls",
-            "points": 24,
+            "text": "Apps",
+            "points": 20,
             "aliases": [
-              "facetime",
-              "video calling",
-              "whatsapp video",
-              "zoom"
+              "installing apps",
+              "downloading apps",
+              "using apps"
             ]
           },
           {
             "text": "Texting",
-            "points": 20,
+            "points": 18,
             "aliases": [
               "typing",
               "sending messages",
@@ -26666,26 +25638,36 @@
             ]
           },
           {
-            "text": "Apps",
+            "text": "The internet",
             "points": 16,
             "aliases": [
-              "installing apps",
-              "downloading apps",
-              "using apps"
+              "wifi",
+              "google",
+              "searching"
             ]
           },
           {
-            "text": "The volume",
-            "points": 10,
+            "text": "Video calls",
+            "points": 14,
             "aliases": [
-              "volume",
-              "turning it up",
-              "ringtone"
+              "facetime",
+              "video calling",
+              "whatsapp video",
+              "zoom"
+            ]
+          },
+          {
+            "text": "Passwords",
+            "points": 12,
+            "aliases": [
+              "password",
+              "unlocking it",
+              "pin"
             ]
           },
           {
             "text": "The camera",
-            "points": 10,
+            "points": 7,
             "aliases": [
               "taking photos",
               "selfies",
@@ -26694,35 +25676,26 @@
             ]
           },
           {
-            "text": "Passwords",
-            "points": 8,
+            "text": "The volume",
+            "points": 5,
             "aliases": [
-              "password",
-              "unlocking it",
-              "pin"
-            ]
-          },
-          {
-            "text": "The internet",
-            "points": 6,
-            "aliases": [
-              "wifi",
-              "google",
-              "searching"
-            ]
-          },
-          {
-            "text": "Emojis",
-            "points": 4,
-            "aliases": [
-              "emoji"
+              "volume",
+              "turning it up",
+              "ringtone"
             ]
           },
           {
             "text": "Updates",
-            "points": 2,
+            "points": 5,
             "aliases": [
               "settings"
+            ]
+          },
+          {
+            "text": "Emojis",
+            "points": 3,
+            "aliases": [
+              "emoji"
             ]
           }
         ]
@@ -26733,7 +25706,7 @@
         "answers": [
           {
             "text": "Wine",
-            "points": 44,
+            "points": 46,
             "aliases": [
               "red wine"
             ]
@@ -26753,7 +25726,7 @@
           },
           {
             "text": "People",
-            "points": 8,
+            "points": 7,
             "aliases": [
               "men",
               "women",
@@ -26761,8 +25734,16 @@
             ]
           },
           {
-            "text": "Friendships",
+            "text": "Wisdom",
             "points": 5,
+            "aliases": [
+              "experience",
+              "confidence"
+            ]
+          },
+          {
+            "text": "Friendships",
+            "points": 4,
             "aliases": [
               "friendship",
               "relationships",
@@ -26771,16 +25752,8 @@
             ]
           },
           {
-            "text": "Wisdom",
-            "points": 4,
-            "aliases": [
-              "experience",
-              "confidence"
-            ]
-          },
-          {
             "text": "Leather",
-            "points": 3,
+            "points": 2,
             "aliases": [
               "jeans",
               "boots"
@@ -26802,37 +25775,34 @@
         "answers": [
           {
             "text": "1 million",
-            "points": 23,
+            "points": 36,
             "aliases": [
               "a million",
               "one million",
               "1000000",
-              "1",
-              "000",
-              "000",
-              "million"
+              "million",
+              "1m"
             ]
           },
           {
             "text": "10 million",
-            "points": 16,
+            "points": 10,
             "aliases": [
               "ten million"
             ]
           },
           {
-            "text": "100,000",
-            "points": 13,
+            "text": "500,000",
+            "points": 10,
             "aliases": [
-              "100k",
-              "a hundred thousand",
-              "100000",
-              "one hundred thousand"
+              "500k",
+              "half a million",
+              "five hundred thousand"
             ]
           },
           {
             "text": "5 million",
-            "points": 10,
+            "points": 9,
             "aliases": [
               "five million"
             ]
@@ -26845,36 +25815,37 @@
             ]
           },
           {
-            "text": "500,000",
-            "points": 8,
+            "text": "100,000",
+            "points": 9,
             "aliases": [
-              "500k",
-              "half a million",
-              "five hundred thousand"
+              "100k",
+              "a hundred thousand",
+              "100000",
+              "one hundred thousand"
             ]
           },
           {
-            "text": "1 billion",
-            "points": 7,
+            "text": "250,000",
+            "points": 5,
             "aliases": [
-              "a billion",
-              "one billion",
-              "billion"
+              "250k",
+              "quarter of a million"
             ]
           },
           {
             "text": "100 million",
-            "points": 6,
+            "points": 4,
             "aliases": [
               "a hundred million"
             ]
           },
           {
-            "text": "250,000",
+            "text": "1 billion",
             "points": 4,
             "aliases": [
-              "250k",
-              "quarter of a million"
+              "a billion",
+              "one billion",
+              "billion"
             ]
           },
           {
@@ -26893,7 +25864,7 @@
         "answers": [
           {
             "text": "Takeaways",
-            "points": 22,
+            "points": 24,
             "aliases": [
               "takeaway",
               "fast food",
@@ -26903,7 +25874,7 @@
           },
           {
             "text": "Clothes",
-            "points": 18,
+            "points": 16,
             "aliases": [
               "shoes",
               "fashion",
@@ -26912,7 +25883,7 @@
           },
           {
             "text": "Subscriptions",
-            "points": 14,
+            "points": 12,
             "aliases": [
               "streaming",
               "netflix",
@@ -26922,24 +25893,15 @@
           },
           {
             "text": "Coffee",
-            "points": 12,
+            "points": 10,
             "aliases": [
               "takeaway coffee",
               "starbucks"
             ]
           },
           {
-            "text": "Cigarettes",
-            "points": 10,
-            "aliases": [
-              "smoking",
-              "vapes",
-              "vaping"
-            ]
-          },
-          {
             "text": "Alcohol",
-            "points": 8,
+            "points": 10,
             "aliases": [
               "drinks",
               "drinking",
@@ -26948,8 +25910,26 @@
             ]
           },
           {
-            "text": "Gambling",
+            "text": "Cigarettes",
+            "points": 9,
+            "aliases": [
+              "smoking",
+              "vapes",
+              "vaping"
+            ]
+          },
+          {
+            "text": "Gadgets",
             "points": 6,
+            "aliases": [
+              "phones",
+              "new phone",
+              "technology"
+            ]
+          },
+          {
+            "text": "Gambling",
+            "points": 5,
             "aliases": [
               "betting",
               "lottery",
@@ -26958,12 +25938,10 @@
             ]
           },
           {
-            "text": "Gadgets",
+            "text": "Bottled water",
             "points": 5,
             "aliases": [
-              "phones",
-              "new phone",
-              "technology"
+              "water"
             ]
           },
           {
@@ -26974,97 +25952,16 @@
               "in-app purchases",
               "skins"
             ]
-          },
-          {
-            "text": "Bottled water",
-            "points": 2,
-            "aliases": [
-              "water"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "fm-54",
-        "question": "Complete the phrase \"Cash ___.\"",
-        "answers": [
-          {
-            "text": "Machine",
-            "points": 28,
-            "aliases": [
-              "cash machine",
-              "cashpoint",
-              "point"
-            ]
-          },
-          {
-            "text": "Back",
-            "points": 20,
-            "aliases": [
-              "cashback",
-              "cash back"
-            ]
-          },
-          {
-            "text": "Flow",
-            "points": 16,
-            "aliases": [
-              "cash flow",
-              "cashflow"
-            ]
-          },
-          {
-            "text": "Cow",
-            "points": 10,
-            "aliases": [
-              "cash cow"
-            ]
-          },
-          {
-            "text": "Only",
-            "points": 8,
-            "aliases": [
-              "cash only"
-            ]
-          },
-          {
-            "text": "Register",
-            "points": 6,
-            "aliases": [
-              "cash register",
-              "till"
-            ]
-          },
-          {
-            "text": "Out",
-            "points": 5,
-            "aliases": [
-              "cash out"
-            ]
-          },
-          {
-            "text": "In hand",
-            "points": 4,
-            "aliases": [
-              "cash in hand"
-            ]
-          },
-          {
-            "text": "Prize",
-            "points": 3,
-            "aliases": [
-              "cash prize"
-            ]
           }
         ]
       },
       {
         "id": "fm-55",
-        "question": "How many euros is a fair price for a cinema ticket?",
+        "question": "How many euros do people call a fair price for a cinema ticket?",
         "answers": [
           {
             "text": "€10",
-            "points": 32,
+            "points": 28,
             "aliases": [
               "10",
               "ten",
@@ -27083,18 +25980,8 @@
             ]
           },
           {
-            "text": "€12",
-            "points": 14,
-            "aliases": [
-              "12",
-              "twelve",
-              "12 euros",
-              "twelve euros"
-            ]
-          },
-          {
             "text": "€5",
-            "points": 12,
+            "points": 16,
             "aliases": [
               "5",
               "five",
@@ -27104,7 +25991,7 @@
           },
           {
             "text": "€7",
-            "points": 8,
+            "points": 12,
             "aliases": [
               "7",
               "seven",
@@ -27113,23 +26000,33 @@
             ]
           },
           {
-            "text": "€15",
-            "points": 5,
-            "aliases": [
-              "15",
-              "fifteen",
-              "15 euros",
-              "fifteen euros"
-            ]
-          },
-          {
             "text": "€6",
-            "points": 5,
+            "points": 8,
             "aliases": [
               "6",
               "six",
               "6 euros",
               "six euros"
+            ]
+          },
+          {
+            "text": "€12",
+            "points": 8,
+            "aliases": [
+              "12",
+              "twelve",
+              "12 euros",
+              "twelve euros"
+            ]
+          },
+          {
+            "text": "€15",
+            "points": 4,
+            "aliases": [
+              "15",
+              "fifteen",
+              "15 euros",
+              "fifteen euros"
             ]
           }
         ]
@@ -27140,7 +26037,7 @@
         "answers": [
           {
             "text": "Air",
-            "points": 28,
+            "points": 30,
             "aliases": [
               "oxygen",
               "fresh air",
@@ -27153,15 +26050,17 @@
             "aliases": []
           },
           {
-            "text": "Advice",
-            "points": 12,
+            "text": "A smile",
+            "points": 10,
             "aliases": [
-              "opinions"
+              "smiles",
+              "smiling",
+              "laughter"
             ]
           },
           {
             "text": "Sunshine",
-            "points": 10,
+            "points": 9,
             "aliases": [
               "the sun",
               "sunlight",
@@ -27169,12 +26068,18 @@
             ]
           },
           {
-            "text": "A smile",
+            "text": "Advice",
             "points": 8,
             "aliases": [
-              "smiles",
-              "smiling",
-              "laughter"
+              "opinions"
+            ]
+          },
+          {
+            "text": "Hugs",
+            "points": 7,
+            "aliases": [
+              "a hug",
+              "kisses"
             ]
           },
           {
@@ -27183,14 +26088,6 @@
             "aliases": [
               "friends",
               "family"
-            ]
-          },
-          {
-            "text": "Hugs",
-            "points": 5,
-            "aliases": [
-              "a hug",
-              "kisses"
             ]
           },
           {
@@ -27210,374 +26107,7 @@
           },
           {
             "text": "Time",
-            "points": 2,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-01",
-        "question": "Name one of the five most populous countries in the European Union.",
-        "answers": [
-          {
-            "text": "Germany",
-            "points": 30,
-            "aliases": [
-              "deutschland"
-            ]
-          },
-          {
-            "text": "France",
-            "points": 25,
-            "aliases": []
-          },
-          {
-            "text": "Italy",
-            "points": 20,
-            "aliases": []
-          },
-          {
-            "text": "Spain",
-            "points": 15,
-            "aliases": []
-          },
-          {
-            "text": "Poland",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-02",
-        "question": "Name one of the five largest countries in the European Union by area.",
-        "answers": [
-          {
-            "text": "France",
-            "points": 30,
-            "aliases": []
-          },
-          {
-            "text": "Spain",
-            "points": 25,
-            "aliases": []
-          },
-          {
-            "text": "Sweden",
-            "points": 20,
-            "aliases": []
-          },
-          {
-            "text": "Germany",
-            "points": 15,
-            "aliases": [
-              "deutschland"
-            ]
-          },
-          {
-            "text": "Finland",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-03",
-        "question": "Name one of the five longest rivers in Europe.",
-        "answers": [
-          {
-            "text": "Volga",
-            "points": 30,
-            "aliases": [
-              "the volga"
-            ]
-          },
-          {
-            "text": "Danube",
-            "points": 25,
-            "aliases": [
-              "the danube"
-            ]
-          },
-          {
-            "text": "Ural",
-            "points": 20,
-            "aliases": []
-          },
-          {
-            "text": "Dnieper",
-            "points": 15,
-            "aliases": [
-              "dnipro",
-              "dnepr"
-            ]
-          },
-          {
-            "text": "Don",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-04",
-        "question": "Name one of the five largest planets in the solar system.",
-        "answers": [
-          {
-            "text": "Jupiter",
-            "points": 30,
-            "aliases": []
-          },
-          {
-            "text": "Saturn",
-            "points": 25,
-            "aliases": []
-          },
-          {
-            "text": "Uranus",
-            "points": 20,
-            "aliases": []
-          },
-          {
-            "text": "Neptune",
-            "points": 15,
-            "aliases": []
-          },
-          {
-            "text": "Earth",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-05",
-        "question": "Name one of the five largest islands in the Mediterranean.",
-        "answers": [
-          {
-            "text": "Sicily",
-            "points": 30,
-            "aliases": []
-          },
-          {
-            "text": "Sardinia",
-            "points": 25,
-            "aliases": []
-          },
-          {
-            "text": "Cyprus",
-            "points": 20,
-            "aliases": []
-          },
-          {
-            "text": "Corsica",
-            "points": 15,
-            "aliases": []
-          },
-          {
-            "text": "Crete",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-06",
-        "question": "Name one of the five highest mountains in the world.",
-        "answers": [
-          {
-            "text": "Everest",
-            "points": 30,
-            "aliases": [
-              "mount everest",
-              "mt everest"
-            ]
-          },
-          {
-            "text": "K2",
-            "points": 25,
-            "aliases": [
-              "k 2",
-              "mount godwin austen"
-            ]
-          },
-          {
-            "text": "Kangchenjunga",
-            "points": 20,
-            "aliases": [
-              "kanchenjunga"
-            ]
-          },
-          {
-            "text": "Lhotse",
-            "points": 15,
-            "aliases": []
-          },
-          {
-            "text": "Makalu",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-07",
-        "question": "Name one of the five oceans. The bigger it is, the more it scores.",
-        "answers": [
-          {
-            "text": "Pacific",
-            "points": 30,
-            "aliases": [
-              "pacific ocean",
-              "the pacific"
-            ]
-          },
-          {
-            "text": "Atlantic",
-            "points": 25,
-            "aliases": [
-              "atlantic ocean",
-              "the atlantic"
-            ]
-          },
-          {
-            "text": "Indian",
-            "points": 20,
-            "aliases": [
-              "indian ocean"
-            ]
-          },
-          {
-            "text": "Southern",
-            "points": 15,
-            "aliases": [
-              "southern ocean",
-              "antarctic",
-              "antarctic ocean"
-            ]
-          },
-          {
-            "text": "Arctic",
-            "points": 10,
-            "aliases": [
-              "arctic ocean"
-            ]
-          }
-        ]
-      },
-      {
-        "id": "top5-08",
-        "question": "Name one of the five most populous countries in the world.",
-        "answers": [
-          {
-            "text": "India",
-            "points": 30,
-            "aliases": []
-          },
-          {
-            "text": "China",
-            "points": 25,
-            "aliases": [
-              "people's republic of china"
-            ]
-          },
-          {
-            "text": "United States",
-            "points": 20,
-            "aliases": [
-              "usa",
-              "us",
-              "america",
-              "the united states",
-              "united states of america",
-              "the states"
-            ]
-          },
-          {
-            "text": "Indonesia",
-            "points": 15,
-            "aliases": []
-          },
-          {
-            "text": "Pakistan",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-09",
-        "question": "Name one of the five smallest countries in the world.",
-        "answers": [
-          {
-            "text": "Vatican City",
-            "points": 30,
-            "aliases": [
-              "vatican",
-              "the vatican",
-              "holy see"
-            ]
-          },
-          {
-            "text": "Monaco",
-            "points": 25,
-            "aliases": []
-          },
-          {
-            "text": "Nauru",
-            "points": 20,
-            "aliases": []
-          },
-          {
-            "text": "Tuvalu",
-            "points": 15,
-            "aliases": []
-          },
-          {
-            "text": "San Marino",
-            "points": 10,
-            "aliases": []
-          }
-        ]
-      },
-      {
-        "id": "top5-10",
-        "question": "Name one of the five largest countries in the world by area.",
-        "answers": [
-          {
-            "text": "Russia",
-            "points": 30,
-            "aliases": [
-              "russian federation"
-            ]
-          },
-          {
-            "text": "Canada",
-            "points": 25,
-            "aliases": []
-          },
-          {
-            "text": "China",
-            "points": 20,
-            "aliases": [
-              "people's republic of china"
-            ]
-          },
-          {
-            "text": "United States",
-            "points": 15,
-            "aliases": [
-              "usa",
-              "us",
-              "america",
-              "the united states",
-              "united states of america",
-              "the states"
-            ]
-          },
-          {
-            "text": "Brazil",
-            "points": 10,
+            "points": 1,
             "aliases": []
           }
         ]
