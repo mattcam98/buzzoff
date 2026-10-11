@@ -1347,7 +1347,7 @@
             "id": "cat-11-x04",
             "value": 200,
             "difficulty": 2,
-            "question": "In \"Stranger Things\", what is the dark parallel dimension beneath Hawkins called?",
+            "question": "In \"Stranger Things\", what is the eerie mirror world beneath Hawkins called?",
             "answer": "The Upside Down",
             "accept": []
           },
@@ -5164,7 +5164,7 @@
             "id": "pm-04-x13",
             "value": 500,
             "difficulty": 5,
-            "question": "Which English car maker, based in Malvern, has built three-wheelers since 1909?",
+            "question": "Which English car maker, based in Malvern, began in 1909 by building three-wheelers?",
             "answer": "Morgan",
             "accept": [
               "Morgan Motor Company"
@@ -7414,7 +7414,7 @@
             "accept": [
               "Kipchoge"
             ],
-            "notes": "1:59:40, in a specially staged run, so it did not count as an official record."
+            "notes": "1:59:40, in a specially staged run, so it did not count as an official record. The first to do it in a race was Sabastian Sawe of Kenya: 1:59:30 in London in April 2026."
           },
           {
             "id": "goats-5d",
@@ -14163,7 +14163,7 @@
             "id": "cat-06-x05",
             "value": 200,
             "difficulty": 2,
-            "question": "Which short-video app is owned by the Chinese company ByteDance?",
+            "question": "Which short-video app was created by the Chinese company ByteDance?",
             "answer": "TikTok",
             "accept": []
           },
@@ -15408,7 +15408,7 @@
             "id": "pm-08-x04",
             "value": 200,
             "difficulty": 2,
-            "question": "Which village in Somerset gives its name to the world's most popular cheese?",
+            "question": "Which village in Somerset gives its name to Britain's most popular cheese?",
             "answer": "Cheddar",
             "accept": []
           },
@@ -15560,7 +15560,7 @@
               "Fourth finger",
               "Third finger"
             ],
-            "notes": "The finger next to the little finger, on the left hand in most of Europe."
+            "notes": "The finger next to the little finger. On the left hand in Britain, France and Italy; on the right in Germany, Poland and Norway."
           },
           {
             "id": "pw-09-x02",
@@ -17537,7 +17537,7 @@
               "3,500 km",
               "3,400 km"
             ],
-            "notes": "It changes every year but stays close to 3,400 or 3,500 km."
+            "notes": "It changes every year: between about 3,300 and 3,500 km in recent Tours."
           },
           {
             "id": "pm-03-x05",
@@ -19006,7 +19006,7 @@
             "id": "who-s-that-pokemon-4d",
             "value": 400,
             "difficulty": 4,
-            "question": "The pink blob that can transform into any other Pokémon.",
+            "question": "The pinkish-purple blob that can transform into any other Pokémon.",
             "answer": "Ditto",
             "accept": []
           },
