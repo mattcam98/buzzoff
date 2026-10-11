@@ -3,7 +3,7 @@
  *
  *   wager ──all in / time──▶ answering ──time / host──▶ reveal (one player at a time, host judges)
  */
-import { sameAnswer } from '../normalize';
+import { matchSurvey } from '../normalize';
 import type { FinalRound, GameState } from '../state';
 import type { FinalPublic, FinalSecret } from '../views';
 import { activePlayers, addScore, fail, maxWager, ranked, requirePlayer, setTimer, shiftTime, timerView, type Ctx, type Mode } from './core';
@@ -159,7 +159,8 @@ export const final: Mode<FinalRound, FinalPublic, FinalSecret> = {
       notes: r.clue.notes ?? null,
       wagers: r.wagers,
       answers: r.answers,
-      suggestion: cur && !r.results[cur] ? [r.clue.answer, ...r.clue.accept].some((x) => sameAnswer(x, typed)) : null,
+      // A hint for the host, read the way a survey answer is: a slip of the finger or another spelling still looks right.
+      suggestion: cur && !r.results[cur] ? matchSurvey(typed, [{ text: r.clue.answer, points: 0, aliases: r.clue.accept }]) !== null : null,
       current: cur,
     };
   },

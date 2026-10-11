@@ -479,8 +479,9 @@ describe('final round', () => {
     s.player('cat', { t: 'wager', amount: 1000 });
     // Everyone is in, so the question appears without the host doing anything.
     expect(s.final).toMatchObject({ stage: 'answering', question: 'Question 0.4?' });
-    s.player('ann', { t: 'final.answer', text: 'the answer 0.4' }).player('bob', { t: 'final.answer', text: 'no idea' });
-    expect(JSON.stringify(s.pub)).not.toContain('no idea');
+    // A slip of the finger still looks right to the host's hint; a different number does not.
+    s.player('ann', { t: 'final.answer', text: 'the anwser 0.4' }).player('bob', { t: 'final.answer', text: 'answer 0.5' });
+    expect(JSON.stringify(s.pub)).not.toContain('0.5');
     s.advance(60_000);
     expect(s.final.stage).toBe('reveal');
 

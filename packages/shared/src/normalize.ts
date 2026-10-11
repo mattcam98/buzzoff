@@ -8,11 +8,25 @@
 import type { SurveyAnswer } from './content';
 
 const STOPWORDS = new Set(['the', 'a', 'an', 'my', 'your', 'our', 'their', 'his', 'her', 'some', 'of', 'to']);
+const UNITS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9 };
+const TENS: Record<string, number> = { twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
 const NUMBER_WORDS: Record<string, string> = {
-  zero: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9',
-  ten: '10', eleven: '11', twelve: '12', thirteen: '13', twenty: '20', thirty: '30', forty: '40', fifty: '50',
-  hundred: '100', thousand: '1000',
+  zero: '0', ten: '10', eleven: '11', twelve: '12', thirteen: '13', fourteen: '14', fifteen: '15', sixteen: '16',
+  seventeen: '17', eighteen: '18', nineteen: '19', hundred: '100', thousand: '1000',
+  ...Object.fromEntries(Object.entries({ ...UNITS, ...TENS }).map(([word, n]) => [word, String(n)])),
 };
+
+/** Number words as figures, so that "eighteen" is 18 and "twenty-seven" is 27 rather than a 20 and a 7. */
+function numerals(words: string[]): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < words.length; i++) {
+    const tens = TENS[words[i]];
+    const unit = UNITS[words[i + 1]];
+    if (tens && unit) out.push(String(tens + unit)), i++;
+    else out.push(NUMBER_WORDS[words[i]] ?? words[i]);
+  }
+  return out;
+}
 
 function singular(word: string): string {
   // "cookies" becomes "cooky" below, so "cookie" has to as well.
@@ -37,7 +51,7 @@ export function normalizeAnswer(input: string): string {
     .replace(/[^\p{L}\p{N}]+/gu, ' ')
     .trim();
   if (!cleaned) return '';
-  const words = cleaned.split(' ').map((w) => NUMBER_WORDS[w] ?? w);
+  const words = numerals(cleaned.split(' '));
   const meaningful = words.filter((w) => !STOPWORDS.has(w));
   return (meaningful.length ? meaningful : words).map(singular).join(' ');
 }

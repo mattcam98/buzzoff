@@ -24,6 +24,10 @@ describe('normalizeAnswer', () => {
     ['東京', '東京'],
     ['glass', 'glass'],
     ['three wishes', '3 wish'],
+    ['Eighteen', '18'],
+    ['twenty-seven', '27'],
+    ['Ninety nine red balloons', '99 red balloon'],
+    ['twenty twenty', '20 20'],
     ['The', 'the'],
     ['!!!', ''],
   ])('%s → %s', (input, expected) => expect(normalizeAnswer(input)).toBe(expected));

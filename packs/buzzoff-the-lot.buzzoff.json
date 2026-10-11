@@ -18,8 +18,6 @@
             "question": "Which enormous Chinese structure is wrongly said to be visible from space?",
             "answer": "Great Wall of China",
             "accept": [
-              "The Great Wall of China",
-              "The Great Wall",
               "Great Wall"
             ]
           },
@@ -39,7 +37,9 @@
             "difficulty": 1,
             "question": "Which black-and-white bear is native to China?",
             "answer": "Giant panda",
-            "accept": []
+            "accept": [
+              "Panda"
+            ]
           },
           {
             "id": "a-very-chinese-time-1d",
@@ -87,7 +87,9 @@
             "difficulty": 3,
             "question": "Which army of clay soldiers was buried with China's first emperor?",
             "answer": "Terracotta Army",
-            "accept": []
+            "accept": [
+              "Terracotta Warriors"
+            ]
           },
           {
             "id": "a-very-chinese-time-3b",
@@ -103,7 +105,9 @@
             "difficulty": 3,
             "question": "What is the longest river in China?",
             "answer": "Yangtze",
-            "accept": []
+            "accept": [
+              "Chang Jiang"
+            ]
           },
           {
             "id": "a-very-chinese-time-3d",
@@ -136,9 +140,7 @@
             "question": "Which was China's last imperial dynasty, ending in 1912?",
             "answer": "Qing",
             "accept": [
-              "The Qing dynasty",
               "Qing dynasty",
-              "Ching",
               "Manchu",
               "Manchu dynasty"
             ],
@@ -150,7 +152,9 @@
             "difficulty": 4,
             "question": "Which board game played with black and white stones originated in China?",
             "answer": "Go",
-            "accept": []
+            "accept": [
+              "Weiqi"
+            ]
           },
           {
             "id": "a-very-chinese-time-5a",
@@ -158,7 +162,10 @@
             "difficulty": 5,
             "question": "Who was the first emperor of a unified China?",
             "answer": "Qin Shi Huang",
-            "accept": []
+            "accept": [
+              "Qin Shi Huangdi",
+              "Shi Huangdi"
+            ]
           },
           {
             "id": "a-very-chinese-time-5b",
@@ -237,7 +244,9 @@
             "difficulty": 2,
             "question": "Who takes your order in a restaurant?",
             "answer": "Waiter",
-            "accept": []
+            "accept": [
+              "Waitress"
+            ]
           },
           {
             "id": "ai-2c",
@@ -261,9 +270,7 @@
             "difficulty": 3,
             "question": "Which Japanese poem follows a 5-7-5 syllable pattern?",
             "answer": "Haiku",
-            "accept": [
-              "A haiku"
-            ]
+            "accept": []
           },
           {
             "id": "ai-3b",
@@ -271,10 +278,7 @@
             "difficulty": 3,
             "question": "What is a narrow waterway linking two larger bodies of water called?",
             "answer": "Strait",
-            "accept": [
-              "A strait",
-              "Straits"
-            ],
+            "accept": [],
             "notes": "\"Channel\" fits the definition but has no A-I."
           },
           {
@@ -300,9 +304,7 @@
             "question": "Which dark-purple Amazonian berry is sold as a superfood?",
             "answer": "Açaí",
             "accept": [
-              "Acai",
-              "Acai berry",
-              "Açaí berry"
+              "Acai berry"
             ],
             "notes": "Pronounced \"ah-sah-EE\"."
           },
@@ -334,11 +336,9 @@
             "id": "ai-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "Which compound gives chili peppers their heat?",
+            "question": "Which compound gives chilli peppers their heat?",
             "answer": "Capsaicin",
-            "accept": [
-              "Capsaicine"
-            ]
+            "accept": []
           },
           {
             "id": "ai-5b",
@@ -587,7 +587,9 @@
             "difficulty": 2,
             "question": "What is the second book in the Harry Potter series?",
             "answer": "Harry Potter and the Chamber of Secrets",
-            "accept": []
+            "accept": [
+              "Chamber of Secrets"
+            ]
           },
           {
             "id": "always-the-bridesmaid-2c",
@@ -683,7 +685,10 @@
             "difficulty": 5,
             "question": "Whose expedition was the second to reach the South Pole?",
             "answer": "Robert Falcon Scott",
-            "accept": []
+            "accept": [
+              "Scott",
+              "Captain Scott"
+            ]
           },
           {
             "id": "always-the-bridesmaid-5c",
@@ -691,7 +696,9 @@
             "difficulty": 5,
             "question": "Who was the second human to orbit the Earth?",
             "answer": "Gherman Titov",
-            "accept": []
+            "accept": [
+              "Titov"
+            ]
           },
           {
             "id": "always-the-bridesmaid-5d",
@@ -711,9 +718,7 @@
             "id": "cat-12-1",
             "notes": "\"Whale\" alone is not specific enough; ask which kind.",
             "value": 100,
-            "accept": [
-              "Blue whale"
-            ],
+            "accept": [],
             "answer": "The blue whale",
             "question": "What is the largest animal on Earth?",
             "difficulty": 1
@@ -724,9 +729,7 @@
             "difficulty": 1,
             "question": "Which African animal is covered in black and white stripes?",
             "answer": "The zebra",
-            "accept": [
-              "Zebra"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x02",
@@ -734,9 +737,7 @@
             "difficulty": 1,
             "question": "What is a baby frog called?",
             "answer": "A tadpole",
-            "accept": [
-              "Tadpole"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x03",
@@ -744,16 +745,12 @@
             "difficulty": 1,
             "question": "Which bird is the largest in the world, and cannot fly?",
             "answer": "The ostrich",
-            "accept": [
-              "Ostrich"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-2",
             "value": 200,
-            "accept": [
-              "Pride"
-            ],
+            "accept": [],
             "answer": "A pride",
             "question": "What is the collective name for a group of lions?",
             "difficulty": 2
@@ -764,9 +761,7 @@
             "difficulty": 2,
             "question": "Which is the fastest animal on land?",
             "answer": "The cheetah",
-            "accept": [
-              "Cheetah"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x05",
@@ -774,10 +769,7 @@
             "difficulty": 2,
             "question": "Which is the only mammal capable of true flight?",
             "answer": "The bat",
-            "accept": [
-              "Bat",
-              "Bats"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x06",
@@ -785,17 +777,13 @@
             "difficulty": 2,
             "question": "How many legs does an insect have?",
             "answer": "Six",
-            "accept": [
-              "6"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-3",
             "notes": "Two pump blood through the gills and one pumps it around the rest of the body.",
             "value": 300,
-            "accept": [
-              "3"
-            ],
+            "accept": [],
             "answer": "Three",
             "question": "How many hearts does an octopus have?",
             "difficulty": 3
@@ -806,9 +794,7 @@
             "difficulty": 3,
             "question": "Which is the largest fish in the sea?",
             "answer": "The whale shark",
-            "accept": [
-              "Whale shark"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x08",
@@ -816,9 +802,7 @@
             "difficulty": 3,
             "question": "What is a female fox called?",
             "answer": "A vixen",
-            "accept": [
-              "Vixen"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x09",
@@ -827,7 +811,6 @@
             "question": "Which Australian mammal lays eggs and has a bill like a duck's?",
             "answer": "The platypus",
             "accept": [
-              "Platypus",
               "Duck-billed platypus"
             ]
           },
@@ -836,7 +819,6 @@
             "notes": "\"Falcon\" alone is not specific enough; ask which kind.",
             "value": 400,
             "accept": [
-              "Peregrine falcon",
               "Peregrine"
             ],
             "answer": "The peregrine falcon",
@@ -849,9 +831,7 @@
             "difficulty": 4,
             "question": "Which Australian animal has fingerprints almost impossible to tell apart from a human's?",
             "answer": "The koala",
-            "accept": [
-              "Koala"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x11",
@@ -859,9 +839,7 @@
             "difficulty": 4,
             "question": "Which seabird makes the longest migration of any animal, from the Arctic to the Antarctic and back each year?",
             "answer": "The Arctic tern",
-            "accept": [
-              "Arctic tern"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x12",
@@ -874,9 +852,7 @@
           {
             "id": "cat-12-5",
             "value": 500,
-            "accept": [
-              "Flamboyance"
-            ],
+            "accept": [],
             "answer": "A flamboyance",
             "question": "What showy collective noun is used for a group of flamingos?",
             "difficulty": 5
@@ -887,9 +863,7 @@
             "difficulty": 5,
             "question": "Which is the only mammal covered in scales?",
             "answer": "The pangolin",
-            "accept": [
-              "Pangolin"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x14",
@@ -897,9 +871,7 @@
             "difficulty": 5,
             "question": "Which Mexican salamander keeps its feathery gills for life and can regrow lost limbs?",
             "answer": "The axolotl",
-            "accept": [
-              "Axolotl"
-            ]
+            "accept": []
           },
           {
             "id": "cat-12-x15",
@@ -975,9 +947,7 @@
             "difficulty": 2,
             "question": "Which river is the longest in South America?",
             "answer": "The Amazon",
-            "accept": [
-              "Amazon"
-            ]
+            "accept": []
           },
           {
             "id": "cat-01-x06",
@@ -1002,7 +972,9 @@
             "difficulty": 3,
             "question": "Which waterfall on the border of Zambia and Zimbabwe is known as \"the smoke that thunders\"?",
             "answer": "Victoria Falls",
-            "accept": []
+            "accept": [
+              "Mosi-oa-Tunya"
+            ]
           },
           {
             "id": "cat-01-x08",
@@ -1011,7 +983,6 @@
             "question": "Which canal links the Mediterranean to the Red Sea?",
             "answer": "The Suez Canal",
             "accept": [
-              "Suez Canal",
               "Suez"
             ]
           },
@@ -1022,7 +993,6 @@
             "question": "Which desert covers much of southern Mongolia and northern China?",
             "answer": "The Gobi",
             "accept": [
-              "Gobi",
               "Gobi Desert"
             ]
           },
@@ -1068,7 +1038,6 @@
             "notes": "Pronounced wah-gah-DOO-goo. Be generous with pronunciation.",
             "value": 500,
             "accept": [
-              "Wagadugu",
               "Ouaga"
             ],
             "answer": "Ouagadougou",
@@ -1081,9 +1050,8 @@
             "difficulty": 5,
             "question": "Counting its overseas territories, which country spans the most time zones?",
             "answer": "France",
-            "accept": [
-              "| Twelve, or thirteen with its Antarctic claim, thanks to its overseas territories. Russia has eleven."
-            ]
+            "accept": [],
+            "notes": "Twelve, or thirteen with its Antarctic claim, thanks to its overseas territories. Russia has eleven."
           },
           {
             "id": "cat-01-x14",
@@ -1091,9 +1059,7 @@
             "difficulty": 5,
             "question": "Which Caribbean island is the only country in the world named after a woman?",
             "answer": "Saint Lucia",
-            "accept": [
-              "St Lucia"
-            ],
+            "accept": [],
             "notes": "After Saint Lucy of Syracuse. Ireland, named for the goddess Ériu, is the usual quibble."
           },
           {
@@ -1149,9 +1115,7 @@
           {
             "id": "pw-06-1",
             "value": 100,
-            "accept": [
-              "Pokemon Yellow Brick Road"
-            ],
+            "accept": [],
             "answer": "Pokémon Yellow Brick Road",
             "question": "Combine the Pikachu-themed Game Boy game with the road Dorothy follows in \"The Wizard of Oz\".",
             "difficulty": 1
@@ -1232,7 +1196,6 @@
             "id": "pw-06-3",
             "value": 300,
             "accept": [
-              "Formula 1 Direction",
               "F1 Direction"
             ],
             "answer": "Formula One Direction",
@@ -1269,7 +1232,9 @@
             "difficulty": 4,
             "question": "The Macedonian conqueror + the world's longest fortification.",
             "answer": "Alexander the Great Wall of China",
-            "accept": []
+            "accept": [
+              "Alexander the Great Wall"
+            ]
           },
           {
             "id": "pw-06-4",
@@ -1315,7 +1280,6 @@
             "id": "pw-06-5",
             "value": 500,
             "accept": [
-              "Notre Dame de Paris Saint Germain",
               "Notre-Dame de Paris SG"
             ],
             "answer": "Notre-Dame de Paris Saint-Germain",
@@ -1346,8 +1310,7 @@
             "question": "Which yellow sea sponge lives in a pineapple under the sea?",
             "answer": "SpongeBob SquarePants",
             "accept": [
-              "SpongeBob",
-              "Spongebob"
+              "SpongeBob"
             ]
           },
           {
@@ -1365,8 +1328,7 @@
             "question": "Which animated family includes Peter, Lois and a talking dog called Brian?",
             "answer": "The Griffins",
             "accept": [
-              "Family Guy",
-              "Griffin"
+              "Family Guy"
             ]
           },
           {
@@ -1383,9 +1345,7 @@
             "difficulty": 2,
             "question": "In \"Stranger Things\", what is the dark parallel dimension beneath Hawkins called?",
             "answer": "The Upside Down",
-            "accept": [
-              "Upside Down"
-            ]
+            "accept": []
           },
           {
             "id": "cat-11-x05",
@@ -1422,9 +1382,7 @@
             "difficulty": 3,
             "question": "In \"Game of Thrones\", which seat, forged from the swords of the defeated, does everyone fight over?",
             "answer": "The Iron Throne",
-            "accept": [
-              "Iron Throne"
-            ]
+            "accept": []
           },
           {
             "id": "cat-11-x08",
@@ -1499,9 +1457,7 @@
             "difficulty": 5,
             "question": "Which Italian crime drama is set among the Camorra clans of Naples?",
             "answer": "Gomorrah",
-            "accept": [
-              "Gomorra"
-            ]
+            "accept": []
           },
           {
             "id": "cat-11-x15",
@@ -1520,7 +1476,7 @@
       },
       {
         "id": "pm-10",
-        "blurb": "Find the word. Answers grow by two letters a clue: 2, 4, 6, 8, then 10.",
+        "blurb": "Find the word. Answers grow by two letters a question: 2, 4, 6, 8, then 10.",
         "clues": [
           {
             "id": "pm-10-1",
@@ -1589,9 +1545,8 @@
             "difficulty": 2,
             "question": "Give a four-letter word that is the opposite of \"love\".",
             "answer": "HATE",
-            "accept": [
-              "| The intended answer is HATE. Another four-letter word that fits is the host's call."
-            ]
+            "accept": [],
+            "notes": "The intended answer is HATE. Another four-letter word that fits is the host's call."
           },
           {
             "id": "pm-10-3",
@@ -1647,7 +1602,8 @@
             "difficulty": 4,
             "question": "Which eight-letter word is a formal term for a wedding ceremony?",
             "answer": "NUPTIALS",
-            "accept": []
+            "accept": [],
+            "notes": "\"Marriage\" also has eight letters; host's call."
           },
           {
             "id": "pm-10-x12",
@@ -1655,9 +1611,8 @@
             "difficulty": 4,
             "question": "Which eight-letter word describes something that happens once every two years?",
             "answer": "BIENNIAL",
-            "accept": [
-              "| Not \"biannual\", which is twice a year and has an extra letter."
-            ]
+            "accept": [],
+            "notes": "Not \"biannual\", which is twice a year and has an extra letter."
           },
           {
             "id": "pm-10-5",
@@ -1673,9 +1628,8 @@
             "difficulty": 5,
             "question": "Which ten-letter word, from the Latin for bee, is the formal name for beekeeping?",
             "answer": "APICULTURE",
-            "accept": [
-              "| \"Beekeeping\" also has ten letters, but it is the word in the clue."
-            ]
+            "accept": [],
+            "notes": "\"Beekeeping\" also has ten letters, but it is the word in the question."
           },
           {
             "id": "pm-10-x14",
@@ -1747,7 +1701,9 @@
             "difficulty": 2,
             "question": "Which Saint-Exupéry novella features a boy from a tiny asteroid?",
             "answer": "The Little Prince",
-            "accept": []
+            "accept": [
+              "Le Petit Prince"
+            ]
           },
           {
             "id": "books-we-ve-all-read-2c",
@@ -1755,7 +1711,9 @@
             "difficulty": 2,
             "question": "Who wrote Romeo and Juliet?",
             "answer": "William Shakespeare",
-            "accept": []
+            "accept": [
+              "Shakespeare"
+            ]
           },
           {
             "id": "books-we-ve-all-read-2d",
@@ -1779,9 +1737,7 @@
             "difficulty": 3,
             "question": "Which George Orwell novel introduced Big Brother?",
             "answer": "Nineteen Eighty-Four",
-            "accept": [
-              "1984"
-            ]
+            "accept": []
           },
           {
             "id": "books-we-ve-all-read-3c",
@@ -1880,7 +1836,6 @@
               "Vinyl",
               "Records",
               "LPs",
-              "Vinyl record",
               "Gramophone records"
             ],
             "notes": "Plain \"vinyl\" is fine."
@@ -1951,11 +1906,9 @@
             "question": "Which Sony-backed high-definition disc format launched in 2006 and became the successor to DVD?",
             "answer": "Blu-ray",
             "accept": [
-              "Blu ray",
-              "Blu-ray Disc",
-              "Blue ray"
+              "Blu-ray Disc"
             ],
-            "notes": "HD DVD also launched in 2006 but lost the format war; host's call."
+            "notes": "Not HD DVD: that was Toshiba's rival format, which lost the format war."
           },
           {
             "id": "boomer-media-3b",
@@ -1979,7 +1932,10 @@
             "difficulty": 3,
             "question": "Which Microsoft chat service let you \"nudge\" your friends?",
             "answer": "MSN Messenger",
-            "accept": []
+            "accept": [
+              "MSN",
+              "Windows Live Messenger"
+            ]
           },
           {
             "id": "boomer-media-4a",
@@ -1988,7 +1944,6 @@
             "question": "Which Nintendo console kept cartridges while its rivals moved to CDs?",
             "answer": "Nintendo 64",
             "accept": [
-              "The Nintendo 64",
               "N64"
             ]
           },
@@ -2061,7 +2016,10 @@
             "difficulty": 1,
             "question": "What is the capital of the United States?",
             "answer": "Washington, D.C.",
-            "accept": []
+            "accept": [
+              "Washington",
+              "D.C."
+            ]
           },
           {
             "id": "capital-punishment-1b",
@@ -2085,7 +2043,8 @@
             "difficulty": 1,
             "question": "What is the capital of India?",
             "answer": "New Delhi",
-            "accept": []
+            "accept": [],
+            "notes": "Plain \"Delhi\" is the host's call: New Delhi is the capital district within the city of Delhi."
           },
           {
             "id": "capital-punishment-2a",
@@ -2205,7 +2164,9 @@
             "difficulty": 5,
             "question": "What is the legislative capital of Sri Lanka?",
             "answer": "Sri Jayawardenepura Kotte",
-            "accept": []
+            "accept": [
+              "Kotte"
+            ]
           },
           {
             "id": "capital-punishment-5d",
@@ -2272,9 +2233,7 @@
             "difficulty": 2,
             "question": "What is the chemical formula for table salt?",
             "answer": "NaCl",
-            "accept": [
-              "Sodium chloride"
-            ]
+            "accept": []
           },
           {
             "id": "pw-08-x05",
@@ -2292,17 +2251,13 @@
             "difficulty": 2,
             "question": "Which negatively charged particle orbits the nucleus of an atom?",
             "answer": "The electron",
-            "accept": [
-              "Electron",
-              "Electrons"
-            ]
+            "accept": []
           },
           {
             "id": "pw-08-3",
             "notes": "Not covalent: covalent bonds share electrons.",
             "value": 300,
             "accept": [
-              "Ionic bond",
               "Ionic",
               "Ionic bonding"
             ],
@@ -2328,9 +2283,7 @@
             "difficulty": 3,
             "question": "What do you call a substance that speeds up a chemical reaction without being used up?",
             "answer": "A catalyst",
-            "accept": [
-              "Catalyst"
-            ]
+            "accept": []
           },
           {
             "id": "pw-08-x09",
@@ -2361,8 +2314,6 @@
             "question": "To the nearest degree Celsius, what is absolute zero?",
             "answer": "Minus 273",
             "accept": [
-              "-273",
-              "−273",
               "-273.15",
               "Minus 273 degrees"
             ]
@@ -2373,9 +2324,7 @@
             "difficulty": 4,
             "question": "What do you call atoms of the same element that have different numbers of neutrons?",
             "answer": "Isotopes",
-            "accept": [
-              "Isotope"
-            ]
+            "accept": []
           },
           {
             "id": "pw-08-x12",
@@ -2391,9 +2340,7 @@
             "id": "pw-08-5",
             "notes": "Helium, neon, argon, krypton, xenon, radon and oganesson. Six is the count without oganesson.",
             "value": 500,
-            "accept": [
-              "7"
-            ],
+            "accept": [],
             "answer": "Seven",
             "question": "How many noble gases are there in the modern periodic table?",
             "difficulty": 5
@@ -2405,7 +2352,6 @@
             "question": "Which particle, predicted in 1964 and found at CERN in 2012, gives other particles their mass?",
             "answer": "The Higgs boson",
             "accept": [
-              "Higgs boson",
               "Higgs",
               "The God particle"
             ]
@@ -2572,7 +2518,10 @@
             "difficulty": 5,
             "question": "What is the name of the Dutch royal house?",
             "answer": "Orange-Nassau",
-            "accept": []
+            "accept": [
+              "House of Orange",
+              "Orange"
+            ]
           },
           {
             "id": "colour-me-surprised-5b",
@@ -2611,9 +2560,7 @@
             "difficulty": 1,
             "question": "At what age can you vote in most European countries?",
             "answer": "18",
-            "accept": [
-              "Eighteen"
-            ],
+            "accept": [],
             "notes": "It is 16 in Austria and Malta, and 17 in Greece."
           },
           {
@@ -2703,9 +2650,7 @@
             "difficulty": 3,
             "question": "Jimi Hendrix, Janis Joplin, Kurt Cobain and Amy Winehouse all died at which age?",
             "answer": "27",
-            "accept": [
-              "Twenty-seven"
-            ]
+            "accept": []
           },
           {
             "id": "coming-of-age-4a",
@@ -2743,9 +2688,7 @@
             "id": "os-08-4",
             "notes": "Spirits have to wait until 18.",
             "value": 400,
-            "accept": [
-              "Sixteen"
-            ],
+            "accept": [],
             "answer": "16",
             "question": "From what age can you legally buy beer and wine in Germany?",
             "difficulty": 4
@@ -2778,9 +2721,7 @@
             "id": "os-08-5",
             "notes": "Born in Salzburg in January 1756.",
             "value": 500,
-            "accept": [
-              "Thirty-five"
-            ],
+            "accept": [],
             "answer": "35",
             "question": "How old was Wolfgang Amadeus Mozart when he died in Vienna in 1791?",
             "difficulty": 5
@@ -3053,9 +2994,7 @@
             "difficulty": 3,
             "question": "How many books are there in the main Harry Potter series?",
             "answer": "7",
-            "accept": [
-              "Seven"
-            ]
+            "accept": []
           },
           {
             "id": "count-on-it-4a",
@@ -3146,9 +3085,7 @@
             "difficulty": 1,
             "question": "Which long green salad vegetable is sliced into sandwiches?",
             "answer": "Cucumber",
-            "accept": [
-              "A cucumber"
-            ]
+            "accept": []
           },
           {
             "id": "pw-07-x02",
@@ -3156,9 +3093,7 @@
             "difficulty": 1,
             "question": "What do you call a factual film or series, such as a wildlife programme?",
             "answer": "A documentary",
-            "accept": [
-              "Documentary"
-            ]
+            "accept": []
           },
           {
             "id": "pw-07-x03",
@@ -3193,9 +3128,7 @@
             "difficulty": 2,
             "question": "What is a file made in Microsoft Word called?",
             "answer": "A document",
-            "accept": [
-              "Document"
-            ]
+            "accept": []
           },
           {
             "id": "pw-07-x06",
@@ -3208,9 +3141,7 @@
           {
             "id": "pw-07-3",
             "value": 300,
-            "accept": [
-              "To succumb"
-            ],
+            "accept": [],
             "answer": "Succumb",
             "question": "Which verb means to give in to pressure, temptation or a stronger force?",
             "difficulty": 3
@@ -3240,16 +3171,13 @@
             "question": "Which kind of bet combines several selections, all of which must win?",
             "answer": "An accumulator",
             "accept": [
-              "Accumulator",
               "Acca"
             ]
           },
           {
             "id": "pw-07-4",
             "value": 400,
-            "accept": [
-              "The incumbent"
-            ],
+            "accept": [],
             "answer": "Incumbent",
             "question": "What is the term for the person currently holding an official position, particularly in politics?",
             "difficulty": 4
@@ -3278,16 +3206,12 @@
             "difficulty": 4,
             "question": "Which accent sits like a little hat on the E in \"fête\"?",
             "answer": "The circumflex",
-            "accept": [
-              "Circumflex"
-            ]
+            "accept": []
           },
           {
             "id": "pw-07-5",
             "value": 500,
-            "accept": [
-              "A modicum"
-            ],
+            "accept": [],
             "answer": "Modicum",
             "question": "Which word means a small or limited amount of something?",
             "difficulty": 5
@@ -3298,9 +3222,7 @@
             "difficulty": 5,
             "question": "What do you call a doctor who stands in temporarily for another?",
             "answer": "A locum",
-            "accept": [
-              "Locum"
-            ]
+            "accept": []
           },
           {
             "id": "pw-07-x14",
@@ -3308,9 +3230,7 @@
             "difficulty": 5,
             "question": "Which broad pleated sash is worn around the waist with a dinner jacket?",
             "answer": "A cummerbund",
-            "accept": [
-              "Cummerbund"
-            ]
+            "accept": []
           },
           {
             "id": "pw-07-x15",
@@ -3531,8 +3451,8 @@
             "id": "douze-points-2a",
             "value": 200,
             "difficulty": 2,
-            "question": "Which country won in 2021 with the rock band Måneskin?",
-            "answer": "Italy",
+            "question": "Which country won in 2025 with JJ's song Wasted Love?",
+            "answer": "Austria",
             "accept": []
           },
           {
@@ -3542,7 +3462,6 @@
             "question": "Which Canadian singer won Eurovision for Switzerland in 1988?",
             "answer": "Céline Dion",
             "accept": [
-              "Celine Dion",
               "Dion"
             ],
             "notes": "With \"Ne partez pas sans moi\", by a single point."
@@ -3567,9 +3486,7 @@
             "id": "pm-07-2",
             "notes": "Said \"MOH-neh-skin\". It is Danish for moonlight.",
             "value": 200,
-            "accept": [
-              "Maneskin"
-            ],
+            "accept": [],
             "answer": "Måneskin",
             "question": "Which Italian rock band won Eurovision in 2021 with \"Zitti e buoni\"?",
             "difficulty": 2
@@ -3612,7 +3529,9 @@
             "difficulty": 4,
             "question": "Which Ukrainian group won in 2022 with Stefania?",
             "answer": "Kalush Orchestra",
-            "accept": []
+            "accept": [
+              "Kalush"
+            ]
           },
           {
             "id": "douze-points-4b",
@@ -3979,7 +3898,9 @@
             "difficulty": 5,
             "question": "Which element has the chemical symbol W?",
             "answer": "Tungsten",
-            "accept": []
+            "accept": [
+              "Wolfram"
+            ]
           },
           {
             "id": "element-of-surprise-5b",
@@ -4091,7 +4012,9 @@
             "difficulty": 3,
             "question": "👽🚲🌕",
             "answer": "E.T. the Extra-Terrestrial",
-            "accept": []
+            "accept": [
+              "E.T."
+            ]
           },
           {
             "id": "emoji-cinema-3c",
@@ -4202,7 +4125,9 @@
             "difficulty": 1,
             "question": "Which country shares a land border with Northern Ireland?",
             "answer": "Ireland",
-            "accept": []
+            "accept": [
+              "Republic of Ireland"
+            ]
           },
           {
             "id": "establishing-some-borders-1d",
@@ -4350,9 +4275,7 @@
             "id": "pm-02-1",
             "value": 100,
             "accept": [
-              "Femur",
-              "Thigh bone",
-              "Thighbone"
+              "Thigh bone"
             ],
             "answer": "The femur",
             "question": "Which bone is the longest and largest in the human body?",
@@ -4364,9 +4287,7 @@
             "difficulty": 1,
             "question": "Which organ pumps blood around the body?",
             "answer": "The heart",
-            "accept": [
-              "Heart"
-            ]
+            "accept": []
           },
           {
             "id": "pm-02-x02",
@@ -4375,7 +4296,6 @@
             "question": "Which bony case protects the brain?",
             "answer": "The skull",
             "accept": [
-              "Skull",
               "Cranium"
             ]
           },
@@ -4386,16 +4306,13 @@
             "question": "Which curved bones form a cage around the heart and lungs?",
             "answer": "The ribs",
             "accept": [
-              "Ribs",
               "Rib cage"
             ]
           },
           {
             "id": "pm-02-2",
             "value": 200,
-            "accept": [
-              "Skin"
-            ],
+            "accept": [],
             "answer": "The skin",
             "question": "What is the largest organ of the human body?",
             "difficulty": 2
@@ -4406,9 +4323,7 @@
             "difficulty": 2,
             "question": "Which pair of bean-shaped organs filter the blood and make urine?",
             "answer": "The kidneys",
-            "accept": [
-              "Kidneys"
-            ]
+            "accept": []
           },
           {
             "id": "pm-02-x05",
@@ -4417,7 +4332,6 @@
             "question": "What is the column of bones running down the middle of the back called?",
             "answer": "The spine",
             "accept": [
-              "Spine",
               "Backbone",
               "Spinal column",
               "Vertebral column"
@@ -4429,19 +4343,13 @@
             "difficulty": 2,
             "question": "Which muscle bulges at the front of the upper arm when you flex it?",
             "answer": "The biceps",
-            "accept": [
-              "Biceps",
-              "Bicep"
-            ]
+            "accept": []
           },
           {
             "id": "pm-02-3",
             "notes": "The liver makes bile; the gallbladder only stores and releases it.",
             "value": 300,
-            "accept": [
-              "Gallbladder",
-              "Gall bladder"
-            ],
+            "accept": [],
             "answer": "The gallbladder",
             "question": "Which organ stores bile and releases it to help with digestion?",
             "difficulty": 3
@@ -4453,7 +4361,6 @@
             "question": "Which tendon joins the calf muscle to the heel?",
             "answer": "The Achilles tendon",
             "accept": [
-              "Achilles tendon",
               "Achilles"
             ]
           },
@@ -4463,9 +4370,7 @@
             "difficulty": 3,
             "question": "Which organ produces insulin?",
             "answer": "The pancreas",
-            "accept": [
-              "Pancreas"
-            ]
+            "accept": []
           },
           {
             "id": "pm-02-x09",
@@ -4473,16 +4378,13 @@
             "difficulty": 3,
             "question": "What is the medical name for the kneecap?",
             "answer": "The patella",
-            "accept": [
-              "Patella"
-            ]
+            "accept": []
           },
           {
             "id": "pm-02-4",
             "notes": "\"Cerebrum\" is close but is the larger structure; the cortex is its outer layer. Host's call.",
             "value": 400,
             "accept": [
-              "Cerebral cortex",
               "Cortex"
             ],
             "answer": "The cerebral cortex",
@@ -4496,7 +4398,6 @@
             "question": "Which bone in the middle ear is the smallest in the human body?",
             "answer": "The stapes",
             "accept": [
-              "Stapes",
               "Stirrup",
               "The stirrup bone"
             ]
@@ -4507,9 +4408,7 @@
             "difficulty": 4,
             "question": "What is the largest artery in the human body?",
             "answer": "The aorta",
-            "accept": [
-              "Aorta"
-            ]
+            "accept": []
           },
           {
             "id": "pm-02-x12",
@@ -4518,7 +4417,6 @@
             "question": "What is the largest muscle in the human body?",
             "answer": "The gluteus maximus",
             "accept": [
-              "Gluteus maximus",
               "Glutes"
             ]
           },
@@ -4526,7 +4424,6 @@
             "id": "pm-02-5",
             "value": 500,
             "accept": [
-              "Endocrine system",
               "Endocrine"
             ],
             "answer": "The endocrine system",
@@ -4540,7 +4437,6 @@
             "question": "Which horseshoe-shaped bone in the neck is the only one not joined to any other bone?",
             "answer": "The hyoid",
             "accept": [
-              "Hyoid",
               "Hyoid bone"
             ]
           },
@@ -4548,10 +4444,9 @@
             "id": "pm-02-x14",
             "value": 500,
             "difficulty": 5,
-            "question": "Which clusters of cells in the pancreas, named after a German anatomist, produce insulin?",
+            "question": "Which clusters of hormone-producing cells, named after a German anatomist, make insulin?",
             "answer": "The islets of Langerhans",
             "accept": [
-              "Islets of Langerhans",
               "Langerhans"
             ]
           },
@@ -4561,9 +4456,7 @@
             "difficulty": 5,
             "question": "Which muscle, running across the thigh and nicknamed the tailor's muscle, is the longest in the body?",
             "answer": "The sartorius",
-            "accept": [
-              "Sartorius"
-            ]
+            "accept": []
           }
         ],
         "title": "Exploring Bodies"
@@ -4615,7 +4508,6 @@
             "answer": "Pitbull",
             "accept": [
               "Armando Pérez",
-              "Armando Perez",
               "Mr. 305"
             ]
           },
@@ -4625,7 +4517,9 @@
             "difficulty": 2,
             "question": "Which French footballer headbutted Marco Materazzi in the 2006 World Cup final?",
             "answer": "Zinedine Zidane",
-            "accept": []
+            "accept": [
+              "Zidane"
+            ]
           },
           {
             "id": "famous-balds-2c",
@@ -4649,7 +4543,9 @@
             "difficulty": 3,
             "question": "Which Spanish manager has coached Barcelona, Bayern Munich and Manchester City?",
             "answer": "Pep Guardiola",
-            "accept": []
+            "accept": [
+              "Guardiola"
+            ]
           },
           {
             "id": "famous-balds-3b",
@@ -4657,7 +4553,10 @@
             "difficulty": 3,
             "question": "Which Harry Potter villain is known as \"He Who Must Not Be Named\"?",
             "answer": "Lord Voldemort",
-            "accept": []
+            "accept": [
+              "Voldemort",
+              "Tom Riddle"
+            ]
           },
           {
             "id": "famous-balds-3c",
@@ -4715,7 +4614,9 @@
             "difficulty": 5,
             "question": "Which Soviet leader denounced Stalin in his 1956 \"Secret Speech\"?",
             "answer": "Nikita Khrushchev",
-            "accept": []
+            "accept": [
+              "Khrushchev"
+            ]
           },
           {
             "id": "famous-balds-5b",
@@ -4754,7 +4655,11 @@
             "difficulty": 1,
             "question": "The \"People's Princess\" who died in Paris in 1997.",
             "answer": "Princess Diana",
-            "accept": []
+            "accept": [
+              "Diana",
+              "Lady Diana",
+              "Lady Di"
+            ]
           },
           {
             "id": "famous-women-1b",
@@ -4802,7 +4707,9 @@
             "difficulty": 2,
             "question": "The French heroine burned at the stake in 1431.",
             "answer": "Joan of Arc",
-            "accept": []
+            "accept": [
+              "Jeanne d'Arc"
+            ]
           },
           {
             "id": "famous-women-2d",
@@ -4834,7 +4741,9 @@
             "difficulty": 3,
             "question": "The Pakistani education activist who became the youngest Nobel laureate.",
             "answer": "Malala Yousafzai",
-            "accept": []
+            "accept": [
+              "Malala"
+            ]
           },
           {
             "id": "famous-women-3d",
@@ -4850,7 +4759,9 @@
             "difficulty": 4,
             "question": "The Soviet cosmonaut who became the first woman in space in 1963.",
             "answer": "Valentina Tereshkova",
-            "accept": []
+            "accept": [
+              "Tereshkova"
+            ]
           },
           {
             "id": "famous-women-4b",
@@ -5084,9 +4995,7 @@
           {
             "id": "pm-04-1",
             "value": 100,
-            "accept": [
-              "Unicycle"
-            ],
+            "accept": [],
             "answer": "A unicycle",
             "question": "Which single-wheeled vehicle is associated with circus performers and acrobats?",
             "difficulty": 1
@@ -5098,9 +5007,7 @@
             "question": "Which two-wheeled vehicle do you pedal?",
             "answer": "A bicycle",
             "accept": [
-              "Bicycle",
-              "Bike",
-              "A bike"
+              "Bike"
             ]
           },
           {
@@ -5110,7 +5017,6 @@
             "question": "Which three-wheeled cycle do small children learn to ride on?",
             "answer": "A tricycle",
             "accept": [
-              "Tricycle",
               "Trike"
             ]
           },
@@ -5121,7 +5027,6 @@
             "question": "Which one-wheeled garden cart do you push by its two handles?",
             "answer": "A wheelbarrow",
             "accept": [
-              "Wheelbarrow",
               "Barrow"
             ]
           },
@@ -5143,7 +5048,6 @@
             "question": "Which two-wheeled board with a handlebar do children push along with one foot?",
             "answer": "A scooter",
             "accept": [
-              "Scooter",
               "Kick scooter"
             ]
           },
@@ -5153,9 +5057,7 @@
             "difficulty": 2,
             "question": "What is a bicycle built for two riders called?",
             "answer": "A tandem",
-            "accept": [
-              "Tandem"
-            ]
+            "accept": []
           },
           {
             "id": "pm-04-x06",
@@ -5171,10 +5073,7 @@
             "id": "pm-04-3",
             "value": 300,
             "accept": [
-              "Tuk tuk",
-              "Tuktuk",
-              "Auto rickshaw",
-              "Autorickshaw"
+              "Auto rickshaw"
             ],
             "answer": "A tuk-tuk",
             "question": "Which three-wheeled motorised taxi is a common sight in Southeast Asia?",
@@ -5186,10 +5085,7 @@
             "difficulty": 3,
             "question": "Which Victorian bicycle had an enormous front wheel and a tiny back one?",
             "answer": "The penny-farthing",
-            "accept": [
-              "Penny-farthing",
-              "Penny farthing"
-            ]
+            "accept": []
           },
           {
             "id": "pm-04-x08",
@@ -5197,9 +5093,7 @@
             "difficulty": 3,
             "question": "Which two-wheeled passenger cart is traditionally pulled by a person on foot?",
             "answer": "A rickshaw",
-            "accept": [
-              "Rickshaw"
-            ]
+            "accept": []
           },
           {
             "id": "pm-04-x09",
@@ -5207,15 +5101,12 @@
             "difficulty": 3,
             "question": "What is the one-wheeled passenger compartment bolted to the side of a motorcycle called?",
             "answer": "A sidecar",
-            "accept": [
-              "Sidecar"
-            ]
+            "accept": []
           },
           {
             "id": "pm-04-4",
             "value": 400,
             "accept": [
-              "Segway",
               "Segway PT",
               "Segway HT"
             ],
@@ -5230,7 +5121,6 @@
             "question": "Which three-wheeled British car of the 1970s was famous for tipping over?",
             "answer": "The Reliant Robin",
             "accept": [
-              "Reliant Robin",
               "Robin"
             ]
           },
@@ -5255,9 +5145,7 @@
             "notes": "Said \"AH-peh\".",
             "value": 500,
             "accept": [
-              "Piaggio Ape",
               "Ape",
-              "Apé",
               "Ape car"
             ],
             "answer": "The Piaggio Ape",
@@ -5281,7 +5169,6 @@
             "question": "What was the pedal-less wooden forerunner of the bicycle, invented by Karl Drais in 1817, known as?",
             "answer": "The dandy horse",
             "accept": [
-              "Dandy horse",
               "Draisine",
               "Draisienne",
               "Laufmaschine",
@@ -5295,7 +5182,6 @@
             "question": "Which battery-powered tricycle of 1985 was one of the great flops of British invention?",
             "answer": "The Sinclair C5",
             "accept": [
-              "Sinclair C5",
               "C5"
             ]
           }
@@ -5330,9 +5216,7 @@
             "difficulty": 1,
             "question": "How many planets are there in our Solar System?",
             "answer": "Eight",
-            "accept": [
-              "8"
-            ]
+            "accept": []
           },
           {
             "id": "cat-13-x03",
@@ -5340,15 +5224,12 @@
             "difficulty": 1,
             "question": "Which planet is the third from the Sun?",
             "answer": "Earth",
-            "accept": [
-              "The Earth"
-            ]
+            "accept": []
           },
           {
             "id": "cat-13-2",
             "value": 200,
             "accept": [
-              "Milky Way",
               "Milky Way Galaxy"
             ],
             "answer": "The Milky Way",
@@ -5379,9 +5260,7 @@
             "difficulty": 2,
             "question": "What is the proper name for a shooting star?",
             "answer": "A meteor",
-            "accept": [
-              "Meteor"
-            ]
+            "accept": []
           },
           {
             "id": "cat-13-3",
@@ -5444,9 +5323,7 @@
             "difficulty": 4,
             "question": "What is the boundary around a black hole called, beyond which nothing can escape?",
             "answer": "The event horizon",
-            "accept": [
-              "Event horizon"
-            ]
+            "accept": []
           },
           {
             "id": "cat-13-x12",
@@ -5460,10 +5337,7 @@
             "id": "cat-13-5",
             "notes": "The number matters: Voyager 2 launched the same year but crossed over later.",
             "value": 500,
-            "accept": [
-              "Voyager One",
-              "Voyager I"
-            ],
+            "accept": [],
             "answer": "Voyager 1",
             "question": "Which NASA probe, launched in 1977, became the first human-made object to enter interstellar space?",
             "difficulty": 5
@@ -5491,8 +5365,7 @@
             "question": "Which Soviet cosmonaut made the first spacewalk, in 1965?",
             "answer": "Alexei Leonov",
             "accept": [
-              "Leonov",
-              "Aleksei Leonov"
+              "Leonov"
             ]
           }
         ],
@@ -5523,9 +5396,13 @@
             "id": "flag-on-the-play-1c",
             "value": 100,
             "difficulty": 1,
-            "question": "Red, white and blue crosses combined in the \"Union Jack.\"",
+            "question": "Red, white and blue crosses combined in the \"Union Jack\".",
             "answer": "United Kingdom",
-            "accept": []
+            "accept": [
+              "UK",
+              "Great Britain",
+              "Britain"
+            ]
           },
           {
             "id": "flag-on-the-play-1d",
@@ -5645,7 +5522,10 @@
             "difficulty": 5,
             "question": "Apart from Switzerland, the only country with a square national flag.",
             "answer": "Vatican City",
-            "accept": []
+            "accept": [
+              "Vatican",
+              "Holy See"
+            ]
           },
           {
             "id": "flag-on-the-play-5c",
@@ -5673,7 +5553,6 @@
             "id": "cat-07-1",
             "value": 100,
             "accept": [
-              "Avocados",
               "Avo"
             ],
             "answer": "Avocado",
@@ -5695,8 +5574,7 @@
             "question": "Which vegetable are chips made from?",
             "answer": "Potatoes",
             "accept": [
-              "Potato",
-              "The potato"
+              "Potato"
             ]
           },
           {
@@ -5708,7 +5586,6 @@
             "accept": [
               "Cocoa",
               "Cacao",
-              "Cocoa beans",
               "Cacao beans"
             ]
           },
@@ -5730,7 +5607,6 @@
             "question": "Which pulse is the main ingredient of hummus?",
             "answer": "Chickpeas",
             "accept": [
-              "Chickpea",
               "Garbanzo beans"
             ]
           },
@@ -5740,9 +5616,7 @@
             "difficulty": 2,
             "question": "Which nut is ground to make marzipan?",
             "answer": "Almonds",
-            "accept": [
-              "Almond"
-            ]
+            "accept": []
           },
           {
             "id": "cat-07-x06",
@@ -5809,9 +5683,7 @@
             "difficulty": 4,
             "question": "Which small salty fish goes into a traditional Caesar dressing?",
             "answer": "Anchovies",
-            "accept": [
-              "Anchovy"
-            ]
+            "accept": []
           },
           {
             "id": "cat-07-x12",
@@ -5824,9 +5696,7 @@
           {
             "id": "cat-07-5",
             "value": 500,
-            "accept": [
-              "A Negroni"
-            ],
+            "accept": [],
             "answer": "Negroni",
             "question": "Which classic cocktail is made from equal parts gin, Campari and sweet vermouth?",
             "difficulty": 5
@@ -5896,7 +5766,6 @@
             "question": "What is awarded to the attacking team when a defender commits a foul inside their own penalty area?",
             "answer": "A penalty",
             "accept": [
-              "Penalty",
               "Penalty kick"
             ]
           },
@@ -5904,7 +5773,7 @@
             "id": "pm-11-x03",
             "value": 100,
             "difficulty": 1,
-            "question": "Which Norwegian striker joined Manchester City in 2022 and broke the Premier League scoring record in his first season?",
+            "question": "Which Norwegian striker joined Manchester City in 2022 and broke the Premier League's single-season scoring record in his first season?",
             "answer": "Erling Haaland",
             "accept": [
               "Haaland"
@@ -5935,8 +5804,7 @@
             "question": "Which French forward left Paris Saint-Germain for Real Madrid in 2024?",
             "answer": "Kylian Mbappé",
             "accept": [
-              "Mbappé",
-              "Mbappe"
+              "Mbappé"
             ]
           },
           {
@@ -6021,8 +5889,7 @@
             "question": "Which club scored twice in stoppage time to beat Bayern Munich in the 1999 Champions League final?",
             "answer": "Manchester United",
             "accept": [
-              "Man United",
-              "Man Utd"
+              "Man United"
             ]
           },
           {
@@ -6030,8 +5897,7 @@
             "notes": "Liverpool scored three in six minutes and won on penalties. Inter is not correct.",
             "value": 500,
             "accept": [
-              "Milan",
-              "A.C. Milan"
+              "Milan"
             ],
             "answer": "AC Milan",
             "question": "In the 2005 Champions League final in Istanbul, which club led Liverpool 3–0 at half-time and still lost?",
@@ -6043,9 +5909,7 @@
             "difficulty": 5,
             "question": "Which Portuguese striker, nicknamed the Black Panther, was top scorer at the 1966 World Cup?",
             "answer": "Eusébio",
-            "accept": [
-              "Eusebio"
-            ]
+            "accept": []
           },
           {
             "id": "pm-11-x14",
@@ -6240,7 +6104,7 @@
       {
         "id": "fyi",
         "title": "FYI",
-        "blurb": "What do the letters stand for?.",
+        "blurb": "What do the letters stand for?",
         "clues": [
           {
             "id": "fyi-1a",
@@ -6320,7 +6184,9 @@
             "difficulty": 3,
             "question": "What does FIFA stand for?",
             "answer": "Fédération Internationale de Football Association",
-            "accept": []
+            "accept": [
+              "International Federation of Association Football"
+            ]
           },
           {
             "id": "fyi-3c",
@@ -6417,7 +6283,9 @@
             "difficulty": 1,
             "question": "Which billionaire co-founded Microsoft?",
             "answer": "Bill Gates",
-            "accept": []
+            "accept": [
+              "Gates"
+            ]
           },
           {
             "id": "gates-1b",
@@ -6489,7 +6357,9 @@
             "difficulty": 3,
             "question": "Which 2015 scandal involved Volkswagen cheating on emissions tests?",
             "answer": "Dieselgate",
-            "accept": []
+            "accept": [
+              "Emissionsgate"
+            ]
           },
           {
             "id": "gates-3c",
@@ -6594,7 +6464,9 @@
             "difficulty": 1,
             "question": "Which queen reigned over the United Kingdom from 1952 to 2022?",
             "answer": "Elizabeth II",
-            "accept": []
+            "accept": [
+              "Queen Elizabeth"
+            ]
           },
           {
             "id": "genes-royals-1c",
@@ -6664,7 +6536,9 @@
             "difficulty": 3,
             "question": "How many chromosomes do humans normally have?",
             "answer": "46",
-            "accept": []
+            "accept": [
+              "23 pairs"
+            ]
           },
           {
             "id": "genes-royals-3c",
@@ -6696,7 +6570,9 @@
             "difficulty": 4,
             "question": "Which monk founded the science of genetics by breeding pea plants?",
             "answer": "Gregor Mendel",
-            "accept": []
+            "accept": [
+              "Mendel"
+            ]
           },
           {
             "id": "genes-royals-4c",
@@ -6705,7 +6581,6 @@
             "question": "Which blood-clotting disorder spread through Europe's royal families from Queen Victoria?",
             "answer": "Haemophilia",
             "accept": [
-              "Hemophilia",
               "Haemophilia B",
               "The royal disease"
             ],
@@ -6723,9 +6598,11 @@
             "id": "genes-royals-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "Which king of Spain, nicknamed \"the Bewitched,\" died childless in 1700 and sparked a war of succession?",
+            "question": "Which king of Spain, nicknamed \"the Bewitched\", died childless in 1700 and sparked a war of succession?",
             "answer": "Charles II",
-            "accept": []
+            "accept": [
+              "Carlos II"
+            ]
           },
           {
             "id": "genes-royals-5b",
@@ -6733,7 +6610,9 @@
             "difficulty": 5,
             "question": "Which Egyptian pharaoh's parents were shown by DNA testing to be brother and sister?",
             "answer": "Tutankhamun",
-            "accept": []
+            "accept": [
+              "King Tut"
+            ]
           },
           {
             "id": "genes-royals-5c",
@@ -6741,7 +6620,9 @@
             "difficulty": 5,
             "question": "Which British chemist led the X-ray work that produced \"Photo 51\", the image that helped reveal the structure of DNA?",
             "answer": "Rosalind Franklin",
-            "accept": []
+            "accept": [
+              "Franklin"
+            ]
           },
           {
             "id": "genes-royals-5d",
@@ -6797,7 +6678,7 @@
             "question": "Which Japanese city was long ranked as the world's most populous metropolitan area?",
             "answer": "Tokyo",
             "accept": [],
-            "notes": "The UN's 2025 figures put Jakarta and Dhaka ahead, which is why the clue says “long ranked”."
+            "notes": "The UN's 2025 figures put Jakarta and Dhaka ahead, which is why the question says “long ranked”."
           },
           {
             "id": "geography-2b",
@@ -6827,7 +6708,6 @@
             "id": "pw-11-2",
             "value": 200,
             "accept": [
-              "The Vatican",
               "Vatican",
               "Holy See"
             ],
@@ -6849,7 +6729,9 @@
             "difficulty": 3,
             "question": "Which strait separates Spain from Morocco?",
             "answer": "Strait of Gibraltar",
-            "accept": []
+            "accept": [
+              "Gibraltar"
+            ]
           },
           {
             "id": "geography-3c",
@@ -6862,13 +6744,9 @@
           {
             "id": "pw-11-3",
             "value": 300,
-            "accept": [
-              "Bell",
-              "Graham Bell",
-              "Alexander Bell"
-            ],
-            "answer": "Alexander Graham Bell",
-            "question": "Which inventor, born in Edinburgh in Scotland and closely associated with teaching the deaf, is credited with inventing the telephone?",
+            "accept": [],
+            "answer": "Edinburgh",
+            "question": "In which Scottish city was Alexander Graham Bell, credited with inventing the telephone, born?",
             "difficulty": 3
           },
           {
@@ -6899,9 +6777,7 @@
             "id": "pw-11-4",
             "notes": "His birthplace in the Bonngasse is now a museum.",
             "value": 400,
-            "accept": [
-              "Bonn, Germany"
-            ],
+            "accept": [],
             "answer": "Bonn",
             "question": "In which German city was the composer Ludwig van Beethoven born?",
             "difficulty": 4
@@ -7016,7 +6892,9 @@
             "difficulty": 2,
             "question": "Which Jamaican sprinter won the 100 metres at three consecutive Olympics?",
             "answer": "Usain Bolt",
-            "accept": []
+            "accept": [
+              "Bolt"
+            ]
           },
           {
             "id": "go-for-gold-2d",
@@ -7024,9 +6902,7 @@
             "difficulty": 2,
             "question": "Which Olympic race is named after the run of the Greek messenger Pheidippides?",
             "answer": "Marathon",
-            "accept": [
-              "The marathon"
-            ]
+            "accept": []
           },
           {
             "id": "go-for-gold-3a",
@@ -7042,7 +6918,9 @@
             "difficulty": 3,
             "question": "Which Romanian gymnast scored the first perfect 10 in Olympic history in 1976?",
             "answer": "Nadia Comăneci",
-            "accept": []
+            "accept": [
+              "Comăneci"
+            ]
           },
           {
             "id": "go-for-gold-3c",
@@ -7094,7 +6972,9 @@
             "difficulty": 4,
             "question": "Which American swimmer won seven gold medals at a single Games in 1972?",
             "answer": "Mark Spitz",
-            "accept": []
+            "accept": [
+              "Spitz"
+            ]
           },
           {
             "id": "os-05-4",
@@ -7127,7 +7007,9 @@
             "difficulty": 5,
             "question": "Which Ethiopian won the 1960 Olympic marathon in Rome running barefoot?",
             "answer": "Abebe Bikila",
-            "accept": []
+            "accept": [
+              "Bikila"
+            ]
           },
           {
             "id": "go-for-gold-5c",
@@ -7143,7 +7025,9 @@
             "difficulty": 5,
             "question": "Which Czechoslovak runner won the 5,000 m, 10,000 m and marathon at the 1952 Games?",
             "answer": "Emil Zátopek",
-            "accept": []
+            "accept": [
+              "Zátopek"
+            ]
           }
         ]
       },
@@ -7182,7 +7066,10 @@
             "difficulty": 1,
             "question": "Which four crime-fighting turtles are named after Renaissance artists?",
             "answer": "Teenage Mutant Ninja Turtles",
-            "accept": []
+            "accept": [
+              "Ninja Turtles",
+              "Teenage Mutant Hero Turtles"
+            ]
           },
           {
             "id": "goat-groups-2a",
@@ -7206,7 +7093,9 @@
             "difficulty": 2,
             "question": "Which South Korean boy band had a global hit with Dynamite?",
             "answer": "BTS",
-            "accept": []
+            "accept": [
+              "Bangtan Boys"
+            ]
           },
           {
             "id": "goat-groups-x01",
@@ -7214,9 +7103,7 @@
             "difficulty": 2,
             "question": "Which band backed Bob Marley?",
             "answer": "The Wailers",
-            "accept": [
-              "Wailers"
-            ]
+            "accept": []
           },
           {
             "id": "goat-groups-3a",
@@ -7224,7 +7111,9 @@
             "difficulty": 3,
             "question": "Alexander the Great's army came from which ancient kingdom?",
             "answer": "Macedonia",
-            "accept": []
+            "accept": [
+              "Macedon"
+            ]
           },
           {
             "id": "goat-groups-3b",
@@ -7254,7 +7143,7 @@
             "id": "goat-groups-4a",
             "value": 400,
             "difficulty": 4,
-            "question": "Which Italian island was the first \"Blue Zone,\" famous for its large number of centenarians?",
+            "question": "Which Italian island was the first \"Blue Zone\", famous for its large number of centenarians?",
             "answer": "Sardinia",
             "accept": []
           },
@@ -7272,7 +7161,9 @@
             "difficulty": 4,
             "question": "Which order of crusading knights was founded in 1119 and dissolved in 1312?",
             "answer": "Knights Templar",
-            "accept": []
+            "accept": [
+              "Templars"
+            ]
           },
           {
             "id": "goat-groups-4d",
@@ -7325,9 +7216,11 @@
             "id": "goats-1a",
             "value": 100,
             "difficulty": 1,
-            "question": "Which Chicago Bulls legend, nicknamed \"His Airness,\" wore the number 23?",
+            "question": "Which Chicago Bulls legend, nicknamed \"His Airness\", wore the number 23?",
             "answer": "Michael Jordan",
-            "accept": []
+            "accept": [
+              "Jordan"
+            ]
           },
           {
             "id": "goats-1b",
@@ -7335,7 +7228,10 @@
             "difficulty": 1,
             "question": "Which Argentinian footballer has won a record eight Ballon d'Or awards?",
             "answer": "Lionel Messi",
-            "accept": []
+            "accept": [
+              "Messi",
+              "Leo Messi"
+            ]
           },
           {
             "id": "goats-1c",
@@ -7343,7 +7239,10 @@
             "difficulty": 1,
             "question": "Which boxer said he would \"float like a butterfly, sting like a bee\"?",
             "answer": "Muhammad Ali",
-            "accept": []
+            "accept": [
+              "Ali",
+              "Cassius Clay"
+            ]
           },
           {
             "id": "goats-1d",
@@ -7351,7 +7250,9 @@
             "difficulty": 1,
             "question": "Which Portuguese footballer is known as CR7?",
             "answer": "Cristiano Ronaldo",
-            "accept": []
+            "accept": [
+              "Ronaldo"
+            ]
           },
           {
             "id": "goats-2a",
@@ -7359,7 +7260,10 @@
             "difficulty": 2,
             "question": "Which golfer, winner of 15 majors, shares his nickname with a big cat?",
             "answer": "Tiger Woods",
-            "accept": []
+            "accept": [
+              "Woods",
+              "Tiger"
+            ]
           },
           {
             "id": "goats-2b",
@@ -7367,7 +7271,9 @@
             "difficulty": 2,
             "question": "Which Swiss tennis player won 20 Grand Slam titles, including eight at Wimbledon?",
             "answer": "Roger Federer",
-            "accept": []
+            "accept": [
+              "Federer"
+            ]
           },
           {
             "id": "goats-2c",
@@ -7375,7 +7281,9 @@
             "difficulty": 2,
             "question": "Which American is the most decorated gymnast of all time?",
             "answer": "Simone Biles",
-            "accept": []
+            "accept": [
+              "Biles"
+            ]
           },
           {
             "id": "goats-2d",
@@ -7383,7 +7291,9 @@
             "difficulty": 2,
             "question": "Which German driver won seven Formula 1 titles, five of them in a row with Ferrari?",
             "answer": "Michael Schumacher",
-            "accept": []
+            "accept": [
+              "Schumacher"
+            ]
           },
           {
             "id": "goats-3a",
@@ -7391,7 +7301,9 @@
             "difficulty": 3,
             "question": "Which Canadian ice hockey legend is known as \"The Great One\"?",
             "answer": "Wayne Gretzky",
-            "accept": []
+            "accept": [
+              "Gretzky"
+            ]
           },
           {
             "id": "goats-3b",
@@ -7399,7 +7311,9 @@
             "difficulty": 3,
             "question": "Which Serbian holds the record for the most men's Grand Slam singles titles?",
             "answer": "Novak Djokovic",
-            "accept": []
+            "accept": [
+              "Djokovic"
+            ]
           },
           {
             "id": "goats-3c",
@@ -7415,7 +7329,9 @@
             "difficulty": 3,
             "question": "Which American won 23 Grand Slam singles titles and has a sister called Venus?",
             "answer": "Serena Williams",
-            "accept": []
+            "accept": [
+              "Serena"
+            ]
           },
           {
             "id": "goats-4a",
@@ -7423,23 +7339,29 @@
             "difficulty": 4,
             "question": "Which Norwegian was world chess champion from 2013 to 2023?",
             "answer": "Magnus Carlsen",
-            "accept": []
+            "accept": [
+              "Carlsen"
+            ]
           },
           {
             "id": "goats-4b",
             "value": 400,
             "difficulty": 4,
-            "question": "Which Belgian cyclist, nicknamed \"The Cannibal,\" won five Tours de France?",
+            "question": "Which Belgian cyclist, nicknamed \"The Cannibal\", won five Tours de France?",
             "answer": "Eddy Merckx",
-            "accept": []
+            "accept": [
+              "Merckx"
+            ]
           },
           {
             "id": "goats-4c",
             "value": 400,
             "difficulty": 4,
-            "question": "Which Italian motorcycle racer, nicknamed \"The Doctor,\" won nine world titles?",
+            "question": "Which Italian motorcycle racer, nicknamed \"The Doctor\", won nine world titles?",
             "answer": "Valentino Rossi",
-            "accept": []
+            "accept": [
+              "Rossi"
+            ]
           },
           {
             "id": "goats-4d",
@@ -7447,7 +7369,9 @@
             "difficulty": 4,
             "question": "Which Russian chess champion lost a famous 1997 match to the computer Deep Blue?",
             "answer": "Garry Kasparov",
-            "accept": []
+            "accept": [
+              "Kasparov"
+            ]
           },
           {
             "id": "goats-5a",
@@ -7455,15 +7379,20 @@
             "difficulty": 5,
             "question": "Which Australian cricketer retired with a Test batting average of 99.94?",
             "answer": "Don Bradman",
-            "accept": []
+            "accept": [
+              "Bradman",
+              "Donald Bradman"
+            ]
           },
           {
             "id": "goats-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Soviet goalkeeper, the \"Black Spider,\" is the only keeper to win the Ballon d'Or?",
+            "question": "Which Soviet goalkeeper, the \"Black Spider\", is the only keeper to win the Ballon d'Or?",
             "answer": "Lev Yashin",
-            "accept": []
+            "accept": [
+              "Yashin"
+            ]
           },
           {
             "id": "goats-5c",
@@ -7479,7 +7408,9 @@
             "difficulty": 5,
             "question": "Which \"Flying Finn\" won nine Olympic gold medals in distance running in the 1920s?",
             "answer": "Paavo Nurmi",
-            "accept": []
+            "accept": [
+              "Nurmi"
+            ]
           }
         ]
       },
@@ -7511,7 +7442,9 @@
             "difficulty": 1,
             "question": "Which loud style of rock music was pioneered by Black Sabbath and Iron Maiden?",
             "answer": "Heavy metal",
-            "accept": []
+            "accept": [
+              "Metal"
+            ]
           },
           {
             "id": "pw-03-x03",
@@ -7535,9 +7468,7 @@
             "difficulty": 2,
             "question": "Which school workshop subject teaches pupils to cut, shape and weld steel?",
             "answer": "Metalwork",
-            "accept": [
-              "Metal work"
-            ]
+            "accept": []
           },
           {
             "id": "pw-03-x05",
@@ -7545,9 +7476,7 @@
             "difficulty": 2,
             "question": "Which handheld device do treasure hunters sweep over a beach in search of coins?",
             "answer": "A metal detector",
-            "accept": [
-              "Metal detector"
-            ]
+            "accept": []
           },
           {
             "id": "pw-03-x06",
@@ -7561,9 +7490,7 @@
             "id": "pw-03-3",
             "notes": "Not a simile, which uses \"like\" or \"as\".",
             "value": 300,
-            "accept": [
-              "Metaphor"
-            ],
+            "accept": [],
             "answer": "A metaphor",
             "question": "Which figure of speech describes one thing as if it were another, as in \"time is a thief\"?",
             "difficulty": 3
@@ -7597,9 +7524,7 @@
           {
             "id": "pw-03-4",
             "value": 400,
-            "accept": [
-              "The metabolism"
-            ],
+            "accept": [],
             "answer": "Metabolism",
             "question": "What is the name for the chemical processes by which the body turns food and drink into energy?",
             "difficulty": 4
@@ -7627,7 +7552,6 @@
             "question": "Which five bones form the palm of the hand, between the wrist and the fingers?",
             "answer": "The metacarpals",
             "accept": [
-              "Metacarpals",
               "Metacarpal bones"
             ]
           },
@@ -7635,8 +7559,6 @@
             "id": "pw-03-5",
             "value": 500,
             "accept": [
-              "Metatarsals",
-              "Metatarsal",
               "Metatarsal bones"
             ],
             "answer": "The metatarsals",
@@ -7665,9 +7587,7 @@
             "difficulty": 5,
             "question": "Which word for a shared virtual world was coined by Neal Stephenson in his 1992 novel \"Snow Crash\"?",
             "answer": "Metaverse",
-            "accept": [
-              "The metaverse"
-            ]
+            "accept": []
           }
         ],
         "title": "Going Meta"
@@ -7679,9 +7599,7 @@
           {
             "id": "cat-08-1",
             "value": 100,
-            "accept": [
-              "Eleven"
-            ],
+            "accept": [],
             "answer": "11",
             "question": "In football, how many players does each team have on the pitch at kick-off, including the goalkeeper?",
             "difficulty": 1
@@ -7711,9 +7629,7 @@
             "difficulty": 1,
             "question": "How many players does a basketball team have on court at one time?",
             "answer": "Five",
-            "accept": [
-              "5"
-            ]
+            "accept": []
           },
           {
             "id": "cat-08-2",
@@ -7730,8 +7646,7 @@
             "question": "How long is an Olympic swimming pool, in metres?",
             "answer": "50 metres",
             "accept": [
-              "50",
-              "50 m"
+              "50"
             ]
           },
           {
@@ -7757,9 +7672,7 @@
             "id": "cat-08-3",
             "notes": "A perfect game takes twelve strikes in a row.",
             "value": 300,
-            "accept": [
-              "Three hundred"
-            ],
+            "accept": [],
             "answer": "300",
             "question": "What is the highest possible score in a single game of ten-pin bowling?",
             "difficulty": 3
@@ -7778,9 +7691,7 @@
             "difficulty": 3,
             "question": "In cricket, how many balls are bowled in an over?",
             "answer": "Six",
-            "accept": [
-              "6"
-            ]
+            "accept": []
           },
           {
             "id": "cat-08-x09",
@@ -7789,7 +7700,6 @@
             "question": "Which of tennis's four Grand Slam tournaments is played on clay?",
             "answer": "The French Open",
             "accept": [
-              "French Open",
               "Roland Garros"
             ]
           },
@@ -7807,9 +7717,7 @@
             "difficulty": 4,
             "question": "How many players does a water polo team have in the water?",
             "answer": "Seven",
-            "accept": [
-              "7"
-            ],
+            "accept": [],
             "notes": "Six outfield players and a goalkeeper."
           },
           {
@@ -7834,9 +7742,7 @@
             "id": "cat-08-5",
             "notes": "Also called a double eagle in the US, but the bird asked for is the albatross.",
             "value": 500,
-            "accept": [
-              "An albatross"
-            ],
+            "accept": [],
             "answer": "Albatross",
             "question": "In golf, which bird gives its name to a score of three under par on a single hole?",
             "difficulty": 5
@@ -7847,10 +7753,7 @@
             "difficulty": 5,
             "question": "In fencing, which weapon completes the trio with the foil and the épée?",
             "answer": "The sabre",
-            "accept": [
-              "Sabre",
-              "Saber"
-            ]
+            "accept": []
           },
           {
             "id": "cat-08-x14",
@@ -7868,10 +7771,7 @@
             "answer": "305 centimetres",
             "accept": [
               "3.05 metres",
-              "305 cm",
-              "3.05 m",
-              "10 feet",
-              "Ten feet"
+              "10 feet"
             ]
           }
         ],
@@ -8056,10 +7956,7 @@
             "difficulty": 1,
             "question": "What is the chemical formula for water?",
             "answer": "H2O",
-            "accept": [
-              "H₂O",
-              "H two O"
-            ]
+            "accept": []
           },
           {
             "id": "high-school-trivia-1b",
@@ -8067,7 +7964,10 @@
             "difficulty": 1,
             "question": "Who painted the Mona Lisa?",
             "answer": "Leonardo da Vinci",
-            "accept": []
+            "accept": [
+              "Leonardo",
+              "Da Vinci"
+            ]
           },
           {
             "id": "high-school-trivia-x01",
@@ -8084,7 +7984,6 @@
             "question": "At what temperature, in degrees Celsius, does water freeze?",
             "answer": "0",
             "accept": [
-              "Zero",
               "0 degrees",
               "0°C"
             ]
@@ -8095,7 +7994,10 @@
             "difficulty": 2,
             "question": "The 1914 assassination of Archduke Franz Ferdinand triggered which war?",
             "answer": "First World War",
-            "accept": []
+            "accept": [
+              "World War One",
+              "The Great War"
+            ]
           },
           {
             "id": "high-school-trivia-2b",
@@ -8103,7 +8005,9 @@
             "difficulty": 2,
             "question": "Which scientist developed the theory of general relativity?",
             "answer": "Albert Einstein",
-            "accept": []
+            "accept": [
+              "Einstein"
+            ]
           },
           {
             "id": "high-school-trivia-2c",
@@ -8170,7 +8074,9 @@
             "difficulty": 4,
             "question": "Which 1919 treaty formally ended the First World War with Germany?",
             "answer": "Treaty of Versailles",
-            "accept": []
+            "accept": [
+              "Versailles"
+            ]
           },
           {
             "id": "high-school-trivia-4c",
@@ -8192,7 +8098,6 @@
             "id": "os-06-4",
             "value": 400,
             "accept": [
-              "Treaty of Rome",
               "Rome Treaty",
               "Rome"
             ],
@@ -8206,7 +8111,9 @@
             "difficulty": 5,
             "question": "Which astronomer formulated the three laws of planetary motion?",
             "answer": "Johannes Kepler",
-            "accept": []
+            "accept": [
+              "Kepler"
+            ]
           },
           {
             "id": "high-school-trivia-5b",
@@ -8214,7 +8121,10 @@
             "difficulty": 5,
             "question": "Which 1648 peace settlement ended the Thirty Years' War?",
             "answer": "Peace of Westphalia",
-            "accept": []
+            "accept": [
+              "Treaty of Westphalia",
+              "Westphalia"
+            ]
           },
           {
             "id": "high-school-trivia-5c",
@@ -8222,7 +8132,11 @@
             "difficulty": 5,
             "question": "What is the derivative of sin x?",
             "answer": "cos x",
-            "accept": []
+            "accept": [
+              "Cosine x",
+              "Cosine",
+              "Cos"
+            ]
           },
           {
             "id": "high-school-trivia-5d",
@@ -8412,8 +8326,6 @@
             "accept": [
               "Pythagoras' theorem",
               "Pythagoras's theorem",
-              "Pythagoras theorem",
-              "Pythagorean theorem",
               "Pythagoras"
             ],
             "answer": "The Pythagorean theorem",
@@ -8428,7 +8340,8 @@
             "answer": "The theory of evolution",
             "accept": [
               "Evolution",
-              "Evolution by natural selection"
+              "Evolution by natural selection",
+              "Natural selection"
             ]
           },
           {
@@ -8437,9 +8350,7 @@
             "difficulty": 1,
             "question": "What do you call a belief that a secret plot lies behind an event, such as the Moon landings being faked?",
             "answer": "A conspiracy theory",
-            "accept": [
-              "Conspiracy theory"
-            ]
+            "accept": []
           },
           {
             "id": "pm-09-x03",
@@ -8448,8 +8359,7 @@
             "question": "Which long-disproved idea holds that our planet is a disc rather than a globe?",
             "answer": "Flat Earth theory",
             "accept": [
-              "Flat Earth",
-              "The flat Earth theory"
+              "Flat Earth"
             ]
           },
           {
@@ -8495,8 +8405,7 @@
             "id": "pm-09-3",
             "value": 300,
             "accept": [
-              "Big Bang",
-              "The Big Bang"
+              "Big Bang"
             ],
             "answer": "The Big Bang theory",
             "question": "Which cosmological theory describes the universe expanding from an early hot, dense state?",
@@ -8527,7 +8436,9 @@
             "difficulty": 3,
             "question": "Which theory holds that all matter is made of tiny particles?",
             "answer": "Atomic theory",
-            "accept": []
+            "accept": [
+              "Particle theory"
+            ]
           },
           {
             "id": "pm-09-4",
@@ -8556,9 +8467,7 @@
             "difficulty": 4,
             "question": "Which theorem says a monkey typing at random for ever would eventually produce the works of Shakespeare?",
             "answer": "The infinite monkey theorem",
-            "accept": [
-              "Infinite monkey theorem"
-            ]
+            "accept": []
           },
           {
             "id": "pm-09-x12",
@@ -8592,9 +8501,7 @@
             "difficulty": 5,
             "question": "Which Cold War theory held that if one country fell to communism, its neighbours would follow?",
             "answer": "The domino theory",
-            "accept": [
-              "Domino theory"
-            ]
+            "accept": []
           },
           {
             "id": "pm-09-x15",
@@ -8662,7 +8569,9 @@
             "difficulty": 2,
             "question": "Which is the largest of the Balearic Islands?",
             "answer": "Mallorca",
-            "accept": []
+            "accept": [
+              "Majorca"
+            ]
           },
           {
             "id": "island-life-2c",
@@ -8758,7 +8667,9 @@
             "difficulty": 5,
             "question": "On which Danish island does most of Copenhagen stand?",
             "answer": "Zealand",
-            "accept": []
+            "accept": [
+              "Sjælland"
+            ]
           },
           {
             "id": "island-life-5c",
@@ -8838,10 +8749,6 @@
             "question": "On which date is Labour Day celebrated across most of Europe?",
             "answer": "1 May",
             "accept": [
-              "May 1",
-              "1st of May",
-              "May 1st",
-              "First of May",
               "May Day"
             ]
           },
@@ -8859,7 +8766,9 @@
             "difficulty": 3,
             "question": "On which date in 2001 were the Twin Towers attacked?",
             "answer": "11 September",
-            "accept": []
+            "accept": [
+              "9/11"
+            ]
           },
           {
             "id": "it-s-a-date-3b",
@@ -8868,9 +8777,6 @@
             "question": "On which date is France's national day, Bastille Day?",
             "answer": "14 July",
             "accept": [
-              "July 14",
-              "14th of July",
-              "July 14th",
               "Le quatorze juillet",
               "Quatorze juillet"
             ]
@@ -8929,7 +8835,9 @@
             "difficulty": 5,
             "question": "On which date in 44 BC was Julius Caesar assassinated?",
             "answer": "15 March",
-            "accept": []
+            "accept": [
+              "The Ides of March"
+            ]
           },
           {
             "id": "it-s-a-date-5b",
@@ -9112,7 +9020,9 @@
             "difficulty": 5,
             "question": "Which South American herbal infusion is sipped through a metal straw called a bombilla?",
             "answer": "Yerba mate",
-            "accept": []
+            "accept": [
+              "Mate"
+            ]
           },
           {
             "id": "juicers-5d",
@@ -9120,9 +9030,7 @@
             "difficulty": 5,
             "question": "Which Scandinavian spirit is flavoured with caraway or dill?",
             "answer": "Akvavit",
-            "accept": [
-              "Aquavit"
-            ]
+            "accept": []
           }
         ]
       },
@@ -9300,9 +9208,7 @@
           {
             "id": "pw-02-1",
             "value": 100,
-            "accept": [
-              "Deathnote"
-            ],
+            "accept": [],
             "answer": "Death Note",
             "question": "Which anime features the detective L as the main opponent of its protagonist?",
             "difficulty": 1
@@ -9321,11 +9227,9 @@
             "id": "pw-02-x02",
             "value": 100,
             "difficulty": 1,
-            "question": "Which tabletop role-playing game, played with a twenty-sided die, is shortened to D&D?",
+            "question": "Which tabletop fantasy game, played with a twenty-sided die, is shortened to D&D?",
             "answer": "Dungeons & Dragons",
-            "accept": [
-              "Dungeons and Dragons"
-            ]
+            "accept": []
           },
           {
             "id": "pw-02-x03",
@@ -9369,16 +9273,12 @@
             "difficulty": 2,
             "question": "Which science-fiction series follows an alien who travels through time in a blue police box?",
             "answer": "Doctor Who",
-            "accept": [
-              "Dr Who"
-            ]
+            "accept": []
           },
           {
             "id": "pw-02-3",
             "value": 300,
-            "accept": [
-              "Forty-two"
-            ],
+            "accept": [],
             "answer": "42",
             "question": "In \"The Hitchhiker's Guide to the Galaxy\", which number is the answer to life, the universe and everything?",
             "difficulty": 3
@@ -9444,8 +9344,7 @@
             "question": "Which collectible card game, created by Richard Garfield in 1993, is known as MTG?",
             "answer": "Magic: The Gathering",
             "accept": [
-              "Magic",
-              "Magic the Gathering"
+              "Magic"
             ]
           },
           {
@@ -9453,7 +9352,6 @@
             "notes": "The earliest known appearance of the word in print, as the name of one of the zoo's creatures.",
             "value": 500,
             "accept": [
-              "Dr Seuss",
               "Seuss",
               "Theodor Seuss Geisel",
               "Theodor Geisel"
@@ -9479,7 +9377,7 @@
             "question": "Which test, proposed in 1950, asks whether a machine can pass for a human in conversation?",
             "answer": "The Turing test",
             "accept": [
-              "Turing test"
+              "The imitation game"
             ]
           },
           {
@@ -9488,10 +9386,7 @@
             "difficulty": 5,
             "question": "In computing, what is a unit of four bits, or half a byte, called?",
             "answer": "A nibble",
-            "accept": [
-              "Nibble",
-              "Nybble"
-            ]
+            "accept": []
           }
         ],
         "title": "L Nerd"
@@ -9524,9 +9419,7 @@
             "difficulty": 1,
             "question": "What do you call an animal that eats only plants?",
             "answer": "A herbivore",
-            "accept": [
-              "Herbivore"
-            ]
+            "accept": []
           },
           {
             "id": "cat-02-x03",
@@ -9534,16 +9427,13 @@
             "difficulty": 1,
             "question": "Which natural disasters are measured on the Richter scale?",
             "answer": "Earthquakes",
-            "accept": [
-              "Earthquake"
-            ]
+            "accept": []
           },
           {
             "id": "cat-02-2",
             "value": 200,
             "accept": [
-              "Mitochondrion",
-              "The mitochondria"
+              "Mitochondrion"
             ],
             "answer": "Mitochondria",
             "question": "Which part of a cell is famously nicknamed \"the powerhouse of the cell\"?",
@@ -9585,7 +9475,7 @@
               "N2"
             ],
             "answer": "Nitrogen",
-            "question": "Which gas makes up about 78 percent of Earth's atmosphere?",
+            "question": "Which gas makes up about 78 per cent of Earth's atmosphere?",
             "difficulty": 3
           },
           {
@@ -9595,8 +9485,6 @@
             "question": "Which blood group is known as the universal donor?",
             "answer": "O negative",
             "accept": [
-              "O",
-              "O-",
               "Type O negative"
             ]
           },
@@ -9634,9 +9522,7 @@
             "difficulty": 4,
             "question": "Which layer of the atmosphere contains the ozone layer?",
             "answer": "The stratosphere",
-            "accept": [
-              "Stratosphere"
-            ]
+            "accept": []
           },
           {
             "id": "cat-02-x11",
@@ -9644,9 +9530,7 @@
             "difficulty": 4,
             "question": "What was the supercontinent that existed about 300 million years ago called?",
             "answer": "Pangaea",
-            "accept": [
-              "Pangea"
-            ]
+            "accept": []
           },
           {
             "id": "cat-02-x12",
@@ -9655,7 +9539,6 @@
             "question": "Which effect makes a siren drop in pitch as an ambulance passes you?",
             "answer": "The Doppler effect",
             "accept": [
-              "Doppler effect",
               "Doppler"
             ]
           },
@@ -9676,8 +9559,7 @@
             "question": "Which Austrian physicist imagined a cat that is both alive and dead?",
             "answer": "Erwin Schrödinger",
             "accept": [
-              "Schrödinger",
-              "Schrodinger"
+              "Schrödinger"
             ]
           },
           {
@@ -9687,7 +9569,8 @@
             "question": "Which enzyme in saliva starts the digestion of starch?",
             "answer": "Amylase",
             "accept": [
-              "Salivary amylase"
+              "Salivary amylase",
+              "Ptyalin"
             ]
           },
           {
@@ -9817,7 +9700,10 @@
             "difficulty": 4,
             "question": "What does \"quid pro quo\" mean?",
             "answer": "Something for something",
-            "accept": []
+            "accept": [
+              "This for that",
+              "A favour for a favour"
+            ]
           },
           {
             "id": "latin-lover-4b",
@@ -10221,8 +10107,7 @@
             "id": "pw-01-1",
             "value": 100,
             "accept": [
-              "Liverpool FC",
-              "Liverpool F.C."
+              "Liverpool FC"
             ],
             "answer": "Liverpool",
             "question": "Which English football club plays its home matches at Anfield?",
@@ -10234,10 +10119,7 @@
             "difficulty": 1,
             "question": "Which small green or black fruit is pressed to make oil?",
             "answer": "An olive",
-            "accept": [
-              "Olive",
-              "Olives"
-            ]
+            "accept": []
           },
           {
             "id": "pw-01-x02",
@@ -10245,9 +10127,7 @@
             "difficulty": 1,
             "question": "Which organ of the body is damaged by drinking too much alcohol?",
             "answer": "The liver",
-            "accept": [
-              "Liver"
-            ]
+            "accept": []
           },
           {
             "id": "pw-01-x03",
@@ -10256,16 +10136,13 @@
             "question": "What do you call it when a pizza is brought to your front door?",
             "answer": "Delivery",
             "accept": [
-              "A delivery",
               "Home delivery"
             ]
           },
           {
             "id": "pw-01-2",
             "value": 200,
-            "accept": [
-              "Live stock"
-            ],
+            "accept": [],
             "answer": "Livestock",
             "question": "What is the collective term for farm animals raised for meat, milk, eggs or other products?",
             "difficulty": 2
@@ -10284,9 +10161,7 @@
             "difficulty": 2,
             "question": "Which Bee Gees disco hit opens the film \"Saturday Night Fever\"?",
             "answer": "Stayin' Alive",
-            "accept": [
-              "Staying Alive"
-            ]
+            "accept": []
           },
           {
             "id": "pw-01-x06",
@@ -10294,10 +10169,7 @@
             "difficulty": 2,
             "question": "What do you call a video broadcast over the internet as it happens?",
             "answer": "A livestream",
-            "accept": [
-              "Livestream",
-              "Live stream"
-            ]
+            "accept": []
           },
           {
             "id": "pw-01-3",
@@ -10323,9 +10195,7 @@
             "difficulty": 3,
             "question": "What do you call a small, thin splinter of wood or glass?",
             "answer": "A sliver",
-            "accept": [
-              "Sliver"
-            ]
+            "accept": []
           },
           {
             "id": "pw-01-x09",
@@ -10338,9 +10208,7 @@
           {
             "id": "pw-01-4",
             "value": 400,
-            "accept": [
-              "Live-action"
-            ],
+            "accept": [],
             "answer": "Live action",
             "question": "What is the term for filmmaking with real actors and filmed footage rather than animation?",
             "difficulty": 4
@@ -10369,9 +10237,7 @@
             "difficulty": 4,
             "question": "Which two-word term for an energetic, unpredictable person is also a hazard for electricians?",
             "answer": "A live wire",
-            "accept": [
-              "Live wire"
-            ]
+            "accept": []
           },
           {
             "id": "pw-01-5",
@@ -10420,7 +10286,6 @@
             "id": "gn-08-1",
             "value": 100,
             "accept": [
-              "Blue Shell",
               "Spiny Shell",
               "Blue Spiny Shell"
             ],
@@ -10434,10 +10299,7 @@
             "difficulty": 1,
             "question": "Which red-and-white ball do trainers throw to catch a Pokémon?",
             "answer": "A Poké Ball",
-            "accept": [
-              "Poké Ball",
-              "Pokeball"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-x02",
@@ -10446,8 +10308,6 @@
             "question": "In the \"Super Mario\" games, which item makes Mario grow to twice his size?",
             "answer": "The Super Mushroom",
             "accept": [
-              "Super Mushroom",
-              "A mushroom",
               "Mushroom"
             ]
           },
@@ -10458,16 +10318,13 @@
             "question": "In \"Minecraft\", which tool do you need to mine stone and ore?",
             "answer": "A pickaxe",
             "accept": [
-              "Pickaxe",
               "Pick"
             ]
           },
           {
             "id": "gn-08-2",
             "value": 200,
-            "accept": [
-              "Master Sword"
-            ],
+            "accept": [],
             "answer": "The Master Sword",
             "question": "Which legendary blade, also called the Blade of Evil's Bane, rests in a stone pedestal in \"The Legend of Zelda\" games?",
             "difficulty": 2
@@ -10480,7 +10337,6 @@
             "answer": "The Super Star",
             "accept": [
               "Star",
-              "Super Star",
               "Starman"
             ]
           },
@@ -10490,9 +10346,7 @@
             "difficulty": 2,
             "question": "In \"Minecraft\", which pale blue gem makes the strongest tools and armour you can craft without smelting ancient debris?",
             "answer": "Diamond",
-            "accept": [
-              "Diamonds"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-x06",
@@ -10500,16 +10354,12 @@
             "difficulty": 2,
             "question": "In the \"Super Mario\" games, which flower lets Mario throw fireballs?",
             "answer": "The Fire Flower",
-            "accept": [
-              "Fire Flower"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-3",
             "value": 300,
             "accept": [
-              "Hidden Blade",
-              "Hidden blades",
               "Wrist blade"
             ],
             "answer": "The Hidden Blade",
@@ -10522,9 +10372,7 @@
             "difficulty": 3,
             "question": "Which shield, bearing the royal crest of Hyrule, is Link's best-known defence in \"The Legend of Zelda\"?",
             "answer": "The Hylian Shield",
-            "accept": [
-              "Hylian Shield"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-x08",
@@ -10532,9 +10380,7 @@
             "difficulty": 3,
             "question": "Which glowing, two-pronged blade is carried by the Elites of the Covenant in \"Halo\"?",
             "answer": "The Energy Sword",
-            "accept": [
-              "Energy Sword"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-x09",
@@ -10543,7 +10389,6 @@
             "question": "Which handheld device fires linked doorways on to walls in Valve's puzzle game \"Portal\"?",
             "answer": "The Portal Gun",
             "accept": [
-              "Portal Gun",
               "Aperture Science Handheld Portal Device"
             ]
           },
@@ -10551,7 +10396,6 @@
             "id": "gn-08-4",
             "value": 400,
             "accept": [
-              "Leviathan Axe",
               "Leviathan"
             ],
             "answer": "The Leviathan Axe",
@@ -10564,9 +10408,7 @@
             "difficulty": 4,
             "question": "In \"GoldenEye 007\" on the Nintendo 64, which weapon kills with a single shot?",
             "answer": "The Golden Gun",
-            "accept": [
-              "Golden Gun"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-x11",
@@ -10574,9 +10416,7 @@
             "difficulty": 4,
             "question": "Which key-shaped weapon does Sora wield in \"Kingdom Hearts\"?",
             "answer": "The Keyblade",
-            "accept": [
-              "Keyblade"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-x12",
@@ -10585,16 +10425,13 @@
             "question": "In \"Metal Gear Solid\", under which everyday item does Snake famously hide from guards?",
             "answer": "A cardboard box",
             "accept": [
-              "Cardboard box",
               "A box"
             ]
           },
           {
             "id": "gn-08-5",
             "value": 500,
-            "accept": [
-              "Buster Sword"
-            ],
+            "accept": [],
             "answer": "The Buster Sword",
             "question": "What is the name of the enormous broadsword carried by Cloud Strife in \"Final Fantasy VII\"?",
             "difficulty": 5
@@ -10606,7 +10443,6 @@
             "question": "Which flask restores your health when you rest at a bonfire in \"Dark Souls\"?",
             "answer": "The Estus Flask",
             "accept": [
-              "Estus Flask",
               "Estus"
             ]
           },
@@ -10616,18 +10452,15 @@
             "difficulty": 5,
             "question": "In the \"Final Fantasy\" series, which feather-like item revives a fallen party member?",
             "answer": "Phoenix Down",
-            "accept": [
-              "A Phoenix Down"
-            ]
+            "accept": []
           },
           {
             "id": "gn-08-x15",
             "value": 500,
             "difficulty": 5,
-            "question": "Which enormous energy weapon from \"Doom\" is known by the initials BFG?",
+            "question": "Which enormous energy weapon from \"Doom\" is known by three initials followed by the number 9000?",
             "answer": "The BFG 9000",
             "accept": [
-              "BFG 9000",
               "BFG"
             ]
           }
@@ -10677,7 +10510,9 @@
             "difficulty": 2,
             "question": "Which country does Samsung come from?",
             "answer": "South Korea",
-            "accept": []
+            "accept": [
+              "Korea"
+            ]
           },
           {
             "id": "made-in-where-2b",
@@ -10709,7 +10544,9 @@
             "difficulty": 3,
             "question": "Which country does Heineken come from?",
             "answer": "Netherlands",
-            "accept": []
+            "accept": [
+              "Holland"
+            ]
           },
           {
             "id": "made-in-where-3b",
@@ -10991,7 +10828,9 @@
             "difficulty": 1,
             "question": "In which game do you match three sweets in a row?",
             "answer": "Candy Crush Saga",
-            "accept": []
+            "accept": [
+              "Candy Crush"
+            ]
           },
           {
             "id": "mobile-app-classics-1c",
@@ -11301,7 +11140,10 @@
             "difficulty": 5,
             "question": "Which Sherpa reached the summit of Everest with Edmund Hillary in 1953?",
             "answer": "Tenzing Norgay",
-            "accept": []
+            "accept": [
+              "Tenzing",
+              "Sherpa Tenzing"
+            ]
           },
           {
             "id": "mountains-5d",
@@ -11333,8 +11175,6 @@
             "question": "What is a group of fish called?",
             "answer": "A school",
             "accept": [
-              "A shoal",
-              "School",
               "Shoal"
             ]
           },
@@ -11355,9 +11195,7 @@
             "difficulty": 1,
             "question": "What is a group of cows called?",
             "answer": "A herd",
-            "accept": [
-              "Herd"
-            ]
+            "accept": []
           },
           {
             "id": "murder-most-fowl-2a",
@@ -11451,9 +11289,7 @@
             "difficulty": 4,
             "question": "What is a group of rhinoceroses called?",
             "answer": "A crash",
-            "accept": [
-              "A herd"
-            ]
+            "accept": []
           },
           {
             "id": "murder-most-fowl-4c",
@@ -11462,8 +11298,7 @@
             "question": "What is a group of giraffes called?",
             "answer": "A tower",
             "accept": [
-              "A journey",
-              "A herd"
+              "A journey"
             ]
           },
           {
@@ -11473,7 +11308,6 @@
             "question": "What is a group of jellyfish called?",
             "answer": "A smack",
             "accept": [
-              "Smack",
               "A bloom",
               "A swarm"
             ]
@@ -11512,8 +11346,7 @@
             "question": "What is a group of hippopotamuses called?",
             "answer": "A bloat",
             "accept": [
-              "A pod",
-              "A herd"
+              "A pod"
             ]
           }
         ]
@@ -12006,9 +11839,8 @@
             "difficulty": 5,
             "question": "What first name connects the composer Mozart and the German writer Goethe?",
             "answer": "Wolfgang",
-            "accept": [
-              "| Johann Wolfgang von Goethe."
-            ]
+            "accept": [],
+            "notes": "Goethe was Johann Wolfgang von Goethe, so Wolfgang is strictly his second given name."
           },
           {
             "id": "pm-01-x14",
@@ -12144,7 +11976,9 @@
             "difficulty": 4,
             "question": "What is the Portuguese custard tart called?",
             "answer": "Pastel de nata",
-            "accept": []
+            "accept": [
+              "Pastel de Belém"
+            ]
           },
           {
             "id": "nonna-knows-best-4c",
@@ -12758,7 +12592,10 @@
             "difficulty": 1,
             "question": "Which club plays at Old Trafford?",
             "answer": "Manchester United",
-            "accept": []
+            "accept": [
+              "Man United",
+              "Man U"
+            ]
           },
           {
             "id": "park-the-bus-1b",
@@ -12840,7 +12677,9 @@
             "difficulty": 3,
             "question": "Which German club plays in front of the \"Yellow Wall\"?",
             "answer": "Borussia Dortmund",
-            "accept": []
+            "accept": [
+              "Dortmund"
+            ]
           },
           {
             "id": "park-the-bus-x02",
@@ -12849,7 +12688,6 @@
             "question": "Which Madrid club is nicknamed Los Colchoneros, \"the mattress makers\"?",
             "answer": "Atlético Madrid",
             "accept": [
-              "Atletico Madrid",
               "Atlético",
               "Atleti"
             ]
@@ -12884,7 +12722,9 @@
             "difficulty": 4,
             "question": "Which manager popularised the phrase \"park the bus\" in 2004?",
             "answer": "José Mourinho",
-            "accept": []
+            "accept": [
+              "Mourinho"
+            ]
           },
           {
             "id": "park-the-bus-5a",
@@ -12892,7 +12732,9 @@
             "difficulty": 5,
             "question": "Which Buenos Aires club plays at La Bombonera?",
             "answer": "Boca Juniors",
-            "accept": []
+            "accept": [
+              "Boca"
+            ]
           },
           {
             "id": "park-the-bus-5b",
@@ -12900,7 +12742,9 @@
             "difficulty": 5,
             "question": "Which Belgian player's 1995 court case transformed football transfers?",
             "answer": "Jean-Marc Bosman",
-            "accept": []
+            "accept": [
+              "Bosman"
+            ]
           },
           {
             "id": "park-the-bus-5c",
@@ -13099,7 +12943,9 @@
             "difficulty": 1,
             "question": "Who was granted the first patent for the telephone in 1876?",
             "answer": "Alexander Graham Bell",
-            "accept": []
+            "accept": [
+              "Bell"
+            ]
           },
           {
             "id": "patent-pending-1b",
@@ -13115,7 +12961,9 @@
             "difficulty": 1,
             "question": "Which American inventor is famous for the practical light bulb?",
             "answer": "Thomas Edison",
-            "accept": []
+            "accept": [
+              "Edison"
+            ]
           },
           {
             "id": "patent-pending-1d",
@@ -13123,7 +12971,10 @@
             "difficulty": 1,
             "question": "Which hard-wearing trousers did Levi Strauss help to invent?",
             "answer": "Blue jeans",
-            "accept": []
+            "accept": [
+              "Jeans",
+              "Denim jeans"
+            ]
           },
           {
             "id": "patent-pending-2a",
@@ -13131,7 +12982,9 @@
             "difficulty": 2,
             "question": "Which German introduced the movable-type printing press to Europe?",
             "answer": "Johannes Gutenberg",
-            "accept": []
+            "accept": [
+              "Gutenberg"
+            ]
           },
           {
             "id": "patent-pending-2b",
@@ -13147,7 +13000,10 @@
             "difficulty": 2,
             "question": "Which invention is Karl Benz credited with in 1886?",
             "answer": "The motor car",
-            "accept": []
+            "accept": [
+              "The car",
+              "The automobile"
+            ]
           },
           {
             "id": "patent-pending-2d",
@@ -13155,7 +13011,9 @@
             "difficulty": 2,
             "question": "Which Italian sent the first transatlantic radio signal in 1901?",
             "answer": "Guglielmo Marconi",
-            "accept": []
+            "accept": [
+              "Marconi"
+            ]
           },
           {
             "id": "patent-pending-3a",
@@ -13163,7 +13021,9 @@
             "difficulty": 3,
             "question": "Which Swede invented dynamite and founded a famous set of prizes?",
             "answer": "Alfred Nobel",
-            "accept": []
+            "accept": [
+              "Nobel"
+            ]
           },
           {
             "id": "patent-pending-3b",
@@ -13171,7 +13031,9 @@
             "difficulty": 3,
             "question": "Which Scottish engineer improved the steam engine and gave his name to a unit of power?",
             "answer": "James Watt",
-            "accept": []
+            "accept": [
+              "Watt"
+            ]
           },
           {
             "id": "patent-pending-3c",
@@ -13179,7 +13041,9 @@
             "difficulty": 3,
             "question": "Which Hungarian invented a colourful cube puzzle in 1974?",
             "answer": "Ernő Rubik",
-            "accept": []
+            "accept": [
+              "Rubik"
+            ]
           },
           {
             "id": "patent-pending-x01",
@@ -13197,7 +13061,9 @@
             "difficulty": 4,
             "question": "Which Serbian-American inventor pioneered alternating current?",
             "answer": "Nikola Tesla",
-            "accept": []
+            "accept": [
+              "Tesla"
+            ]
           },
           {
             "id": "patent-pending-4b",
@@ -13205,7 +13071,9 @@
             "difficulty": 4,
             "question": "Which Italian invented the electric battery in 1800?",
             "answer": "Alessandro Volta",
-            "accept": []
+            "accept": [
+              "Volta"
+            ]
           },
           {
             "id": "patent-pending-4c",
@@ -13213,7 +13081,9 @@
             "difficulty": 4,
             "question": "Which German physicist discovered X-rays in 1895?",
             "answer": "Wilhelm Röntgen",
-            "accept": []
+            "accept": [
+              "Röntgen"
+            ]
           },
           {
             "id": "patent-pending-4d",
@@ -13221,7 +13091,10 @@
             "difficulty": 4,
             "question": "Which Scot gave the first public demonstration of television in 1926?",
             "answer": "John Logie Baird",
-            "accept": []
+            "accept": [
+              "Logie Baird",
+              "Baird"
+            ]
           },
           {
             "id": "patent-pending-5a",
@@ -13229,7 +13102,9 @@
             "difficulty": 5,
             "question": "Which Hungarian journalist invented the modern ballpoint pen?",
             "answer": "László Bíró",
-            "accept": []
+            "accept": [
+              "Bíró"
+            ]
           },
           {
             "id": "patent-pending-5b",
@@ -13301,7 +13176,7 @@
             "id": "pepper-paynes-2a",
             "value": 200,
             "difficulty": 2,
-            "question": "Which green Mexican chili is often sliced onto nachos?",
+            "question": "Which green Mexican chilli is often sliced onto nachos?",
             "answer": "Jalapeño",
             "accept": []
           },
@@ -13311,7 +13186,9 @@
             "difficulty": 2,
             "question": "Which Beatles album features a Lonely Hearts Club Band?",
             "answer": "Sgt. Pepper's Lonely Hearts Club Band",
-            "accept": []
+            "accept": [
+              "Sgt. Pepper"
+            ]
           },
           {
             "id": "pepper-paynes-2c",
@@ -13333,7 +13210,7 @@
             "id": "pepper-paynes-3a",
             "value": 300,
             "difficulty": 3,
-            "question": "Which scale measures the heat of chili peppers?",
+            "question": "Which scale measures the heat of chilli peppers?",
             "answer": "Scoville scale",
             "accept": []
           },
@@ -13365,7 +13242,7 @@
             "id": "pepper-paynes-4a",
             "value": 400,
             "difficulty": 4,
-            "question": "Which chili, bred in South Carolina, was the world's hottest from 2013 to 2023?",
+            "question": "Which chilli, bred in South Carolina, was the world's hottest from 2013 to 2023?",
             "answer": "Carolina Reaper",
             "accept": []
           },
@@ -13373,7 +13250,7 @@
             "id": "pepper-paynes-4b",
             "value": 400,
             "difficulty": 4,
-            "question": "Which bird's-eye chili gives its name to the sauce made famous by Nando's?",
+            "question": "Which bird's-eye chilli gives its name to the sauce made famous by Nando's?",
             "answer": "Piri-piri",
             "accept": [
               "Peri-peri"
@@ -13383,7 +13260,7 @@
             "id": "pepper-paynes-4c",
             "value": 400,
             "difficulty": 4,
-            "question": "Which chili paste comes from Tunisia?",
+            "question": "Which chilli paste comes from Tunisia?",
             "answer": "Harissa",
             "accept": []
           },
@@ -13399,7 +13276,7 @@
             "id": "pepper-paynes-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "Which chili took the world's-hottest record in 2023?",
+            "question": "Which chilli took the world's-hottest record in 2023?",
             "answer": "Pepper X",
             "accept": []
           },
@@ -13407,7 +13284,7 @@
             "id": "pepper-paynes-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "Which ground red chili shares its name with the capital of French Guiana?",
+            "question": "Which ground red chilli shares its name with the capital of French Guiana?",
             "answer": "Cayenne",
             "accept": []
           },
@@ -13423,7 +13300,7 @@
             "id": "pepper-paynes-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "Which fermented chili paste is a staple of Korean cooking?",
+            "question": "Which fermented chilli paste is a staple of Korean cooking?",
             "answer": "Gochujang",
             "accept": []
           }
@@ -13447,7 +13324,7 @@
             "id": "gn-06-x01",
             "value": 100,
             "difficulty": 1,
-            "question": "Which green dinosaur does Mario ride, and who hatches from a spotted egg?",
+            "question": "Which green dinosaur, who hatches from a spotted egg, does Mario ride?",
             "answer": "Yoshi",
             "accept": []
           },
@@ -13458,7 +13335,8 @@
             "question": "Which princess of the Mushroom Kingdom wears a pink dress and a crown?",
             "answer": "Princess Peach",
             "accept": [
-              "Peach"
+              "Peach",
+              "Princess Toadstool"
             ]
           },
           {
@@ -13474,10 +13352,7 @@
           {
             "id": "gn-06-2",
             "value": 200,
-            "accept": [
-              "Pacman",
-              "Pac Man"
-            ],
+            "accept": [],
             "answer": "Pac-Man",
             "question": "Which yellow arcade character is chased around a maze by ghosts called Blinky, Pinky, Inky and Clyde?",
             "difficulty": 2
@@ -13536,7 +13411,6 @@
             "question": "Which blue robot boy with a cannon for an arm is Capcom's best-known hero?",
             "answer": "Mega Man",
             "accept": [
-              "Megaman",
               "Rockman"
             ]
           },
@@ -13552,9 +13426,7 @@
             "id": "gn-06-4",
             "value": 400,
             "accept": [
-              "The Master Chief",
-              "John-117",
-              "John 117"
+              "John-117"
             ],
             "answer": "Master Chief",
             "question": "Which green-armoured supersoldier, rarely seen without his helmet, is the hero of the \"Halo\" series?",
@@ -13640,8 +13512,7 @@
             "notes": "All four are needed, in any order. X is fine for cross.",
             "value": 100,
             "accept": [
-              "Triangle, circle, X and square",
-              "Cross, circle, square and triangle"
+              "Triangle, circle, X and square"
             ],
             "answer": "Triangle, circle, cross and square",
             "question": "Which four shapes mark the face buttons on a PlayStation controller?",
@@ -13651,11 +13522,9 @@
             "id": "gn-02-x01",
             "value": 100,
             "difficulty": 1,
-            "question": "How many numbered PlayStation home consoles had Sony released by the end of 2020?",
+            "question": "How many generations of PlayStation home console had Sony released by the end of 2020?",
             "answer": "Five",
-            "accept": [
-              "5"
-            ],
+            "accept": [],
             "notes": "The PlayStation 5 came out in November 2020."
           },
           {
@@ -13664,9 +13533,7 @@
             "difficulty": 1,
             "question": "What colour was the original PlayStation console?",
             "answer": "Grey",
-            "accept": [
-              "Gray"
-            ]
+            "accept": []
           },
           {
             "id": "gn-02-x03",
@@ -13675,17 +13542,13 @@
             "question": "What is the name of the online shop where PlayStation owners buy and download games?",
             "answer": "The PlayStation Store",
             "accept": [
-              "PlayStation Store",
               "PS Store"
             ]
           },
           {
             "id": "gn-02-2",
             "value": 200,
-            "accept": [
-              "DualSense",
-              "Dual Sense"
-            ],
+            "accept": [],
             "answer": "The DualSense",
             "question": "What is the PlayStation 5's controller called, the successor to the DualShock?",
             "difficulty": 2
@@ -13697,7 +13560,6 @@
             "question": "Which PlayStation is the best-selling games console of all time?",
             "answer": "The PlayStation 2",
             "accept": [
-              "PlayStation 2",
               "PS2"
             ]
           },
@@ -13719,7 +13581,6 @@
             "question": "Which handheld, launched in 2004, was Sony's first portable PlayStation?",
             "answer": "The PSP",
             "accept": [
-              "PSP",
               "PlayStation Portable"
             ]
           },
@@ -13742,8 +13603,7 @@
             "answer": "The PlayStation Vita",
             "accept": [
               "PS Vita",
-              "Vita",
-              "PlayStation Vita"
+              "Vita"
             ]
           },
           {
@@ -13752,9 +13612,7 @@
             "difficulty": 3,
             "question": "Which kind of film disc could the PlayStation 2 play, helping it into millions of living rooms?",
             "answer": "DVD",
-            "accept": [
-              "DVDs"
-            ]
+            "accept": []
           },
           {
             "id": "gn-02-x09",
@@ -13772,7 +13630,6 @@
             "notes": "Made in Brighton by Relentless Software. No relation.",
             "value": 400,
             "accept": [
-              "Buzz",
               "Buzz! The Music Quiz",
               "Buzz! The Big Quiz"
             ],
@@ -13786,9 +13643,7 @@
             "difficulty": 4,
             "question": "Which PlayStation 2 camera, released in 2003, let players control games by waving their arms?",
             "answer": "The EyeToy",
-            "accept": [
-              "EyeToy"
-            ]
+            "accept": []
           },
           {
             "id": "gn-02-x11",
@@ -13804,9 +13659,7 @@
             "difficulty": 4,
             "question": "What did original PlayStation owners have to slot in above the controller port to save their games?",
             "answer": "A memory card",
-            "accept": [
-              "Memory card"
-            ]
+            "accept": []
           },
           {
             "id": "gn-02-5",
@@ -13841,11 +13694,7 @@
             "difficulty": 5,
             "question": "What was the notorious US launch price, in dollars, of the top PlayStation 3 model in 2006?",
             "answer": "599 dollars",
-            "accept": [
-              "$599",
-              "599",
-              "599 US dollars"
-            ]
+            "accept": []
           }
         ],
         "title": "PlayStation Generation"
@@ -13871,7 +13720,6 @@
             "question": "Which web-slinging hero stars in Insomniac's PlayStation games set in New York?",
             "answer": "Spider-Man",
             "accept": [
-              "Spiderman",
               "Peter Parker",
               "Miles Morales"
             ]
@@ -13958,9 +13806,7 @@
             "difficulty": 3,
             "question": "Which PlayStation 2 duo are a pointy-eared hero and the wisecracking orange creature on his shoulder?",
             "answer": "Jak and Daxter",
-            "accept": [
-              "Jak & Daxter"
-            ]
+            "accept": []
           },
           {
             "id": "pm-05-x09",
@@ -13996,7 +13842,6 @@
             "question": "Which cigar-chewing mentor, known as Sully, taught Nathan Drake his trade?",
             "answer": "Victor Sullivan",
             "accept": [
-              "Sully",
               "Victor \"Sully\" Sullivan"
             ]
           },
@@ -14007,16 +13852,13 @@
             "question": "Which rapping dog in an orange hat starred in a 1996 rhythm game?",
             "answer": "PaRappa the Rapper",
             "accept": [
-              "PaRappa",
-              "Parappa"
+              "PaRappa"
             ]
           },
           {
             "id": "pm-05-5",
             "value": 500,
-            "accept": [
-              "Lombax"
-            ],
+            "accept": [],
             "answer": "A Lombax",
             "question": "In the \"Ratchet & Clank\" series, Clank is a robot. What species is Ratchet?",
             "difficulty": 5
@@ -14106,7 +13948,9 @@
             "difficulty": 2,
             "question": "A theme park has a serious health and safety problem with its dinosaurs.",
             "answer": "Jurassic Park",
-            "accept": []
+            "accept": [
+              "Jurassic World"
+            ]
           },
           {
             "id": "plot-holes-2c",
@@ -14178,7 +14022,9 @@
             "difficulty": 4,
             "question": "A man is born old and gets younger every year.",
             "answer": "The Curious Case of Benjamin Button",
-            "accept": []
+            "accept": [
+              "Benjamin Button"
+            ]
           },
           {
             "id": "plot-holes-4d",
@@ -14210,7 +14056,9 @@
             "difficulty": 5,
             "question": "A father convinces his son that a concentration camp is an elaborate game.",
             "answer": "Life Is Beautiful",
-            "accept": []
+            "accept": [
+              "La vita è bella"
+            ]
           },
           {
             "id": "plot-holes-5d",
@@ -14218,7 +14066,9 @@
             "difficulty": 5,
             "question": "An East German secret policeman eavesdrops on a playwright and grows a conscience.",
             "answer": "The Lives of Others",
-            "accept": []
+            "accept": [
+              "Das Leben der Anderen"
+            ]
           }
         ]
       },
@@ -14241,7 +14091,6 @@
             "question": "Which symbol appears in every email address?",
             "answer": "The at sign",
             "accept": [
-              "@",
               "At",
               "At symbol"
             ]
@@ -14298,9 +14147,7 @@
             "id": "cat-06-3",
             "notes": "How to pronounce it is a fight for another night.",
             "value": 300,
-            "accept": [
-              "Graphic Interchange Format"
-            ],
+            "accept": [],
             "answer": "Graphics Interchange Format",
             "question": "What does the image file format abbreviation \"GIF\" stand for?",
             "difficulty": 3
@@ -14433,7 +14280,10 @@
             "difficulty": 1,
             "question": "An Italian plumber keeps rescuing the same princess from a giant turtle.",
             "answer": "Super Mario",
-            "accept": []
+            "accept": [
+              "Mario",
+              "Super Mario Bros."
+            ]
           },
           {
             "id": "poorly-described-video-games-1c",
@@ -14447,8 +14297,8 @@
             "id": "poorly-described-video-games-1d",
             "value": 100,
             "difficulty": 1,
-            "question": "A yellow circle eats dots while running from ghosts.",
-            "answer": "Pac-Man",
+            "question": "Swing an invisible tennis racket in the living room and knock over a lamp.",
+            "answer": "Wii Sports",
             "accept": []
           },
           {
@@ -14476,14 +14326,16 @@
             "difficulty": 2,
             "question": "Steal cars and ignore the storyline.",
             "answer": "Grand Theft Auto",
-            "accept": []
+            "accept": [
+              "GTA"
+            ]
           },
           {
             "id": "poorly-described-video-games-2d",
             "value": 200,
             "difficulty": 2,
-            "question": "A blue hedgehog runs very fast collecting rings.",
-            "answer": "Sonic the Hedgehog",
+            "question": "Press five coloured plastic buttons and believe you are a rock star.",
+            "answer": "Guitar Hero",
             "accept": []
           },
           {
@@ -14516,7 +14368,9 @@
             "difficulty": 3,
             "question": "A boy in green saves a princess whose name is in the title.",
             "answer": "The Legend of Zelda",
-            "accept": []
+            "accept": [
+              "Zelda"
+            ]
           },
           {
             "id": "poorly-described-video-games-4a",
@@ -14540,7 +14394,9 @@
             "difficulty": 4,
             "question": "A white-haired monster hunter keeps getting distracted by a card game.",
             "answer": "The Witcher 3",
-            "accept": []
+            "accept": [
+              "The Witcher"
+            ]
           },
           {
             "id": "poorly-described-video-games-4d",
@@ -14604,10 +14460,7 @@
             "difficulty": 1,
             "question": "In \"Among Us\", what is the hidden killer among the crewmates called?",
             "answer": "The Impostor",
-            "accept": [
-              "Impostor",
-              "Imposter"
-            ]
+            "accept": []
           },
           {
             "id": "cat-05-x02",
@@ -14624,17 +14477,13 @@
             "question": "Which Nintendo console, launched in 2006, had families bowling and playing tennis with a motion-sensing remote?",
             "answer": "The Wii",
             "accept": [
-              "Wii",
               "Nintendo Wii"
             ]
           },
           {
             "id": "cat-05-2",
             "value": 200,
-            "accept": [
-              "A Creeper",
-              "Creepers"
-            ],
+            "accept": [],
             "answer": "Creeper",
             "question": "In \"Minecraft\", what is the name of the green monster that sneaks up on you, hisses and explodes?",
             "difficulty": 2
@@ -14645,10 +14494,7 @@
             "difficulty": 2,
             "question": "What is the in-game currency of \"Fortnite\" called?",
             "answer": "V-Bucks",
-            "accept": [
-              "V Bucks",
-              "Vbucks"
-            ]
+            "accept": []
           },
           {
             "id": "cat-05-x05",
@@ -14667,7 +14513,6 @@
             "question": "In \"Pac-Man\", what does Pac-Man eat to turn the tables on the ghosts?",
             "answer": "A power pellet",
             "accept": [
-              "Power pellets",
               "Power pill",
               "The big dots"
             ]
@@ -14705,9 +14550,7 @@
             "difficulty": 3,
             "question": "What is the kingdom that Mario defends called?",
             "answer": "The Mushroom Kingdom",
-            "accept": [
-              "Mushroom Kingdom"
-            ]
+            "accept": []
           },
           {
             "id": "cat-05-4",
@@ -14746,9 +14589,7 @@
             "notes": "The surname alone is enough; be generous with pronunciation.",
             "value": 500,
             "accept": [
-              "Pajitnov",
-              "Alexei Pajitnov",
-              "Aleksei Pazhitnov"
+              "Pajitnov"
             ],
             "answer": "Alexey Pajitnov",
             "question": "Which Soviet software engineer created \"Tetris\" in 1984?",
@@ -14771,8 +14612,7 @@
             "question": "Unsold cartridges of which 1982 Atari game, a rushed film tie-in, were buried in a landfill in New Mexico?",
             "answer": "E.T. the Extra-Terrestrial",
             "accept": [
-              "E.T.",
-              "ET"
+              "E.T."
             ]
           },
           {
@@ -14807,7 +14647,9 @@
             "difficulty": 1,
             "question": "The American comedian who hosted a daytime talk show for 19 seasons.",
             "answer": "Ellen DeGeneres",
-            "accept": []
+            "accept": [
+              "Ellen"
+            ]
           },
           {
             "id": "pride-icons-1c",
@@ -14871,7 +14713,9 @@
             "difficulty": 3,
             "question": "The bearded Austrian drag artist who won Eurovision in 2014.",
             "answer": "Conchita Wurst",
-            "accept": []
+            "accept": [
+              "Conchita"
+            ]
           },
           {
             "id": "pride-icons-3c",
@@ -14887,7 +14731,9 @@
             "difficulty": 3,
             "question": "The Irish author of The Picture of Dorian Gray, imprisoned in 1895.",
             "answer": "Oscar Wilde",
-            "accept": []
+            "accept": [
+              "Wilde"
+            ]
           },
           {
             "id": "pride-icons-4a",
@@ -14895,7 +14741,9 @@
             "difficulty": 4,
             "question": "The Bletchley Park codebreaker posthumously pardoned in 2013.",
             "answer": "Alan Turing",
-            "accept": []
+            "accept": [
+              "Turing"
+            ]
           },
           {
             "id": "pride-icons-4b",
@@ -14903,7 +14751,9 @@
             "difficulty": 4,
             "question": "The Czech-born tennis star who won nine Wimbledon singles titles.",
             "answer": "Martina Navratilova",
-            "accept": []
+            "accept": [
+              "Navratilova"
+            ]
           },
           {
             "id": "pride-icons-4c",
@@ -14933,7 +14783,7 @@
             "id": "pride-icons-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "The American tennis champion who won the 1973 \"Battle of the Sexes.\"",
+            "question": "The American tennis champion who won the 1973 \"Battle of the Sexes\".",
             "answer": "Billie Jean King",
             "accept": []
           },
@@ -14943,7 +14793,9 @@
             "difficulty": 5,
             "question": "The politician who became Ireland's Taoiseach in 2017.",
             "answer": "Leo Varadkar",
-            "accept": []
+            "accept": [
+              "Varadkar"
+            ]
           },
           {
             "id": "pride-icons-5d",
@@ -15014,9 +14866,7 @@
             "difficulty": 2,
             "question": "How many colours are there in a rainbow?",
             "answer": "Seven",
-            "accept": [
-              "7"
-            ]
+            "accept": []
           },
           {
             "id": "primary-school-trivia-x02",
@@ -15024,9 +14874,7 @@
             "difficulty": 2,
             "question": "What do you call a shape with five sides?",
             "answer": "A pentagon",
-            "accept": [
-              "Pentagon"
-            ]
+            "accept": []
           },
           {
             "id": "primary-school-trivia-3a",
@@ -15122,9 +14970,7 @@
             "difficulty": 5,
             "question": "What is the smallest prime number?",
             "answer": "2",
-            "accept": [
-              "Two"
-            ]
+            "accept": []
           }
         ]
       },
@@ -15202,11 +15048,7 @@
           {
             "id": "os-03-2",
             "value": 200,
-            "accept": [
-              "20",
-              "20 euros",
-              "20 euro"
-            ],
+            "accept": [],
             "answer": "€20",
             "question": "A pair of trainers priced at €80 is reduced by 25%. How much do you save?",
             "difficulty": 2
@@ -15226,8 +15068,7 @@
             "question": "What do the interior angles of a triangle add up to?",
             "answer": "180 degrees",
             "accept": [
-              "180",
-              "180°"
+              "180"
             ]
           },
           {
@@ -15252,9 +15093,7 @@
             "difficulty": 4,
             "question": "A video has 50 views and doubles its views every hour. How many views after three hours?",
             "answer": "400",
-            "accept": [
-              "400 views"
-            ],
+            "accept": [],
             "notes": "50, then 100, 200, 400."
           },
           {
@@ -15393,7 +15232,6 @@
             "question": "Which symbol do you get by pressing Shift + 7 on a US keyboard?",
             "answer": "Ampersand",
             "accept": [
-              "&",
               "And sign"
             ]
           },
@@ -15505,10 +15343,7 @@
             "difficulty": 1,
             "question": "Which farm animal gives most of the milk we drink?",
             "answer": "The cow",
-            "accept": [
-              "Cow",
-              "Cows"
-            ]
+            "accept": []
           },
           {
             "id": "pm-08-x02",
@@ -15516,9 +15351,7 @@
             "difficulty": 1,
             "question": "Which thick dairy food is made by fermenting milk with live bacteria?",
             "answer": "Yoghurt",
-            "accept": [
-              "Yogurt"
-            ]
+            "accept": []
           },
           {
             "id": "pm-08-x03",
@@ -15526,9 +15359,7 @@
             "difficulty": 1,
             "question": "Which cold drink is made by blending milk with ice cream?",
             "answer": "A milkshake",
-            "accept": [
-              "Milkshake"
-            ]
+            "accept": []
           },
           {
             "id": "pm-08-2",
@@ -15602,9 +15433,7 @@
             "notes": "Named after Louis Pasteur.",
             "value": 400,
             "accept": [
-              "Pasteurization",
-              "Pasteurising",
-              "Pasteurizing"
+              "Pasteurising"
             ],
             "answer": "Pasteurisation",
             "question": "Which heat treatment makes raw milk safer to drink by reducing harmful microorganisms?",
@@ -15624,9 +15453,7 @@
             "difficulty": 4,
             "question": "Which thick French soured cream has a name meaning \"fresh cream\"?",
             "answer": "Crème fraîche",
-            "accept": [
-              "Creme fraiche"
-            ]
+            "accept": []
           },
           {
             "id": "pm-08-x12",
@@ -15635,8 +15462,7 @@
             "question": "Which Swiss cheese is famous for its large holes?",
             "answer": "Emmental",
             "accept": [
-              "Emmentaler",
-              "Emmenthal"
+              "Emmentaler"
             ]
           },
           {
@@ -15697,7 +15523,6 @@
             "question": "On which finger is a wedding ring traditionally worn?",
             "answer": "The ring finger",
             "accept": [
-              "Ring finger",
               "Fourth finger",
               "Third finger"
             ],
@@ -15717,17 +15542,12 @@
             "difficulty": 1,
             "question": "Which ring-shaped fried cake comes glazed, sugared or covered in sprinkles?",
             "answer": "A doughnut",
-            "accept": [
-              "Doughnut",
-              "Donut"
-            ]
+            "accept": []
           },
           {
             "id": "pw-09-2",
             "value": 200,
             "accept": [
-              "Mushroom",
-              "Mushrooms",
               "Toadstool"
             ],
             "answer": "A mushroom",
@@ -15769,7 +15589,6 @@
             "id": "pw-09-3",
             "value": 300,
             "accept": [
-              "Mt Doom",
               "Orodruin",
               "Amon Amarth"
             ],
@@ -15784,7 +15603,6 @@
             "question": "What is the belt of volcanoes and earthquake zones around the Pacific Ocean called?",
             "answer": "The Ring of Fire",
             "accept": [
-              "Ring of Fire",
               "The Pacific Ring of Fire"
             ]
           },
@@ -15805,9 +15623,7 @@
             "difficulty": 3,
             "question": "What is the ring of light around the head of a saint or an angel called?",
             "answer": "A halo",
-            "accept": [
-              "Halo"
-            ]
+            "accept": []
           },
           {
             "id": "pw-09-4",
@@ -15823,9 +15639,7 @@
             "difficulty": 4,
             "question": "How many rings does a traditional big-top circus have, according to the old saying?",
             "answer": "Three",
-            "accept": [
-              "3"
-            ],
+            "accept": [],
             "notes": "As in a three-ring circus."
           },
           {
@@ -15870,10 +15684,7 @@
             "difficulty": 5,
             "question": "Which German racing circuit includes the fearsome Nordschleife, nicknamed the Green Hell?",
             "answer": "The Nürburgring",
-            "accept": [
-              "Nürburgring",
-              "Nurburgring"
-            ]
+            "accept": []
           },
           {
             "id": "pw-09-x15",
@@ -15913,7 +15724,9 @@
             "difficulty": 1,
             "question": "Which huge amphitheatre in Rome opened in AD 80?",
             "answer": "The Colosseum",
-            "accept": []
+            "accept": [
+              "The Flavian Amphitheatre"
+            ]
           },
           {
             "id": "roman-around-1d",
@@ -16001,7 +15814,10 @@
             "difficulty": 4,
             "question": "Who was the first Roman emperor?",
             "answer": "Augustus",
-            "accept": []
+            "accept": [
+              "Octavian",
+              "Caesar Augustus"
+            ]
           },
           {
             "id": "roman-around-4c",
@@ -16017,7 +15833,10 @@
             "difficulty": 4,
             "question": "Which emperor legalised Christianity and founded a new capital on the Bosphorus?",
             "answer": "Constantine the Great",
-            "accept": []
+            "accept": [
+              "Constantine",
+              "Constantine I"
+            ]
           },
           {
             "id": "roman-around-5a",
@@ -16041,7 +15860,9 @@
             "difficulty": 5,
             "question": "Which Roman road ran from Rome to Brindisi?",
             "answer": "The Appian Way",
-            "accept": []
+            "accept": [
+              "Via Appia"
+            ]
           },
           {
             "id": "roman-around-5d",
@@ -16061,7 +15882,6 @@
             "id": "cat-03-1",
             "value": 100,
             "accept": [
-              "Clown fish",
               "Anemonefish"
             ],
             "answer": "Clownfish",
@@ -16132,7 +15952,6 @@
             "question": "Which Italian-American family is at the centre of \"The Godfather\"?",
             "answer": "The Corleones",
             "accept": [
-              "Corleone",
               "The Corleone family"
             ]
           },
@@ -16140,8 +15959,7 @@
             "id": "cat-03-3",
             "value": 300,
             "accept": [
-              "Overlook",
-              "The Overlook"
+              "Overlook"
             ],
             "answer": "The Overlook Hotel",
             "question": "What is the name of the haunted hotel in Stanley Kubrick's film \"The Shining\"?",
@@ -16218,8 +16036,6 @@
             "value": 500,
             "accept": [
               "Voight-Kampff",
-              "Voight Kampff",
-              "Voigt-Kampff",
               "VK test"
             ],
             "answer": "The Voight-Kampff test",
@@ -16252,7 +16068,6 @@
             "answer": "The Lumière brothers",
             "accept": [
               "Lumière",
-              "Lumiere",
               "Auguste and Louis Lumière"
             ]
           }
@@ -16318,7 +16133,9 @@
             "difficulty": 2,
             "question": "\"Finger Lickin' Good\"",
             "answer": "KFC",
-            "accept": []
+            "accept": [
+              "Kentucky Fried Chicken"
+            ]
           },
           {
             "id": "slogan-s-run-2d",
@@ -16387,7 +16204,9 @@
             "difficulty": 4,
             "question": "\"Das Auto\"",
             "answer": "Volkswagen",
-            "accept": []
+            "accept": [
+              "VW"
+            ]
           },
           {
             "id": "slogan-s-run-4d",
@@ -16401,7 +16220,7 @@
             "id": "slogan-s-run-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Belgian lager was advertised in Britain as \"Reassuringly Expensive\"?",
+            "question": "\"Reassuringly Expensive\"",
             "answer": "Stella Artois",
             "accept": []
           },
@@ -16419,7 +16238,9 @@
             "difficulty": 5,
             "question": "\"Don't Leave Home Without It\"",
             "answer": "American Express",
-            "accept": []
+            "accept": [
+              "Amex"
+            ]
           },
           {
             "id": "slogan-s-run-5d",
@@ -16427,7 +16248,9 @@
             "difficulty": 5,
             "question": "\"The Best or Nothing\"",
             "answer": "Mercedes-Benz",
-            "accept": []
+            "accept": [
+              "Mercedes"
+            ]
           }
         ]
       },
@@ -16588,8 +16411,8 @@
             "id": "spelling-bee-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "A word that imitates a sound, such as \"buzz.\"",
-            "answer": "Onomatopoeia",
+            "question": "Showing disrespect towards something held sacred.",
+            "answer": "Sacrilegious",
             "accept": [],
             "notes": "Read the word out loud, then judge the spelling. British spelling."
           },
@@ -16656,7 +16479,6 @@
             "question": "In \"Toy Story\", what does Buzz Lightyear finally accept that he is?",
             "answer": "A toy",
             "accept": [
-              "Toy",
               "Just a toy"
             ]
           },
@@ -16716,7 +16538,6 @@
             "question": "In \"Return of the Jedi\", what relation does Princess Leia turn out to be to Luke Skywalker?",
             "answer": "His sister",
             "accept": [
-              "Sister",
               "His twin sister",
               "Twin"
             ]
@@ -16751,9 +16572,7 @@
             "difficulty": 3,
             "question": "In the 1968 film \"Planet of the Apes\", which planet has the astronaut been on all along?",
             "answer": "Earth",
-            "accept": [
-              "The Earth"
-            ]
+            "accept": []
           },
           {
             "id": "gn-09-x09",
@@ -16835,7 +16654,6 @@
             "answer": "His childhood sledge",
             "accept": [
               "A sledge",
-              "A sled",
               "His sled"
             ]
           },
@@ -17024,7 +16842,10 @@
             "difficulty": 5,
             "question": "Which Ukrainian pole vaulter broke the world record 35 times?",
             "answer": "Sergey Bubka",
-            "accept": []
+            "accept": [
+              "Bubka",
+              "Serhiy Bubka"
+            ]
           },
           {
             "id": "sports-guy-5c",
@@ -17075,10 +16896,7 @@
             "difficulty": 1,
             "question": "Maths, history and geography are each a school what?",
             "answer": "Subject",
-            "accept": [
-              "A subject",
-              "Subjects"
-            ]
+            "accept": []
           },
           {
             "id": "pw-04-x03",
@@ -17092,7 +16910,6 @@
             "id": "pw-04-2",
             "value": 200,
             "accept": [
-              "Submarine",
               "Sub",
               "Nuclear submarine"
             ],
@@ -17107,8 +16924,6 @@
             "question": "What do you call a residential district on the edge of a city?",
             "answer": "A suburb",
             "accept": [
-              "Suburb",
-              "Suburbs",
               "Suburbia"
             ]
           },
@@ -17134,9 +16949,7 @@
             "id": "pw-04-3",
             "value": 300,
             "accept": [
-              "Substitute",
-              "Sub",
-              "Substitution"
+              "Sub"
             ],
             "answer": "A substitute",
             "question": "In football, what is a player called who comes off the bench to replace a teammate?",
@@ -17149,7 +16962,6 @@
             "question": "Which loudspeaker handles only the deepest bass notes?",
             "answer": "A subwoofer",
             "accept": [
-              "Subwoofer",
               "Sub"
             ]
           },
@@ -17172,10 +16984,7 @@
           {
             "id": "pw-04-4",
             "value": 400,
-            "accept": [
-              "Sub Zero",
-              "Subzero"
-            ],
+            "accept": [],
             "answer": "Sub-Zero",
             "question": "Which ice-wielding ninja in blue is one of the original fighters in \"Mortal Kombat\"?",
             "difficulty": 4
@@ -17186,10 +16995,7 @@
             "difficulty": 4,
             "question": "What is money paid by a government to keep a price low or an industry going called?",
             "answer": "A subsidy",
-            "accept": [
-              "Subsidy",
-              "Subsidies"
-            ]
+            "accept": []
           },
           {
             "id": "pw-04-x11",
@@ -17198,7 +17004,6 @@
             "question": "Which term describes India, Pakistan and Bangladesh together as a landmass?",
             "answer": "The subcontinent",
             "accept": [
-              "Subcontinent",
               "The Indian subcontinent"
             ]
           },
@@ -17236,9 +17041,7 @@
             "difficulty": 5,
             "question": "Which grammatical mood expresses wishes and doubts, as in \"if I were you\"?",
             "answer": "The subjunctive",
-            "accept": [
-              "Subjunctive"
-            ]
+            "accept": []
           },
           {
             "id": "pw-04-x15",
@@ -17260,7 +17063,6 @@
             "value": 100,
             "accept": [
               "Philip",
-              "The Duke of Edinburgh",
               "Duke of Edinburgh"
             ],
             "answer": "Prince Philip",
@@ -17298,9 +17100,7 @@
             "question": "Dame Vera Lynn, who lived to 103, was the \"Forces' Sweetheart\" of which war?",
             "answer": "The Second World War",
             "accept": [
-              "World War II",
-              "WWII",
-              "World War Two"
+              "World War II"
             ]
           },
           {
@@ -17388,7 +17188,6 @@
             "notes": "The oldest man on record, Jiroemon Kimura of Japan, reached 116 and does not make the top ten.",
             "value": 400,
             "accept": [
-              "0",
               "None"
             ],
             "answer": "Zero",
@@ -17401,9 +17200,7 @@
             "difficulty": 4,
             "question": "What is the term for a person who has reached the age of 110?",
             "answer": "A supercentenarian",
-            "accept": [
-              "Supercentenarian"
-            ]
+            "accept": []
           },
           {
             "id": "os-01-x11",
@@ -17411,7 +17208,9 @@
             "difficulty": 4,
             "question": "Which star of \"Gone with the Wind\" died in Paris in 2020 at the age of 104?",
             "answer": "Olivia de Havilland",
-            "accept": []
+            "accept": [
+              "De Havilland"
+            ]
           },
           {
             "id": "os-01-x12",
@@ -17419,7 +17218,9 @@
             "difficulty": 4,
             "question": "Which composer of \"White Christmas\" and \"God Bless America\" lived to the age of 101?",
             "answer": "Irving Berlin",
-            "accept": []
+            "accept": [
+              "Berlin"
+            ]
           },
           {
             "id": "os-01-5",
@@ -17437,7 +17238,9 @@
             "difficulty": 5,
             "question": "Which Japanese woman died in 2022 at 119, the second-oldest person whose age has been verified?",
             "answer": "Kane Tanaka",
-            "accept": []
+            "accept": [
+              "Tanaka"
+            ]
           },
           {
             "id": "os-01-x14",
@@ -17474,9 +17277,7 @@
             "question": "How often does a leap year usually occur?",
             "answer": "Every four years",
             "accept": [
-              "Every 4 years",
               "Four years",
-              "4 years",
               "Once every four years"
             ],
             "notes": "\"Usually\" because century years must divide by 400: 1900 was not one, 2000 was."
@@ -17511,9 +17312,7 @@
             "difficulty": 2,
             "question": "Which word means a period of two weeks?",
             "answer": "Fortnight",
-            "accept": [
-              "A fortnight"
-            ]
+            "accept": []
           },
           {
             "id": "tick-tock-2b",
@@ -17521,11 +17320,7 @@
             "difficulty": 2,
             "question": "Which word means a period of 1,000 years?",
             "answer": "Millennium",
-            "accept": [
-              "A millennium",
-              "Millenium",
-              "Millennia"
-            ]
+            "accept": []
           },
           {
             "id": "tick-tock-2c",
@@ -17581,10 +17376,7 @@
             "difficulty": 4,
             "question": "What is the time taken for half the atoms in a radioactive sample to decay called?",
             "answer": "Half-life",
-            "accept": [
-              "Half life",
-              "A half-life"
-            ]
+            "accept": []
           },
           {
             "id": "tick-tock-4b",
@@ -17616,10 +17408,7 @@
             "difficulty": 5,
             "question": "How many minutes are in a 365-day year?",
             "answer": "525,600",
-            "accept": [
-              "525600",
-              "525,600 minutes"
-            ],
+            "accept": [],
             "notes": "As sung in \"Seasons of Love\" from the musical \"Rent\"."
           },
           {
@@ -17652,7 +17441,7 @@
       },
       {
         "id": "pm-03",
-        "blurb": "Estimate a distance in kilometres. Each clue says how close you need to be.",
+        "blurb": "Estimate a distance in kilometres. Each question says how close you need to be.",
         "clues": [
           {
             "id": "pm-03-1",
@@ -17976,10 +17765,7 @@
             "difficulty": 2,
             "question": "Which Norwegian trio had a worldwide hit in 1985 with \"Take On Me\"?",
             "answer": "a-ha",
-            "accept": [
-              "A-ha",
-              "Aha"
-            ]
+            "accept": []
           },
           {
             "id": "os-11-x06",
@@ -18019,9 +17805,7 @@
             "difficulty": 3,
             "question": "Which Irish band, fronted by Dolores O'Riordan, recorded \"Zombie\"?",
             "answer": "The Cranberries",
-            "accept": [
-              "Cranberries"
-            ]
+            "accept": []
           },
           {
             "id": "os-11-4",
@@ -18045,9 +17829,7 @@
             "difficulty": 4,
             "question": "Which German rock band recorded \"Wind of Change\" as the Cold War ended?",
             "answer": "Scorpions",
-            "accept": [
-              "The Scorpions"
-            ]
+            "accept": []
           },
           {
             "id": "os-11-x12",
@@ -18055,9 +17837,7 @@
             "difficulty": 4,
             "question": "Which Icelandic singer wore a swan dress to the Oscars in 2001?",
             "answer": "Björk",
-            "accept": [
-              "Bjork"
-            ]
+            "accept": []
           },
           {
             "id": "os-11-5",
@@ -18144,7 +17924,11 @@
             "difficulty": 2,
             "question": "What is the currency of the United Kingdom?",
             "answer": "Pound sterling",
-            "accept": []
+            "accept": [
+              "Pound",
+              "Sterling",
+              "British pound"
+            ]
           },
           {
             "id": "trillionaire-things-2b",
@@ -18152,7 +17936,9 @@
             "difficulty": 2,
             "question": "Who leads both Tesla and SpaceX?",
             "answer": "Elon Musk",
-            "accept": []
+            "accept": [
+              "Musk"
+            ]
           },
           {
             "id": "trillionaire-things-2c",
@@ -18184,7 +17970,10 @@
             "difficulty": 3,
             "question": "Which Disney duck swims in a vault full of coins?",
             "answer": "Scrooge McDuck",
-            "accept": []
+            "accept": [
+              "Uncle Scrooge",
+              "Scrooge"
+            ]
           },
           {
             "id": "trillionaire-things-3c",
@@ -18192,7 +17981,9 @@
             "difficulty": 3,
             "question": "What is the currency of Switzerland?",
             "answer": "Swiss franc",
-            "accept": []
+            "accept": [
+              "Franc"
+            ]
           },
           {
             "id": "trillionaire-things-3d",
@@ -18200,7 +17991,11 @@
             "difficulty": 3,
             "question": "What was Germany's currency before the euro?",
             "answer": "Deutsche Mark",
-            "accept": []
+            "accept": [
+              "Mark",
+              "German mark",
+              "D-Mark"
+            ]
           },
           {
             "id": "trillionaire-things-4a",
@@ -18216,7 +18011,9 @@
             "difficulty": 4,
             "question": "Which Spanish billionaire founded Zara?",
             "answer": "Amancio Ortega",
-            "accept": []
+            "accept": [
+              "Ortega"
+            ]
           },
           {
             "id": "trillionaire-things-4c",
@@ -18248,13 +18045,16 @@
             "difficulty": 5,
             "question": "Which Italian bank, founded in Siena in 1472, is the world's oldest still operating?",
             "answer": "Monte dei Paschi di Siena",
-            "accept": []
+            "accept": [
+              "Monte dei Paschi",
+              "MPS"
+            ]
           },
           {
             "id": "trillionaire-things-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Augsburg banking family, led by Jakob \"the Rich,\" bankrolled the Habsburgs?",
+            "question": "Which Augsburg banking family, led by Jakob \"the Rich\", bankrolled the Habsburgs?",
             "answer": "Fugger",
             "accept": []
           },
@@ -18275,9 +18075,7 @@
           {
             "id": "cat-04-1",
             "value": 100,
-            "accept": [
-              "Beatles"
-            ],
+            "accept": [],
             "answer": "The Beatles",
             "question": "Which band was made up of John, Paul, George and Ringo?",
             "difficulty": 1
@@ -18296,9 +18094,7 @@
             "difficulty": 1,
             "question": "How many strings does a standard guitar have?",
             "answer": "Six",
-            "accept": [
-              "6"
-            ]
+            "accept": []
           },
           {
             "id": "cat-04-x03",
@@ -18373,9 +18169,7 @@
             "difficulty": 3,
             "question": "Which American band recorded \"Hotel California\"?",
             "answer": "Eagles",
-            "accept": [
-              "The Eagles"
-            ]
+            "accept": []
           },
           {
             "id": "cat-04-x09",
@@ -18383,9 +18177,7 @@
             "difficulty": 3,
             "question": "Which singer's albums include \"Lemonade\" and \"Renaissance\"?",
             "answer": "Beyoncé",
-            "accept": [
-              "Beyonce"
-            ]
+            "accept": []
           },
           {
             "id": "cat-04-4",
@@ -18421,9 +18213,7 @@
             "difficulty": 4,
             "question": "Which Pink Floyd album has a prism splitting light into a rainbow on its cover?",
             "answer": "The Dark Side of the Moon",
-            "accept": [
-              "Dark Side of the Moon"
-            ]
+            "accept": []
           },
           {
             "id": "cat-04-5",
@@ -18495,7 +18285,9 @@
             "difficulty": 1,
             "question": "Which Nintendo console, launched in 2017, can be played handheld or docked to a TV?",
             "answer": "Nintendo Switch",
-            "accept": []
+            "accept": [
+              "Switch"
+            ]
           },
           {
             "id": "gn-11-1",
@@ -18551,7 +18343,7 @@
             "id": "video-games-3b",
             "value": 300,
             "difficulty": 3,
-            "question": "Which football management series began life as Championship Manager?",
+            "question": "Which series from Sports Interactive began life as Championship Manager?",
             "answer": "Football Manager",
             "accept": []
           },
@@ -18589,7 +18381,9 @@
             "difficulty": 4,
             "question": "Which Japanese designer created Mario and The Legend of Zelda?",
             "answer": "Shigeru Miyamoto",
-            "accept": []
+            "accept": [
+              "Miyamoto"
+            ]
           },
           {
             "id": "video-games-4c",
@@ -18612,8 +18406,7 @@
             "value": 400,
             "accept": [
               "CD Projekt",
-              "CDPR",
-              "CD Project Red"
+              "CDPR"
             ],
             "answer": "CD Projekt Red",
             "question": "Which Polish studio developed both \"The Witcher 3: Wild Hunt\" and \"Cyberpunk 2077\"?",
@@ -18649,7 +18442,9 @@
             "difficulty": 5,
             "question": "Which Japanese designer created the Metal Gear series?",
             "answer": "Hideo Kojima",
-            "accept": []
+            "accept": [
+              "Kojima"
+            ]
           },
           {
             "id": "gn-11-5",
@@ -18657,8 +18452,6 @@
             "value": 500,
             "accept": [
               "GTA: San Andreas",
-              "GTA San Andreas",
-              "Grand Theft Auto San Andreas",
               "San Andreas"
             ],
             "answer": "Grand Theft Auto: San Andreas",
@@ -18675,7 +18468,6 @@
             "id": "cat-09-1",
             "value": 100,
             "accept": [
-              "Titanic",
               "RMS Titanic"
             ],
             "answer": "The Titanic",
@@ -18699,7 +18491,6 @@
             "question": "Which plague of the 1340s killed perhaps a third of Europe's people?",
             "answer": "The Black Death",
             "accept": [
-              "Black Death",
               "Bubonic plague"
             ]
           },
@@ -18716,9 +18507,7 @@
           {
             "id": "cat-09-2",
             "value": 200,
-            "accept": [
-              "Berlin Wall"
-            ],
+            "accept": [],
             "answer": "The Berlin Wall",
             "question": "Which barrier divided a German city in two from 1961 until 1989?",
             "difficulty": 2
@@ -18743,7 +18532,6 @@
             "question": "Which war was fought between the northern and southern states of America from 1861 to 1865?",
             "answer": "The American Civil War",
             "accept": [
-              "American Civil War",
               "The Civil War",
               "US Civil War"
             ]
@@ -18760,7 +18548,6 @@
             "id": "cat-09-3",
             "value": 300,
             "accept": [
-              "Nineteen forty-five",
               "'45"
             ],
             "answer": "1945",
@@ -18773,9 +18560,7 @@
             "difficulty": 3,
             "question": "Which ship carried the Pilgrims from England to America in 1620?",
             "answer": "The Mayflower",
-            "accept": [
-              "Mayflower"
-            ]
+            "accept": []
           },
           {
             "id": "cat-09-x08",
@@ -18803,7 +18588,6 @@
             "id": "cat-09-4",
             "value": 400,
             "accept": [
-              "The Magna Carta",
               "The Great Charter"
             ],
             "answer": "Magna Carta",
@@ -18827,7 +18611,6 @@
             "question": "Which banking family ruled Renaissance Florence and included Lorenzo the Magnificent?",
             "answer": "The Medici",
             "accept": [
-              "Medici",
               "De' Medici"
             ]
           },
@@ -18838,7 +18621,6 @@
             "question": "Which revolution of 1917 brought the Bolsheviks to power?",
             "answer": "The October Revolution",
             "accept": [
-              "October Revolution",
               "The Russian Revolution",
               "Bolshevik Revolution"
             ]
@@ -18848,7 +18630,6 @@
             "value": 500,
             "accept": [
               "Ottoman",
-              "Ottomans",
               "Ottoman Turks"
             ],
             "answer": "The Ottoman Empire",
@@ -18873,7 +18654,6 @@
             "question": "Which congress of 1814 and 1815 redrew the map of Europe after Napoleon?",
             "answer": "The Congress of Vienna",
             "accept": [
-              "Congress of Vienna",
               "Vienna"
             ]
           },
@@ -18884,7 +18664,6 @@
             "question": "Which English king was beheaded in 1649?",
             "answer": "Charles I",
             "accept": [
-              "Charles the First",
               "King Charles I"
             ]
           }
@@ -19079,7 +18858,6 @@
             "question": "The round pink Pokémon that sings its opponents to sleep.",
             "answer": "Jigglypuff",
             "accept": [
-              "Jiggly Puff",
               "Pummeluff",
               "Rondoudou"
             ],
@@ -19188,7 +18966,6 @@
             "question": "The Psychic type created in a lab as a clone of Mew.",
             "answer": "Mewtwo",
             "accept": [
-              "Mew Two",
               "Mewtu"
             ],
             "notes": "Mewtu in German."
@@ -19242,7 +19019,7 @@
               "Aquali"
             ],
             "answer": "Vaporeon",
-            "question": "Which Water-type Pokémon does Eevee evolve into when it is given a Water Stone?",
+            "question": "The Water type that Eevee becomes when it is given a Water Stone.",
             "difficulty": 5
           }
         ]
@@ -19282,7 +19059,9 @@
             "difficulty": 1,
             "question": "Who wanted to make a fur coat out of Dalmatian puppies?",
             "answer": "Cruella de Vil",
-            "accept": []
+            "accept": [
+              "Cruella"
+            ]
           },
           {
             "id": "who-s-the-villain-2a",
@@ -19310,7 +19089,11 @@
             "difficulty": 2,
             "question": "Who poisoned an apple for her stepdaughter because of what a mirror said?",
             "answer": "The Evil Queen",
-            "accept": []
+            "accept": [
+              "The Wicked Queen",
+              "Snow White's stepmother",
+              "Queen Grimhilde"
+            ]
           },
           {
             "id": "who-s-the-villain-2d",
@@ -19342,7 +19125,11 @@
             "difficulty": 3,
             "question": "Which cannibal psychiatrist enjoys liver with fava beans?",
             "answer": "Hannibal Lecter",
-            "accept": []
+            "accept": [
+              "Hannibal",
+              "Lecter",
+              "Hannibal the Cannibal"
+            ]
           },
           {
             "id": "who-s-the-villain-3d",
@@ -19350,7 +19137,10 @@
             "difficulty": 3,
             "question": "Which boy king had Ned Stark beheaded in Game of Thrones?",
             "answer": "Joffrey Baratheon",
-            "accept": []
+            "accept": [
+              "Joffrey",
+              "King Joffrey"
+            ]
           },
           {
             "id": "who-s-the-villain-4a",
@@ -19358,7 +19148,10 @@
             "difficulty": 4,
             "question": "Who murdered his musical partner and stole his songs in Pixar's Coco?",
             "answer": "Ernesto de la Cruz",
-            "accept": []
+            "accept": [
+              "De la Cruz",
+              "Ernesto"
+            ]
           },
           {
             "id": "who-s-the-villain-4b",
@@ -19366,7 +19159,9 @@
             "difficulty": 4,
             "question": "Which computer refuses to open the pod bay doors in 2001: A Space Odyssey?",
             "answer": "HAL 9000",
-            "accept": []
+            "accept": [
+              "HAL"
+            ]
           },
           {
             "id": "who-s-the-villain-4c",
@@ -19406,7 +19201,9 @@
             "difficulty": 5,
             "question": "Which Bond villain planned to irradiate the gold in Fort Knox?",
             "answer": "Auric Goldfinger",
-            "accept": []
+            "accept": [
+              "Goldfinger"
+            ]
           },
           {
             "id": "who-s-the-villain-5d",
@@ -19414,7 +19211,10 @@
             "difficulty": 5,
             "question": "Whom did Sherlock Holmes call \"the Napoleon of crime\"?",
             "answer": "Professor Moriarty",
-            "accept": []
+            "accept": [
+              "Moriarty",
+              "James Moriarty"
+            ]
           }
         ]
       },
@@ -19438,9 +19238,7 @@
             "difficulty": 1,
             "question": "How many vowels are there in the English alphabet?",
             "answer": "Five",
-            "accept": [
-              "5"
-            ],
+            "accept": [],
             "notes": "A, E, I, O and U."
           },
           {
@@ -19449,10 +19247,7 @@
             "difficulty": 1,
             "question": "Which punctuation mark goes at the end of a question?",
             "answer": "A question mark",
-            "accept": [
-              "Question mark",
-              "?"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-x03",
@@ -19466,7 +19261,6 @@
             "id": "cat-10-2",
             "value": 200,
             "accept": [
-              "A palindrome",
               "Palindromic"
             ],
             "answer": "Palindrome",
@@ -19479,9 +19273,7 @@
             "difficulty": 2,
             "question": "What do you call a word that means the same as another word?",
             "answer": "A synonym",
-            "accept": [
-              "Synonym"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-x05",
@@ -19489,9 +19281,7 @@
             "difficulty": 2,
             "question": "What do you call a word that means the opposite of another word?",
             "answer": "An antonym",
-            "accept": [
-              "Antonym"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-x06",
@@ -19499,16 +19289,12 @@
             "difficulty": 2,
             "question": "What do you call a word made from the first letters of a phrase, like \"NASA\"?",
             "answer": "An acronym",
-            "accept": [
-              "Acronym"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-3",
             "value": 300,
-            "accept": [
-              "An anagram"
-            ],
+            "accept": [],
             "answer": "Anagram",
             "question": "What do you call a word made by rearranging all the letters of another word, such as \"silent\" from \"listen\"?",
             "difficulty": 3
@@ -19520,7 +19306,6 @@
             "question": "What do you call a word that sounds the same as another but means something different, like \"pair\" and \"pear\"?",
             "answer": "A homophone",
             "accept": [
-              "Homophone",
               "Homonym"
             ]
           },
@@ -19538,9 +19323,7 @@
             "difficulty": 3,
             "question": "Which figure of speech makes a comparison using \"like\" or \"as\"?",
             "answer": "A simile",
-            "accept": [
-              "Simile"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-4",
@@ -19559,9 +19342,7 @@
             "difficulty": 4,
             "question": "What do you call a phrase that puts two contradictory words together, like \"deafening silence\"?",
             "answer": "An oxymoron",
-            "accept": [
-              "Oxymoron"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-x11",
@@ -19569,9 +19350,7 @@
             "difficulty": 4,
             "question": "What is the term for a mild word used in place of a harsh one, like \"passed away\"?",
             "answer": "A euphemism",
-            "accept": [
-              "Euphemism"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-x12",
@@ -19580,7 +19359,6 @@
             "question": "What do you call a word made by blending two others, like \"brunch\"?",
             "answer": "A portmanteau",
             "accept": [
-              "Portmanteau",
               "Portmanteau word"
             ]
           },
@@ -19588,7 +19366,6 @@
             "id": "cat-10-5",
             "value": 500,
             "accept": [
-              "A pangram",
               "Holoalphabetic sentence"
             ],
             "answer": "Pangram",
@@ -19601,9 +19378,7 @@
             "difficulty": 5,
             "question": "What do you call a slip of the tongue that swaps the first sounds of two words, like \"a blushing crow\"?",
             "answer": "A spoonerism",
-            "accept": [
-              "Spoonerism"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-x14",
@@ -19611,9 +19386,7 @@
             "difficulty": 5,
             "question": "What is the dot over a lower-case i or j called?",
             "answer": "A tittle",
-            "accept": [
-              "Tittle"
-            ]
+            "accept": []
           },
           {
             "id": "cat-10-x15",
@@ -19622,7 +19395,6 @@
             "question": "What do you call a word that can be its own opposite, like \"cleave\" or \"sanction\"?",
             "answer": "A contronym",
             "accept": [
-              "Contronym",
               "Contranym",
               "Auto-antonym",
               "Janus word"
@@ -19805,11 +19577,7 @@
           {
             "id": "os-04-1",
             "value": 100,
-            "accept": [
-              "Meter",
-              "Metres",
-              "Meters"
-            ],
+            "accept": [],
             "answer": "Metre",
             "question": "What is the base unit of length in the metric system?",
             "difficulty": 1
@@ -19820,9 +19588,7 @@
             "difficulty": 1,
             "question": "Which tall plant has a trunk, branches and leaves?",
             "answer": "A tree",
-            "accept": [
-              "Tree"
-            ]
+            "accept": []
           },
           {
             "id": "os-04-x02",
@@ -19838,10 +19604,7 @@
             "difficulty": 1,
             "question": "What do you see twinkling in the night sky?",
             "answer": "A star",
-            "accept": [
-              "Star",
-              "Stars"
-            ]
+            "accept": []
           },
           {
             "id": "os-04-2",
@@ -19873,10 +19636,7 @@
             "difficulty": 2,
             "question": "What do actors stand on to perform in a theatre?",
             "answer": "A stage",
-            "accept": [
-              "Stage",
-              "The stage"
-            ]
+            "accept": []
           },
           {
             "id": "os-04-3",
@@ -19893,9 +19653,7 @@
             "difficulty": 3,
             "question": "Which speech condition, also called a stutter, makes a person repeat sounds?",
             "answer": "A stammer",
-            "accept": [
-              "Stammer"
-            ]
+            "accept": []
           },
           {
             "id": "os-04-x08",
@@ -19919,7 +19677,6 @@
             "id": "os-04-4",
             "value": 400,
             "accept": [
-              "Merger",
               "Merge"
             ],
             "answer": "A merger",
@@ -19932,9 +19689,7 @@
             "difficulty": 4,
             "question": "What do you call an old game or album re-released with sharper picture or sound, but not remade from scratch?",
             "answer": "A remaster",
-            "accept": [
-              "Remaster"
-            ]
+            "accept": []
           },
           {
             "id": "os-04-x11",
@@ -19942,9 +19697,7 @@
             "difficulty": 4,
             "question": "Which adjective describes a portion that is disappointingly small?",
             "answer": "Meagre",
-            "accept": [
-              "Meager"
-            ]
+            "accept": []
           },
           {
             "id": "os-04-x12",
@@ -19952,17 +19705,12 @@
             "difficulty": 4,
             "question": "Which stinging chemical do riot police fire in canisters to break up a crowd?",
             "answer": "Tear gas",
-            "accept": [
-              "Teargas"
-            ]
+            "accept": []
           },
           {
             "id": "os-04-5",
             "value": 500,
-            "accept": [
-              "Gamete",
-              "Gametes"
-            ],
+            "accept": [],
             "answer": "A gamete",
             "question": "What is a mature reproductive cell, such as a sperm or an egg, that carries half the usual genetic information?",
             "difficulty": 5
@@ -19995,10 +19743,7 @@
             "difficulty": 5,
             "question": "England's oldest order of chivalry, founded in 1348, is named after which item of legwear?",
             "answer": "A garter",
-            "accept": [
-              "Garter",
-              "The Garter"
-            ],
+            "accept": [],
             "notes": "The Order of the Garter."
           }
         ],
@@ -20030,9 +19775,7 @@
             "difficulty": 1,
             "question": "What do birds build to lay their eggs in?",
             "answer": "A nest",
-            "accept": [
-              "Nest"
-            ]
+            "accept": []
           },
           {
             "id": "pw-05-x03",
@@ -20040,17 +19783,12 @@
             "difficulty": 1,
             "question": "Which small insects live in colonies and can carry many times their own weight?",
             "answer": "Ants",
-            "accept": [
-              "Ant"
-            ]
+            "accept": []
           },
           {
             "id": "pw-05-2",
             "value": 200,
-            "accept": [
-              "Tiger",
-              "Tigers"
-            ],
+            "accept": [],
             "answer": "A tiger",
             "question": "Which striped big cat is the largest in the world?",
             "difficulty": 2
@@ -20061,9 +19799,7 @@
             "difficulty": 2,
             "question": "Which electric vehicle runs on rails laid along city streets?",
             "answer": "A tram",
-            "accept": [
-              "Tram"
-            ],
+            "accept": [],
             "notes": "A train fits the rails, but it has a second N in it. Only \"tram\" can be spelled from \"streaming\"."
           },
           {
@@ -20072,9 +19808,7 @@
             "difficulty": 2,
             "question": "Which object attracts iron and sticks to the fridge door?",
             "answer": "A magnet",
-            "accept": [
-              "Magnet"
-            ]
+            "accept": []
           },
           {
             "id": "pw-05-x06",
@@ -20082,9 +19816,7 @@
             "difficulty": 2,
             "question": "Which word names the enormous man at the top of Jack's beanstalk?",
             "answer": "A giant",
-            "accept": [
-              "Giant"
-            ]
+            "accept": []
           },
           {
             "id": "pw-05-3",
@@ -20112,7 +19844,6 @@
             "question": "Which insect, known for its \"praying\" pose, sometimes eats its mate?",
             "answer": "A mantis",
             "accept": [
-              "Mantis",
               "Praying mantis"
             ]
           },
@@ -20122,9 +19853,7 @@
             "difficulty": 3,
             "question": "What do you call a small, narrow river?",
             "answer": "A stream",
-            "accept": [
-              "Stream"
-            ]
+            "accept": []
           },
           {
             "id": "pw-05-4",
@@ -20151,9 +19880,7 @@
             "difficulty": 4,
             "question": "In which French city, in the Champagne region, were the kings of France crowned?",
             "answer": "Reims",
-            "accept": [
-              "Rheims"
-            ]
+            "accept": []
           },
           {
             "id": "pw-05-x12",
@@ -20161,10 +19888,7 @@
             "difficulty": 4,
             "question": "Which soldiers are trained to serve at sea and fight on land?",
             "answer": "Marines",
-            "accept": [
-              "Marine",
-              "The marines"
-            ]
+            "accept": []
           },
           {
             "id": "pw-05-5",
@@ -20180,9 +19904,7 @@
             "difficulty": 5,
             "question": "Which Moroccan port on the Strait of Gibraltar gave its name to a small orange citrus fruit?",
             "answer": "Tangier",
-            "accept": [
-              "Tangiers"
-            ],
+            "accept": [],
             "notes": "The tangerine."
           },
           {
@@ -20215,7 +19937,10 @@
             "difficulty": 1,
             "question": "Which US president was assassinated in Dallas in 1963?",
             "answer": "John F. Kennedy",
-            "accept": []
+            "accept": [
+              "JFK",
+              "Kennedy"
+            ]
           },
           {
             "id": "world-leaders-1b",
@@ -20223,7 +19948,9 @@
             "difficulty": 1,
             "question": "Who became South Africa's first Black president in 1994?",
             "answer": "Nelson Mandela",
-            "accept": []
+            "accept": [
+              "Mandela"
+            ]
           },
           {
             "id": "world-leaders-1c",
@@ -20231,7 +19958,9 @@
             "difficulty": 1,
             "question": "Which British prime minister led the UK through most of the Second World War?",
             "answer": "Winston Churchill",
-            "accept": []
+            "accept": [
+              "Churchill"
+            ]
           },
           {
             "id": "world-leaders-1d",
@@ -20239,7 +19968,9 @@
             "difficulty": 1,
             "question": "Who was the first Black president of the United States?",
             "answer": "Barack Obama",
-            "accept": []
+            "accept": [
+              "Obama"
+            ]
           },
           {
             "id": "world-leaders-2a",
@@ -20247,7 +19978,9 @@
             "difficulty": 2,
             "question": "Which German chancellor held office from 2005 to 2021?",
             "answer": "Angela Merkel",
-            "accept": []
+            "accept": [
+              "Merkel"
+            ]
           },
           {
             "id": "world-leaders-2b",
@@ -20255,7 +19988,9 @@
             "difficulty": 2,
             "question": "Which British prime minister was nicknamed the Iron Lady?",
             "answer": "Margaret Thatcher",
-            "accept": []
+            "accept": [
+              "Thatcher"
+            ]
           },
           {
             "id": "world-leaders-2c",
@@ -20263,7 +19998,9 @@
             "difficulty": 2,
             "question": "Who was the first president of the United States?",
             "answer": "George Washington",
-            "accept": []
+            "accept": [
+              "Washington"
+            ]
           },
           {
             "id": "world-leaders-2d",
@@ -20271,7 +20008,11 @@
             "difficulty": 2,
             "question": "Which French emperor was defeated at the Battle of Waterloo?",
             "answer": "Napoleon Bonaparte",
-            "accept": []
+            "accept": [
+              "Napoleon",
+              "Napoleon I",
+              "Bonaparte"
+            ]
           },
           {
             "id": "world-leaders-3a",
@@ -20279,7 +20020,9 @@
             "difficulty": 3,
             "question": "Which former Hollywood actor became US president in 1981?",
             "answer": "Ronald Reagan",
-            "accept": []
+            "accept": [
+              "Reagan"
+            ]
           },
           {
             "id": "world-leaders-3b",
@@ -20287,7 +20030,9 @@
             "difficulty": 3,
             "question": "Which Soviet leader introduced glasnost and perestroika?",
             "answer": "Mikhail Gorbachev",
-            "accept": []
+            "accept": [
+              "Gorbachev"
+            ]
           },
           {
             "id": "world-leaders-3c",
@@ -20295,7 +20040,9 @@
             "difficulty": 3,
             "question": "Which French general founded the Fifth Republic in 1958?",
             "answer": "Charles de Gaulle",
-            "accept": []
+            "accept": [
+              "De Gaulle"
+            ]
           },
           {
             "id": "world-leaders-3d",
@@ -20303,7 +20050,9 @@
             "difficulty": 3,
             "question": "Which revolutionary led Cuba from 1959 until 2008?",
             "answer": "Fidel Castro",
-            "accept": []
+            "accept": [
+              "Castro"
+            ]
           },
           {
             "id": "world-leaders-4a",
@@ -20319,7 +20068,10 @@
             "difficulty": 4,
             "question": "Which US president was elected four times?",
             "answer": "Franklin D. Roosevelt",
-            "accept": []
+            "accept": [
+              "FDR",
+              "Franklin Roosevelt"
+            ]
           },
           {
             "id": "world-leaders-4c",
@@ -20327,7 +20079,10 @@
             "difficulty": 4,
             "question": "Which leader ruled Yugoslavia until his death in 1980?",
             "answer": "Josip Broz Tito",
-            "accept": []
+            "accept": [
+              "Tito",
+              "Marshal Tito"
+            ]
           },
           {
             "id": "world-leaders-4d",
@@ -20335,7 +20090,9 @@
             "difficulty": 4,
             "question": "Which leader of the Solidarity trade union became president of Poland in 1990?",
             "answer": "Lech Wałęsa",
-            "accept": []
+            "accept": [
+              "Wałęsa"
+            ]
           },
           {
             "id": "world-leaders-5a",
@@ -20355,7 +20112,9 @@
             "difficulty": 5,
             "question": "Who was the first chancellor of West Germany, serving from 1949 to 1963?",
             "answer": "Konrad Adenauer",
-            "accept": []
+            "accept": [
+              "Adenauer"
+            ]
           },
           {
             "id": "world-leaders-5c",
@@ -20363,7 +20122,9 @@
             "difficulty": 5,
             "question": "Which woman was prime minister of Israel from 1969 to 1974?",
             "answer": "Golda Meir",
-            "accept": []
+            "accept": [
+              "Meir"
+            ]
           },
           {
             "id": "world-leaders-5d",
@@ -20371,7 +20132,9 @@
             "difficulty": 5,
             "question": "Which Swedish prime minister was assassinated in Stockholm in 1986?",
             "answer": "Olof Palme",
-            "accept": []
+            "accept": [
+              "Palme"
+            ]
           }
         ]
       }
@@ -20506,10 +20269,7 @@
             "points": 8,
             "aliases": [
               "15 percent",
-              "15 per cent",
-              "fifteen percent",
-              "fifteen per cent",
-              "fifteen"
+              "15 per cent"
             ]
           },
           {
@@ -20525,10 +20285,7 @@
             "points": 1,
             "aliases": [
               "25 percent",
-              "25 per cent",
-              "twenty five percent",
-              "twenty five per cent",
-              "twenty five"
+              "25 per cent"
             ]
           }
         ],
@@ -22970,8 +22727,7 @@
             "points": 30,
             "aliases": [
               "2",
-              "a couple of hours",
-              "couple of hours"
+              "a couple of hours"
             ]
           },
           {
@@ -23348,8 +23104,7 @@
             "points": 40,
             "aliases": [
               "2",
-              "a couple of hours",
-              "couple of hours"
+              "a couple of hours"
             ]
           },
           {
@@ -23717,7 +23472,6 @@
             "text": "15",
             "points": 8,
             "aliases": [
-              "fifteen",
               "15 people"
             ]
           },
@@ -23725,7 +23479,6 @@
             "text": "14",
             "points": 3,
             "aliases": [
-              "fourteen",
               "14 people"
             ]
           },
@@ -24445,7 +24198,6 @@
             "text": "25",
             "points": 16,
             "aliases": [
-              "twenty five",
               "25 goals"
             ]
           },
@@ -24460,7 +24212,6 @@
             "text": "15",
             "points": 6,
             "aliases": [
-              "fifteen",
               "15 goals"
             ]
           },
@@ -24475,7 +24226,6 @@
             "text": "35",
             "points": 2,
             "aliases": [
-              "thirty five",
               "35 goals"
             ]
           }
@@ -24871,7 +24621,6 @@
             "text": "14",
             "points": 26,
             "aliases": [
-              "fourteen",
               "two weeks",
               "a fortnight",
               "14 days"
@@ -24895,7 +24644,6 @@
             "text": "21",
             "points": 6,
             "aliases": [
-              "twenty one",
               "three weeks",
               "21 days"
             ]
@@ -25324,7 +25072,6 @@
             "text": "70",
             "points": 42,
             "aliases": [
-              "seventy",
               "70 years old",
               "70 years"
             ]
@@ -25333,7 +25080,6 @@
             "text": "60",
             "points": 28,
             "aliases": [
-              "sixty",
               "60 years old",
               "60 years"
             ]
@@ -25342,7 +25088,6 @@
             "text": "80",
             "points": 16,
             "aliases": [
-              "eighty",
               "80 years old",
               "80 years"
             ]
@@ -25359,7 +25104,6 @@
             "text": "90",
             "points": 3,
             "aliases": [
-              "ninety",
               "90 years old",
               "90 years"
             ]
@@ -25863,9 +25607,7 @@
             "text": "€15",
             "points": 4,
             "aliases": [
-              "fifteen",
-              "15 euros",
-              "fifteen euros"
+              "15 euros"
             ]
           }
         ]

@@ -51,7 +51,7 @@
             "difficulty": 5,
             "question": "What is the capital city of Burkina Faso?",
             "answer": "Ouagadougou",
-            "accept": ["Wagadugu", "Ouaga"],
+            "accept": ["Ouaga"],
             "notes": "Pronounced wah-gah-DOO-goo. Be generous with pronunciation."
           }
         ]
@@ -75,13 +75,13 @@
             "difficulty": 2,
             "question": "Which part of a cell is famously nicknamed \"the powerhouse of the cell\"?",
             "answer": "Mitochondria",
-            "accept": ["Mitochondrion", "The mitochondria"]
+            "accept": ["Mitochondrion"]
           },
           {
             "id": "cat-02-3",
             "value": 300,
             "difficulty": 3,
-            "question": "Which gas makes up about 78 percent of Earth's atmosphere?",
+            "question": "Which gas makes up about 78 per cent of Earth's atmosphere?",
             "answer": "Nitrogen",
             "accept": ["N2"]
           },
@@ -115,7 +115,7 @@
             "difficulty": 1,
             "question": "In the Pixar film \"Finding Nemo\", what kind of fish is Nemo?",
             "answer": "Clownfish",
-            "accept": ["Clown fish", "Anemonefish"]
+            "accept": ["Anemonefish"]
           },
           {
             "id": "cat-03-2",
@@ -131,7 +131,7 @@
             "difficulty": 3,
             "question": "What is the name of the haunted hotel in Stanley Kubrick's film \"The Shining\"?",
             "answer": "The Overlook Hotel",
-            "accept": ["Overlook", "The Overlook"]
+            "accept": ["Overlook"]
           },
           {
             "id": "cat-03-4",
@@ -148,7 +148,7 @@
             "difficulty": 5,
             "question": "In the 1982 film \"Blade Runner\", what is the name of the test used to tell replicants apart from humans?",
             "answer": "The Voight-Kampff test",
-            "accept": ["Voight-Kampff", "Voight Kampff", "Voigt-Kampff", "VK test"]
+            "accept": ["Voight-Kampff", "VK test"]
           }
         ]
       },
@@ -163,7 +163,7 @@
             "difficulty": 1,
             "question": "Which band was made up of John, Paul, George and Ringo?",
             "answer": "The Beatles",
-            "accept": ["Beatles"]
+            "accept": []
           },
           {
             "id": "cat-04-2",
@@ -218,7 +218,7 @@
             "difficulty": 2,
             "question": "In \"Minecraft\", what is the name of the green monster that sneaks up on you, hisses and explodes?",
             "answer": "Creeper",
-            "accept": ["A Creeper", "Creepers"]
+            "accept": []
           },
           {
             "id": "cat-05-3",
@@ -243,7 +243,7 @@
             "difficulty": 5,
             "question": "Which Soviet software engineer created \"Tetris\" in 1984?",
             "answer": "Alexey Pajitnov",
-            "accept": ["Pajitnov", "Alexei Pajitnov", "Aleksei Pazhitnov"],
+            "accept": ["Pajitnov"],
             "notes": "The surname alone is enough; be generous with pronunciation."
           }
         ]
@@ -275,7 +275,7 @@
             "difficulty": 3,
             "question": "What does the image file format abbreviation \"GIF\" stand for?",
             "answer": "Graphics Interchange Format",
-            "accept": ["Graphic Interchange Format"],
+            "accept": [],
             "notes": "How to pronounce it is a fight for another night."
           },
           {
@@ -307,7 +307,7 @@
             "difficulty": 1,
             "question": "Which fruit is the main ingredient of guacamole?",
             "answer": "Avocado",
-            "accept": ["Avocados", "Avo"]
+            "accept": ["Avo"]
           },
           {
             "id": "cat-07-2",
@@ -340,7 +340,7 @@
             "difficulty": 5,
             "question": "Which classic cocktail is made from equal parts gin, Campari and sweet vermouth?",
             "answer": "Negroni",
-            "accept": ["A Negroni"]
+            "accept": []
           }
         ]
       },
@@ -355,7 +355,7 @@
             "difficulty": 1,
             "question": "In football, how many players does each team have on the pitch at kick-off, including the goalkeeper?",
             "answer": "11",
-            "accept": ["Eleven"]
+            "accept": []
           },
           {
             "id": "cat-08-2",
@@ -371,7 +371,7 @@
             "difficulty": 3,
             "question": "What is the highest possible score in a single game of ten-pin bowling?",
             "answer": "300",
-            "accept": ["Three hundred"],
+            "accept": [],
             "notes": "A perfect game takes twelve strikes in a row."
           },
           {
@@ -388,7 +388,7 @@
             "difficulty": 5,
             "question": "In golf, which bird gives its name to a score of three under par on a single hole?",
             "answer": "Albatross",
-            "accept": ["An albatross"],
+            "accept": [],
             "notes": "Also called a double eagle in the US, but the bird asked for is the albatross."
           }
         ]
@@ -404,7 +404,7 @@
             "difficulty": 1,
             "question": "Which ocean liner sank on its maiden voyage in April 1912 after hitting an iceberg?",
             "answer": "The Titanic",
-            "accept": ["Titanic", "RMS Titanic"]
+            "accept": ["RMS Titanic"]
           },
           {
             "id": "cat-09-2",
@@ -412,7 +412,7 @@
             "difficulty": 2,
             "question": "Which barrier divided a German city in two from 1961 until 1989?",
             "answer": "The Berlin Wall",
-            "accept": ["Berlin Wall"]
+            "accept": []
           },
           {
             "id": "cat-09-3",
@@ -420,7 +420,7 @@
             "difficulty": 3,
             "question": "In which year did the Second World War end?",
             "answer": "1945",
-            "accept": ["Nineteen forty-five", "'45"]
+            "accept": ["'45"]
           },
           {
             "id": "cat-09-4",
@@ -428,7 +428,7 @@
             "difficulty": 4,
             "question": "Which charter, sealed by King John of England in 1215, limited the power of the crown?",
             "answer": "Magna Carta",
-            "accept": ["The Magna Carta", "The Great Charter"]
+            "accept": ["The Great Charter"]
           },
           {
             "id": "cat-09-5",
@@ -436,7 +436,7 @@
             "difficulty": 5,
             "question": "Which empire was ruled by Suleiman the Magnificent in the sixteenth century?",
             "answer": "The Ottoman Empire",
-            "accept": ["Ottoman", "Ottomans", "Ottoman Turks"]
+            "accept": ["Ottoman", "Ottoman Turks"]
           }
         ]
       },
@@ -459,7 +459,7 @@
             "difficulty": 2,
             "question": "What do you call a word or phrase that reads the same forwards and backwards, like \"level\" or \"racecar\"?",
             "answer": "Palindrome",
-            "accept": ["A palindrome", "Palindromic"]
+            "accept": ["Palindromic"]
           },
           {
             "id": "cat-10-3",
@@ -467,7 +467,7 @@
             "difficulty": 3,
             "question": "What do you call a word made by rearranging all the letters of another word, such as \"silent\" from \"listen\"?",
             "answer": "Anagram",
-            "accept": ["An anagram"]
+            "accept": []
           },
           {
             "id": "cat-10-4",
@@ -483,7 +483,7 @@
             "difficulty": 5,
             "question": "What is the term for a sentence that uses every letter of the alphabet at least once, such as \"The quick brown fox jumps over the lazy dog\"?",
             "answer": "Pangram",
-            "accept": ["A pangram", "Holoalphabetic sentence"]
+            "accept": ["Holoalphabetic sentence"]
           }
         ]
       },
@@ -545,7 +545,7 @@
             "difficulty": 1,
             "question": "What is the largest animal on Earth?",
             "answer": "The blue whale",
-            "accept": ["Blue whale"],
+            "accept": [],
             "notes": "\"Whale\" alone is not specific enough; ask which kind."
           },
           {
@@ -554,7 +554,7 @@
             "difficulty": 2,
             "question": "What is the collective name for a group of lions?",
             "answer": "A pride",
-            "accept": ["Pride"]
+            "accept": []
           },
           {
             "id": "cat-12-3",
@@ -562,7 +562,7 @@
             "difficulty": 3,
             "question": "How many hearts does an octopus have?",
             "answer": "Three",
-            "accept": ["3"],
+            "accept": [],
             "notes": "Two pump blood through the gills and one pumps it around the rest of the body."
           },
           {
@@ -571,7 +571,7 @@
             "difficulty": 4,
             "question": "Which bird of prey is the fastest animal on Earth, reaching more than 300 kilometres per hour in a hunting dive?",
             "answer": "The peregrine falcon",
-            "accept": ["Peregrine falcon", "Peregrine"],
+            "accept": ["Peregrine"],
             "notes": "\"Falcon\" alone is not specific enough; ask which kind."
           },
           {
@@ -580,7 +580,7 @@
             "difficulty": 5,
             "question": "What showy collective noun is used for a group of flamingos?",
             "answer": "A flamboyance",
-            "accept": ["Flamboyance"]
+            "accept": []
           }
         ]
       },
@@ -603,7 +603,7 @@
             "difficulty": 2,
             "question": "What is the name of the galaxy that contains our Solar System?",
             "answer": "The Milky Way",
-            "accept": ["Milky Way", "Milky Way Galaxy"]
+            "accept": ["Milky Way Galaxy"]
           },
           {
             "id": "cat-13-3",
@@ -628,7 +628,7 @@
             "difficulty": 5,
             "question": "Which NASA probe, launched in 1977, became the first human-made object to enter interstellar space?",
             "answer": "Voyager 1",
-            "accept": ["Voyager One", "Voyager I"],
+            "accept": [],
             "notes": "The number matters: Voyager 2 launched the same year but crossed over later."
           }
         ]
