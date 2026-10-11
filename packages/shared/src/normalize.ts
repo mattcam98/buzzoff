@@ -86,6 +86,10 @@ export function matchSurvey(response: string, answers: readonly SurveyAnswer[]):
   if (!norm) return null;
   const compact = norm.replace(/ /g, '');
   const candidates = answers.map((a) => [a.text, ...a.aliases].map(normalizeAnswer).filter(Boolean));
+  // A number is not a spelling. "9 times" is not a slip of the finger for "8 times", and "20 million" does not
+  // become "a million" by having the word in it: for an answer that is a number, a loose match needs the same digits.
+  const digits = (text: string) => text.replace(/\D/g, '');
+  const sameNumber = (i: number, c: string) => !/\d/.test(candidates[i][0] ?? '') || digits(c) === digits(norm);
 
   for (let i = 0; i < candidates.length; i++) {
     if (candidates[i].some((c) => c === norm || c.replace(/ /g, '') === compact)) return { index: i, kind: 'exact' };
@@ -95,7 +99,7 @@ export function matchSurvey(response: string, answers: readonly SurveyAnswer[]):
   for (let i = 0; i < candidates.length; i++) {
     for (const c of candidates[i]) {
       const limit = allowedTypos(Math.min(c.length, norm.length));
-      if (!limit || Math.abs(c.length - norm.length) > limit) continue;
+      if (!limit || Math.abs(c.length - norm.length) > limit || !sameNumber(i, c)) continue;
       const d = editDistance(c, norm);
       if (d <= limit && (!best || d < best.distance)) best = { index: i, distance: d };
     }
@@ -105,7 +109,7 @@ export function matchSurvey(response: string, answers: readonly SurveyAnswer[]):
   let longest: { index: number; length: number } | null = null;
   for (let i = 0; i < candidates.length; i++) {
     for (const c of candidates[i]) {
-      if (c.length >= 4 && containsPhrase(norm, c) && (!longest || c.length > longest.length)) {
+      if (c.length >= 4 && containsPhrase(norm, c) && sameNumber(i, c) && (!longest || c.length > longest.length)) {
         longest = { index: i, length: c.length };
       }
     }

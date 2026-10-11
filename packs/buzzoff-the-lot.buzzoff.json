@@ -20395,7 +20395,9 @@
             "aliases": [
               "choc",
               "double chocolate",
-              "chocolate fudge"
+              "chocolate fudge",
+              "chocolate chip",
+              "choc chip"
             ]
           },
           {
@@ -20429,7 +20431,6 @@
             "aliases": [
               "caramel",
               "salt caramel",
-              "salted caramel swirl",
               "dulce de leche"
             ]
           },
@@ -20437,8 +20438,7 @@
             "text": "Cookie dough",
             "points": 4,
             "aliases": [
-              "chocolate chip cookie dough",
-              "double dough"
+              "chocolate chip cookie dough"
             ]
           },
           {
@@ -20446,8 +20446,7 @@
             "points": 3,
             "aliases": [
               "cookies n cream",
-              "oreo",
-              "cookie and cream"
+              "oreo"
             ]
           },
           {
@@ -20455,7 +20454,6 @@
             "points": 3,
             "aliases": [
               "rum raisin",
-              "rum & raisin",
               "rum n raisin"
             ]
           }
@@ -20470,9 +20468,7 @@
             "points": 44,
             "aliases": [
               "10 percent",
-              "10 per cent",
-              "ten percent",
-              "ten per cent"
+              "10 per cent"
             ]
           },
           {
@@ -20480,9 +20476,7 @@
             "points": 20,
             "aliases": [
               "5 percent",
-              "5 per cent",
-              "five percent",
-              "five per cent"
+              "5 per cent"
             ]
           },
           {
@@ -20491,7 +20485,6 @@
             "aliases": [
               "0%",
               "0 percent",
-              "zero percent",
               "none",
               "no tip",
               "i don't tip"
@@ -20524,9 +20517,7 @@
             "points": 4,
             "aliases": [
               "20 percent",
-              "20 per cent",
-              "twenty percent",
-              "twenty per cent"
+              "20 per cent"
             ]
           },
           {
@@ -20551,7 +20542,6 @@
             "points": 22,
             "aliases": [
               "5",
-              "five times",
               "5x"
             ]
           },
@@ -20560,7 +20550,6 @@
             "points": 22,
             "aliases": [
               "6",
-              "six times",
               "6x"
             ]
           },
@@ -20569,7 +20558,6 @@
             "points": 16,
             "aliases": [
               "4",
-              "four times",
               "4x"
             ]
           },
@@ -20578,7 +20566,6 @@
             "points": 13,
             "aliases": [
               "7",
-              "seven times",
               "7x"
             ]
           },
@@ -20587,7 +20574,6 @@
             "points": 10,
             "aliases": [
               "8",
-              "eight times",
               "8x"
             ]
           },
@@ -20596,7 +20582,6 @@
             "points": 8,
             "aliases": [
               "3",
-              "three times",
               "3x",
               "thrice"
             ]
@@ -20606,7 +20591,6 @@
             "points": 6,
             "aliases": [
               "10",
-              "ten times",
               "10x"
             ]
           },
@@ -20615,7 +20599,6 @@
             "points": 3,
             "aliases": [
               "2",
-              "two times",
               "2x",
               "twice"
             ]
@@ -20629,17 +20612,12 @@
           {
             "text": "Appendix",
             "points": 28,
-            "aliases": [
-              "the appendix",
-              "their appendix"
-            ]
+            "aliases": []
           },
           {
             "text": "Tonsils",
             "points": 20,
             "aliases": [
-              "tonsil",
-              "the tonsils",
               "adenoids"
             ]
           },
@@ -20648,15 +20626,13 @@
             "points": 12,
             "aliases": [
               "sutures",
-              "staples",
-              "stitch"
+              "staples"
             ]
           },
           {
             "text": "A tooth",
             "points": 10,
             "aliases": [
-              "tooth",
               "teeth",
               "wisdom tooth",
               "wisdom teeth"
@@ -20666,30 +20642,25 @@
             "text": "A tumour",
             "points": 8,
             "aliases": [
-              "tumour",
               "tumor",
-              "a tumor",
               "cancer",
               "a growth",
               "cyst",
-              "a cyst"
+              "lump"
             ]
           },
           {
             "text": "A mole",
             "points": 7,
             "aliases": [
-              "mole",
               "wart",
-              "skin tag",
-              "a wart"
+              "skin tag"
             ]
           },
           {
             "text": "A splinter",
             "points": 6,
             "aliases": [
-              "splinter",
               "a thorn",
               "glass",
               "a foreign object"
@@ -20699,20 +20670,15 @@
             "text": "A kidney",
             "points": 5,
             "aliases": [
-              "kidney",
-              "kidney stone",
-              "an organ",
-              "organ"
+              "kidney stone"
             ]
           },
           {
             "text": "A cast",
             "points": 4,
             "aliases": [
-              "cast",
               "plaster cast",
-              "bandage",
-              "a bandage"
+              "bandage"
             ]
           }
         ],
@@ -20804,7 +20770,8 @@
             "points": 1,
             "aliases": [
               "minecraft steve",
-              "steve from minecraft"
+              "steve from minecraft",
+              "minecraft"
             ]
           }
         ],
@@ -20817,22 +20784,18 @@
             "text": "Lion",
             "points": 24,
             "aliases": [
-              "lions",
               "lioness"
             ]
           },
           {
             "text": "Elephant",
             "points": 17,
-            "aliases": [
-              "elephants"
-            ]
+            "aliases": []
           },
           {
             "text": "Monkey",
             "points": 15,
             "aliases": [
-              "monkeys",
               "ape",
               "chimp",
               "chimpanzee",
@@ -20843,36 +20806,27 @@
           {
             "text": "Giraffe",
             "points": 14,
-            "aliases": [
-              "giraffes"
-            ]
+            "aliases": []
           },
           {
             "text": "Tiger",
             "points": 10,
-            "aliases": [
-              "tigers"
-            ]
+            "aliases": []
           },
           {
             "text": "Penguin",
             "points": 7,
-            "aliases": [
-              "penguins"
-            ]
+            "aliases": []
           },
           {
             "text": "Zebra",
             "points": 5,
-            "aliases": [
-              "zebras"
-            ]
+            "aliases": []
           },
           {
             "text": "Bear",
             "points": 4,
             "aliases": [
-              "bears",
               "polar bear",
               "grizzly bear",
               "brown bear"
@@ -20882,7 +20836,6 @@
             "text": "Panda",
             "points": 2,
             "aliases": [
-              "pandas",
               "giant panda",
               "red panda"
             ]
@@ -20891,7 +20844,6 @@
             "text": "Hippo",
             "points": 2,
             "aliases": [
-              "hippos",
               "hippopotamus"
             ]
           }
@@ -20904,23 +20856,19 @@
           {
             "text": "Macarena",
             "points": 28,
-            "aliases": [
-              "the macarena"
-            ]
+            "aliases": []
           },
           {
             "text": "YMCA",
             "points": 13,
             "aliases": [
-              "y.m.c.a.",
-              "the ymca"
+              "y.m.c.a."
             ]
           },
           {
             "text": "Waltz",
             "points": 12,
             "aliases": [
-              "the waltz",
               "viennese waltz"
             ]
           },
@@ -20928,7 +20876,6 @@
             "text": "Conga",
             "points": 10,
             "aliases": [
-              "the conga",
               "conga line"
             ]
           },
@@ -20936,7 +20883,6 @@
             "text": "Moonwalk",
             "points": 9,
             "aliases": [
-              "the moonwalk",
               "moon walk"
             ]
           },
@@ -20944,7 +20890,6 @@
             "text": "Tango",
             "points": 7,
             "aliases": [
-              "the tango",
               "argentine tango"
             ]
           },
@@ -20959,16 +20904,13 @@
             "text": "Floss",
             "points": 5,
             "aliases": [
-              "the floss",
               "flossing"
             ]
           },
           {
             "text": "Twist",
             "points": 4,
-            "aliases": [
-              "the twist"
-            ]
+            "aliases": []
           },
           {
             "text": "Gangnam Style",
@@ -20980,9 +20922,7 @@
           {
             "text": "Robot",
             "points": 2,
-            "aliases": [
-              "the robot"
-            ]
+            "aliases": []
           }
         ],
         "question": "Name a dance everybody knows."
@@ -21001,7 +20941,11 @@
               "playstation 5",
               "playstation 4",
               "playstation 2",
-              "sony playstation"
+              "sony playstation",
+              "ps3",
+              "playstation 3",
+              "ps",
+              "sony"
             ]
           },
           {
@@ -21011,7 +20955,9 @@
               "xbox 360",
               "xbox one",
               "xbox series x",
-              "microsoft xbox"
+              "microsoft xbox",
+              "xbox series s",
+              "series x"
             ]
           },
           {
@@ -21063,7 +21009,8 @@
               "mega drive",
               "megadrive",
               "sega genesis",
-              "sega"
+              "sega",
+              "genesis"
             ]
           }
         ],
@@ -21077,7 +21024,6 @@
             "points": 55,
             "aliases": [
               "7",
-              "seven days",
               "every day",
               "everyday",
               "daily",
@@ -21088,40 +21034,35 @@
             "text": "3 days",
             "points": 11,
             "aliases": [
-              "3",
-              "three days"
+              "3"
             ]
           },
           {
             "text": "5 days",
             "points": 9,
             "aliases": [
-              "5",
-              "five days"
+              "5"
             ]
           },
           {
             "text": "2 days",
             "points": 8,
             "aliases": [
-              "2",
-              "two days"
+              "2"
             ]
           },
           {
             "text": "4 days",
             "points": 7,
             "aliases": [
-              "4",
-              "four days"
+              "4"
             ]
           },
           {
             "text": "6 days",
             "points": 5,
             "aliases": [
-              "6",
-              "six days"
+              "6"
             ]
           },
           {
@@ -21129,7 +21070,6 @@
             "points": 4,
             "aliases": [
               "1",
-              "one day",
               "once"
             ]
           },
@@ -21138,7 +21078,6 @@
             "points": 1,
             "aliases": [
               "0",
-              "zero days",
               "none",
               "never"
             ]
@@ -21154,8 +21093,6 @@
             "points": 36,
             "aliases": [
               "3 euros",
-              "three euros",
-              "3 euro",
               "3.00"
             ]
           },
@@ -21164,8 +21101,6 @@
             "points": 30,
             "aliases": [
               "2 euros",
-              "two euros",
-              "2 euro",
               "2.00"
             ]
           },
@@ -21174,8 +21109,6 @@
             "points": 20,
             "aliases": [
               "4 euros",
-              "four euros",
-              "4 euro",
               "4.00"
             ]
           },
@@ -21184,8 +21117,6 @@
             "points": 8,
             "aliases": [
               "5 euros",
-              "five euros",
-              "5 euro",
               "5.00"
             ]
           },
@@ -21194,7 +21125,6 @@
             "points": 6,
             "aliases": [
               "1 euro",
-              "one euro",
               "a euro",
               "1.00"
             ]
@@ -21301,7 +21231,9 @@
               "fc",
               "fc 25",
               "fc 26",
-              "ea sports fifa"
+              "ea sports fifa",
+              "fc 27",
+              "fc 24"
             ]
           },
           {
@@ -21319,7 +21251,8 @@
             "aliases": [
               "cod",
               "warzone",
-              "black ops"
+              "black ops",
+              "modern warfare"
             ]
           },
           {
@@ -21401,8 +21334,7 @@
             "aliases": [
               "10k",
               "ten thousand",
-              "10000 steps",
-              "10 thousand"
+              "10000 steps"
             ]
           },
           {
@@ -21411,8 +21343,7 @@
             "aliases": [
               "5k",
               "five thousand",
-              "5000 steps",
-              "5 thousand"
+              "5000 steps"
             ]
           },
           {
@@ -21421,8 +21352,7 @@
             "aliases": [
               "8k",
               "eight thousand",
-              "8000 steps",
-              "8 thousand"
+              "8000 steps"
             ]
           },
           {
@@ -21431,8 +21361,7 @@
             "aliases": [
               "6k",
               "six thousand",
-              "6000 steps",
-              "6 thousand"
+              "6000 steps"
             ]
           },
           {
@@ -21441,8 +21370,7 @@
             "aliases": [
               "7k",
               "seven thousand",
-              "7000 steps",
-              "7 thousand"
+              "7000 steps"
             ]
           },
           {
@@ -21451,8 +21379,7 @@
             "aliases": [
               "4k",
               "four thousand",
-              "4000 steps",
-              "4 thousand"
+              "4000 steps"
             ]
           },
           {
@@ -21461,8 +21388,7 @@
             "aliases": [
               "3k",
               "three thousand",
-              "3000 steps",
-              "3 thousand"
+              "3000 steps"
             ]
           },
           {
@@ -21471,8 +21397,7 @@
             "aliases": [
               "12k",
               "twelve thousand",
-              "12000 steps",
-              "12 thousand"
+              "12000 steps"
             ]
           },
           {
@@ -21481,8 +21406,7 @@
             "aliases": [
               "2k",
               "two thousand",
-              "2000 steps",
-              "2 thousand"
+              "2000 steps"
             ]
           },
           {
@@ -21491,8 +21415,7 @@
             "aliases": [
               "9k",
               "nine thousand",
-              "9000 steps",
-              "9 thousand"
+              "9000 steps"
             ]
           }
         ],
@@ -21543,7 +21466,9 @@
           {
             "text": "Carl Lewis",
             "points": 3,
-            "aliases": []
+            "aliases": [
+              "lewis"
+            ]
           },
           {
             "text": "Muhammad Ali",
@@ -21589,7 +21514,6 @@
             "text": "3",
             "points": 36,
             "aliases": [
-              "three",
               "3 out of 5",
               "3/5",
               "3 stars"
@@ -21599,7 +21523,6 @@
             "text": "4",
             "points": 30,
             "aliases": [
-              "four",
               "4 out of 5",
               "4/5",
               "4 stars"
@@ -21609,7 +21532,6 @@
             "text": "2",
             "points": 15,
             "aliases": [
-              "two",
               "2 out of 5",
               "2/5",
               "2 stars"
@@ -21619,7 +21541,6 @@
             "text": "5",
             "points": 10,
             "aliases": [
-              "five",
               "5 out of 5",
               "5/5",
               "5 stars"
@@ -21629,7 +21550,6 @@
             "text": "1",
             "points": 9,
             "aliases": [
-              "one",
               "1 out of 5",
               "1/5",
               "1 star"
@@ -21647,7 +21567,6 @@
             "aliases": [
               "gum",
               "a pack of gum",
-              "pack of gum",
               "bubble gum",
               "bubblegum"
             ]
@@ -21657,7 +21576,6 @@
             "points": 20,
             "aliases": [
               "chocolate",
-              "chocolate bar",
               "sweets",
               "candy",
               "a bag of sweets"
@@ -21686,7 +21604,6 @@
             "points": 8,
             "aliases": [
               "can of coke",
-              "a can of coke",
               "coke",
               "soft drink",
               "fizzy drink",
@@ -21698,18 +21615,15 @@
             "points": 7,
             "aliases": [
               "crisps",
-              "chips",
-              "bag of crisps"
+              "chips"
             ]
           },
           {
             "text": "A scratch card",
             "points": 5,
             "aliases": [
-              "scratch card",
               "scratchcard",
               "lottery ticket",
-              "a lottery ticket",
               "lotto ticket"
             ]
           },
@@ -21720,7 +21634,6 @@
               "bread",
               "a roll",
               "a baguette",
-              "baguette",
               "a croissant"
             ]
           },
@@ -21728,7 +21641,6 @@
             "text": "A lollipop",
             "points": 4,
             "aliases": [
-              "lollipop",
               "lolly"
             ]
           },
@@ -21736,9 +21648,7 @@
             "text": "A pen",
             "points": 2,
             "aliases": [
-              "pen",
               "pencil",
-              "a pencil",
               "eraser"
             ]
           }
@@ -21756,7 +21666,9 @@
               "look at phone",
               "scroll",
               "check messages",
-              "check notifications"
+              "check notifications",
+              "social media",
+              "check social media"
             ]
           },
           {
@@ -21767,7 +21679,8 @@
               "toilet",
               "go to the loo",
               "bathroom",
-              "wee"
+              "wee",
+              "loo"
             ]
           },
           {
@@ -21777,27 +21690,30 @@
               "snooze",
               "go back to sleep",
               "snooze the alarm",
-              "sleep more"
+              "sleep more",
+              "alarm",
+              "turn off the alarm"
             ]
           },
           {
             "text": "Brush their teeth",
             "points": 9,
             "aliases": [
-              "brush teeth",
               "teeth",
               "clean teeth"
             ]
           },
           {
-            "text": "Make coffee",
+            "text": "Make coffee or tea",
             "points": 8,
             "aliases": [
               "coffee",
               "drink coffee",
               "tea",
               "make tea",
-              "put the kettle on"
+              "put the kettle on",
+              "make coffee",
+              "kettle"
             ]
           },
           {
@@ -21806,8 +21722,6 @@
             "aliases": [
               "water",
               "a glass of water",
-              "glass of water",
-              "drink some water",
               "have a drink"
             ]
           },
@@ -21840,7 +21754,6 @@
             "text": "Batteries",
             "points": 22,
             "aliases": [
-              "battery",
               "dead batteries",
               "old batteries",
               "aa batteries"
@@ -21850,7 +21763,6 @@
             "text": "Pens",
             "points": 22,
             "aliases": [
-              "pen",
               "pencils",
               "pens and pencils",
               "markers",
@@ -21881,10 +21793,10 @@
             "points": 9,
             "aliases": [
               "chargers",
-              "charger",
               "old cables",
               "cords",
-              "phone charger"
+              "phone charger",
+              "wires"
             ]
           },
           {
@@ -21904,8 +21816,7 @@
             "aliases": [
               "spare keys",
               "old keys",
-              "mystery keys",
-              "key"
+              "mystery keys"
             ]
           },
           {
@@ -21913,7 +21824,6 @@
             "points": 5,
             "aliases": [
               "tape measure",
-              "a tape measure",
               "measure",
               "ruler"
             ]
@@ -21923,7 +21833,6 @@
             "points": 4,
             "aliases": [
               "elastic bands",
-              "rubber band",
               "elastics",
               "hair ties"
             ]
@@ -21932,11 +21841,8 @@
             "text": "Screwdrivers",
             "points": 3,
             "aliases": [
-              "screwdriver",
-              "a screwdriver",
               "tools",
-              "allen keys",
-              "allen key"
+              "allen keys"
             ]
           }
         ],
@@ -21950,15 +21856,13 @@
             "points": 32,
             "aliases": [
               "peperoni",
-              "salami",
-              "pepperonis"
+              "salami"
             ]
           },
           {
             "text": "Mushrooms",
             "points": 18,
             "aliases": [
-              "mushroom",
               "shrooms"
             ]
           },
@@ -21967,8 +21871,7 @@
             "points": 11,
             "aliases": [
               "prosciutto",
-              "cooked ham",
-              "ham and mushroom"
+              "cooked ham"
             ]
           },
           {
@@ -21985,17 +21888,14 @@
             "points": 9,
             "aliases": [
               "hawaiian",
-              "ham and pineapple",
-              "pineapples"
+              "ham and pineapple"
             ]
           },
           {
             "text": "Onions",
             "points": 6,
             "aliases": [
-              "onion",
-              "red onion",
-              "red onions"
+              "red onion"
             ]
           },
           {
@@ -22005,15 +21905,13 @@
               "bell peppers",
               "green peppers",
               "capsicum",
-              "jalapenos",
-              "pepper"
+              "jalapenos"
             ]
           },
           {
             "text": "Olives",
             "points": 4,
             "aliases": [
-              "olive",
               "black olives",
               "green olives"
             ]
@@ -22030,10 +21928,8 @@
             "text": "Sausage",
             "points": 2,
             "aliases": [
-              "sausages",
               "italian sausage",
-              "chorizo",
-              "meatballs"
+              "chorizo"
             ]
           }
         ],
@@ -22061,7 +21957,8 @@
               "alarm didn't go off",
               "oversleeping",
               "slept through my alarm",
-              "woke up late"
+              "woke up late",
+              "alarm"
             ]
           },
           {
@@ -22073,7 +21970,11 @@
               "missed the bus",
               "missed the train",
               "public transport",
-              "train delay"
+              "train delay",
+              "train",
+              "bus",
+              "late train",
+              "late bus"
             ]
           },
           {
@@ -22095,18 +21996,20 @@
               "car wouldn't start",
               "flat tyre",
               "flat tire",
-              "car problems"
+              "car problems",
+              "car",
+              "puncture"
             ]
           },
           {
             "text": "The kids",
             "points": 5,
             "aliases": [
-              "kids",
               "school run",
               "child was sick",
               "dropping off the kids",
-              "childcare"
+              "childcare",
+              "children"
             ]
           },
           {
@@ -22116,7 +22019,9 @@
               "had to go back",
               "forgot my keys",
               "forgot my phone",
-              "went back for something"
+              "went back for something",
+              "forgot",
+              "couldn't find my keys"
             ]
           },
           {
@@ -22141,9 +22046,7 @@
             "points": 30,
             "aliases": [
               "car keys",
-              "house keys",
-              "key",
-              "my keys"
+              "house keys"
             ]
           },
           {
@@ -22162,7 +22065,6 @@
             "aliases": [
               "remote",
               "remote control",
-              "the remote",
               "tv controller"
             ]
           },
@@ -22190,9 +22092,7 @@
             "text": "Pens",
             "points": 6,
             "aliases": [
-              "pen",
-              "pencils",
-              "pencil"
+              "pencils"
             ]
           },
           {
@@ -22202,7 +22102,6 @@
               "earbuds",
               "earphones",
               "airpods",
-              "headphone",
               "ear buds"
             ]
           },
@@ -22210,8 +22109,6 @@
             "text": "Socks",
             "points": 3,
             "aliases": [
-              "sock",
-              "a sock",
               "odd socks",
               "one sock"
             ]
@@ -22231,7 +22128,8 @@
               "wine",
               "booze",
               "a bottle",
-              "bottle of wine"
+              "bottle of wine",
+              "spirits"
             ]
           },
           {
@@ -22263,7 +22161,6 @@
             "aliases": [
               "board game",
               "card game",
-              "games",
               "cards",
               "party game"
             ]
@@ -22274,18 +22171,14 @@
             "aliases": [
               "speaker",
               "a playlist",
-              "bluetooth speaker",
-              "playlist",
-              "speakers"
+              "bluetooth speaker"
             ]
           },
           {
             "text": "A friend",
             "points": 4,
             "aliases": [
-              "friends",
               "a plus one",
-              "plus one",
               "a date",
               "partner"
             ]
@@ -22297,9 +22190,7 @@
               "flowers",
               "chocolates",
               "a gift",
-              "gift",
               "a present",
-              "present",
               "box of chocolates"
             ]
           },
@@ -22326,7 +22217,10 @@
               "scrolling",
               "doomscroll",
               "instagram",
-              "tiktok"
+              "tiktok",
+              "facebook",
+              "snapchat",
+              "twitter"
             ]
           },
           {
@@ -22334,10 +22228,10 @@
             "points": 20,
             "aliases": [
               "games",
-              "play a game",
               "mobile games",
               "gaming",
-              "wordle"
+              "wordle",
+              "candy crush"
             ]
           },
           {
@@ -22371,7 +22265,8 @@
               "shop",
               "browse amazon",
               "window shopping",
-              "buy stuff"
+              "buy stuff",
+              "amazon"
             ]
           },
           {
@@ -22379,7 +22274,6 @@
             "points": 5,
             "aliases": [
               "news",
-              "read news",
               "read articles",
               "headlines"
             ]
@@ -22389,8 +22283,6 @@
             "points": 3,
             "aliases": [
               "email",
-              "emails",
-              "check emails",
               "inbox"
             ]
           },
@@ -22492,7 +22384,6 @@
             "text": "Double-booked",
             "points": 4,
             "aliases": [
-              "double booked",
               "other plans",
               "something came up",
               "already had plans"
@@ -22531,8 +22422,7 @@
             "points": 9,
             "aliases": [
               "nachos and cheese",
-              "tortilla chips",
-              "nacho"
+              "tortilla chips"
             ]
           },
           {
@@ -22544,7 +22434,9 @@
               "coke",
               "pop",
               "slushie",
-              "drink"
+              "drink",
+              "cola",
+              "pepsi"
             ]
           },
           {
@@ -22561,16 +22453,13 @@
             "text": "Hot dog",
             "points": 5,
             "aliases": [
-              "hot dogs",
-              "hotdog",
-              "hotdogs"
+              "hotdog"
             ]
           },
           {
             "text": "Pretzels",
             "points": 2,
             "aliases": [
-              "pretzel",
               "soft pretzel",
               "pretzel bites"
             ]
@@ -22596,7 +22485,6 @@
             "aliases": [
               "flight",
               "fly",
-              "to fly",
               "being able to fly"
             ]
           },
@@ -22608,7 +22496,8 @@
               "stop time",
               "freeze time",
               "control time",
-              "go back in time"
+              "go back in time",
+              "time travelling"
             ]
           },
           {
@@ -22679,7 +22568,6 @@
             "text": "Eggs",
             "points": 16,
             "aliases": [
-              "egg",
               "carton of eggs"
             ]
           },
@@ -22717,7 +22605,6 @@
             "text": "Beer",
             "points": 7,
             "aliases": [
-              "beers",
               "wine",
               "alcohol",
               "drinks",
@@ -22732,7 +22619,8 @@
               "veggies",
               "salad",
               "lettuce",
-              "carrots"
+              "carrots",
+              "tomatoes"
             ]
           },
           {
@@ -22831,8 +22719,6 @@
             "points": 5,
             "aliases": [
               "oven",
-              "the oven",
-              "cleaning oven",
               "scrubbing the oven"
             ]
           },
@@ -22857,16 +22743,12 @@
           {
             "text": "Tent",
             "points": 42,
-            "aliases": [
-              "a tent",
-              "tents"
-            ]
+            "aliases": []
           },
           {
             "text": "Sleeping bag",
             "points": 20,
             "aliases": [
-              "sleeping bags",
               "bedding",
               "blanket"
             ]
@@ -22915,7 +22797,9 @@
               "stove",
               "gas stove",
               "cooker",
-              "grill"
+              "grill",
+              "bbq",
+              "barbecue"
             ]
           },
           {
@@ -22954,58 +22838,43 @@
             "text": "Rose",
             "points": 34,
             "aliases": [
-              "roses",
               "red rose"
             ]
           },
           {
             "text": "Tulip",
             "points": 14,
-            "aliases": [
-              "tulips"
-            ]
+            "aliases": []
           },
           {
             "text": "Daisy",
             "points": 11,
-            "aliases": [
-              "daisies"
-            ]
+            "aliases": []
           },
           {
             "text": "Sunflower",
             "points": 10,
-            "aliases": [
-              "sunflowers"
-            ]
+            "aliases": []
           },
           {
             "text": "Lily",
             "points": 9,
-            "aliases": [
-              "lilies"
-            ]
+            "aliases": []
           },
           {
             "text": "Daffodil",
             "points": 7,
-            "aliases": [
-              "daffodils"
-            ]
+            "aliases": []
           },
           {
             "text": "Orchid",
             "points": 5,
-            "aliases": [
-              "orchids"
-            ]
+            "aliases": []
           },
           {
             "text": "Poppy",
             "points": 3,
-            "aliases": [
-              "poppies"
-            ]
+            "aliases": []
           },
           {
             "text": "Lavender",
@@ -23015,23 +22884,17 @@
           {
             "text": "Carnation",
             "points": 2,
-            "aliases": [
-              "carnations"
-            ]
+            "aliases": []
           },
           {
             "text": "Dandelion",
             "points": 2,
-            "aliases": [
-              "dandelions"
-            ]
+            "aliases": []
           },
           {
             "text": "Violet",
             "points": 1,
-            "aliases": [
-              "violets"
-            ]
+            "aliases": []
           }
         ]
       },
@@ -23043,36 +22906,32 @@
             "text": "2",
             "points": 54,
             "aliases": [
-              "two",
               "two kids",
-              "2 kids"
+              "2 children"
             ]
           },
           {
             "text": "3",
             "points": 22,
             "aliases": [
-              "three",
               "three kids",
-              "3 kids"
+              "3 children"
             ]
           },
           {
             "text": "1",
             "points": 9,
             "aliases": [
-              "one",
               "one kid",
-              "1 kid"
+              "1 child"
             ]
           },
           {
             "text": "4",
             "points": 7,
             "aliases": [
-              "four",
               "four kids",
-              "4 kids"
+              "4 children"
             ]
           },
           {
@@ -23080,22 +22939,24 @@
             "points": 5,
             "aliases": [
               "none",
-              "zero",
-              "no kids"
+              "no kids",
+              "no children"
             ]
           },
           {
             "text": "5",
             "points": 2,
             "aliases": [
-              "five"
+              "5 kids",
+              "5 children"
             ]
           },
           {
             "text": "6",
             "points": 1,
             "aliases": [
-              "six"
+              "6 kids",
+              "6 children"
             ]
           }
         ]
@@ -23109,17 +22970,15 @@
             "points": 30,
             "aliases": [
               "2",
-              "two",
-              "two hours"
+              "a couple of hours",
+              "couple of hours"
             ]
           },
           {
             "text": "3 hours",
             "points": 22,
             "aliases": [
-              "3",
-              "three",
-              "three hours"
+              "3"
             ]
           },
           {
@@ -23127,45 +22986,35 @@
             "points": 16,
             "aliases": [
               "1",
-              "one",
-              "an hour",
-              "one hour"
+              "an hour"
             ]
           },
           {
             "text": "4 hours",
             "points": 12,
             "aliases": [
-              "4",
-              "four",
-              "four hours"
+              "4"
             ]
           },
           {
             "text": "5 hours",
             "points": 8,
             "aliases": [
-              "5",
-              "five",
-              "five hours"
+              "5"
             ]
           },
           {
             "text": "6 hours",
             "points": 5,
             "aliases": [
-              "6",
-              "six",
-              "six hours"
+              "6"
             ]
           },
           {
             "text": "8 hours",
             "points": 4,
             "aliases": [
-              "8",
-              "eight",
-              "eight hours"
+              "8"
             ]
           },
           {
@@ -23173,8 +23022,7 @@
             "points": 3,
             "aliases": [
               "0",
-              "none",
-              "zero"
+              "none"
             ]
           }
         ]
@@ -23187,7 +23035,6 @@
             "text": "Thumb",
             "points": 46,
             "aliases": [
-              "thumbs",
               "thumbnail",
               "left thumb",
               "right thumb"
@@ -23198,7 +23045,6 @@
             "points": 26,
             "aliases": [
               "pinky",
-              "pinkie",
               "little",
               "small finger"
             ]
@@ -23281,8 +23127,7 @@
             "text": "Netherlands",
             "points": 1,
             "aliases": [
-              "holland",
-              "the netherlands"
+              "holland"
             ]
           }
         ]
@@ -23307,7 +23152,8 @@
               "too busy",
               "busy",
               "work",
-              "working late"
+              "working late",
+              "time"
             ]
           },
           {
@@ -23371,19 +23217,24 @@
             "text": "Forgot my kit",
             "points": 3,
             "aliases": [
-              "forgot kit",
               "no clean kit",
               "forgot my gym bag",
-              "forgot my trainers"
+              "forgot my trainers",
+              "forgot",
+              "kit"
             ]
           },
           {
-            "text": "It's too busy",
+            "text": "The gym is too crowded",
             "points": 2,
             "aliases": [
               "too crowded",
               "crowded",
-              "gym is full"
+              "gym is full",
+              "gym is too busy",
+              "gym too busy",
+              "too many people",
+              "packed"
             ]
           }
         ]
@@ -23397,7 +23248,6 @@
             "points": 24,
             "aliases": [
               "charger",
-              "chargers",
               "cable",
               "phone cable"
             ]
@@ -23498,17 +23348,15 @@
             "points": 40,
             "aliases": [
               "2",
-              "two",
-              "two hours"
+              "a couple of hours",
+              "couple of hours"
             ]
           },
           {
             "text": "3 hours",
             "points": 27,
             "aliases": [
-              "3",
-              "three",
-              "three hours"
+              "3"
             ]
           },
           {
@@ -23518,8 +23366,6 @@
               "2.5",
               "two and a half",
               "two and a half hours",
-              "2 and a half",
-              "2 and a half hours",
               "150 minutes"
             ]
           },
@@ -23538,27 +23384,21 @@
             "points": 4,
             "aliases": [
               "1",
-              "one",
-              "an hour",
-              "one hour"
+              "an hour"
             ]
           },
           {
             "text": "4 hours",
             "points": 4,
             "aliases": [
-              "4",
-              "four",
-              "four hours"
+              "4"
             ]
           },
           {
             "text": "5 hours",
             "points": 1,
             "aliases": [
-              "5",
-              "five",
-              "five hours"
+              "5"
             ]
           }
         ]
@@ -23571,9 +23411,7 @@
             "text": "Kick the seat",
             "points": 20,
             "aliases": [
-              "kicking your seat",
-              "kicking the seat",
-              "kick your seat"
+              "kicking your seat"
             ]
           },
           {
@@ -23584,8 +23422,10 @@
               "crying baby",
               "screaming kids",
               "noisy kids",
-              "crying babies",
-              "kids"
+              "kids",
+              "children",
+              "babies",
+              "screaming children"
             ]
           },
           {
@@ -23606,7 +23446,8 @@
               "loud music",
               "watching videos out loud",
               "playing audio without headphones",
-              "loud phone"
+              "loud phone",
+              "music"
             ]
           },
           {
@@ -23690,14 +23531,14 @@
               "broken plane",
               "engineering",
               "fault",
-              "maintenance"
+              "maintenance",
+              "technical issue"
             ]
           },
           {
             "text": "Strike",
             "points": 12,
             "aliases": [
-              "strikes",
               "staff strike",
               "pilot strike"
             ]
@@ -23729,7 +23570,9 @@
               "no crew",
               "crew late",
               "missing crew",
-              "no pilot"
+              "no pilot",
+              "staff",
+              "no staff"
             ]
           },
           {
@@ -23761,7 +23604,6 @@
             "aliases": [
               "are you hungry",
               "eat something",
-              "have you eaten",
               "you must be hungry",
               "eat"
             ]
@@ -23773,7 +23615,8 @@
               "haven't you grown",
               "look how big you are",
               "you're so tall",
-              "how you've grown"
+              "how you've grown",
+              "grown"
             ]
           },
           {
@@ -23783,7 +23626,8 @@
               "you're too thin",
               "you look thin",
               "lost weight",
-              "you need feeding"
+              "you need feeding",
+              "too thin"
             ]
           },
           {
@@ -23811,7 +23655,10 @@
             "aliases": [
               "when are you getting married",
               "got a girlfriend",
-              "got a boyfriend"
+              "got a boyfriend",
+              "boyfriend",
+              "girlfriend",
+              "are you single"
             ]
           },
           {
@@ -23820,7 +23667,9 @@
             "aliases": [
               "aren't you cold",
               "you'll catch a cold",
-              "where's your coat"
+              "where's your coat",
+              "jumper",
+              "cold"
             ]
           }
         ]
@@ -23833,56 +23682,58 @@
             "text": "10",
             "points": 28,
             "aliases": [
-              "ten"
+              "10 people"
             ]
           },
           {
             "text": "8",
             "points": 22,
             "aliases": [
-              "eight"
+              "8 people"
             ]
           },
           {
             "text": "12",
             "points": 16,
             "aliases": [
-              "twelve"
+              "12 people"
             ]
           },
           {
             "text": "6",
             "points": 12,
             "aliases": [
-              "six"
+              "6 people"
             ]
           },
           {
             "text": "20",
             "points": 9,
             "aliases": [
-              "twenty"
+              "20 people"
             ]
           },
           {
             "text": "15",
             "points": 8,
             "aliases": [
-              "fifteen"
+              "fifteen",
+              "15 people"
             ]
           },
           {
             "text": "14",
             "points": 3,
             "aliases": [
-              "fourteen"
+              "fourteen",
+              "14 people"
             ]
           },
           {
             "text": "5",
             "points": 2,
             "aliases": [
-              "five"
+              "5 people"
             ]
           }
         ]
@@ -23915,15 +23766,16 @@
             "aliases": [
               "old arguments",
               "the past",
-              "grudges"
+              "grudges",
+              "feuds",
+              "family feuds"
             ]
           },
           {
             "text": "Football",
             "points": 9,
             "aliases": [
-              "sport",
-              "sports"
+              "sport"
             ]
           },
           {
@@ -24067,9 +23919,9 @@
             "text": "Job title",
             "points": 12,
             "aliases": [
-              "job titles",
               "position",
-              "role"
+              "role",
+              "title"
             ]
           },
           {
@@ -24119,7 +23971,6 @@
             "text": "Age",
             "points": 24,
             "aliases": [
-              "their age",
               "how old they are"
             ]
           },
@@ -24127,16 +23978,16 @@
             "text": "Exes",
             "points": 18,
             "aliases": [
-              "their ex",
               "past relationships",
-              "how many exes"
+              "how many exes",
+              "dating history",
+              "body count"
             ]
           },
           {
             "text": "Job",
             "points": 15,
             "aliases": [
-              "their job",
               "work",
               "career",
               "what they do"
@@ -24155,7 +24006,6 @@
             "text": "Height",
             "points": 11,
             "aliases": [
-              "their height",
               "how tall they are"
             ]
           },
@@ -24171,15 +24021,14 @@
             "points": 5,
             "aliases": [
               "relationship status",
-              "married"
+              "married",
+              "single"
             ]
           },
           {
             "text": "Weight",
             "points": 4,
-            "aliases": [
-              "their weight"
-            ]
+            "aliases": []
           }
         ]
       },
@@ -24191,49 +24040,56 @@
             "text": "8",
             "points": 30,
             "aliases": [
-              "eight"
+              "8 out of 10",
+              "8/10"
             ]
           },
           {
             "text": "7",
             "points": 20,
             "aliases": [
-              "seven"
+              "7 out of 10",
+              "7/10"
             ]
           },
           {
             "text": "9",
             "points": 16,
             "aliases": [
-              "nine"
+              "9 out of 10",
+              "9/10"
             ]
           },
           {
             "text": "6",
             "points": 12,
             "aliases": [
-              "six"
+              "6 out of 10",
+              "6/10"
             ]
           },
           {
             "text": "10",
             "points": 10,
             "aliases": [
-              "ten"
+              "10 out of 10",
+              "10/10"
             ]
           },
           {
             "text": "5",
             "points": 9,
             "aliases": [
-              "five"
+              "5 out of 10",
+              "5/10"
             ]
           },
           {
             "text": "4",
             "points": 3,
             "aliases": [
-              "four"
+              "4 out of 10",
+              "4/10"
             ]
           }
         ]
@@ -24247,9 +24103,9 @@
             "points": 53,
             "aliases": [
               "none",
-              "zero",
               "never",
-              "i don't"
+              "i don't",
+              "0 times"
             ]
           },
           {
@@ -24257,7 +24113,7 @@
             "points": 21,
             "aliases": [
               "once",
-              "one"
+              "1 times"
             ]
           },
           {
@@ -24265,35 +24121,35 @@
             "points": 13,
             "aliases": [
               "twice",
-              "two"
+              "2 times"
             ]
           },
           {
             "text": "3",
             "points": 7,
             "aliases": [
-              "three"
+              "3 times"
             ]
           },
           {
             "text": "4",
             "points": 3,
             "aliases": [
-              "four"
+              "4 times"
             ]
           },
           {
             "text": "5",
             "points": 2,
             "aliases": [
-              "five"
+              "5 times"
             ]
           },
           {
             "text": "10",
             "points": 1,
             "aliases": [
-              "ten"
+              "10 times"
             ]
           }
         ]
@@ -24307,7 +24163,6 @@
             "points": 46,
             "aliases": [
               "caffeine",
-              "a coffee",
               "espresso"
             ]
           },
@@ -24315,7 +24170,6 @@
             "text": "Snacks",
             "points": 17,
             "aliases": [
-              "a snack",
               "biscuits",
               "fruit",
               "breakfast",
@@ -24336,8 +24190,7 @@
             "aliases": [
               "radio",
               "a playlist",
-              "podcasts",
-              "podcast"
+              "podcasts"
             ]
           },
           {
@@ -24354,17 +24207,17 @@
             "text": "Energy drinks",
             "points": 5,
             "aliases": [
-              "energy drink",
-              "red bull"
+              "red bull",
+              "monster"
             ]
           },
           {
             "text": "Cigarettes",
             "points": 5,
             "aliases": [
-              "a cigarette",
               "smoking",
-              "vape"
+              "vape",
+              "vaping"
             ]
           },
           {
@@ -24428,8 +24281,7 @@
             "text": "Tuesday",
             "points": 3,
             "aliases": [
-              "tue",
-              "tues"
+              "tue"
             ]
           }
         ]
@@ -24443,7 +24295,6 @@
             "points": 40,
             "aliases": [
               "ref",
-              "referee",
               "officials",
               "linesman"
             ]
@@ -24452,7 +24303,6 @@
             "text": "The manager",
             "points": 24,
             "aliases": [
-              "manager",
               "coach",
               "head coach"
             ]
@@ -24461,7 +24311,6 @@
             "text": "The goalkeeper",
             "points": 12,
             "aliases": [
-              "goalkeeper",
               "keeper",
               "goalie"
             ]
@@ -24470,15 +24319,13 @@
             "text": "VAR",
             "points": 10,
             "aliases": [
-              "video referee",
-              "the var"
+              "video referee"
             ]
           },
           {
             "text": "The owners",
             "points": 6,
             "aliases": [
-              "owner",
               "the board",
               "chairman"
             ]
@@ -24487,9 +24334,7 @@
             "text": "The striker",
             "points": 5,
             "aliases": [
-              "striker",
-              "forwards",
-              "the forward"
+              "forwards"
             ]
           },
           {
@@ -24536,7 +24381,8 @@
               "fatigue",
               "too many games",
               "fixture congestion",
-              "busy schedule"
+              "busy schedule",
+              "tired"
             ]
           },
           {
@@ -24585,14 +24431,14 @@
             "text": "20",
             "points": 36,
             "aliases": [
-              "twenty"
+              "20 goals"
             ]
           },
           {
             "text": "30",
             "points": 28,
             "aliases": [
-              "thirty"
+              "30 goals"
             ]
           },
           {
@@ -24600,35 +24446,37 @@
             "points": 16,
             "aliases": [
               "twenty five",
-              "twenty-five"
+              "25 goals"
             ]
           },
           {
             "text": "40",
             "points": 8,
             "aliases": [
-              "forty"
+              "40 goals"
             ]
           },
           {
             "text": "15",
             "points": 6,
             "aliases": [
-              "fifteen"
+              "fifteen",
+              "15 goals"
             ]
           },
           {
             "text": "50",
             "points": 4,
             "aliases": [
-              "fifty"
+              "50 goals"
             ]
           },
           {
             "text": "35",
             "points": 2,
             "aliases": [
-              "thirty five"
+              "thirty five",
+              "35 goals"
             ]
           }
         ]
@@ -24665,7 +24513,6 @@
             "aliases": [
               "slow throw in",
               "throw-in",
-              "throw in",
               "delay a throw"
             ]
           },
@@ -24693,7 +24540,8 @@
             "aliases": [
               "corner flag",
               "hold it in the corner",
-              "run to the corner"
+              "run to the corner",
+              "corner"
             ]
           },
           {
@@ -24716,59 +24564,58 @@
             "text": "4",
             "points": 26,
             "aliases": [
-              "four"
+              "4 slices"
             ]
           },
           {
             "text": "3",
             "points": 22,
             "aliases": [
-              "three"
+              "3 slices"
             ]
           },
           {
             "text": "8",
             "points": 16,
             "aliases": [
-              "eight",
               "a whole pizza",
-              "whole pizza",
-              "all of it"
+              "all of it",
+              "8 slices"
             ]
           },
           {
             "text": "6",
             "points": 14,
             "aliases": [
-              "six"
+              "6 slices"
             ]
           },
           {
             "text": "5",
             "points": 10,
             "aliases": [
-              "five"
+              "5 slices"
             ]
           },
           {
             "text": "2",
             "points": 6,
             "aliases": [
-              "two"
+              "2 slices"
             ]
           },
           {
             "text": "10",
             "points": 4,
             "aliases": [
-              "ten"
+              "10 slices"
             ]
           },
           {
             "text": "12",
             "points": 2,
             "aliases": [
-              "twelve"
+              "12 slices"
             ]
           }
         ]
@@ -24785,7 +24632,8 @@
               "what food",
               "which food",
               "what to eat",
-              "pizza or chinese"
+              "pizza or chinese",
+              "food"
             ]
           },
           {
@@ -24825,7 +24673,8 @@
             "aliases": [
               "who collects it",
               "who picks it up",
-              "delivery"
+              "delivery",
+              "collection"
             ]
           },
           {
@@ -24878,9 +24727,7 @@
           {
             "text": "Tiramisu",
             "points": 7,
-            "aliases": [
-              "tiramisù"
-            ]
+            "aliases": []
           },
           {
             "text": "Gelato",
@@ -24932,8 +24779,7 @@
             "text": "Towel",
             "points": 34,
             "aliases": [
-              "beach towel",
-              "towels"
+              "beach towel"
             ]
           },
           {
@@ -24977,7 +24823,6 @@
             "text": "A book",
             "points": 5,
             "aliases": [
-              "book",
               "magazine",
               "kindle"
             ]
@@ -24986,7 +24831,6 @@
             "text": "A ball",
             "points": 4,
             "aliases": [
-              "ball",
               "football",
               "beach ball",
               "volleyball"
@@ -25005,7 +24849,6 @@
             "points": 4,
             "aliases": [
               "drinks",
-              "a drink",
               "cool box"
             ]
           }
@@ -25019,9 +24862,9 @@
             "text": "7",
             "points": 30,
             "aliases": [
-              "seven",
               "a week",
-              "one week"
+              "one week",
+              "7 days"
             ]
           },
           {
@@ -25030,21 +24873,22 @@
             "aliases": [
               "fourteen",
               "two weeks",
-              "a fortnight"
+              "a fortnight",
+              "14 days"
             ]
           },
           {
             "text": "10",
             "points": 24,
             "aliases": [
-              "ten"
+              "10 days"
             ]
           },
           {
             "text": "5",
             "points": 6,
             "aliases": [
-              "five"
+              "5 days"
             ]
           },
           {
@@ -25052,23 +24896,24 @@
             "points": 6,
             "aliases": [
               "twenty one",
-              "three weeks"
+              "three weeks",
+              "21 days"
             ]
           },
           {
             "text": "3",
             "points": 4,
             "aliases": [
-              "three",
-              "a long weekend"
+              "a long weekend",
+              "3 days"
             ]
           },
           {
             "text": "30",
             "points": 4,
             "aliases": [
-              "thirty",
-              "a month"
+              "a month",
+              "30 days"
             ]
           }
         ]
@@ -25085,7 +24930,8 @@
               "selfies",
               "photos",
               "photographs",
-              "take selfies"
+              "take selfies",
+              "pictures"
             ]
           },
           {
@@ -25113,7 +24959,10 @@
             "aliases": [
               "sunburn",
               "get burnt",
-              "burn"
+              "burn",
+              "sunburnt",
+              "sunburned",
+              "get sunburned"
             ]
           },
           {
@@ -25122,7 +24971,8 @@
             "aliases": [
               "block the pavement",
               "stop in the middle of the street",
-              "walk slow"
+              "walk slow",
+              "walking slowly"
             ]
           },
           {
@@ -25140,7 +24990,8 @@
             "aliases": [
               "queue",
               "visit museums",
-              "sightseeing"
+              "sightseeing",
+              "queuing"
             ]
           },
           {
@@ -25148,7 +24999,10 @@
             "points": 4,
             "aliases": [
               "eat local food",
-              "try the food"
+              "try the food",
+              "tourist traps",
+              "eat out",
+              "restaurants"
             ]
           }
         ]
@@ -25214,7 +25068,6 @@
             "text": "Heights",
             "points": 22,
             "aliases": [
-              "height",
               "falling",
               "high places"
             ]
@@ -25222,16 +25075,12 @@
           {
             "text": "Spiders",
             "points": 20,
-            "aliases": [
-              "spider"
-            ]
+            "aliases": []
           },
           {
             "text": "Snakes",
             "points": 15,
-            "aliases": [
-              "snake"
-            ]
+            "aliases": []
           },
           {
             "text": "Public speaking",
@@ -25246,7 +25095,6 @@
             "text": "The dark",
             "points": 8,
             "aliases": [
-              "dark",
               "darkness"
             ]
           },
@@ -25283,16 +25131,13 @@
             "text": "Needles",
             "points": 4,
             "aliases": [
-              "injections",
-              "needle"
+              "injections"
             ]
           },
           {
             "text": "Clowns",
             "points": 4,
-            "aliases": [
-              "clown"
-            ]
+            "aliases": []
           }
         ]
       },
@@ -25304,70 +25149,80 @@
             "text": "1",
             "points": 30,
             "aliases": [
-              "one"
+              "1 out of 10",
+              "1/10"
             ]
           },
           {
             "text": "2",
             "points": 12,
             "aliases": [
-              "two"
+              "2 out of 10",
+              "2/10"
             ]
           },
           {
             "text": "5",
             "points": 10,
             "aliases": [
-              "five"
+              "5 out of 10",
+              "5/10"
             ]
           },
           {
             "text": "10",
             "points": 10,
             "aliases": [
-              "ten"
+              "10 out of 10",
+              "10/10"
             ]
           },
           {
             "text": "3",
             "points": 9,
             "aliases": [
-              "three"
+              "3 out of 10",
+              "3/10"
             ]
           },
           {
             "text": "8",
             "points": 8,
             "aliases": [
-              "eight"
+              "8 out of 10",
+              "8/10"
             ]
           },
           {
             "text": "7",
             "points": 7,
             "aliases": [
-              "seven"
+              "7 out of 10",
+              "7/10"
             ]
           },
           {
             "text": "4",
             "points": 5,
             "aliases": [
-              "four"
+              "4 out of 10",
+              "4/10"
             ]
           },
           {
             "text": "6",
             "points": 5,
             "aliases": [
-              "six"
+              "6 out of 10",
+              "6/10"
             ]
           },
           {
             "text": "9",
             "points": 4,
             "aliases": [
-              "nine"
+              "9 out of 10",
+              "9/10"
             ]
           }
         ]
@@ -25380,8 +25235,6 @@
             "text": "Cats",
             "points": 16,
             "aliases": [
-              "cat",
-              "a cat",
               "cats fighting"
             ]
           },
@@ -25389,7 +25242,6 @@
             "text": "Dogs",
             "points": 14,
             "aliases": [
-              "dog",
               "a dog barking",
               "barking"
             ]
@@ -25398,9 +25250,9 @@
             "text": "The wind",
             "points": 14,
             "aliases": [
-              "wind",
               "storm",
-              "rain"
+              "rain",
+              "thunder"
             ]
           },
           {
@@ -25416,7 +25268,6 @@
             "points": 10,
             "aliases": [
               "neighbors",
-              "the neighbours",
               "people upstairs"
             ]
           },
@@ -25424,10 +25275,8 @@
             "text": "Owls",
             "points": 9,
             "aliases": [
-              "owl",
               "birds",
-              "foxes",
-              "fox"
+              "foxes"
             ]
           },
           {
@@ -25462,7 +25311,6 @@
             "text": "The fridge",
             "points": 4,
             "aliases": [
-              "fridge",
               "freezer"
             ]
           }
@@ -25476,50 +25324,61 @@
             "text": "70",
             "points": 42,
             "aliases": [
-              "seventy"
+              "seventy",
+              "70 years old",
+              "70 years"
             ]
           },
           {
             "text": "60",
             "points": 28,
             "aliases": [
-              "sixty"
+              "sixty",
+              "60 years old",
+              "60 years"
             ]
           },
           {
             "text": "80",
             "points": 16,
             "aliases": [
-              "eighty"
+              "eighty",
+              "80 years old",
+              "80 years"
             ]
           },
           {
             "text": "50",
             "points": 7,
             "aliases": [
-              "fifty"
+              "50 years old",
+              "50 years"
             ]
           },
           {
             "text": "90",
             "points": 3,
             "aliases": [
-              "ninety"
+              "ninety",
+              "90 years old",
+              "90 years"
             ]
           },
           {
             "text": "40",
             "points": 2,
             "aliases": [
-              "forty"
+              "40 years old",
+              "40 years"
             ]
           },
           {
             "text": "100",
             "points": 2,
             "aliases": [
-              "a hundred",
-              "one hundred"
+              "one hundred",
+              "100 years old",
+              "100 years"
             ]
           }
         ]
@@ -25552,7 +25411,8 @@
             "aliases": [
               "making noises",
               "grunting",
-              "aches"
+              "aches",
+              "groaning"
             ]
           },
           {
@@ -25592,7 +25452,8 @@
             "points": 4,
             "aliases": [
               "reading the paper",
-              "watching tv"
+              "watching tv",
+              "news"
             ]
           },
           {
@@ -25660,7 +25521,6 @@
             "text": "Passwords",
             "points": 12,
             "aliases": [
-              "password",
               "unlocking it",
               "pin"
             ]
@@ -25679,7 +25539,6 @@
             "text": "The volume",
             "points": 5,
             "aliases": [
-              "volume",
               "turning it up",
               "ringtone"
             ]
@@ -25688,15 +25547,14 @@
             "text": "Updates",
             "points": 5,
             "aliases": [
-              "settings"
+              "settings",
+              "updating"
             ]
           },
           {
             "text": "Emojis",
             "points": 3,
-            "aliases": [
-              "emoji"
-            ]
+            "aliases": []
           }
         ]
       },
@@ -25745,7 +25603,6 @@
             "text": "Friendships",
             "points": 4,
             "aliases": [
-              "friendship",
               "relationships",
               "marriage",
               "love"
@@ -25764,7 +25621,8 @@
             "points": 2,
             "aliases": [
               "a frying pan",
-              "pan"
+              "pan",
+              "cast iron"
             ]
           }
         ]
@@ -25778,9 +25636,7 @@
             "points": 36,
             "aliases": [
               "a million",
-              "one million",
               "1000000",
-              "million",
               "1m"
             ]
           },
@@ -25788,7 +25644,7 @@
             "text": "10 million",
             "points": 10,
             "aliases": [
-              "ten million"
+              "10m"
             ]
           },
           {
@@ -25804,14 +25660,14 @@
             "text": "5 million",
             "points": 9,
             "aliases": [
-              "five million"
+              "5m"
             ]
           },
           {
             "text": "2 million",
             "points": 9,
             "aliases": [
-              "two million"
+              "2m"
             ]
           },
           {
@@ -25836,7 +25692,7 @@
             "text": "100 million",
             "points": 4,
             "aliases": [
-              "a hundred million"
+              "100m"
             ]
           },
           {
@@ -25844,8 +25700,7 @@
             "points": 4,
             "aliases": [
               "a billion",
-              "one billion",
-              "billion"
+              "1bn"
             ]
           },
           {
@@ -25866,10 +25721,10 @@
             "text": "Takeaways",
             "points": 24,
             "aliases": [
-              "takeaway",
               "fast food",
               "food delivery",
-              "eating out"
+              "eating out",
+              "restaurants"
             ]
           },
           {
@@ -25906,7 +25761,9 @@
               "drinks",
               "drinking",
               "beer",
-              "nights out"
+              "nights out",
+              "booze",
+              "going out"
             ]
           },
           {
@@ -25924,7 +25781,8 @@
             "aliases": [
               "phones",
               "new phone",
-              "technology"
+              "technology",
+              "tech"
             ]
           },
           {
@@ -25963,67 +25821,48 @@
             "text": "€10",
             "points": 28,
             "aliases": [
-              "10",
-              "ten",
-              "10 euros",
-              "ten euros"
+              "10 euros"
             ]
           },
           {
             "text": "€8",
             "points": 24,
             "aliases": [
-              "8",
-              "eight",
-              "8 euros",
-              "eight euros"
+              "8 euros"
             ]
           },
           {
             "text": "€5",
             "points": 16,
             "aliases": [
-              "5",
-              "five",
-              "5 euros",
-              "five euros"
+              "5 euros"
             ]
           },
           {
             "text": "€7",
             "points": 12,
             "aliases": [
-              "7",
-              "seven",
-              "7 euros",
-              "seven euros"
+              "7 euros"
             ]
           },
           {
             "text": "€6",
             "points": 8,
             "aliases": [
-              "6",
-              "six",
-              "6 euros",
-              "six euros"
+              "6 euros"
             ]
           },
           {
             "text": "€12",
             "points": 8,
             "aliases": [
-              "12",
-              "twelve",
-              "12 euros",
-              "twelve euros"
+              "12 euros"
             ]
           },
           {
             "text": "€15",
             "points": 4,
             "aliases": [
-              "15",
               "fifteen",
               "15 euros",
               "fifteen euros"
@@ -26053,7 +25892,6 @@
             "text": "A smile",
             "points": 10,
             "aliases": [
-              "smiles",
               "smiling",
               "laughter"
             ]
@@ -26078,7 +25916,6 @@
             "text": "Hugs",
             "points": 7,
             "aliases": [
-              "a hug",
               "kisses"
             ]
           },

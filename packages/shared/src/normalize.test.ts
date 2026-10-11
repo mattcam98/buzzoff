@@ -42,6 +42,19 @@ describe('matchSurvey', () => {
 
   it.each(['red', 'bad', 'tea', '', '   ', 'shower'])('does not match %j', (input) => expect(matchSurvey(input, answers)).toBeNull());
 
+  it('never takes one number for another, however close it is typed', () => {
+    const hours = [{ text: '8 hours', points: 50, aliases: ['8'] }, { text: '1 million', points: 30, aliases: ['a million'] }, { text: '2.5 hours', points: 20, aliases: [] }];
+    // One digit away is a different answer, not a typo; and the word alone does not make it the listed number.
+    for (const input of ['9 hours', '7 hours', '20 million', 'three million']) expect([input, matchSurvey(input, hours)]).toEqual([input, null]);
+    // Said another way, with the same number, it still counts.
+    expect(matchSurvey('about 8 hours', hours)).toEqual({ index: 0, kind: 'fuzzy' });
+    expect(matchSurvey('8 hourz', hours)).toEqual({ index: 0, kind: 'fuzzy' });
+    expect(matchSurvey('a million euros', hours)).toEqual({ index: 1, kind: 'fuzzy' });
+    expect(matchSurvey('about 2.5 hours', hours)).toEqual({ index: 2, kind: 'fuzzy' });
+    // Answers that are not numbers keep their tolerance, digits and all.
+    expect(matchSurvey('gta 6', [{ text: 'Grand Theft Auto', points: 10, aliases: ['gta 5'] }])).toEqual({ index: 0, kind: 'fuzzy' });
+  });
+
   it('matches one of something to several of it, and an answer written in another script', () => {
     const snacks = [{ text: 'Cookies', points: 40, aliases: [] }, { text: 'A movie', points: 30, aliases: [] }, { text: 'Пицца', points: 20, aliases: [] }];
     expect(matchSurvey('a cookie', snacks)).toEqual({ index: 0, kind: 'exact' });

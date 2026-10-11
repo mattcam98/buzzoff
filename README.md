@@ -278,7 +278,8 @@ on a trivia board instead, and are not in the pack's surveys.
 
 Typed Fast Money answers are matched against the survey after normalising case,
 accents, punctuation, filler words and plurals, then allowing a small typo, then
-looking for an accepted phrase inside the answer. Inexact matches are flagged
+looking for an accepted phrase inside the answer. A number is never taken for
+a different number: "9 times" does not count as "8 times". Inexact matches are flagged
 "close" on the host console, and the host can change any match before or after
 it is revealed.
 
