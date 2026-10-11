@@ -12,6 +12,6 @@ export * from './leaderboard';
 export { GameError, type Ctx } from './engine/core';
 export {
   applyBuzz, applyHost, applyPlayer, applySystem, assembleRounds, createGame, findPlayerByName, hostView, nextDeadline, playerView,
-  playedContent, publicView, restoreSnapshot,
+  clueKey, playedContent, publicView, restoreSnapshot,
   type ContentPool, type Env, type Outcome, type Picks, type Played, type SystemAction,
 } from './engine/game';

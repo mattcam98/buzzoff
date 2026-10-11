@@ -121,9 +121,11 @@ the proxy must pass `Upgrade` requests through.
    room you already have first.
 
 Questions do not come round again until they have to. The server remembers
-when each category and survey was last played, in any room, and deals a new
-game (or a reroll) what has never been played first, then what has rested
-longest. What you hand-pick is dealt whatever its history.
+when each category, clue and survey was last played, in any room, and deals a
+new game (or a reroll) what has never been played first, then what has rested
+longest. A category that holds several clues at the same value is dealt one of
+them, the one that has rested longest, so the same category comes back with
+different questions. What you hand-pick is dealt whatever its history.
 
 Things that go wrong at a party, and what to do:
 
@@ -253,6 +255,18 @@ alternative answers and private host notes. A clue may run to 600 characters
 and its answer to 300: the TV sets a long one in smaller type so that all of
 it is on the screen, and a phone lets it scroll inside its card. Packs export
 to and import from a single JSON file (`*.buzzoff.json`).
+
+A category is a pool, not a fixed column. It can hold up to 60 clues, several
+at each value, and a board takes one clue at each of its lowest values. Write
+four 100s, four 200s and so on, and the category plays four games before a
+clue repeats. A pack holds up to 400 categories and 400 surveys.
+
+`packs/buzzoff-the-lot.buzzoff.json` is every question BuzzOff has, in one
+pack to import from the Packs page: 110 categories (most with twenty clues,
+four at each value), over 1,600 clues and 98 surveys. That is ten full shows
+before a category comes round again, and about forty before a clue in one of
+the twenty-clue categories does. Its survey numbers are illustrative, not from
+real polls, except the few its host notes say come from one.
 
 Typed Fast Money answers are matched against the survey after normalising case,
 accents, punctuation, filler words and plurals, then allowing a small typo, then

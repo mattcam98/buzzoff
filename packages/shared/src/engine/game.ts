@@ -8,7 +8,7 @@
  * is never mutated, so the caller can keep old states around for undo.
  */
 import type { BuzzAck, HostAction, PlayerAction } from '../actions';
-import type { Category, Survey } from '../content';
+import type { Category, Clue, Survey } from '../content';
 import type { GameMode, GameRules, TriviaRoundDef } from '../rules';
 import {
   canStart, emptyStats, nameKey, notReady, type Avatar, type BoardCategory, type FinalRound, type GameEvent, type GameState, type Player, type RoundState,
@@ -39,8 +39,13 @@ export interface ContentPool {
 }
 /** Per round: the category or survey ids to use, or null to draw at random. */
 export type Picks = (string[] | null)[];
-/** When each category and survey was last played, by id. Anything missing has never been played. */
+/**
+ * When each category, clue and survey was last played. Categories and surveys are known by id, a
+ * clue by `clueKey`. Anything missing has never been played.
+ */
 export type Played = Record<string, number>;
+/** How a clue is known in the record of what has been played: its own id only tells it apart within its category. */
+export const clueKey = (categoryId: string, clueId: string) => `${categoryId}/${clueId}`;
 
 function shuffle<T>(items: T[], rand: () => number): T[] {
   const a = [...items];
@@ -56,8 +61,22 @@ function shuffle<T>(items: T[], rand: () => number): T[] {
  * the rest, longest rested first. So one game does not ask what the last one asked, and a pack
  * that has been played right through starts again with what the room saw longest ago.
  */
-function freshest<T extends { id: string }>(items: T[], played: Played, rand: () => number): T[] {
-  return shuffle(items, rand).sort((a, b) => (played[a.id] ?? 0) - (played[b.id] ?? 0));
+function freshest<T extends { id: string }>(items: T[], played: Played, rand: () => number, key = (item: T) => item.id): T[] {
+  return shuffle(items, rand).sort((a, b) => (played[key(a)] ?? 0) - (played[key(b)] ?? 0));
+}
+
+/**
+ * The clues a category puts on a board of `rows` rows. A category is a pool and may hold several
+ * clues at the same value: a board takes one of each, the freshest, for the lowest values there are.
+ * A category with fewer different values than the board has rows makes the rest up from what is left.
+ */
+function pickClues(cat: Category, rows: number, played: Played, rand: () => number): Clue[] {
+  const byValue = new Map<number, Clue[]>();
+  for (const clue of freshest(cat.clues, played, rand, (c) => clueKey(cat.id, c.id))) byValue.set(clue.value, [...(byValue.get(clue.value) ?? []), clue]);
+  const values = [...byValue.keys()].sort((a, b) => a - b);
+  const chosen = values.slice(0, rows).map((value) => byValue.get(value)![0]);
+  const spare = cat.clues.filter((clue) => !chosen.includes(clue)).sort((a, b) => a.value - b.value);
+  return [...chosen, ...spare.slice(0, Math.max(0, rows - chosen.length))].sort((a, b) => a.value - b.value);
 }
 
 /**
@@ -87,29 +106,27 @@ function draw<T extends { id: string }>(
 }
 
 /** One column of a board: a pack category cut down to the round's size and priced by its multiplier. */
-function boardCategory(cat: Category, def: TriviaRoundDef): BoardCategory {
+function boardCategory(cat: Category, def: TriviaRoundDef, played: Played, rand: () => number): BoardCategory {
   return {
     id: cat.id,
     title: cat.title,
     blurb: cat.blurb,
     singleAttempt: cat.singleAttempt ?? false,
-    clues: [...cat.clues]
-      .sort((a, b) => a.value - b.value)
-      .slice(0, def.cluesPerCategory)
-      .map((c) => ({
-        value: c.value * def.valueMultiplier, question: c.question, answer: c.answer, accept: c.accept,
-        notes: c.notes, media: c.media, difficulty: c.difficulty, wager: false, used: false, winnerId: null,
-      })),
+    clues: pickClues(cat, def.cluesPerCategory, played, rand).map((c) => ({
+      id: c.id, value: c.value * def.valueMultiplier, question: c.question, answer: c.answer, accept: c.accept,
+      notes: c.notes, media: c.media, difficulty: c.difficulty, wager: false, used: false, winnerId: null,
+    })),
   };
 }
 
-/** The written final asks the hardest clue of its category. */
-function finalQuestion(cat: Category): Pick<FinalRound, 'category' | 'categoryId' | 'clue'> {
-  const hardest = [...cat.clues].sort((a, b) => b.value - a.value)[0];
+/** The written final asks a hardest clue of its category: the freshest of those at its top value. */
+function finalQuestion(cat: Category, played: Played, rand: () => number): Pick<FinalRound, 'category' | 'categoryId' | 'clue'> {
+  const top = Math.max(...cat.clues.map((c) => c.value));
+  const [hardest] = freshest(cat.clues.filter((c) => c.value === top), played, rand, (c) => clueKey(cat.id, c.id));
   return {
     category: cat.title,
     categoryId: cat.id,
-    clue: { question: hardest.question, answer: hardest.answer, accept: hardest.accept, notes: hardest.notes, media: hardest.media },
+    clue: { id: hardest.id, question: hardest.question, answer: hardest.answer, accept: hardest.accept, notes: hardest.notes, media: hardest.media },
   };
 }
 
@@ -126,7 +143,7 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
     const picked = picks?.[i] ?? null;
     if (def.mode === 'trivia') {
       const categories = draw(pool.categories, usedCategories, reserved, picked, def.categories, 'category', rand, played);
-      const board = categories.map((cat) => boardCategory(cat, def));
+      const board = categories.map((cat) => boardCategory(cat, def, played, rand));
       // Wagers hide below the top row so the opening clue is never one.
       const slots = board.flatMap((cat, c) => cat.clues.map((_, k) => ({ c, k }))).filter((s) => s.k > 0 || def.cluesPerCategory === 1);
       for (const s of shuffle(slots, rand).slice(0, def.wagers)) board[s.c].clues[s.k].wager = true;
@@ -135,7 +152,7 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
     if (def.mode === 'final') {
       const [cat] = draw(pool.categories, usedCategories, reserved, picked, 1, 'category', rand, played);
       return {
-        mode: 'final', def, stage: 'intro', ...finalQuestion(cat),
+        mode: 'final', def, stage: 'intro', ...finalQuestion(cat, played, rand),
         players: [], wagers: {}, answers: {}, deadline: null, timerMs: null, order: [], shown: 0, results: {},
       };
     }
@@ -156,15 +173,24 @@ export function createGame(o: { code: string; rules: GameRules; rounds: RoundSta
 }
 
 /**
- * The categories and surveys a game has put in front of the room, by id: a board category once one
- * of its clues has been played, the final's once its question has been asked, and the surveys once
- * Fast Money has begun. What was dealt but never reached, or swapped out first, is still fresh.
+ * What a game has put in front of the room, as it is known in the record of what has been played:
+ * a board category once one of its clues has been played, and each of those clues; the final's
+ * category and question once it has been asked; and the surveys once Fast Money has begun. What was
+ * dealt but never reached, or swapped out first, is still fresh.
  */
 export function playedContent(g: GameState): string[] {
   const ids = g.rounds.flatMap((r) => {
-    if (r.mode === 'trivia') return r.board.filter((cat) => cat.clues.some((clue) => clue.used)).map((cat) => cat.id);
+    if (r.mode === 'trivia') {
+      return r.board.flatMap((cat) => {
+        const used = cat.clues.filter((clue) => clue.used);
+        return used.length && cat.id ? [cat.id, ...used.map((clue) => clue.id && clueKey(cat.id!, clue.id))] : [];
+      });
+    }
     // The question goes up once every wager is in.
-    if (r.mode === 'final') return r.players.length && r.players.every((id) => r.wagers[id] !== undefined) ? [r.categoryId] : [];
+    if (r.mode === 'final') {
+      const asked = r.players.length > 0 && r.players.every((id) => r.wagers[id] !== undefined);
+      return asked && r.categoryId ? [r.categoryId, r.clue.id && clueKey(r.categoryId, r.clue.id)] : [];
+    }
     return r.turns.length ? r.surveys.map((s) => s.id) : [];
   });
   return [...new Set(ids.filter((id): id is string => !!id))];
@@ -469,7 +495,7 @@ export function applySystem(state: GameState, action: SystemAction, env: Env): O
         if (round.mode === 'trivia') {
           const old = round.board[action.cat] ?? fail('no_category', 'That category is not on this board');
           if (old.id) passed.push(old.id);
-          const next = boardCategory(fresh, round.def);
+          const next = boardCategory(fresh, round.def, action.played ?? {}, ctx.rand);
           // A hidden wager stays in the row it was in, so the board has as many as before.
           old.clues.forEach((clue, k) => {
             if (clue.wager && next.clues.length) next.clues[Math.min(k, next.clues.length - 1)].wager = true;
@@ -478,7 +504,7 @@ export function applySystem(state: GameState, action: SystemAction, env: Env): O
         } else {
           if (action.cat !== 0) fail('no_category', 'The final has only one category');
           if (round.categoryId) passed.push(round.categoryId);
-          Object.assign(round, finalQuestion(fresh));
+          Object.assign(round, finalQuestion(fresh, action.played ?? {}, ctx.rand));
         }
         ctx.events.push({ type: 'category.changed', cat: action.cat });
         return;

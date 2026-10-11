@@ -209,15 +209,22 @@ lobby and the player comes back in another browser under the same name, they
 are given the same seat (never a second one) and the profile it already had,
 so the leaderboard still sees one person.
 
-`PlayLog` (`apps/server/src/playLog.ts`) remembers when each category and
-survey was last played, server-wide, in one settings row. `playedContent` says
-what a game actually put in front of the room: a board category once a clue
-from it was played, the final's once its question was asked, the surveys once
-Fast Money began. It is recorded when a game finishes, and when a room is
-closed or expires part-way through. `assembleRounds` and the reroll deal what
-has never been played first, then what has rested longest; hand-picks ignore
-it. A category the host rerolls away is not offered again in that game while
-any other is left.
+`PlayLog` (`apps/server/src/playLog.ts`) remembers when each category, clue
+and survey was last played, server-wide, in one settings row. `playedContent`
+says what a game actually put in front of the room: a board category once a
+clue from it was played, and each of those clues; the final's category and
+question once it was asked; the surveys once Fast Money began. It is recorded
+when a game finishes, and when a room is closed or expires part-way through.
+`assembleRounds` and the reroll deal what has never been played first, then
+what has rested longest; hand-picks ignore it. A category the host rerolls
+away is not offered again in that game while any other is left.
+
+A pack category is a pool. It may hold several clues at the same value, and
+`pickClues` gives a board one clue at each of the category's lowest values:
+the one that has rested longest, by the same record (a clue is known there as
+`category id/clue id`, since clue ids only tell clues apart within a
+category). The written final asks the freshest of the clues at the category's
+top value. A category with one clue per value deals exactly as it always did.
 
 ## Results and the leaderboard
 

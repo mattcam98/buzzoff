@@ -71,6 +71,8 @@ export const emptyStats = (): PlayerStats => ({
 // ---------------------------------------------------------------- trivia
 
 export interface BoardClue {
+  /** The pack clue this was copied from, so that a category with several clues at a value deals another next time. */
+  id?: string;
   value: number;
   question: string;
   answer: string;
@@ -230,7 +232,7 @@ export interface FinalRound {
   category: string;
   /** The pack category the question came from. */
   categoryId?: string;
-  clue: { question: string; answer: string; accept: string[]; notes?: string; media?: Media };
+  clue: { id?: string; question: string; answer: string; accept: string[]; notes?: string; media?: Media };
   /** Players taking part, fixed when the round begins. */
   players: string[];
   wagers: Record<string, number>;

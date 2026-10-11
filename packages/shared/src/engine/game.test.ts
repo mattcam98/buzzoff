@@ -359,20 +359,61 @@ describe('assembling rounds', () => {
     expect(game(6).sort()).toEqual([...nights[1]].sort());
   });
 
-  it('counts a category or survey as played only once the room has seen it', () => {
+  it('counts a category, clue or survey as played only once the room has seen it', () => {
     const s = new Sim({ rounds: [TRIVIA, FINAL, FAST_MONEY] }).start();
     expect(playedContent(s.state)).toEqual([]);
     s.open(0, 0).host({ t: 'clue.reveal' }).host({ t: 'clue.continue' });
-    expect(playedContent(s.state)).toEqual(['cat0']);
+    expect(playedContent(s.state)).toEqual(['cat0', 'cat0/cat0-0']);
     // The final is introduced, and wagered on, before its question is asked.
     s.host({ t: 'round.end' }).host({ t: 'round.next' }).host({ t: 'round.begin' });
-    expect(playedContent(s.state)).toEqual(['cat0']);
+    expect(playedContent(s.state)).toEqual(['cat0', 'cat0/cat0-0']);
     s.host({ t: 'final.advance' });
-    expect(playedContent(s.state)).toEqual(['cat0', 'cat2']);
+    expect(playedContent(s.state)).toEqual(['cat0', 'cat0/cat0-0', 'cat2', 'cat2/cat2-4']);
     s.host({ t: 'round.end' }).host({ t: 'round.next' });
-    expect(playedContent(s.state)).toEqual(['cat0', 'cat2']);
+    expect(playedContent(s.state)).toHaveLength(4);
     s.host({ t: 'round.begin' });
-    expect(playedContent(s.state)).toEqual(['cat0', 'cat2', 'sv0', 'sv1', 'sv2', 'sv3', 'sv4']);
+    expect(playedContent(s.state).slice(4)).toEqual(['sv0', 'sv1', 'sv2', 'sv3', 'sv4']);
+  });
+
+  it('deals one clue at each value from a category that holds several, and a different one next time', () => {
+    // A pool category: four clues at each of five values, as cat0-<value>-<a to d>.
+    const deep = {
+      id: 'deep', title: 'Deep',
+      clues: [100, 200, 300, 400, 500].flatMap((value) => ['a', 'b', 'c', 'd'].map((v) => ({ id: `${value}${v}`, value, question: `Q ${value}${v}?`, answer: `A ${value}${v}`, accept: [] }))),
+    };
+    const five = { ...new Sim().state.rules, rounds: [{ ...TRIVIA, categories: 1, cluesPerCategory: 5 }, FINAL] };
+    const played: Record<string, number> = {};
+    const seen = new Set<string>();
+    for (let game = 1; game <= 4; game++) {
+      // The final is hand-picked from a second category so that the board is the only draw on this one.
+      const [board] = assembleRounds({ ...five, rounds: [five.rounds[0]] }, { categories: [deep], surveys: [] }, undefined, Math.random, played);
+      const clues = board.mode === 'trivia' ? board.board[0].clues : [];
+      expect(clues.map((c) => c.value)).toEqual([100, 200, 300, 400, 500]);
+      for (const clue of clues) {
+        expect(seen.has(clue.id!)).toBe(false);
+        seen.add(clue.id!);
+        played[`deep/${clue.id}`] = game;
+      }
+    }
+    expect(seen.size).toBe(20);
+    // Every clue has been played once: the fifth game is dealt the ones that have rested longest, the first game's.
+    const [again] = assembleRounds({ ...five, rounds: [five.rounds[0]] }, { categories: [deep], surveys: [] }, undefined, Math.random, played);
+    expect(again.mode === 'trivia' && again.board[0].clues.every((c) => played[`deep/${c.id}`] === 1)).toBe(true);
+
+    // The written final asks a hardest clue, and again the freshest of them.
+    const finals = { ...five, rounds: [FINAL] };
+    const rest = { 'deep/500a': 9, 'deep/500b': 9, 'deep/500d': 9, 'deep/100a': 1 };
+    for (let i = 0; i < 10; i++) {
+      const [final] = assembleRounds(finals, { categories: [deep], surveys: [] }, undefined, Math.random, rest);
+      expect(final.mode === 'final' && final.clue).toMatchObject({ id: '500c', question: 'Q 500c?' });
+    }
+
+    // A smaller board takes the lowest values; a category short of different values makes up the rows from what is left.
+    const small = assembleRounds({ ...five, rounds: [{ ...TRIVIA, categories: 1, cluesPerCategory: 3 }] }, { categories: [deep], surveys: [] }, undefined, Math.random);
+    expect(small[0].mode === 'trivia' && small[0].board[0].clues.map((c) => c.value)).toEqual([100, 200, 300]);
+    const twins = { ...deep, clues: deep.clues.filter((c) => c.value <= 200 && c.id.endsWith('a') || c.id.endsWith('b') && c.value <= 200) };
+    const filled = assembleRounds({ ...five, rounds: [{ ...TRIVIA, categories: 1, cluesPerCategory: 4 }] }, { categories: [twins], surveys: [] }, undefined, Math.random);
+    expect(filled[0].mode === 'trivia' && filled[0].board[0].clues.map((c) => c.value)).toEqual([100, 100, 200, 200]);
   });
 
   it('swaps in the freshest category, and not one already swapped out of this game', () => {

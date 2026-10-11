@@ -2,7 +2,9 @@
  * Integration tests: a real server on a real port, driven over HTTP and
  * WebSockets exactly as browsers drive it.
  */
+import { readFileSync } from 'node:fs';
 import type { AddressInfo } from 'node:net';
+import path from 'node:path';
 import {
   BUILTIN_PRESETS, DEFAULT_BUZZER,
   type Ack, type ApiError, type AuditEntry, type BuzzAck, type ClientToServerEvents, type CreateGameResponse, type GameEvent,
@@ -629,6 +631,38 @@ describe('content and results', () => {
     expect((await h.api('POST', '/packs/import', { format: 'something.else', pack: {} })).status).toBe(400);
     expect((await h.api('DELETE', `/packs/${imported.body.id}`)).status).toBe(204);
     expect((await h.api('DELETE', `/packs/${imported.body.id}`)).status).toBe(404);
+  });
+
+  it('imports the pack that ships with BuzzOff and deals a board with one clue at each value', async () => {
+    h = await new Harness().start();
+    const file = JSON.parse(readFileSync(path.resolve(__dirname, '../../../packs/buzzoff-the-lot.buzzoff.json'), 'utf8'));
+    const imported = await h.api<{ id: string; categories: { clues: unknown[] }[]; surveys: unknown[] }>('POST', '/packs/import', file);
+    expect(imported.status).toBe(201);
+    expect(imported.body.categories.length).toBeGreaterThan(100);
+    expect(imported.body.categories.some((c) => c.clues.length >= 20)).toBe(true);
+
+    const titles: string[][] = [];
+    for (let game = 0; game < 2; game++) {
+      const made = await h.api<CreateGameResponse>('POST', '/games', { packIds: [imported.body.id], rules: BUILTIN_PRESETS[0].rules });
+      expect(made.status).toBe(201);
+      const host = await h.connect('host', made.body.code, made.body.hostKey);
+      await h.join(made.body.code, 'Ann');
+      await host.host({ t: 'start' });
+      await until(() => host.pub.round?.mode === 'trivia', 'the first board');
+      const board = host.pub.round!.mode === 'trivia' ? host.pub.round!.board : [];
+      expect(board.map((cat) => cat.clues.map((c) => c.value))).toEqual(Array(5).fill([100, 200, 300, 400, 500]));
+      titles.push(board.map((cat) => cat.title));
+      // Play a clue from each category, so that the next game knows they have been used.
+      await host.host({ t: 'round.begin' });
+      for (const cat of board.keys()) {
+        await host.host({ t: 'clue.select', cat, idx: 0 });
+        await host.host({ t: 'clue.reveal' });
+        await host.host({ t: 'clue.continue' });
+      }
+      await host.host({ t: 'game.end' });
+      await until(() => host.pub.phase === 'finished');
+    }
+    expect(titles[1].filter((title) => titles[0].includes(title))).toEqual([]);
   });
 
   it('explains when a pack is too small for the chosen rules', async () => {

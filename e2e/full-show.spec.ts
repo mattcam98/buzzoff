@@ -489,14 +489,11 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await expect(bob.getByRole('heading', { name: 'You’re in!' })).toBeVisible();
   await expect(host.locator('.hc-roster li')).toHaveCount(3);
 
-  // Ready up on the same phones and the next show starts, on questions the last one did not use.
-  const before = [...stealable.slice(0, 4)];
+  // Ready up on the same phones and the next show starts. (That its questions are fresh ones is tested on the server:
+  // here a category whose clues were never picked is still fair game.)
   for (const phone of [ann, bob, cat]) await phone.getByRole('button', { name: 'I’m ready' }).click();
   await host.getByRole('button', { name: 'Start the show' }).click();
   await expect(host.locator('.hc-cats li')).toHaveCount(3);
-  const titles = await host.locator('.hc-cats li strong').allTextContents();
-  const used = pack.categories.filter((c: { id: string }) => before.includes(c.id)).map((c: { title: string }) => c.title);
-  expect(titles.filter((title) => used.includes(title))).toEqual([]);
 });
 
 test('a player who reloads keeps their seat, and a stranger cannot host', async ({ browser, request }) => {

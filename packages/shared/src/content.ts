@@ -8,6 +8,14 @@ import { z } from 'zod';
 const text = (max: number) => z.string().trim().min(1).max(max);
 const id = z.string().trim().min(1).max(40);
 
+/**
+ * How much a pack may hold. A category is a pool: it can carry several clues at each value, and a
+ * board is dealt one of each, so one category lasts many games before a clue comes round again.
+ */
+export const MAX_CLUES_PER_CATEGORY = 60;
+export const MAX_CATEGORIES_PER_PACK = 400;
+export const MAX_SURVEYS_PER_PACK = 400;
+
 /** Media is either an upload served by this server or an absolute http(s) URL. */
 const isSafeMediaUrl = (url: string) => /^\/media\/[\w.-]+$/.test(url) || /^https?:\/\/[^\s]+$/i.test(url);
 
@@ -37,7 +45,7 @@ export const CategorySchema = z.object({
   blurb: z.string().trim().max(160).optional(),
   /** Either/or categories: only the first buzzer may answer, with no steals. */
   singleAttempt: z.boolean().optional(),
-  clues: z.array(ClueSchema).min(1).max(10),
+  clues: z.array(ClueSchema).min(1).max(MAX_CLUES_PER_CATEGORY),
 });
 
 export const SurveyAnswerSchema = z.object({
@@ -60,8 +68,8 @@ export const PackContentSchema = z.object({
   description: z.string().trim().max(400).default(''),
   author: z.string().trim().max(80).default(''),
   // Games tell categories and surveys apart by id, so ids must not repeat within a pack.
-  categories: z.array(CategorySchema).max(80).default([]).refine(unique, 'Two categories share the same id'),
-  surveys: z.array(SurveySchema).max(80).default([]).refine(unique, 'Two surveys share the same id'),
+  categories: z.array(CategorySchema).max(MAX_CATEGORIES_PER_PACK).default([]).refine(unique, 'Two categories share the same id'),
+  surveys: z.array(SurveySchema).max(MAX_SURVEYS_PER_PACK).default([]).refine(unique, 'Two surveys share the same id'),
 });
 
 export const PackSchema = PackContentSchema.extend({

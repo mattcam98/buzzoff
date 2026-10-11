@@ -2,7 +2,7 @@
  * The pack editor. Edits are held locally and written with an explicit Save,
  * so a half-typed clue never reaches a game.
  */
-import { PackContentSchema, type Category, type Clue, type Media, type PackContent, type Survey, type SurveyAnswer } from '@buzzoff/shared';
+import { MAX_CLUES_PER_CATEGORY, PackContentSchema, type Category, type Clue, type Media, type PackContent, type Survey, type SurveyAnswer } from '@buzzoff/shared';
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { Link } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
@@ -232,7 +232,10 @@ function Editor({ id }: { id: string }) {
         <section className="mg-stack" role="tabpanel">
           {draft.categories.length === 0 && (
             <div className="bz-card mg-empty mg-empty--inline">
-              <p>No categories yet. A category is one column on the board: a theme and a handful of clues that get harder as the points go up.</p>
+              <p>
+                No categories yet. A category is one column on the board: a theme and a handful of clues that get harder as the points go up. Give it
+                several clues at the same value and each game is dealt a different one.
+              </p>
             </div>
           )}
           {draft.categories.map((cat, i) => (
@@ -382,12 +385,12 @@ function CategoryCard({ category: cat, index, count, open, focus, onFocusDone, r
                 onNext={() => {
                   const next = cat.clues[i + 1];
                   if (next) requestFocus(next.id);
-                  else if (cat.clues.length < 10) addClue();
+                  else if (cat.clues.length < MAX_CLUES_PER_CATEGORY) addClue();
                 }}
               />
             ))}
           </ol>
-          {cat.clues.length < 10 && (
+          {cat.clues.length < MAX_CLUES_PER_CATEGORY && (
             <Button variant="ghost" size="s" onClick={addClue}>
               + Add a clue
             </Button>

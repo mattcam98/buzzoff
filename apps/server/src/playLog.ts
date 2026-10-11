@@ -1,15 +1,16 @@
 /**
- * When each category and survey was last played on this server. Games are dealt what has rested
- * longest (see `assembleRounds`), so a second game in an evening, or next week's, does not ask
- * what the last one asked until the packs have been played right through.
+ * When each category, clue and survey was last played on this server. Games are dealt what has
+ * rested longest (see `assembleRounds`): the categories and surveys that have waited longest, and
+ * from a category with several clues at a value, the clue that has. So a second game in an evening,
+ * or next week's, does not ask what the last one asked until the packs have been played right through.
  */
 import type { Played } from '@buzzoff/shared';
 import type { Store } from './store/types';
 import { log } from './util';
 
 const KEY = 'content_played';
-/** Far more than any server's packs hold; ids of content that was since deleted fall off the end. */
-const KEEP = 5000;
+/** Far more than any server's packs hold; what was since deleted falls off the end. */
+const KEEP = 50_000;
 
 export class PlayLog {
   private writes: Promise<void> = Promise.resolve();
