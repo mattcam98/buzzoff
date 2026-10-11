@@ -262,10 +262,10 @@ four 100s, four 200s and so on, and the category plays four games before a
 clue repeats. A pack holds up to 400 categories and 400 surveys.
 
 `packs/buzzoff-the-lot.buzzoff.json` is every question BuzzOff has, in one
-pack to import from the Packs page: 110 categories (most with twenty clues,
-four at each value), over 1,600 clues and 98 surveys. That is ten full shows
-before a category comes round again, and about forty before a clue in one of
-the twenty-clue categories does. Its survey numbers are illustrative, not from
+pack to import from the Packs page: 110 categories, each with at least
+twenty clues and four at every value, over 2,200 clues in all, and 98
+surveys. That is ten full shows before a category comes round again, and
+about forty before a clue does. Its survey numbers are illustrative, not from
 real polls, except the few its host notes say come from one.
 
 Typed Fast Money answers are matched against the survey after normalising case,

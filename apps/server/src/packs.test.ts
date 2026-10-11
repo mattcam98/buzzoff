@@ -15,6 +15,8 @@ describe.each(files)('%s', (name) => {
     for (const cat of pack.categories) {
       expect([cat.title, [...new Set(cat.clues.map((c) => c.value))].sort((a, b) => a - b)]).toEqual([cat.title, [100, 200, 300, 400, 500]]);
       expect([cat.title, new Set(cat.clues.map((c) => c.id)).size]).toEqual([cat.title, cat.clues.length]);
+      // Every category is a pool: at least four clues to choose from at every value.
+      for (const value of [100, 200, 300, 400, 500]) expect([cat.title, value, cat.clues.filter((c) => c.value === value).length >= 4]).toEqual([cat.title, value, true]);
     }
     expect(new Set(pack.categories.map((c) => c.title)).size).toBe(pack.categories.length);
     expect(new Set(pack.surveys.map((s) => s.question)).size).toBe(pack.surveys.length);
