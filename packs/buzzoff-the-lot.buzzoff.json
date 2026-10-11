@@ -121,9 +121,11 @@
             "id": "a-very-chinese-time-4a",
             "value": 400,
             "difficulty": 4,
-            "question": "What are Chinese written characters called in Mandarin?",
-            "answer": "Hanzi",
-            "accept": []
+            "question": "Which variety of Chinese, widely spoken in the far south around Guangzhou and in Chinatowns around the world, is the best known after Mandarin?",
+            "answer": "Cantonese",
+            "accept": [
+              "Yue"
+            ]
           },
           {
             "id": "a-very-chinese-time-4b",
@@ -179,9 +181,12 @@
             "id": "a-very-chinese-time-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "Which admiral led the Ming dynasty's treasure fleets as far as East Africa?",
-            "answer": "Zheng He",
-            "accept": []
+            "question": "What name was given to the decade of upheaval that Mao Zedong launched in 1966, when student Red Guards turned on teachers, officials and tradition?",
+            "answer": "The Cultural Revolution",
+            "accept": [
+              "Great Proletarian Cultural Revolution"
+            ],
+            "notes": "Not the Great Leap Forward, which was the economic campaign of 1958 to 1962."
           },
           {
             "id": "a-very-chinese-time-5d",
@@ -282,19 +287,27 @@
             "notes": "\"Channel\" fits the definition but has no A-I."
           },
           {
-            "id": "ai-3c",
-            "value": 300,
-            "difficulty": 3,
-            "question": "What is the capital of Kenya?",
-            "answer": "Nairobi",
-            "accept": []
-          },
-          {
             "id": "ai-3d",
             "value": 300,
             "difficulty": 3,
             "question": "Which island has Taipei as its capital?",
             "answer": "Taiwan",
+            "accept": []
+          },
+          {
+            "id": "ai-4b",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What were the warrior nobles of feudal Japan called?",
+            "answer": "Samurai",
+            "accept": []
+          },
+          {
+            "id": "ai-3c",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is the capital of Kenya?",
+            "answer": "Nairobi",
             "accept": []
           },
           {
@@ -309,18 +322,10 @@
             "notes": "Pronounced \"ah-sah-EE\"."
           },
           {
-            "id": "ai-4b",
-            "value": 400,
-            "difficulty": 4,
-            "question": "What were the warrior nobles of feudal Japan called?",
-            "answer": "Samurai",
-            "accept": []
-          },
-          {
             "id": "ai-4c",
             "value": 400,
             "difficulty": 4,
-            "question": "Which art form creates pictures from small coloured tiles?",
+            "question": "Which art form, seen on the floors of Roman villas, builds its pictures from tiny pieces called tesserae?",
             "answer": "Mosaic",
             "accept": []
           },
@@ -328,7 +333,7 @@
             "id": "ai-4d",
             "value": 400,
             "difficulty": 4,
-            "question": "Which Japanese art involves growing miniature trees in pots?",
+            "question": "Which Japanese art has a name that means \"tray planting\"?",
             "answer": "Bonsai",
             "accept": []
           },
@@ -694,11 +699,10 @@
             "id": "always-the-bridesmaid-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "Who was the second human to orbit the Earth?",
-            "answer": "Gherman Titov",
-            "accept": [
-              "Titov"
-            ]
+            "question": "Which is the second-largest island in the world?",
+            "answer": "New Guinea",
+            "accept": [],
+            "notes": "The island shared by Indonesia and Papua New Guinea. \"Papua New Guinea\" is only the country on its eastern half: host's call. Borneo is third."
           },
           {
             "id": "always-the-bridesmaid-5d",
@@ -1619,7 +1623,7 @@
             "value": 500,
             "accept": [],
             "answer": "CHANDELIER",
-            "question": "Which ten-letter word names a decorative light fitting that hangs from the ceiling?",
+            "question": "Which ten-letter word names the fitting that comes crashing down in The Phantom of the Opera, and is the title of a 2014 hit by Sia?",
             "difficulty": 5
           },
           {
@@ -1635,7 +1639,7 @@
             "id": "pm-10-x14",
             "value": 500,
             "difficulty": 5,
-            "question": "Which ten-letter word names the punctuation mark in \"don't\" and \"it's\"?",
+            "question": "Which ten-letter word names the punctuation mark that shows possession or a missing letter?",
             "answer": "APOSTROPHE",
             "accept": []
           },
@@ -1643,7 +1647,7 @@
             "id": "pm-10-x15",
             "value": 500,
             "difficulty": 5,
-            "question": "Which ten-letter word names a very tall building of many storeys?",
+            "question": "Which ten-letter word began as a sailor's name for a small sail at the very top of a mast, and took on its modern meaning in the Chicago of the 1880s?",
             "answer": "SKYSCRAPER",
             "accept": []
           }
@@ -2122,9 +2126,10 @@
             "id": "capital-punishment-4b",
             "value": 400,
             "difficulty": 4,
-            "question": "What is the capital of Tanzania?",
-            "answer": "Dodoma",
-            "accept": []
+            "question": "What is the capital of the United Arab Emirates?",
+            "answer": "Abu Dhabi",
+            "accept": [],
+            "notes": "Not Dubai, which is the largest city."
           },
           {
             "id": "capital-punishment-4c",
@@ -2162,11 +2167,10 @@
             "id": "capital-punishment-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "What is the legislative capital of Sri Lanka?",
-            "answer": "Sri Jayawardenepura Kotte",
-            "accept": [
-              "Kotte"
-            ]
+            "question": "What is the executive capital of South Africa, the seat of its president and government?",
+            "answer": "Pretoria",
+            "accept": [],
+            "notes": "South Africa has three capitals: Cape Town is the legislative one and Bloemfontein the judicial one. Not Johannesburg, the largest city."
           },
           {
             "id": "capital-punishment-5d",
@@ -3313,14 +3317,6 @@
             "accept": []
           },
           {
-            "id": "double-trouble-3a",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Which French actress of the 1960s became an animal-rights campaigner?",
-            "answer": "Brigitte Bardot",
-            "accept": []
-          },
-          {
             "id": "double-trouble-3b",
             "value": 300,
             "difficulty": 3,
@@ -3345,19 +3341,19 @@
             "accept": []
           },
           {
-            "id": "double-trouble-4a",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which Swedish-born star of the 1930s famously wanted to be alone?",
-            "answer": "Greta Garbo",
+            "id": "double-trouble-4b",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which director made Jaws, E.T. and Schindler's List?",
+            "answer": "Steven Spielberg",
             "accept": []
           },
           {
-            "id": "double-trouble-4b",
+            "id": "double-trouble-3a",
             "value": 400,
             "difficulty": 4,
-            "question": "Which director made Jaws, E.T. and Schindler's List?",
-            "answer": "Steven Spielberg",
+            "question": "Which French actress of the 1960s became an animal-rights campaigner?",
+            "answer": "Brigitte Bardot",
             "accept": []
           },
           {
@@ -3378,10 +3374,18 @@
           },
           {
             "id": "double-trouble-5a",
-            "value": 500,
-            "difficulty": 5,
+            "value": 400,
+            "difficulty": 4,
             "question": "Which astronomer was tried by the Inquisition in 1633?",
             "answer": "Galileo Galilei",
+            "accept": []
+          },
+          {
+            "id": "double-trouble-4a",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which Swedish-born star of the 1930s famously wanted to be alone?",
+            "answer": "Greta Garbo",
             "accept": []
           },
           {
@@ -3586,9 +3590,10 @@
             "id": "douze-points-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Swiss singer won the very first contest?",
-            "answer": "Lys Assia",
-            "accept": []
+            "question": "Which Irish dance show began as the seven-minute interval act at the 1994 contest in Dublin?",
+            "answer": "Riverdance",
+            "accept": [],
+            "notes": "With Michael Flatley and Jean Butler. It became a full stage show the following year."
           }
         ]
       },
@@ -4261,7 +4266,7 @@
             "id": "establishing-some-borders-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "Which country borders both Egypt and Tunisia?",
+            "question": "Which country borders both Egypt and Niger?",
             "answer": "Libya",
             "accept": []
           }
@@ -4434,7 +4439,7 @@
             "id": "pm-02-x13",
             "value": 500,
             "difficulty": 5,
-            "question": "Which horseshoe-shaped bone in the neck is the only one not joined to any other bone?",
+            "question": "Which horseshoe-shaped bone in the neck, the one pathologists in crime dramas check for signs of strangling, is the only bone not joined to any other?",
             "answer": "The hyoid",
             "accept": [
               "Hyoid bone"
@@ -4454,9 +4459,12 @@
             "id": "pm-02-x15",
             "value": 500,
             "difficulty": 5,
-            "question": "Which muscle, running across the thigh and nicknamed the tailor's muscle, is the longest in the body?",
-            "answer": "The sartorius",
-            "accept": []
+            "question": "Which nerve, the longest and thickest in the body, runs from the lower back down the back of each leg?",
+            "answer": "The sciatic nerve",
+            "accept": [
+              "Sciatic"
+            ],
+            "notes": "Trouble with it causes sciatica."
           }
         ],
         "title": "Exploring Bodies"
@@ -5429,19 +5437,27 @@
             "accept": []
           },
           {
-            "id": "flag-on-the-play-2c",
-            "value": 200,
-            "difficulty": 2,
-            "question": "Vertical stripes of green, white and orange.",
-            "answer": "Ireland",
-            "accept": []
-          },
-          {
             "id": "flag-on-the-play-2d",
             "value": 200,
             "difficulty": 2,
             "question": "Horizontal stripes of black, red and gold.",
             "answer": "Germany",
+            "accept": []
+          },
+          {
+            "id": "flag-on-the-play-3d",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Half white, half red, with a George Cross in the corner.",
+            "answer": "Malta",
+            "accept": []
+          },
+          {
+            "id": "flag-on-the-play-2c",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Vertical stripes of green, white and orange.",
+            "answer": "Ireland",
             "accept": []
           },
           {
@@ -5466,14 +5482,6 @@
             "difficulty": 3,
             "question": "A white crescent and star on red.",
             "answer": "Turkey",
-            "accept": []
-          },
-          {
-            "id": "flag-on-the-play-3d",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Half white, half red, with a George Cross in the corner.",
-            "answer": "Malta",
             "accept": []
           },
           {
@@ -6055,7 +6063,7 @@
             "id": "four-syllable-words-4c",
             "value": 400,
             "difficulty": 4,
-            "question": "Which instrument measures temperature?",
+            "question": "Which instrument takes its name from the Greek words for \"heat\" and \"measure\"?",
             "answer": "Thermometer",
             "accept": []
           },
@@ -6063,7 +6071,7 @@
             "id": "four-syllable-words-4d",
             "value": 400,
             "difficulty": 4,
-            "question": "Which form of government is rule by the people?",
+            "question": "Which system of government did Winston Churchill call the worst, except for all the others that have been tried?",
             "answer": "Democracy",
             "accept": []
           },
@@ -6266,9 +6274,12 @@
             "id": "fyi-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "What does IKEA stand for?",
-            "answer": "Ingvar Kamprad Elmtaryd Agunnaryd",
-            "accept": []
+            "question": "What does FIAT stand for?",
+            "answer": "Fabbrica Italiana Automobili Torino",
+            "accept": [
+              "Italian Automobile Factory of Turin"
+            ],
+            "notes": "Founded in Turin in 1899."
           }
         ]
       },
@@ -6378,14 +6389,6 @@
             "accept": []
           },
           {
-            "id": "gates-4a",
-            "value": 400,
-            "difficulty": 4,
-            "question": "What nickname was given to Janet Jackson's wardrobe malfunction at the 2004 Super Bowl?",
-            "answer": "Nipplegate",
-            "accept": []
-          },
-          {
             "id": "gates-4b",
             "value": 400,
             "difficulty": 4,
@@ -6410,19 +6413,27 @@
             "accept": []
           },
           {
+            "id": "gates-5b",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What is a woman who carries a baby for someone else called?",
+            "answer": "Surrogate",
+            "accept": []
+          },
+          {
+            "id": "gates-4a",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What nickname was given to Janet Jackson's wardrobe malfunction at the 2004 Super Bowl?",
+            "answer": "Nipplegate",
+            "accept": []
+          },
+          {
             "id": "gates-5a",
             "value": 500,
             "difficulty": 5,
             "question": "Which blue-tiled gate of Babylon is reconstructed in a Berlin museum?",
             "answer": "Ishtar Gate",
-            "accept": []
-          },
-          {
-            "id": "gates-5b",
-            "value": 500,
-            "difficulty": 5,
-            "question": "What is a woman who carries a baby for someone else called?",
-            "answer": "Surrogate",
             "accept": []
           },
           {
@@ -7098,9 +7109,17 @@
             ]
           },
           {
-            "id": "goat-groups-x01",
+            "id": "goat-groups-3b",
             "value": 200,
             "difficulty": 2,
+            "question": "The Knights of the Round Table served which king?",
+            "answer": "King Arthur",
+            "accept": []
+          },
+          {
+            "id": "goat-groups-x01",
+            "value": 300,
+            "difficulty": 3,
             "question": "Which band backed Bob Marley?",
             "answer": "The Wailers",
             "accept": []
@@ -7114,14 +7133,6 @@
             "accept": [
               "Macedon"
             ]
-          },
-          {
-            "id": "goat-groups-3b",
-            "value": 300,
-            "difficulty": 3,
-            "question": "The Knights of the Round Table served which king?",
-            "answer": "King Arthur",
-            "accept": []
           },
           {
             "id": "goat-groups-3c",
@@ -7398,18 +7409,21 @@
             "id": "goats-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Pakistani squash player went unbeaten for 555 consecutive matches?",
-            "answer": "Jahangir Khan",
-            "accept": []
+            "question": "Which Kenyan runner became the first person to cover the marathon distance in under two hours, in Vienna in 2019?",
+            "answer": "Eliud Kipchoge",
+            "accept": [
+              "Kipchoge"
+            ],
+            "notes": "1:59:40, in a specially staged run, so it did not count as an official record."
           },
           {
             "id": "goats-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "Which \"Flying Finn\" won nine Olympic gold medals in distance running in the 1920s?",
-            "answer": "Paavo Nurmi",
+            "question": "Which American football quarterback won a record seven Super Bowls, six of them with the New England Patriots?",
+            "answer": "Tom Brady",
             "accept": [
-              "Nurmi"
+              "Brady"
             ]
           }
         ]
@@ -7546,9 +7560,17 @@
             "accept": []
           },
           {
-            "id": "pw-03-x12",
+            "id": "pw-03-x15",
             "value": 400,
             "difficulty": 4,
+            "question": "Which word for a shared virtual world was coined by Neal Stephenson in his 1992 novel \"Snow Crash\"?",
+            "answer": "Metaverse",
+            "accept": []
+          },
+          {
+            "id": "pw-03-x12",
+            "value": 500,
+            "difficulty": 5,
             "question": "Which five bones form the palm of the hand, between the wrist and the fingers?",
             "answer": "The metacarpals",
             "accept": [
@@ -7579,14 +7601,6 @@
             "difficulty": 5,
             "question": "Which amber Greek spirit, a blend of brandy, wine and botanicals, has been made since 1888?",
             "answer": "Metaxa",
-            "accept": []
-          },
-          {
-            "id": "pw-03-x15",
-            "value": 500,
-            "difficulty": 5,
-            "question": "Which word for a shared virtual world was coined by Neal Stephenson in his 1992 novel \"Snow Crash\"?",
-            "answer": "Metaverse",
             "accept": []
           }
         ],
@@ -8376,16 +8390,6 @@
             "difficulty": 2
           },
           {
-            "id": "pm-09-x04",
-            "value": 200,
-            "difficulty": 2,
-            "question": "Which theory, championed by Louis Pasteur, says that many diseases are caused by micro-organisms?",
-            "answer": "Germ theory",
-            "accept": [
-              "The germ theory of disease"
-            ]
-          },
-          {
             "id": "pm-09-x05",
             "value": 200,
             "difficulty": 2,
@@ -8400,6 +8404,19 @@
             "question": "Which 2014 film about Stephen Hawking is named after the single explanation of the universe that physicists hope to find?",
             "answer": "The Theory of Everything",
             "accept": []
+          },
+          {
+            "id": "pm-09-4",
+            "notes": "\"Special relativity\" alone leaves out gravity. Host's call.",
+            "value": 200,
+            "accept": [
+              "Relativity",
+              "General relativity",
+              "Theory of general relativity"
+            ],
+            "answer": "The theory of relativity",
+            "question": "Which theory developed by Albert Einstein changed our understanding of space, time and gravity?",
+            "difficulty": 2
           },
           {
             "id": "pm-09-3",
@@ -8441,17 +8458,14 @@
             ]
           },
           {
-            "id": "pm-09-4",
-            "notes": "\"Special relativity\" alone leaves out gravity. Host's call.",
+            "id": "pm-09-x04",
             "value": 400,
+            "difficulty": 4,
+            "question": "Which theory, championed by Louis Pasteur, says that many diseases are caused by micro-organisms?",
+            "answer": "Germ theory",
             "accept": [
-              "Relativity",
-              "General relativity",
-              "Theory of general relativity"
-            ],
-            "answer": "The theory of relativity",
-            "question": "Which theory developed by Albert Einstein changed our understanding of space, time and gravity?",
-            "difficulty": 4
+              "The germ theory of disease"
+            ]
           },
           {
             "id": "pm-09-x10",
@@ -8638,14 +8652,6 @@
             "accept": []
           },
           {
-            "id": "island-life-4c",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which island in the Baltic Sea is Sweden's largest?",
-            "answer": "Gotland",
-            "accept": []
-          },
-          {
             "id": "island-life-4d",
             "value": 400,
             "difficulty": 4,
@@ -8655,10 +8661,18 @@
           },
           {
             "id": "island-life-5a",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which Mediterranean island is traditionally identified with Ogygia, the home of the nymph Calypso in Homer's Odyssey?",
+            "answer": "Gozo",
+            "accept": []
+          },
+          {
+            "id": "island-life-4c",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Maltese island is traditionally identified with Calypso's isle in the Odyssey?",
-            "answer": "Gozo",
+            "question": "Which island in the Baltic Sea is Sweden's largest?",
+            "answer": "Gotland",
             "accept": []
           },
           {
@@ -9206,14 +9220,6 @@
         "blurb": "A mixed bag for anyone who has ever been called one.",
         "clues": [
           {
-            "id": "pw-02-1",
-            "value": 100,
-            "accept": [],
-            "answer": "Death Note",
-            "question": "Which anime features the detective L as the main opponent of its protagonist?",
-            "difficulty": 1
-          },
-          {
             "id": "pw-02-x01",
             "value": 100,
             "difficulty": 1,
@@ -9237,6 +9243,14 @@
             "difficulty": 1,
             "question": "Which toy of interlocking plastic bricks comes from Denmark?",
             "answer": "Lego",
+            "accept": []
+          },
+          {
+            "id": "pw-02-x09",
+            "value": 100,
+            "difficulty": 1,
+            "question": "Which number system uses only the digits 0 and 1?",
+            "answer": "Binary",
             "accept": []
           },
           {
@@ -9276,6 +9290,14 @@
             "accept": []
           },
           {
+            "id": "pw-02-1",
+            "value": 300,
+            "accept": [],
+            "answer": "Death Note",
+            "question": "Which anime features the detective L as the main opponent of its protagonist?",
+            "difficulty": 3
+          },
+          {
             "id": "pw-02-3",
             "value": 300,
             "accept": [],
@@ -9297,14 +9319,6 @@
             "difficulty": 3,
             "question": "In gaming, what does RPG stand for?",
             "answer": "Role-playing game",
-            "accept": []
-          },
-          {
-            "id": "pw-02-x09",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Which number system uses only the digits 0 and 1?",
-            "answer": "Binary",
             "accept": []
           },
           {
@@ -9835,14 +9849,6 @@
             "accept": []
           },
           {
-            "id": "licence-to-double-o-3a",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Which large, low-pitched woodwind instrument is played with a double reed?",
-            "answer": "Bassoon",
-            "accept": []
-          },
-          {
             "id": "licence-to-double-o-3b",
             "value": 300,
             "difficulty": 3,
@@ -9868,18 +9874,18 @@
           },
           {
             "id": "licence-to-double-o-4a",
-            "value": 400,
-            "difficulty": 4,
+            "value": 300,
+            "difficulty": 3,
             "question": "At which 1815 battle was Napoleon finally defeated?",
             "answer": "Waterloo",
             "accept": []
           },
           {
-            "id": "licence-to-double-o-4b",
+            "id": "licence-to-double-o-3a",
             "value": 400,
             "difficulty": 4,
-            "question": "Which Central African country has Yaoundé as its capital?",
-            "answer": "Cameroon",
+            "question": "Which large, low-pitched woodwind instrument is played with a double reed?",
+            "answer": "Bassoon",
             "accept": []
           },
           {
@@ -9899,19 +9905,27 @@
             "accept": []
           },
           {
+            "id": "licence-to-double-o-5b",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which Aboriginal Australian wind instrument is made from a hollowed branch?",
+            "answer": "Didgeridoo",
+            "accept": []
+          },
+          {
+            "id": "licence-to-double-o-4b",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which Central African country has Yaoundé as its capital?",
+            "answer": "Cameroon",
+            "accept": []
+          },
+          {
             "id": "licence-to-double-o-5a",
             "value": 500,
             "difficulty": 5,
             "question": "What was the former name of the Burmese city of Yangon?",
             "answer": "Rangoon",
-            "accept": []
-          },
-          {
-            "id": "licence-to-double-o-5b",
-            "value": 500,
-            "difficulty": 5,
-            "question": "Which Aboriginal Australian wind instrument is made from a hollowed branch?",
-            "answer": "Didgeridoo",
             "accept": []
           },
           {
@@ -10182,14 +10196,6 @@
             "difficulty": 3
           },
           {
-            "id": "pw-01-x07",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Which James Bond film has a theme song by Paul McCartney and Wings?",
-            "answer": "Live and Let Die",
-            "accept": []
-          },
-          {
             "id": "pw-01-x08",
             "value": 300,
             "difficulty": 3,
@@ -10204,6 +10210,14 @@
             "question": "Which American sketch show, on air since 1975, is known by the initials SNL?",
             "answer": "Saturday Night Live",
             "accept": []
+          },
+          {
+            "id": "pw-01-5",
+            "value": 300,
+            "accept": [],
+            "answer": "Live Aid",
+            "question": "Which 1985 charity concert raised money for famine relief in Ethiopia and drew an enormous global television audience?",
+            "difficulty": 3
           },
           {
             "id": "pw-01-4",
@@ -10240,12 +10254,12 @@
             "accept": []
           },
           {
-            "id": "pw-01-5",
+            "id": "pw-01-x07",
             "value": 500,
-            "accept": [],
-            "answer": "Live Aid",
-            "question": "Which 1985 charity concert raised money for famine relief in Ethiopia and drew an enormous global television audience?",
-            "difficulty": 5
+            "difficulty": 5,
+            "question": "Which James Bond film has a theme song by Paul McCartney and Wings?",
+            "answer": "Live and Let Die",
+            "accept": []
           },
           {
             "id": "pw-01-x13",
@@ -10440,19 +10454,21 @@
             "id": "gn-08-x13",
             "value": 500,
             "difficulty": 5,
-            "question": "Which flask restores your health when you rest at a bonfire in \"Dark Souls\"?",
-            "answer": "The Estus Flask",
+            "question": "Which wrist-mounted computer do vault dwellers use to check their health, map and inventory in the \"Fallout\" games?",
+            "answer": "The Pip-Boy",
             "accept": [
-              "Estus"
+              "Pip-Boy 3000",
+              "Pipboy"
             ]
           },
           {
             "id": "gn-08-x14",
             "value": 500,
             "difficulty": 5,
-            "question": "In the \"Final Fantasy\" series, which feather-like item revives a fallen party member?",
-            "answer": "Phoenix Down",
-            "accept": []
+            "question": "Which seven gems does Sonic the Hedgehog collect to transform into the golden Super Sonic?",
+            "answer": "The Chaos Emeralds",
+            "accept": [],
+            "notes": "\"Emeralds\" alone is close: ask for the full name."
           },
           {
             "id": "gn-08-x15",
@@ -10959,9 +10975,10 @@
             "id": "mobile-app-classics-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Vietnamese developer removed Flappy Bird from app stores at the height of its fame?",
-            "answer": "Dong Nguyen",
-            "accept": []
+            "question": "In which game do you hop a chicken across endless roads, rivers and railway lines, one tap at a time?",
+            "answer": "Crossy Road",
+            "accept": [],
+            "notes": "Not Frogger, the 1981 arcade game it borrows from."
           },
           {
             "id": "mobile-app-classics-5c",
@@ -11645,19 +11662,19 @@
             "accept": []
           },
           {
-            "id": "name-that-language-4d",
+            "id": "name-that-language-5a",
             "value": 400,
             "difficulty": 4,
-            "question": "In which language does \"kamsahamnida\" mean \"thank you\"?",
-            "answer": "Korean",
+            "question": "In which language does \"grazzi ħafna\" mean \"thank you very much\"?",
+            "answer": "Maltese",
             "accept": []
           },
           {
-            "id": "name-that-language-5a",
+            "id": "name-that-language-4d",
             "value": 500,
             "difficulty": 5,
-            "question": "In which language does \"grazzi ħafna\" mean \"thank you very much\"?",
-            "answer": "Maltese",
+            "question": "In which language does \"kamsahamnida\" mean \"thank you\"?",
+            "answer": "Korean",
             "accept": []
           },
           {
@@ -11947,19 +11964,27 @@
             "accept": []
           },
           {
-            "id": "nonna-knows-best-3c",
-            "value": 300,
-            "difficulty": 3,
-            "question": "What are Polish filled dumplings called?",
-            "answer": "Pierogi",
-            "accept": []
-          },
-          {
             "id": "nonna-knows-best-3d",
             "value": 300,
             "difficulty": 3,
             "question": "Which Scottish dish is traditionally cooked in a sheep's stomach?",
             "answer": "Haggis",
+            "accept": []
+          },
+          {
+            "id": "nonna-knows-best-4d",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which Maltese flaky pastries are filled with ricotta or mushy peas?",
+            "answer": "Pastizzi",
+            "accept": []
+          },
+          {
+            "id": "nonna-knows-best-3c",
+            "value": 400,
+            "difficulty": 4,
+            "question": "What are Polish filled dumplings called?",
+            "answer": "Pierogi",
             "accept": []
           },
           {
@@ -11986,14 +12011,6 @@
             "difficulty": 4,
             "question": "Which fish stew comes from Marseille?",
             "answer": "Bouillabaisse",
-            "accept": []
-          },
-          {
-            "id": "nonna-knows-best-4d",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which Maltese flaky pastries are filled with ricotta or mushy peas?",
-            "answer": "Pastizzi",
             "accept": []
           },
           {
@@ -12085,19 +12102,19 @@
             "accept": []
           },
           {
-            "id": "pm-06-x05",
-            "value": 200,
-            "difficulty": 2,
-            "question": "Which metal is used to galvanise steel so that it does not rust?",
-            "answer": "Zinc",
-            "accept": []
-          },
-          {
             "id": "pm-06-x06",
             "value": 200,
             "difficulty": 2,
             "question": "Which precious metal, rarer than gold, names a record that has sold a million copies?",
             "answer": "Platinum",
+            "accept": []
+          },
+          {
+            "id": "pm-06-x10",
+            "value": 200,
+            "difficulty": 2,
+            "question": "Which metal, the lightest of all, powers rechargeable batteries?",
+            "answer": "Lithium",
             "accept": []
           },
           {
@@ -12135,20 +12152,20 @@
             "accept": []
           },
           {
+            "id": "pm-06-x05",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which metal is used to galvanise steel so that it does not rust?",
+            "answer": "Zinc",
+            "accept": []
+          },
+          {
             "id": "pm-06-4",
             "value": 400,
             "accept": [],
             "answer": "Copper",
             "question": "Which metal in a cheap gold-coloured ring can turn the skin underneath it green?",
             "difficulty": 4
-          },
-          {
-            "id": "pm-06-x10",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which metal, the lightest of all, powers rechargeable batteries?",
-            "answer": "Lithium",
-            "accept": []
           },
           {
             "id": "pm-06-x11",
@@ -12170,26 +12187,26 @@
           },
           {
             "id": "pm-06-5",
-            "notes": "Its price swings wildly, so \"most valuable\" is true in some years and not in others.",
             "value": 500,
             "accept": [],
-            "answer": "Rhodium",
-            "question": "Which highly corrosion-resistant metal of the platinum group has been called the most valuable precious metal?",
+            "answer": "Cobalt",
+            "question": "Which metal, mined mostly in the Democratic Republic of the Congo for phone and car batteries, also gives its name to a deep shade of blue?",
             "difficulty": 5
           },
           {
             "id": "pm-06-x13",
             "value": 500,
             "difficulty": 5,
-            "question": "Which metal is the densest element found in nature?",
-            "answer": "Osmium",
-            "accept": []
+            "question": "Which radioactive metal was painted on to watch dials in the early 1900s to make them glow in the dark?",
+            "answer": "Radium",
+            "accept": [],
+            "notes": "Not uranium or radon. The factory workers who painted the dials became known as the Radium Girls."
           },
           {
             "id": "pm-06-x14",
             "value": 500,
             "difficulty": 5,
-            "question": "Which metal will melt in the palm of your hand, at about 30 degrees Celsius?",
+            "question": "Which metal, named after the Latin name for France, will melt in the palm of your hand, at about 30 degrees Celsius?",
             "answer": "Gallium",
             "accept": []
           },
@@ -12290,16 +12307,6 @@
             ]
           },
           {
-            "id": "odd-one-out-3a",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Norway, Switzerland, Austria, United Kingdom",
-            "answer": "Austria (the only EU member)",
-            "accept": [
-              "Austria"
-            ]
-          },
-          {
             "id": "odd-one-out-3b",
             "value": 300,
             "difficulty": 3,
@@ -12327,6 +12334,16 @@
             "answer": "Faust (not by Shakespeare)",
             "accept": [
               "Faust"
+            ]
+          },
+          {
+            "id": "odd-one-out-5b",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Estonia, Latvia, Lithuania, Finland",
+            "answer": "Finland (not a Baltic state)",
+            "accept": [
+              "Finland"
             ]
           },
           {
@@ -12370,6 +12387,16 @@
             ]
           },
           {
+            "id": "odd-one-out-3a",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Norway, Switzerland, Austria, United Kingdom",
+            "answer": "Austria (the only EU member)",
+            "accept": [
+              "Austria"
+            ]
+          },
+          {
             "id": "odd-one-out-5a",
             "value": 500,
             "difficulty": 5,
@@ -12377,16 +12404,6 @@
             "answer": "Calcium (not an alkali metal)",
             "accept": [
               "Calcium"
-            ]
-          },
-          {
-            "id": "odd-one-out-5b",
-            "value": 500,
-            "difficulty": 5,
-            "question": "Estonia, Latvia, Lithuania, Finland",
-            "answer": "Finland (not a Baltic state)",
-            "accept": [
-              "Finland"
             ]
           },
           {
@@ -12750,7 +12767,7 @@
             "id": "park-the-bus-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "What is the Istanbul derby between Galatasaray and Fenerbahçe called?",
+            "question": "Galatasaray play on the European side of Istanbul and Fenerbahçe on the Asian side. What is the derby between them called?",
             "answer": "The Intercontinental Derby",
             "accept": []
           },
@@ -13110,9 +13127,10 @@
             "id": "patent-pending-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Swiss engineer invented Velcro after a hunting trip left burrs stuck in his dog's fur?",
-            "answer": "George de Mestral",
-            "accept": []
+            "question": "Which fastening, invented by a Swiss engineer, takes its name from the French words for velvet and hook?",
+            "answer": "Velcro",
+            "accept": [],
+            "notes": "Velours and crochet. George de Mestral got the idea from the burrs stuck in his dog's fur after a hunting trip."
           },
           {
             "id": "patent-pending-5c",
@@ -13126,9 +13144,12 @@
             "id": "patent-pending-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Volvo engineer invented the three-point seat belt?",
-            "answer": "Nils Bohlin",
-            "accept": []
+            "question": "Which French brothers built the hot-air balloon that carried the first people into the sky, over Paris in 1783?",
+            "answer": "The Montgolfier brothers",
+            "accept": [
+              "Montgolfier",
+              "Joseph and Étienne Montgolfier"
+            ]
           }
         ]
       },
@@ -13276,7 +13297,7 @@
             "id": "pepper-paynes-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "Which chilli took the world's-hottest record in 2023?",
+            "question": "Which chilli, named with nothing more than a single letter of the alphabet, took the world's-hottest record in 2023?",
             "answer": "Pepper X",
             "accept": []
           },
@@ -13292,9 +13313,13 @@
             "id": "pepper-paynes-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "Which compound gives black pepper its bite?",
-            "answer": "Piperine",
-            "accept": []
+            "question": "Which \"pepper\", named after a Chinese province, is no relation of black pepper or chillies and numbs the tongue instead of burning it?",
+            "answer": "Sichuan pepper",
+            "accept": [
+              "Szechuan pepper",
+              "Sichuan peppercorn",
+              "Sichuan"
+            ]
           },
           {
             "id": "pepper-paynes-5d",
@@ -13596,17 +13621,6 @@
             "difficulty": 3
           },
           {
-            "id": "gn-02-x07",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Which handheld succeeded the PSP in 2011?",
-            "answer": "The PlayStation Vita",
-            "accept": [
-              "PS Vita",
-              "Vita"
-            ]
-          },
-          {
             "id": "gn-02-x08",
             "value": 300,
             "difficulty": 3,
@@ -13623,6 +13637,25 @@
             "accept": [
               "Move",
               "PS Move"
+            ]
+          },
+          {
+            "id": "gn-02-x12",
+            "value": 300,
+            "difficulty": 3,
+            "question": "What did original PlayStation owners have to slot in above the controller port to save their games?",
+            "answer": "A memory card",
+            "accept": []
+          },
+          {
+            "id": "gn-02-x07",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which handheld succeeded the PSP in 2011?",
+            "answer": "The PlayStation Vita",
+            "accept": [
+              "PS Vita",
+              "Vita"
             ]
           },
           {
@@ -13654,14 +13687,6 @@
             "accept": []
           },
           {
-            "id": "gn-02-x12",
-            "value": 400,
-            "difficulty": 4,
-            "question": "What did original PlayStation owners have to slot in above the controller port to save their games?",
-            "answer": "A memory card",
-            "accept": []
-          },
-          {
             "id": "gn-02-5",
             "notes": "3 December 1994. It reached Europe in September 1995.",
             "value": 500,
@@ -13682,19 +13707,25 @@
             "id": "gn-02-x14",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Sony engineer is known as \"the father of the PlayStation\"?",
-            "answer": "Ken Kutaragi",
+            "question": "Which football series, sold as Winning Eleven in Japan, was FIFA's great rival in the PlayStation 2 years?",
+            "answer": "Pro Evolution Soccer",
             "accept": [
-              "Kutaragi"
-            ]
+              "PES",
+              "Pro Evo",
+              "Pro Evolution"
+            ],
+            "notes": "Renamed eFootball in 2021."
           },
           {
             "id": "gn-02-x15",
             "value": 500,
             "difficulty": 5,
-            "question": "What was the notorious US launch price, in dollars, of the top PlayStation 3 model in 2006?",
-            "answer": "599 dollars",
-            "accept": []
+            "question": "Which survival horror series began on the original PlayStation in 1996, in a mansion full of zombies?",
+            "answer": "Resident Evil",
+            "accept": [
+              "Biohazard"
+            ],
+            "notes": "Biohazard is its name in Japan."
           }
         ],
         "title": "PlayStation Generation"
@@ -13859,30 +13890,31 @@
             "id": "pm-05-5",
             "value": 500,
             "accept": [],
-            "answer": "A Lombax",
-            "question": "In the \"Ratchet & Clank\" series, Clank is a robot. What species is Ratchet?",
-            "difficulty": 5
+            "answer": "Ratchet and Clank",
+            "question": "Which PlayStation double act pairs a furry mechanic who swings an oversized wrench with the little robot who rides on his back?",
+            "difficulty": 5,
+            "notes": "Ratchet is a Lombax; Clank is the robot."
           },
           {
             "id": "pm-05-x13",
             "value": 500,
             "difficulty": 5,
-            "question": "Which skeletal knight is raised from the dead to save the kingdom of Gallowmere in \"MediEvil\"?",
-            "answer": "Sir Daniel Fortesque",
-            "accept": [
-              "Sir Dan",
-              "Daniel Fortesque",
-              "Sir Dan Fortesque"
-            ]
+            "question": "Which 1998 PlayStation game, with the word \"evil\" hiding in its title, stars a skeletal knight raised from the dead to save the kingdom of Gallowmere?",
+            "answer": "MediEvil",
+            "accept": [],
+            "notes": "Said just like \"medieval\". The knight is Sir Daniel Fortesque."
           },
           {
             "id": "pm-05-x14",
             "value": 500,
             "difficulty": 5,
-            "question": "Which killer clown drives an armed ice-cream van in \"Twisted Metal\"?",
-            "answer": "Sweet Tooth",
+            "question": "Which mad scientist, with a large letter N on his forehead, is the arch-enemy of Crash Bandicoot?",
+            "answer": "Doctor Neo Cortex",
             "accept": [
-              "Needles Kane"
+              "Neo Cortex",
+              "Dr Cortex",
+              "Cortex",
+              "Doctor Cortex"
             ]
           },
           {
@@ -14231,7 +14263,7 @@
             "id": "cat-06-x13",
             "value": 500,
             "difficulty": 5,
-            "question": "What was the first widely used graphical web browser, released in 1993, called?",
+            "question": "What was the first widely used graphical web browser, released in 1993 and sharing its name with a picture made of tiny tiles?",
             "answer": "Mosaic",
             "accept": [
               "NCSA Mosaic"
@@ -14527,14 +14559,6 @@
             "difficulty": 3
           },
           {
-            "id": "cat-05-x07",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Which studio made \"Uncharted\" and \"The Last of Us\"?",
-            "answer": "Naughty Dog",
-            "accept": []
-          },
-          {
             "id": "cat-05-x08",
             "value": 300,
             "difficulty": 3,
@@ -14553,20 +14577,28 @@
             "accept": []
           },
           {
+            "id": "cat-05-x10",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which 1978 arcade game by Taito has rows of aliens marching down the screen?",
+            "answer": "Space Invaders",
+            "accept": []
+          },
+          {
+            "id": "cat-05-x07",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which studio made \"Uncharted\" and \"The Last of Us\"?",
+            "answer": "Naughty Dog",
+            "accept": []
+          },
+          {
             "id": "cat-05-4",
             "value": 400,
             "accept": [],
             "answer": "Los Santos",
             "question": "In \"Grand Theft Auto V\", which fictional city, modelled on Los Angeles, do Michael, Franklin and Trevor call home?",
             "difficulty": 4
-          },
-          {
-            "id": "cat-05-x10",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which 1978 arcade game by Taito has rows of aliens marching down the screen?",
-            "answer": "Space Invaders",
-            "accept": []
           },
           {
             "id": "cat-05-x11",
@@ -14586,13 +14618,11 @@
           },
           {
             "id": "cat-05-5",
-            "notes": "The surname alone is enough; be generous with pronunciation.",
+            "notes": "Not Tokyo. Nintendo began there in 1889 as a maker of playing cards.",
             "value": 500,
-            "accept": [
-              "Pajitnov"
-            ],
-            "answer": "Alexey Pajitnov",
-            "question": "Which Soviet software engineer created \"Tetris\" in 1984?",
+            "accept": [],
+            "answer": "Kyoto",
+            "question": "In which Japanese city, the country's old imperial capital, is Nintendo's headquarters?",
             "difficulty": 5
           },
           {
@@ -14619,11 +14649,12 @@
             "id": "cat-05-x15",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Japanese designer created \"Pac-Man\"?",
-            "answer": "Toru Iwatani",
+            "question": "Which Japanese company released \"Pac-Man\" in arcades in 1980?",
+            "answer": "Namco",
             "accept": [
-              "Iwatani"
-            ]
+              "Bandai Namco"
+            ],
+            "notes": "Designed by Toru Iwatani. Namco merged with Bandai in 2005."
           }
         ],
         "title": "Press Start"
@@ -14801,9 +14832,11 @@
             "id": "pride-icons-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "The Icelandic prime minister who in 2009 became the world's first openly LGBT elected head of government.",
-            "answer": "Jóhanna Sigurðardóttir",
-            "accept": []
+            "question": "The Italian fashion designer shot dead outside his Miami Beach mansion in 1997.",
+            "answer": "Gianni Versace",
+            "accept": [
+              "Versace"
+            ]
           }
         ]
       },
@@ -15236,14 +15269,6 @@
             ]
           },
           {
-            "id": "qwerty-3b",
-            "value": 300,
-            "difficulty": 3,
-            "question": "Which shortcut reopens the browser tab you just closed?",
-            "answer": "Ctrl + Shift + T",
-            "accept": []
-          },
-          {
             "id": "qwerty-3c",
             "value": 300,
             "difficulty": 3,
@@ -15260,19 +15285,27 @@
             "accept": []
           },
           {
+            "id": "qwerty-4b",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which function key refreshes a web page?",
+            "answer": "F5",
+            "accept": []
+          },
+          {
+            "id": "qwerty-3b",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which shortcut reopens the browser tab you just closed?",
+            "answer": "Ctrl + Shift + T",
+            "accept": []
+          },
+          {
             "id": "qwerty-4a",
             "value": 400,
             "difficulty": 4,
             "question": "Which key moves the cursor to the beginning of a line?",
             "answer": "Home",
-            "accept": []
-          },
-          {
-            "id": "qwerty-4b",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which function key refreshes a web page?",
-            "answer": "F5",
             "accept": []
           },
           {
@@ -15295,9 +15328,11 @@
             "id": "qwerty-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Windows shortcut resets the display when the screen goes black, often described as restarting the graphics driver?",
-            "answer": "Windows + Ctrl + Shift + B",
-            "accept": []
+            "question": "Which Windows shortcut deletes a file permanently, skipping the Recycle Bin?",
+            "answer": "Shift + Delete",
+            "accept": [
+              "Shift + Del"
+            ]
           },
           {
             "id": "qwerty-5b",
@@ -15319,7 +15354,7 @@
             "id": "qwerty-5d",
             "value": 500,
             "difficulty": 5,
-            "question": "Which alternative keyboard layout, patented in 1936, is named after its inventor?",
+            "question": "Which alternative keyboard layout, patented in 1936, is named after its inventor, who shared his surname with a famous Czech composer?",
             "answer": "Dvorak",
             "accept": []
           }
@@ -15494,11 +15529,10 @@
             "id": "pm-08-x15",
             "value": 500,
             "difficulty": 5,
-            "question": "Which sweet brown Norwegian cheese is made by boiling down whey until it caramelises?",
-            "answer": "Brunost",
+            "question": "Which thick, caramel-coloured spread, loved across Latin America, is made by slowly simmering milk and sugar?",
+            "answer": "Dulce de leche",
             "accept": [
-              "Gjetost",
-              "Brown cheese"
+              "Doce de leite"
             ]
           }
         ],
@@ -16034,13 +16068,11 @@
           {
             "id": "cat-03-5",
             "value": 500,
-            "accept": [
-              "Voight-Kampff",
-              "VK test"
-            ],
-            "answer": "The Voight-Kampff test",
-            "question": "In the 1982 film \"Blade Runner\", what is the name of the test used to tell replicants apart from humans?",
-            "difficulty": 5
+            "accept": [],
+            "answer": "Blade Runner",
+            "question": "Which 1982 science-fiction film was adapted from Philip K. Dick's novel \"Do Androids Dream of Electric Sheep?\"",
+            "difficulty": 5,
+            "notes": "Directed by Ridley Scott, with Harrison Ford hunting replicants."
           },
           {
             "id": "cat-03-x13",
@@ -16756,14 +16788,6 @@
             "accept": []
           },
           {
-            "id": "sports-guy-3a",
-            "value": 300,
-            "difficulty": 3,
-            "question": "How many points is a try worth in rugby union?",
-            "answer": "Five",
-            "accept": []
-          },
-          {
             "id": "sports-guy-3b",
             "value": 300,
             "difficulty": 3,
@@ -16785,6 +16809,24 @@
             "difficulty": 3,
             "question": "What is the highest possible score with three darts?",
             "answer": "180",
+            "accept": []
+          },
+          {
+            "id": "sports-guy-x02",
+            "value": 300,
+            "difficulty": 3,
+            "question": "Which Spanish player won the French Open a record 14 times?",
+            "answer": "Rafael Nadal",
+            "accept": [
+              "Nadal"
+            ]
+          },
+          {
+            "id": "sports-guy-3a",
+            "value": 400,
+            "difficulty": 4,
+            "question": "How many points is a try worth in rugby union?",
+            "answer": "Five",
             "accept": []
           },
           {
@@ -16816,24 +16858,13 @@
             "accept": []
           },
           {
-            "id": "sports-guy-x02",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which Spanish player won the French Open a record 14 times?",
-            "answer": "Rafael Nadal",
-            "accept": [
-              "Nadal"
-            ]
-          },
-          {
             "id": "sports-guy-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Italian driver won the first Formula 1 world championship in 1950?",
-            "answer": "Giuseppe Farina",
+            "question": "Which Argentine driver won five Formula 1 world championships in the 1950s?",
+            "answer": "Juan Manuel Fangio",
             "accept": [
-              "Nino Farina",
-              "Farina"
+              "Fangio"
             ]
           },
           {
@@ -17203,16 +17234,6 @@
             "accept": []
           },
           {
-            "id": "os-01-x11",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Which star of \"Gone with the Wind\" died in Paris in 2020 at the age of 104?",
-            "answer": "Olivia de Havilland",
-            "accept": [
-              "De Havilland"
-            ]
-          },
-          {
             "id": "os-01-x12",
             "value": 400,
             "difficulty": 4,
@@ -17224,43 +17245,54 @@
           },
           {
             "id": "os-01-5",
-            "value": 500,
+            "value": 400,
             "accept": [
               "Douglas"
             ],
             "answer": "Kirk Douglas",
             "question": "Which Hollywood star of \"Spartacus\", the father of Michael, died in 2020 at the age of 103?",
-            "difficulty": 5
+            "difficulty": 4
+          },
+          {
+            "id": "os-01-x11",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Which star of \"Gone with the Wind\" died in Paris in 2020 at the age of 104?",
+            "answer": "Olivia de Havilland",
+            "accept": [
+              "De Havilland"
+            ]
           },
           {
             "id": "os-01-x13",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Japanese woman died in 2022 at 119, the second-oldest person whose age has been verified?",
-            "answer": "Kane Tanaka",
+            "question": "Jeanne Calment, the oldest person ever recorded, recalled meeting which painter as a girl in her home town of Arles?",
+            "answer": "Vincent van Gogh",
             "accept": [
-              "Tanaka"
-            ]
+              "Van Gogh"
+            ],
+            "notes": "She said he came into her family's shop to buy canvas, and that he was rude and scruffy."
           },
           {
             "id": "os-01-x14",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Brazilian architect, the designer of Brasília's great public buildings, died in 2012 at the age of 104?",
-            "answer": "Oscar Niemeyer",
+            "question": "Which hallucinogenic drug was first made in 1938 by the Swiss chemist Albert Hofmann, who went on to live to 102?",
+            "answer": "LSD",
             "accept": [
-              "Niemeyer"
-            ]
+              "Acid",
+              "Lysergic acid diethylamide"
+            ],
+            "notes": "He discovered its effects in 1943 and died in 2008."
           },
           {
             "id": "os-01-x15",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Japanese man, who died in 2013 at 116, is the oldest man whose age has ever been verified?",
-            "answer": "Jiroemon Kimura",
-            "accept": [
-              "Kimura"
-            ]
+            "question": "According to the Book of Genesis, which man lived to the age of 969, longer than anyone else in the Bible?",
+            "answer": "Methuselah",
+            "accept": []
           }
         ],
         "title": "The 100 Club"
@@ -17415,7 +17447,7 @@
             "id": "tick-tock-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "Which word describes a 150th anniversary?",
+            "question": "Which word for a 150th anniversary begins with \"sesqui\", from the Latin for \"one and a half\"?",
             "answer": "Sesquicentenary",
             "accept": [
               "Sesquicentennial"
@@ -17496,18 +17528,6 @@
             "notes": "About 5,570 km, which rounds to 6,000."
           },
           {
-            "id": "pm-03-2",
-            "notes": "Roughly 5,500 km from north to south and 5,200 km from east to west.",
-            "value": 200,
-            "accept": [
-              "5,500 km",
-              "5,500 kilometres"
-            ],
-            "answer": "About 5,500 km",
-            "question": "To the nearest 500 kilometres, how far does China extend from north to south?",
-            "difficulty": 2
-          },
-          {
             "id": "pm-03-x04",
             "value": 200,
             "difficulty": 2,
@@ -17544,6 +17564,18 @@
               "3,400 km"
             ],
             "notes": "About 3,440 km, which rounds to 3,000."
+          },
+          {
+            "id": "pm-03-x11",
+            "value": 200,
+            "difficulty": 2,
+            "question": "To the nearest 1,000 kilometres, what is the circumference of the Earth at the equator?",
+            "answer": "About 40,000 km",
+            "accept": [
+              "40,000 km",
+              "40,075 km"
+            ],
+            "notes": "40,075 km."
           },
           {
             "id": "pm-03-3",
@@ -17597,6 +17629,18 @@
             "notes": "50.45 km, of which about 38 km is under the sea."
           },
           {
+            "id": "pm-03-2",
+            "notes": "Roughly 5,500 km from north to south and 5,200 km from east to west.",
+            "value": 400,
+            "accept": [
+              "5,500 km",
+              "5,500 kilometres"
+            ],
+            "answer": "About 5,500 km",
+            "question": "To the nearest 500 kilometres, how far does China extend from north to south?",
+            "difficulty": 4
+          },
+          {
             "id": "pm-03-4",
             "notes": "About 9,000 km, across eleven time zones.",
             "value": 400,
@@ -17620,18 +17664,6 @@
               "3,500 km"
             ],
             "notes": "3,474 km, which rounds to 3,000."
-          },
-          {
-            "id": "pm-03-x11",
-            "value": 400,
-            "difficulty": 4,
-            "question": "To the nearest 1,000 kilometres, what is the circumference of the Earth at the equator?",
-            "answer": "About 40,000 km",
-            "accept": [
-              "40,000 km",
-              "40,075 km"
-            ],
-            "notes": "40,075 km."
           },
           {
             "id": "pm-03-x12",
@@ -18043,20 +18075,20 @@
             "id": "trillionaire-things-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Italian bank, founded in Siena in 1472, is the world's oldest still operating?",
-            "answer": "Monte dei Paschi di Siena",
-            "accept": [
-              "Monte dei Paschi",
-              "MPS"
-            ]
+            "question": "In which Tuscan city was Monte dei Paschi, the world's oldest surviving bank, founded in 1472?",
+            "answer": "Siena",
+            "accept": [],
+            "notes": "Its full name is Monte dei Paschi di Siena."
           },
           {
             "id": "trillionaire-things-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Augsburg banking family, led by Jakob \"the Rich\", bankrolled the Habsburgs?",
-            "answer": "Fugger",
-            "accept": []
+            "question": "Which banking family began with Mayer Amschel in Frankfurt, whose five sons ran banks in Frankfurt, London, Paris, Vienna and Naples?",
+            "answer": "The Rothschilds",
+            "accept": [
+              "The Rothschild family"
+            ]
           },
           {
             "id": "trillionaire-things-5d",
@@ -18424,7 +18456,7 @@
             "id": "video-games-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "Which early computer game was played at a 1972 tournament with a Rolling Stone subscription as the prize?",
+            "question": "Which early computer game, a duel between two spaceships written at MIT in 1962, was played at a 1972 tournament with a Rolling Stone subscription as the prize?",
             "answer": "Spacewar!",
             "accept": []
           },
@@ -18912,14 +18944,6 @@
             "accept": []
           },
           {
-            "id": "who-s-that-pokemon-3a",
-            "value": 300,
-            "difficulty": 3,
-            "question": "The golden-brown, five-pointed pure Water type with a red gem in its centre.",
-            "answer": "Staryu",
-            "accept": []
-          },
-          {
             "id": "who-s-that-pokemon-3b",
             "value": 300,
             "difficulty": 3,
@@ -18944,6 +18968,25 @@
             "accept": []
           },
           {
+            "id": "who-s-that-pokemon-4c",
+            "value": 300,
+            "difficulty": 3,
+            "question": "The Psychic type created in a lab as a clone of Mew.",
+            "answer": "Mewtwo",
+            "accept": [
+              "Mewtu"
+            ],
+            "notes": "Mewtu in German."
+          },
+          {
+            "id": "who-s-that-pokemon-3a",
+            "value": 400,
+            "difficulty": 4,
+            "question": "The golden-brown, five-pointed pure Water type with a red gem in its centre.",
+            "answer": "Staryu",
+            "accept": []
+          },
+          {
             "id": "who-s-that-pokemon-4a",
             "value": 400,
             "difficulty": 4,
@@ -18960,17 +19003,6 @@
             "accept": []
           },
           {
-            "id": "who-s-that-pokemon-4c",
-            "value": 400,
-            "difficulty": 4,
-            "question": "The Psychic type created in a lab as a clone of Mew.",
-            "answer": "Mewtwo",
-            "accept": [
-              "Mewtu"
-            ],
-            "notes": "Mewtu in German."
-          },
-          {
             "id": "who-s-that-pokemon-4d",
             "value": 400,
             "difficulty": 4,
@@ -18982,25 +19014,27 @@
             "id": "who-s-that-pokemon-5a",
             "value": 500,
             "difficulty": 5,
-            "question": "The white, horned Dark type known as the Disaster Pokémon.",
-            "answer": "Absol",
-            "accept": []
+            "question": "The lonely little Ground type that wears its dead mother's skull as a helmet.",
+            "answer": "Cubone",
+            "accept": [],
+            "notes": "Not Marowak, which is its evolved form."
           },
           {
             "id": "who-s-that-pokemon-5b",
             "value": 500,
             "difficulty": 5,
-            "question": "The small, pink, heart-shaped Water type.",
-            "answer": "Luvdisc",
+            "question": "The gentle blue Water and Ice type that carries people across the sea on its back.",
+            "answer": "Lapras",
             "accept": []
           },
           {
             "id": "who-s-that-pokemon-5c",
             "value": 500,
             "difficulty": 5,
-            "question": "The giant Ground and Ghost type golem.",
-            "answer": "Golurk",
-            "accept": []
+            "question": "The giant Rock and Ground type snake made of boulders.",
+            "answer": "Onix",
+            "accept": [],
+            "notes": "Brock's signature Pokémon. Not Steelix, its Steel-type evolution."
           },
           {
             "id": "who-s-that-pokemon-5d",
@@ -19143,17 +19177,6 @@
             ]
           },
           {
-            "id": "who-s-the-villain-4a",
-            "value": 400,
-            "difficulty": 4,
-            "question": "Who murdered his musical partner and stole his songs in Pixar's Coco?",
-            "answer": "Ernesto de la Cruz",
-            "accept": [
-              "De la Cruz",
-              "Ernesto"
-            ]
-          },
-          {
             "id": "who-s-the-villain-4b",
             "value": 400,
             "difficulty": 4,
@@ -19180,6 +19203,28 @@
             "accept": []
           },
           {
+            "id": "who-s-the-villain-5d",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Whom did Sherlock Holmes call \"the Napoleon of crime\"?",
+            "answer": "Professor Moriarty",
+            "accept": [
+              "Moriarty",
+              "James Moriarty"
+            ]
+          },
+          {
+            "id": "who-s-the-villain-4a",
+            "value": 500,
+            "difficulty": 5,
+            "question": "Who murdered his musical partner and stole his songs in Pixar's Coco?",
+            "answer": "Ernesto de la Cruz",
+            "accept": [
+              "De la Cruz",
+              "Ernesto"
+            ]
+          },
+          {
             "id": "who-s-the-villain-5a",
             "value": 500,
             "difficulty": 5,
@@ -19203,17 +19248,6 @@
             "answer": "Auric Goldfinger",
             "accept": [
               "Goldfinger"
-            ]
-          },
-          {
-            "id": "who-s-the-villain-5d",
-            "value": 500,
-            "difficulty": 5,
-            "question": "Whom did Sherlock Holmes call \"the Napoleon of crime\"?",
-            "answer": "Professor Moriarty",
-            "accept": [
-              "Moriarty",
-              "James Moriarty"
             ]
           }
         ]
@@ -19505,18 +19539,10 @@
             "accept": []
           },
           {
-            "id": "words-in-honey-mogul-4a",
-            "value": 400,
-            "difficulty": 4,
-            "question": "What is a speech honouring someone at their funeral called?",
-            "answer": "Eulogy",
-            "accept": []
-          },
-          {
             "id": "words-in-honey-mogul-4b",
             "value": 400,
             "difficulty": 4,
-            "question": "Which large flightless bird is native to Australia?",
+            "question": "Which bird stands opposite a kangaroo on Australia's coat of arms?",
             "answer": "Emu",
             "accept": []
           },
@@ -19532,8 +19558,24 @@
             "id": "words-in-honey-mogul-4d",
             "value": 400,
             "difficulty": 4,
-            "question": "What is the currency of Japan?",
+            "question": "In which currency are the shares of the Nikkei 225 index priced?",
             "answer": "Yen",
+            "accept": []
+          },
+          {
+            "id": "words-in-honey-mogul-5c",
+            "value": 400,
+            "difficulty": 4,
+            "question": "Which word means darkness, or a feeling of sadness?",
+            "answer": "Gloom",
+            "accept": []
+          },
+          {
+            "id": "words-in-honey-mogul-4a",
+            "value": 500,
+            "difficulty": 5,
+            "question": "What is a speech honouring someone at their funeral called?",
+            "answer": "Eulogy",
             "accept": []
           },
           {
@@ -19550,14 +19592,6 @@
             "difficulty": 5,
             "question": "Which word means a powerful business tycoon, or a bump on a ski slope?",
             "answer": "Mogul",
-            "accept": []
-          },
-          {
-            "id": "words-in-honey-mogul-5c",
-            "value": 500,
-            "difficulty": 5,
-            "question": "Which word means darkness, or a feeling of sadness?",
-            "answer": "Gloom",
             "accept": []
           },
           {

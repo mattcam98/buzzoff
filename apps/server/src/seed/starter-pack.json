@@ -146,9 +146,10 @@
             "id": "cat-03-5",
             "value": 500,
             "difficulty": 5,
-            "question": "In the 1982 film \"Blade Runner\", what is the name of the test used to tell replicants apart from humans?",
-            "answer": "The Voight-Kampff test",
-            "accept": ["Voight-Kampff", "VK test"]
+            "question": "Which 1982 science-fiction film was adapted from Philip K. Dick's novel \"Do Androids Dream of Electric Sheep?\"",
+            "answer": "Blade Runner",
+            "accept": [],
+            "notes": "Directed by Ridley Scott, with Harrison Ford hunting replicants."
           }
         ]
       },
@@ -241,10 +242,10 @@
             "id": "cat-05-5",
             "value": 500,
             "difficulty": 5,
-            "question": "Which Soviet software engineer created \"Tetris\" in 1984?",
-            "answer": "Alexey Pajitnov",
-            "accept": ["Pajitnov"],
-            "notes": "The surname alone is enough; be generous with pronunciation."
+            "question": "In which Japanese city, the country's old imperial capital, is Nintendo's headquarters?",
+            "answer": "Kyoto",
+            "accept": [],
+            "notes": "Not Tokyo. Nintendo began there in 1889 as a maker of playing cards."
           }
         ]
       },
