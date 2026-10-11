@@ -70,6 +70,10 @@ function Session({ code, token, playerId }: { code: string; token: string | null
     } else if (e.type === 'dice.won' && e.playerId === playerId) {
       haptic([30, 40, 30, 40, 120]);
       play('correct');
+    } else if (e.type === 'game.rematch') {
+      // The phone may be lying on the table showing the last game's result: say that it has moved on.
+      haptic([40, 60, 40]);
+      toast('New game! Tap ready when you’re set.', 'good');
     }
   });
 

@@ -41,7 +41,16 @@ export interface LastSetup {
 
 export const storage = {
   seat: (code: string) => read<PlayerSeat | null>(`buzzoff.seat.${code}`, null),
-  setSeat: (code: string, seat: PlayerSeat | null) => write(`buzzoff.seat.${code}`, seat),
+  setSeat(code: string, seat: PlayerSeat | null) {
+    write(`buzzoff.seat.${code}`, seat);
+    if (seat) write('buzzoff.room', code);
+    else if (read<string | null>('buzzoff.room', null) === code) write('buzzoff.room', null);
+  },
+  /** The room this phone last took a seat in and still holds it, so the front door can offer the way back. */
+  room() {
+    const code = read<string | null>('buzzoff.room', null);
+    return code && this.seat(code) ? code : null;
+  },
 
   profile: () => read<Profile | null>('buzzoff.profile', null),
   setProfile: (profile: Profile) => write('buzzoff.profile', profile),

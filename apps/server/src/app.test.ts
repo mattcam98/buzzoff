@@ -695,6 +695,211 @@ describe('content and results', () => {
     expect(ann.client.pub.phase).toBe('lobby');
   });
 
+  it('plays again in the same room: nobody rejoins, both games are kept, and the questions are new', async () => {
+    const store = new MemoryStore();
+    h = await new Harness().start(store);
+    const { code, hostKey } = await h.createGame();
+    const key = { 'x-host-key': hostKey };
+    const again = (headers: Record<string, string> = key) => h.api<ApiError>('POST', `/games/${code}/rematch`, undefined, headers);
+    const host = await h.connect('host', code, hostKey);
+    const ann = await h.join(code, 'Ann');
+    const bo = await h.join(code, 'Bo');
+    const board = (of = host) => (of.pub.round?.mode === 'trivia' ? of.pub.round.board.map((c) => c.title) : []);
+    /** Start the show and play a clue from every category, so that all of them have been seen. */
+    const play = async (winner: string) => {
+      await host.host({ t: 'start' });
+      await host.host({ t: 'round.begin' });
+      // Handing someone the board settles the roll for the first pick, which is not what is being tested.
+      await host.host({ t: 'control.set', id: winner });
+      const titles = board();
+      for (const cat of titles.keys()) {
+        await host.host({ t: 'clue.select', cat, idx: 0 });
+        await host.host({ t: 'clue.reveal' });
+        await host.host({ t: 'clue.continue' });
+      }
+      await host.host({ t: 'score.adjust', id: winner, delta: 400 });
+      return titles;
+    };
+
+    const first = await play(ann.playerId);
+    // A game in play is never dealt over, and only the host can ask.
+    expect((await again()).body.error.message).toMatch(/Finish this game/);
+    expect(host.pub.phase).toBe('round');
+    await host.host({ t: 'game.end' });
+    await until(() => host.pub.phase === 'finished');
+    expect((await again({})).status).toBe(403);
+
+    // One request with nothing in it: the same format and packs, in the same room, for the same people.
+    expect((await again()).status).toBe(200);
+    await until(() => ann.client.pub.phase === 'lobby' && bo.client.pub.phase === 'lobby', 'both phones back in the lobby');
+    expect(bo.client.events.at(-1)).toEqual({ type: 'game.rematch' });
+    expect(host.pub.players.map((p) => [p.id, p.name, p.score, p.ready, p.connected])).toEqual([
+      [ann.playerId, 'Ann', 0, false, true],
+      [bo.playerId, 'Bo', 0, false, true],
+    ]);
+    expect(host.hostView!.undo).toBeNull();
+
+    // Asked a second time (a double tap, a request sent again), the lobby everyone is in is left alone.
+    await ann.client.act({ t: 'ready', ready: true });
+    expect((await again()).status).toBe(200);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(host.pub.players.map((p) => p.ready)).toEqual([true, false]);
+
+    await bo.client.act({ t: 'ready', ready: true });
+    const second = await play(bo.playerId);
+    expect(second.filter((title) => first.includes(title))).toEqual([]);
+    await host.host({ t: 'game.end' });
+    await until(async () => (await h.api<GameResult[]>('GET', '/history')).body.length === 2, 'both games in History');
+    const [later, earlier] = (await h.api<GameResult[]>('GET', '/history')).body;
+    expect([earlier, later].map((game) => game.players.find((p) => p.champion)!.name)).toEqual(['Ann', 'Bo']);
+    expect(later.id).not.toBe(earlier.id);
+    expect(later.startedAt).toBeGreaterThanOrEqual(earlier.finishedAt);
+    // Each seat is the same person in both games.
+    const who = (game: GameResult) => Object.fromEntries(game.players.map((p) => [p.name, p.profileId]));
+    expect(who(later)).toEqual(who(earlier));
+
+    // What has been played is remembered across rooms and restarts: a brand-new game is dealt other questions too.
+    await h.stop();
+    h = await new Harness().start(store);
+    const next = await h.createGame();
+    const host2 = await h.connect('host', next.code, next.hostKey);
+    await h.join(next.code, 'Cy');
+    await host2.host({ t: 'start' });
+    await until(() => board(host2).length > 0, 'the new game’s board');
+    expect(board(host2).filter((title) => [...first, ...second].includes(title))).toEqual([]);
+  });
+
+  it('does not ask a Fast Money survey again until every survey has had its turn', async () => {
+    h = await new Harness().start();
+    const SURVEYS: GameRules = {
+      ...RULES,
+      rounds: [{
+        mode: 'fastMoney', title: 'Surveys', questions: 3, participants: 'all', turnSec: 60, extraSecPerTurn: 0, blockDuplicates: false,
+        reveal: 'atEnd', stakes: 'points', pointMultiplier: 10, target: 0, targetBonus: 0,
+      }],
+    };
+    const asked: string[][] = [];
+    /** Start the show and begin Fast Money, which is when its questions have been put to the room. */
+    const play = async (host: Client) => {
+      await host.host({ t: 'start' });
+      await host.host({ t: 'round.begin' });
+      await until(() => host.pub.round?.stage === 'ready' && host.hostView?.round?.mode === 'fastMoney', 'Fast Money to begin');
+      const round = host.hostView!.round!;
+      asked.push(round.mode === 'fastMoney' ? round.surveys.map((s) => s.question) : []);
+      await host.host({ t: 'game.end' });
+      await until(() => host.pub.phase === 'finished');
+    };
+    /** A new room, as when the host sets up a game from scratch, and then a second game in it with Play again. */
+    const room = async (games: 1 | 2) => {
+      const { code, hostKey } = await h.createGame(SURVEYS);
+      const host = await h.connect('host', code, hostKey);
+      const ann = await h.join(code, 'Ann');
+      await play(host);
+      if (games === 1) return;
+      expect((await h.api('POST', `/games/${code}/rematch`, undefined, { 'x-host-key': hostKey })).status).toBe(200);
+      await until(() => host.pub.phase === 'lobby');
+      await ann.client.act({ t: 'ready', ready: true });
+      await play(host);
+    };
+
+    // The starter pack has twelve surveys: four games of three, across two rooms, and none is asked twice.
+    await room(2);
+    await room(2);
+    expect(asked.map((questions) => questions.length)).toEqual([3, 3, 3, 3]);
+    expect(new Set(asked.flat()).size).toBe(12);
+    // A fifth game has no choice but to repeat, and is given the three that have rested longest.
+    await room(1);
+    expect([...asked[4]].sort()).toEqual([...asked[0]].sort());
+  });
+
+  it('plays a Fast Money question out on every screen from one press, and takes it back as one', async () => {
+    h = await new Harness().start();
+    const HEAD_TO_HEAD: GameRules = {
+      ...RULES,
+      rounds: [{
+        mode: 'fastMoney', title: 'Fast Money', questions: 2, participants: 'top2', turnSec: 45, extraSecPerTurn: 10, blockDuplicates: true,
+        reveal: 'atEnd', stakes: 'decider', pointMultiplier: 10, target: 0, targetBonus: 0,
+      }],
+    };
+    const { code, hostKey } = await h.createGame(HEAD_TO_HEAD);
+    const host = await h.connect('host', code, hostKey);
+    const tv = await h.connect('display', code);
+    const ann = await h.join(code, 'Ann');
+    const bo = await h.join(code, 'Bo');
+    const screens = [host, tv, ann.client, bo.client];
+    const fm = (of: Client = host) => (of.pub.round?.mode === 'fastMoney' ? of.pub.round : null);
+    const secret = () => (host.hostView?.round?.mode === 'fastMoney' ? host.hostView.round : null);
+
+    await host.host({ t: 'start' });
+    await host.host({ t: 'round.begin' });
+    await until(() => fm()?.stage === 'ready');
+    for (const id of fm()!.turns.flat()) {
+      await host.host({ t: 'fm.start' });
+      await host.host({ t: 'fm.setAnswer', playerId: id, q: 0, text: `answer from ${id}` });
+      await host.host({ t: 'fm.endTurn' });
+    }
+    await until(() => fm()?.stage === 'reveal' && secret()?.playing === false);
+    for (const screen of screens) screen.events.length = 0;
+    const heard: number[] = [];
+    tv.socket.on('event', (e) => e.type === 'fm.reveal' && heard.push(Date.now()));
+
+    // One press: both contestants' answers and points for question one, each a beat after the last.
+    await host.host({ t: 'fm.reveal' });
+    await until(() => secret()?.playing === true, 'the question to start playing');
+    await until(() => secret()?.playing === false && secret()?.revealStep === 4, 'the question to play out', 8000);
+    const beats = [{ type: 'fm.reveal', kind: 'answer' }, { type: 'fm.reveal', kind: 'points', points: 0 }];
+    await until(() => screens.every((screen) => screen.events.length === 4), 'every screen to have heard it all');
+    for (const screen of screens) expect(screen.events).toEqual([...beats, ...beats]);
+    const gaps = heard.slice(1).map((at, i) => at - heard[i]);
+    expect(gaps.map((ms, i) => Math.abs(ms - [1400, 1800, 1400][i]) < 250)).toEqual([true, true, true]);
+    // Every screen shows the same board: question one out in full, question two untouched and waiting for the host.
+    for (const screen of screens) expect(fm(screen)!.cells).toEqual(fm()!.cells);
+    expect(Object.values(fm()!.cells).map((cells) => cells.map((cell) => cell.points))).toEqual([[0, null], [0, null]]);
+
+    // Undo is one step back for the host too: the whole question, not a quarter of it.
+    expect(host.hostView!.undo).toBe('reveal');
+    await host.host({ t: 'undo' });
+    await until(() => secret()?.revealStep === 0);
+    expect(secret()!.playing).toBe(false);
+    const blank = (screen: Client) => Object.values(fm(screen)!.cells).flat().every((cell) => cell.text === null && cell.points === null);
+    await until(() => screens.every(blank), 'the question to be covered again on every screen');
+  });
+
+  it('keeps a seat with the player who earned it when they come back after a rematch on another browser', async () => {
+    h = await new Harness().start();
+    const { code, hostKey } = await h.createGame();
+    const host = await h.connect('host', code, hostKey);
+    const ann = await h.join(code, 'Ann');
+    const bo = await h.join(code, 'Bo');
+    const finish = async () => {
+      await host.host({ t: 'start' });
+      await host.host({ t: 'score.adjust', id: ann.playerId, delta: 400 });
+      await host.host({ t: 'game.end' });
+      await until(() => host.pub.phase === 'finished');
+    };
+    await finish();
+    expect((await h.api('POST', `/games/${code}/rematch`, undefined, { 'x-host-key': hostKey })).status).toBe(200);
+    await until(() => host.pub.phase === 'lobby');
+
+    // Ann's phone drops out and she returns in a browser the server has never seen: same seat, no second Ann.
+    ann.client.socket.disconnect();
+    await until(() => !host.pub.players[0].connected, 'Ann to drop');
+    const back = await h.join(code, 'Ann');
+    expect(back.playerId).toBe(ann.playerId);
+    expect(back.cookie).not.toBe(ann.cookie);
+    expect(host.pub.players.map((p) => p.name)).toEqual(['Ann', 'Bo']);
+    // The token her old browser held no longer opens the seat.
+    await expect(h.connect('player', code, ann.token)).rejects.toThrow('unauthorized');
+
+    await bo.client.act({ t: 'ready', ready: true });
+    await until(() => host.pub.players.every((p) => p.connected && p.ready), 'Ann and Bo ready');
+    await finish();
+    await until(async () => (await h.api<GameResult[]>('GET', '/history')).body.length === 2, 'both games in History');
+    const anns = (await h.api<GameResult[]>('GET', '/history')).body.map((game) => game.players.find((p) => p.name === 'Ann')!.profileId);
+    expect(anns[0]).toBe(anns[1]);
+    expect((await h.api<LeaderboardView>('GET', '/leaderboard')).body.players.filter((p) => p.name === 'Ann')).toMatchObject([{ games: 2, wins: 2 }]);
+  });
+
   /** Play a two-player game to the end over the wire, the first player winning. Returns the phones' cookies. */
   async function playNight(names: [string, string], cookies: [string?, string?] = []) {
     const { code, hostKey } = await h.createGame();

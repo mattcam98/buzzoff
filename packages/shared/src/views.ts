@@ -176,6 +176,8 @@ export interface FastMoneySecret {
   revealStep: number;
   /** Steps currently available to reveal. */
   revealLimit: number;
+  /** A question is playing itself out: its next step is on the clock and needs no press. */
+  playing: boolean;
 }
 
 export interface FinalSecret {

@@ -122,6 +122,119 @@ describe('fast money: head-to-head decider', () => {
   });
 });
 
+describe('fast money: the reveal plays a question from one press', () => {
+  /** Both finalists have answered both questions: ann apple (40) and banana (30), bob orange (20) and nothing. */
+  function answered(over: Partial<FastMoneyRoundDef> = {}) {
+    const s = sim(over);
+    s.host({ t: 'fm.start' });
+    s.player('ann', { t: 'fm.answer', q: 0, text: 'apple' }).player('ann', { t: 'fm.answer', q: 1, text: 'banana' }).player('ann', { t: 'fm.done' });
+    s.host({ t: 'fm.start' }).player('bob', { t: 'fm.answer', q: 0, text: 'orange' }).player('bob', { t: 'fm.done' });
+    s.events.length = 0;
+    return s;
+  }
+  const playing = (s: Sim) => s.secret.round!.mode === 'fastMoney' && s.secret.round!.playing;
+  const row = (s: Sim, q: number) => [s.fm.cells.ann[q], s.fm.cells.bob[q]].map((cell) => [cell.text, cell.points]);
+
+  it('shows each contestant’s answer, then its points, on a beat, and waits for the host between questions', () => {
+    const s = answered();
+    expect(playing(s)).toBe(false);
+    s.advance(60_000);
+    expect(s.fm.focus).toBeNull(); // nothing is revealed until the host asks
+
+    s.host({ t: 'fm.reveal' });
+    expect(row(s, 0)).toEqual([['apple', null], [null, null]]);
+    expect(playing(s)).toBe(true);
+    s.advance(1399);
+    expect(row(s, 0)).toEqual([['apple', null], [null, null]]);
+    s.advance(1);
+    expect(row(s, 0)).toEqual([['apple', 40], [null, null]]);
+    s.advance(1800);
+    expect(row(s, 0)).toEqual([['apple', 40], ['orange', null]]);
+    expect(s.fm.focus).toEqual({ turn: 1, q: 0, step: 1 });
+    s.advance(1400);
+    expect(row(s, 0)).toEqual([['apple', 40], ['orange', 20]]);
+    expect(s.events).toEqual([
+      { type: 'fm.reveal', kind: 'answer' }, { type: 'fm.reveal', kind: 'points', points: 40 },
+      { type: 'fm.reveal', kind: 'answer' }, { type: 'fm.reveal', kind: 'points', points: 20 },
+    ]);
+
+    // The next question is the host's to start, however long that takes.
+    expect(playing(s)).toBe(false);
+    s.advance(60_000);
+    expect(row(s, 1)).toEqual([[null, null], [null, null]]);
+    expect(() => s.host({ t: 'fm.next' })).toThrow(/Finish the reveals/);
+
+    s.host({ t: 'fm.reveal' }).advance(10_000);
+    expect(row(s, 1)).toEqual([['banana', 30], ['', 0]]);
+    expect(s.fm.totals).toEqual({ ann: 70, bob: 20 });
+    expect(playing(s)).toBe(false);
+    expect(() => s.host({ t: 'fm.reveal' })).toThrow(/Everything/);
+    s.host({ t: 'fm.next' });
+    expect(s.fm).toMatchObject({ stage: 'result', outcome: { winners: ['ann'] } });
+  });
+
+  it('takes the next step at once when the host presses again, and the beat starts over from there', () => {
+    const s = answered();
+    s.host({ t: 'fm.reveal' }).advance(500).host({ t: 'fm.reveal' });
+    expect(row(s, 0)).toEqual([['apple', 40], [null, null]]);
+    s.advance(1799);
+    expect(row(s, 0)).toEqual([['apple', 40], [null, null]]);
+    s.advance(1).host({ t: 'fm.reveal' });
+    expect(row(s, 0)).toEqual([['apple', 40], ['orange', 20]]);
+    // Hurrying to the end of a question does not start the next one.
+    s.advance(60_000);
+    expect(row(s, 1)).toEqual([[null, null], [null, null]]);
+  });
+
+  it('holds where it is while the game is paused, and picks the beat up again', () => {
+    const s = answered();
+    s.host({ t: 'fm.reveal' }).advance(1000).host({ t: 'pause', paused: true });
+    s.advance(60_000);
+    expect(row(s, 0)).toEqual([['apple', null], [null, null]]);
+    s.host({ t: 'pause', paused: false }).advance(399);
+    expect(row(s, 0)).toEqual([['apple', null], [null, null]]);
+    s.advance(1);
+    expect(row(s, 0)).toEqual([['apple', 40], [null, null]]);
+  });
+
+  it('adds the points to the score as they appear, and a match fixed mid-question counts', () => {
+    const s = answered({ stakes: 'points', pointMultiplier: 10 });
+    s.host({ t: 'fm.reveal' });
+    expect(s.score('ann')).toBe(500);
+    s.advance(1400);
+    expect(s.score('ann')).toBe(900);
+    // Bob's answer is up and its points are a beat away: the host rules it worth nothing after all.
+    s.advance(1800).host({ t: 'fm.override', playerId: 'bob', q: 0, match: null }).advance(1400);
+    expect(row(s, 0)).toEqual([['apple', 40], ['orange', 0]]);
+    expect(s.score('bob')).toBe(300);
+  });
+
+  it('plays one contestant’s answer and points per press when turns are revealed one at a time', () => {
+    const s = sim({ reveal: 'afterEachTurn' });
+    s.host({ t: 'fm.start' });
+    s.player('ann', { t: 'fm.answer', q: 0, text: 'apple' }).player('ann', { t: 'fm.answer', q: 1, text: 'banana' }).player('ann', { t: 'fm.done' });
+    s.host({ t: 'fm.reveal' }).advance(60_000);
+    expect(s.fm.cells.ann).toEqual([{ text: 'apple', points: 40 }, { text: null, points: null }]);
+    s.host({ t: 'fm.reveal' }).advance(60_000);
+    expect(s.fm.cells.ann[1]).toEqual({ text: 'banana', points: 30 });
+    // The second contestant has not played: there is nothing of theirs for the clock to run on to.
+    expect(playing(s)).toBe(false);
+    expect(s.fm.cells.bob.every((cell) => cell.text === null)).toBe(true);
+  });
+
+  it('reveals everybody’s answers to a question together when the whole room plays', () => {
+    const s = sim({ participants: 'all', blockDuplicates: false, stakes: 'points', pointMultiplier: 5, extraSecPerTurn: 0 });
+    s.host({ t: 'fm.start' });
+    for (const p of ['ann', 'bob', 'cat']) s.player(p, { t: 'fm.answer', q: 0, text: 'apple' }).player(p, { t: 'fm.done' });
+    s.host({ t: 'fm.reveal' });
+    expect(Object.values(s.fm.cells).map((cells) => cells[0])).toEqual(Array(3).fill({ text: 'apple', points: null }));
+    s.advance(1400);
+    expect([s.score('ann'), s.score('bob'), s.score('cat')]).toEqual([700, 500, 300]);
+    s.advance(60_000);
+    expect(s.fm.focus).toEqual({ turn: 0, q: 0, step: 2 });
+  });
+});
+
 describe('fast money: classic jackpot', () => {
   const classic = { reveal: 'afterEachTurn', stakes: 'points', pointMultiplier: 10, target: 100, targetBonus: 5000 } as const;
 

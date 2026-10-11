@@ -76,7 +76,9 @@ export function IdentityFields({ name, avatar, onName, onAvatar, nameRef }: {
 export function Home({ code: initialCode = '' }: { code?: string }) {
   const [, navigate] = useLocation();
   const saved = useRef(storage.profile()).current;
-  const [code, setCode] = useState(normalizeRoomCode(initialCode));
+  // Arriving with no code, a phone that still holds a seat is shown the room it is in: one tap and it is back.
+  const resumed = useRef(initialCode ? null : storage.room());
+  const [code, setCode] = useState(normalizeRoomCode(initialCode || resumed.current || ''));
   const [name, setName] = useState(saved?.name ?? '');
   const [avatar, setAvatar] = useState<AvatarData>(saved?.avatar ?? randomAvatar);
   const [lookup, setLookup] = useState<Lookup>({ state: 'idle' });
@@ -109,7 +111,16 @@ export function Home({ code: initialCode = '' }: { code?: string }) {
         setLookup({ state: 'found', game });
         setChangingCode(false);
       },
-      (err: ApiFailure) => !cancelled && setLookup({ state: 'missing', message: err.status === 404 ? 'No game with that code' : err.message }),
+      (err: ApiFailure) => {
+        if (cancelled) return;
+        // The room this phone was last in has closed: forget it and ask for a code as usual.
+        if (err.status === 404 && code === resumed.current) {
+          resumed.current = null;
+          storage.setSeat(code, null);
+          return setCode('');
+        }
+        setLookup({ state: 'missing', message: err.status === 404 ? 'No game with that code' : err.message });
+      },
     );
     return () => {
       cancelled = true;

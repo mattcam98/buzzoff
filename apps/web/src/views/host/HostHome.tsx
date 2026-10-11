@@ -1,11 +1,11 @@
 /** The host's starting point: start a game, or get back to one already running. */
 import type { GameInfo } from '@buzzoff/shared';
 import { useEffect, useState } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { api, ApiFailure } from '../../lib/api';
 import { plural } from '../../lib/format';
 import { storage, type HostedGame } from '../../lib/storage';
-import { Button, toast } from '../../ui/kit';
+import { Button, cx, toast } from '../../ui/kit';
 import { HostShell, useShell } from './HostShell';
 
 export function HostHome() {
@@ -16,14 +16,14 @@ export function HostHome() {
   );
 }
 
-interface LiveGame extends HostedGame {
+export interface LiveGame extends HostedGame {
   info: GameInfo;
 }
 
 const PHASE_LABEL: Record<GameInfo['phase'], string> = { lobby: 'In the lobby', round: 'In play', standings: 'Between rounds', finished: 'Finished' };
 
 /** Keep only the games this browser still holds a working host key for. */
-async function loadGames(): Promise<LiveGame[]> {
+export async function loadGames(): Promise<LiveGame[]> {
   const checked = await Promise.all(
     storage.hostedGames().map(async (game) => {
       try {
@@ -41,8 +41,10 @@ async function loadGames(): Promise<LiveGame[]> {
 
 function Dashboard() {
   const { info, fail } = useShell();
+  const [, navigate] = useLocation();
   const [games, setGames] = useState<LiveGame[] | null>(null);
   const [packCount, setPackCount] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,6 +67,18 @@ function Dashboard() {
       setGames((list) => list?.filter((g) => g.code !== game.code) ?? null);
     } catch (err) {
       toast(fail(err), 'error');
+    }
+  }
+
+  /** The next game in a finished room: its players are still in it, so nobody joins again. */
+  async function again(game: LiveGame) {
+    setBusy(true);
+    try {
+      await api.rematch(game.code);
+      navigate(`/host/game/${game.code}`);
+    } catch (err) {
+      toast(fail(err), 'error');
+      setBusy(false);
     }
   }
 
@@ -122,7 +136,12 @@ function Dashboard() {
                   </span>
                 </div>
                 <div className="mg-game__actions">
-                  <Link href={`/host/game/${game.code}`} className="bz-btn bz-btn--primary bz-btn--s">
+                  {game.info.phase === 'finished' && game.info.playerCount > 0 && (
+                    <Button variant="primary" size="s" disabled={busy} onClick={() => void again(game)} title="Same room, same players, new questions. Nobody has to join again.">
+                      Play again
+                    </Button>
+                  )}
+                  <Link href={`/host/game/${game.code}`} className={cx('bz-btn bz-btn--s', game.info.phase === 'finished' && game.info.playerCount > 0 ? 'bz-btn--ghost' : 'bz-btn--primary')}>
                     Open console
                   </Link>
                   <a href={`/tv/${game.code}`} target="_blank" rel="noreferrer" className="bz-btn bz-btn--ghost bz-btn--s">

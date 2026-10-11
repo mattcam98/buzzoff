@@ -4,9 +4,9 @@
  */
 import {
   GameRulesSchema, normalizeRoomCode, ROOM_CODE_LENGTH,
-  type CreateGameRequest, type GameRules, type Pack, type PackSummary, type Picks, type Preset, type RoundDef,
+  type CreateGameRequest, type GameInfo, type GameRules, type Pack, type PackSummary, type Picks, type Preset, type RoundDef,
 } from '@buzzoff/shared';
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useLocation } from 'wouter';
 import { api } from '../../lib/api';
 import { plural } from '../../lib/format';
@@ -40,10 +40,14 @@ function needs(rules: GameRules) {
 function Setup() {
   const { fail, info } = useShell();
   const [, navigate] = useLocation();
-  const rematch = useMemo(() => {
+  // The room the next game is played in, when it is one whose players are staying on; otherwise a new room is made.
+  const [rematch, setRematch] = useState(() => {
     const code = normalizeRoomCode(new URLSearchParams(window.location.search).get('rematch') ?? '');
     return code.length === ROOM_CODE_LENGTH && storage.hostKey(code) ? code : null;
-  }, []);
+  });
+  const arrivedFor = useRef(rematch).current;
+  /** A room of this browser's whose game is over and whose players are still in it. */
+  const [waiting, setWaiting] = useState<GameInfo | null>(null);
 
   const [presets, setPresets] = useState<Preset[] | null>(null);
   const [packs, setPacks] = useState<PackSummary[] | null>(null);
@@ -64,7 +68,7 @@ function Setup() {
       ([presetList, packList]) => {
         if (cancelled) return;
         const last = storage.lastSetup();
-        const previous = rematch ? storage.gameSetup(rematch) : null;
+        const previous = arrivedFor ? storage.gameSetup(arrivedFor) : null;
         // The server's chosen default, else whatever this browser played last, else the flagship format.
         const wantedPreset = info.defaultPresetId ?? last?.presetId;
         const preset = presetList.find((p) => p.id === wantedPreset) ?? presetList.find((p) => p.id === 'full-show') ?? presetList[0];
@@ -82,7 +86,19 @@ function Setup() {
     return () => {
       cancelled = true;
     };
-  }, [fail, rematch, info.defaultPresetId]);
+  }, [fail, arrivedFor, info.defaultPresetId]);
+
+  // A host who comes here straight after a game is offered its room, so the players in it are not left behind.
+  useEffect(() => {
+    let cancelled = false;
+    // Newest first, as the browser lists them.
+    void Promise.all(storage.hostedGames().map((game) => api.game(game.code).catch(() => null))).then((rooms) => {
+      if (!cancelled) setWaiting(rooms.find((room) => room?.phase === 'finished' && room.playerCount > 0) ?? null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Hand-picking needs the packs' contents, which are only fetched once asked for.
   const requested = useRef(new Set<string>());
@@ -199,8 +215,28 @@ function Setup() {
       <PageHead
         eyebrow={rematch ? `Room ${rematch}` : 'Host'}
         title={rematch ? 'Next game' : 'New game'}
-        lead={rematch ? 'Same room, same players, scores back to zero.' : 'Pick a format and some questions. You can start in two clicks.'}
-      />
+        lead={rematch ? 'Same room, same players: nobody has to join again. Scores go back to zero.' : 'Pick a format and some questions. You can start in two clicks.'}
+      >
+        {rematch && (
+          <Button variant="ghost" size="s" onClick={() => setRematch(null)}>
+            Use a new room instead
+          </Button>
+        )}
+      </PageHead>
+
+      {waiting && !rematch && (
+        <div className="mg-note mg-note--act" role="note">
+          <p>
+            <strong>
+              {plural(waiting.playerCount, 'player')} {waiting.playerCount === 1 ? 'is' : 'are'} still in room {waiting.code}.
+            </strong>{' '}
+            Keep them for this game and nobody has to scan or join again. A new room gets a new code that everyone joins from scratch.
+          </p>
+          <Button variant="primary" size="s" onClick={() => setRematch(waiting.code)}>
+            Keep these players
+          </Button>
+        </div>
+      )}
 
       {/* The two choices that matter sit side by side where there is room; everything optional folds away below. */}
       <div className="mg-setup__pick">

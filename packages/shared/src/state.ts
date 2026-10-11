@@ -216,6 +216,8 @@ export interface FastMoneyRound {
   finished: string[];
   /** Reveal progress through `fmCells()`: two steps (answer, points) per cell. */
   revealStep: number;
+  /** When the reveal next moves on by itself; null while it waits for the host. (A game saved before this existed has none.) */
+  autoAt?: number | null;
   outcome: FmOutcome | null;
 }
 
@@ -275,7 +277,11 @@ export interface GameState {
   lastEliminated: string[];
   /** Set when a decider round names the winner outright; otherwise the top score wins. */
   champions: string[] | null;
+  /** When the host started the show. A room is created, and may be played in again, well before or after. */
+  startedAt?: number | null;
   finishedAt: number | null;
+  /** Categories the host swapped out of this game before their round began. */
+  passed?: string[];
 }
 
 /** One-shot notifications that drive sounds and animations on clients. */
@@ -304,6 +310,8 @@ export type GameEvent =
   | { type: 'final.stage'; stage: 'wager' | 'answering' | 'reveal' }
   | { type: 'final.shown'; playerId: string }
   | { type: 'game.finished' }
+  /** The room is back in its lobby for another game with the same players. */
+  | { type: 'game.rematch' }
   | { type: 'cue'; name: CueName }
   | { type: 'paused'; paused: boolean };
 

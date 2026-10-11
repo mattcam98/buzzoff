@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { applySystem, assembleRounds, restoreSnapshot } from './game';
+import { buildResult } from '../stats';
+import { applySystem, assembleRounds, playedContent, restoreSnapshot } from './game';
 import { GameError } from './core';
 import { BUILTIN_PRESETS, GameRulesSchema } from '../rules';
 import { categories, FAST_MONEY, FINAL, Sim, surveys, TRIVIA } from './testkit';
@@ -277,6 +278,26 @@ describe('pause, undo and recovery', () => {
     expect(s.pub).toMatchObject({ phase: 'lobby', champions: null });
     expect(s.pub.players.map((p) => p.score)).toEqual([0, 0, 0]);
     expect(s.state.stats.ann.correct).toBe(0);
+
+    // The second game in a room is timed from its own start, not from when the room was made.
+    s.now += 600_000;
+    s.player('ann', { t: 'ready', ready: true }).host({ t: 'start' });
+    const started = s.now;
+    s.now += 1000;
+    s.host({ t: 'game.end' });
+    expect(buildResult(s.state, 'again')).toMatchObject({ startedAt: started, finishedAt: started + 1000 });
+  });
+
+  it('will not deal a new game over one in play, or into a room too full for the format', () => {
+    const s = new Sim().start();
+    const again = (rules = s.state.rules) => applySystem(s.state, { t: 'rematch', rules, rounds: s.state.rounds, packTitles: [] }, { now: s.now, rand: s.rand, rtt: () => null });
+    expect(() => again()).toThrow(/Finish this game/);
+    s.host({ t: 'game.end' });
+    expect(() => again({ ...s.state.rules, maxPlayers: 2 })).toThrow(/takes 2 players, and 3 are in the room/);
+    const out = again();
+    expect(out.events).toEqual([{ type: 'game.rematch' }]);
+    expect(out.state).toMatchObject({ phase: 'lobby', startedAt: null, finishedAt: null });
+    expect(Object.keys(out.state.players)).toEqual(['ann', 'bob', 'cat']);
   });
 });
 
@@ -302,6 +323,72 @@ describe('assembling rounds', () => {
     expect(rounds[2].mode === 'final' && rounds[2].category).toBe('Category 0');
     expect(() => assembleRounds(rules, { categories: categories(10), surveys: surveys(5) }, undefined, Math.random)).toThrow(/short by 1 category/);
     expect(() => assembleRounds(rules, pool, [['cat1'], ['cat1'], null, null], Math.random)).toThrow(/two rounds/);
+  });
+
+  it('deals what has never been played first, then what has rested longest', () => {
+    const board = new Sim().state.rules; // one board of two categories
+    const pool = { categories: categories(6), surveys: [] };
+    const dealt = (played: Record<string, number>, picks?: (string[] | null)[]) => {
+      const [round] = assembleRounds(board, pool, picks, Math.random, played);
+      return round.mode === 'trivia' ? round.board.map((c) => c.id) : [];
+    };
+    for (let i = 0; i < 20; i++) {
+      expect(dealt({ cat0: 5, cat1: 6, cat2: 7, cat3: 8 }).sort()).toEqual(['cat4', 'cat5']);
+      expect(dealt({ cat0: 50, cat1: 10, cat2: 70, cat3: 80, cat4: 20, cat5: 60 })).toEqual(['cat1', 'cat4']);
+    }
+    // What the host hand-picks is dealt however recently it was played.
+    expect(dealt({ cat0: 1, cat1: 2, cat2: 3, cat3: 99, cat4: 4 }, [['cat3']])).toEqual(['cat3', 'cat5']);
+    // With nothing known, any category may come up.
+    expect(new Set(Array.from({ length: 60 }, () => dealt({})).flat()).size).toBe(6);
+  });
+
+  it('goes through every category and every survey before any of them comes round again', () => {
+    // The Full Show takes 11 categories and 5 surveys a game: four games use up 44 and 20 exactly.
+    const pool = { categories: categories(44), surveys: surveys(20) };
+    const played: Record<string, number> = {};
+    const game = (at: number) => {
+      const rounds = assembleRounds(rules, pool, undefined, Math.random, played);
+      const ids = rounds.flatMap((r) => (r.mode === 'trivia' ? r.board.map((c) => c.id!) : r.mode === 'final' ? [r.categoryId!] : r.surveys.map((s) => s.id)));
+      for (const id of ids) played[id] = at;
+      return ids;
+    };
+    const nights = [1, 2, 3, 4].map(game);
+    expect(new Set(nights.flat()).size).toBe(44 + 20);
+    // With everything played once, the fifth game is dealt what has rested longest: the first game's questions.
+    expect(game(5).sort()).toEqual([...nights[0]].sort());
+    expect(game(6).sort()).toEqual([...nights[1]].sort());
+  });
+
+  it('counts a category or survey as played only once the room has seen it', () => {
+    const s = new Sim({ rounds: [TRIVIA, FINAL, FAST_MONEY] }).start();
+    expect(playedContent(s.state)).toEqual([]);
+    s.open(0, 0).host({ t: 'clue.reveal' }).host({ t: 'clue.continue' });
+    expect(playedContent(s.state)).toEqual(['cat0']);
+    // The final is introduced, and wagered on, before its question is asked.
+    s.host({ t: 'round.end' }).host({ t: 'round.next' }).host({ t: 'round.begin' });
+    expect(playedContent(s.state)).toEqual(['cat0']);
+    s.host({ t: 'final.advance' });
+    expect(playedContent(s.state)).toEqual(['cat0', 'cat2']);
+    s.host({ t: 'round.end' }).host({ t: 'round.next' });
+    expect(playedContent(s.state)).toEqual(['cat0', 'cat2']);
+    s.host({ t: 'round.begin' });
+    expect(playedContent(s.state)).toEqual(['cat0', 'cat2', 'sv0', 'sv1', 'sv2', 'sv3', 'sv4']);
+  });
+
+  it('swaps in the freshest category, and not one already swapped out of this game', () => {
+    const pool = categories(5);
+    const s = new Sim({ pool: { categories: pool, surveys: [] } }).host({ t: 'start' });
+    const reroll = (played = {}) => {
+      s.state = applySystem(s.state, { t: 'reroll', cat: 0, categories: pool, played }, { now: s.now, rand: s.rand, rtt: () => null }).state;
+      const [round] = s.state.rounds;
+      return round.mode === 'trivia' ? round.board[0].id : null;
+    };
+    const played = { cat2: 5, cat3: 9 };
+    expect(reroll(played)).toBe('cat4');
+    expect(reroll(played)).toBe('cat2');
+    expect(reroll(played)).toBe('cat3');
+    // Every other category has now been turned down: they come round again sooner than leave the host stuck.
+    expect(['cat0', 'cat2', 'cat4']).toContain(reroll(played));
   });
 });
 

@@ -413,13 +413,24 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
 
   await expect(host.getByRole('heading', { name: 'Reveal the answers' })).toBeVisible();
   await snap(host, 'host-fm-reveal');
-  // Two contestants, two questions, two beats each: answer, then "survey says".
-  for (let i = 0; i < 8; i++) {
-    await key(host, 'Space', i % 2 ? /Survey says/ : /Show answer/);
-    await expect(host.locator('.hc-fm__row[data-shown="2"]')).toHaveCount(Math.floor((i + 1) / 2));
-    if (i === 2) await snap(tv, 'tv-fm-reveal');
-    if (i === 2) await snap(first, 'phone-fm-reveal');
-  }
+  // One press reveals a question: each contestant's answer and then its points play out by themselves,
+  // on the TV, the phones and the console together.
+  await key(host, 'Space', /Reveal question 1/);
+  await expect(host.getByRole('button', { name: /Skip the wait/ })).toBeVisible();
+  await expect(tv.locator('.tv-fm__cell b:not(:empty)')).toHaveCount(2);
+  await expect(host.locator('.hc-fm__row[data-shown="2"]')).toHaveCount(2);
+  await expect(first.locator('.play__cells li b:not(:empty)')).toHaveCount(1);
+  await expect(second.locator('.play__cells li b:not(:empty)')).toHaveCount(1);
+  // It stops there: the next question waits for the host.
+  await expect(host.getByRole('button', { name: /Reveal question 2/ })).toBeVisible();
+  await snap(tv, 'tv-fm-reveal');
+  await snap(first, 'phone-fm-reveal');
+  await snap(host, 'host-fm-reveal-next');
+  // A press while a question is playing takes its next step at once, and the rest still follows on its own.
+  await key(host, 'Space', /Reveal question 2/);
+  await key(host, 'Space', /Skip the wait/);
+  await expect(host.locator('.hc-fm__row[data-shown="2"]')).toHaveCount(3);
+  await expect(tv.locator('.tv-fm__cell b:not(:empty)')).toHaveCount(4);
   await key(host, 'Space', /Show the result/);
   await expect(tv.locator('.tv-fm[data-stage="result"]')).toBeVisible();
   await snap(tv, 'tv-fm-result');
@@ -450,12 +461,42 @@ test('a full show from lobby to champion', async ({ browser, request }) => {
   await expect(standings.getByRole('dialog')).toHaveCount(0);
   await standings.close();
 
-  // --- play again: everyone lands back in the lobby with scores cleared
-  await host.evaluate(([c, setup]) => localStorage.setItem(`buzzoff.setup.${c}`, setup), [code, JSON.stringify({ packIds: [packs[0].id], rules: RULES })]);
-  await host.reload();
+  // --- a host who goes looking for a new game is offered the room they have, so its players are not left behind
+  const setup = watch(await hostContext.newPage());
+  await setup.goto('/host');
+  await expect(setup.locator('.mg-game').filter({ hasText: code }).getByRole('button', { name: 'Play again' })).toBeVisible();
+  await setup.getByRole('link', { name: 'Host a game' }).click();
+  await expect(setup.getByRole('note')).toContainText(`3 players are still in room ${code}`);
+  await snap(setup, 'manage-new-game-players-waiting');
+  await setup.getByRole('button', { name: 'Keep these players' }).click();
+  await expect(setup.getByRole('heading', { name: 'Next game' })).toBeVisible();
+  await expect(setup.getByRole('button', { name: 'Start next game' })).toBeVisible();
+  await setup.close();
+
+  // --- play again: one press, with nothing remembered by this browser, and everyone is back in the same room's lobby
   await host.getByRole('button', { name: 'Play again' }).click();
+  await expect(ann.getByText('New game! Tap ready when you’re set.')).toBeVisible();
+  await expect(host.getByRole('heading', { name: '3 players in the room' })).toBeVisible();
   await expect(tv.locator('.tv-lobby__players li')).toHaveCount(3);
-  await expect(ann.getByRole('heading', { name: 'You’re in!' })).toBeVisible();
+  for (const phone of [ann, bob, cat]) await expect(phone.getByRole('heading', { name: 'You’re in!' })).toBeVisible();
+  await expect(ann.locator('.play__score')).toContainText('0');
+  await snap(ann, 'phone-play-again');
+  await snap(host, 'host-play-again-lobby');
+
+  // A phone that has wandered off to the front door is shown the way back to its seat: no code, no QR.
+  await bob.goto('/');
+  await bob.getByRole('button', { name: 'Rejoin your game' }).click();
+  await expect(bob.getByRole('heading', { name: 'You’re in!' })).toBeVisible();
+  await expect(host.locator('.hc-roster li')).toHaveCount(3);
+
+  // Ready up on the same phones and the next show starts, on questions the last one did not use.
+  const before = [...stealable.slice(0, 4)];
+  for (const phone of [ann, bob, cat]) await phone.getByRole('button', { name: 'I’m ready' }).click();
+  await host.getByRole('button', { name: 'Start the show' }).click();
+  await expect(host.locator('.hc-cats li')).toHaveCount(3);
+  const titles = await host.locator('.hc-cats li strong').allTextContents();
+  const used = pack.categories.filter((c: { id: string }) => before.includes(c.id)).map((c: { title: string }) => c.title);
+  expect(titles.filter((title) => used.includes(title))).toEqual([]);
 });
 
 test('a player who reloads keeps their seat, and a stranger cannot host', async ({ browser, request }) => {

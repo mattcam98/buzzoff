@@ -5,6 +5,7 @@ import { Server } from 'socket.io';
 import type { Config } from './config';
 import { AdminAuth } from './auth';
 import { createHttp } from './http';
+import { PlayLog } from './playLog';
 import { Results } from './results';
 import type { AppServer } from './room';
 import { Rooms } from './rooms';
@@ -50,7 +51,8 @@ export async function createApp(config: Config, store: Store): Promise<App> {
     pingTimeout: 8_000,
   });
   const results = await Results.load(store);
-  const rooms = new Rooms(io, store, results, settings);
+  const playLog = await PlayLog.load(store);
+  const rooms = new Rooms(io, store, results, settings, playLog);
   await rooms.restore();
   // Socket.IO answers its own path; everything else is the HTTP app's.
   const http = createHttp({ config, store, rooms, results, auth, settings, audit });
@@ -100,6 +102,7 @@ export async function createApp(config: Config, store: Store): Promise<App> {
       // Hang up first, so nothing can be acknowledged after the final save.
       const hungUp = io.close();
       await rooms.shutdown();
+      await playLog.flush();
       await hungUp;
       await store.close();
     },

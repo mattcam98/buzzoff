@@ -39,6 +39,8 @@ export interface ContentPool {
 }
 /** Per round: the category or survey ids to use, or null to draw at random. */
 export type Picks = (string[] | null)[];
+/** When each category and survey was last played, by id. Anything missing has never been played. */
+export type Played = Record<string, number>;
 
 function shuffle<T>(items: T[], rand: () => number): T[] {
   const a = [...items];
@@ -50,11 +52,20 @@ function shuffle<T>(items: T[], rand: () => number): T[] {
 }
 
 /**
- * Take `count` items for one round: explicit picks first, then a random fill
- * from whatever is neither used nor reserved by another round's picks.
+ * Content in the order it should be dealt: whatever has never been played first, at random, then
+ * the rest, longest rested first. So one game does not ask what the last one asked, and a pack
+ * that has been played right through starts again with what the room saw longest ago.
+ */
+function freshest<T extends { id: string }>(items: T[], played: Played, rand: () => number): T[] {
+  return shuffle(items, rand).sort((a, b) => (played[a.id] ?? 0) - (played[b.id] ?? 0));
+}
+
+/**
+ * Take `count` items for one round: explicit picks first, then the freshest of
+ * whatever is neither used nor reserved by another round's picks.
  */
 function draw<T extends { id: string }>(
-  all: T[], used: Set<string>, reserved: Set<string>, picked: string[] | null, count: number, what: string, rand: () => number,
+  all: T[], used: Set<string>, reserved: Set<string>, picked: string[] | null, count: number, what: string, rand: () => number, played: Played,
 ): T[] {
   const chosen: T[] = [];
   for (const id of picked ?? []) {
@@ -64,7 +75,7 @@ function draw<T extends { id: string }>(
     chosen.push(item);
   }
   if (chosen.length > count) fail('content', `Too many ${what} selections for one round`);
-  for (const item of shuffle(all.filter((x) => !used.has(x.id) && !reserved.has(x.id)), rand)) {
+  for (const item of freshest(all.filter((x) => !used.has(x.id) && !reserved.has(x.id)), played, rand)) {
     if (chosen.length === count) break;
     used.add(item.id);
     chosen.push(item);
@@ -102,8 +113,11 @@ function finalQuestion(cat: Category): Pick<FinalRound, 'category' | 'categoryId
   };
 }
 
-/** Turn rules plus a pool of content into ready-to-play rounds. Content is copied in, so later pack edits never affect a game. */
-export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks | undefined, rand: () => number): RoundState[] {
+/**
+ * Turn rules plus a pool of content into ready-to-play rounds. Content is copied in, so later pack edits never affect a game.
+ * Given what has been played before, a round the host did not hand-pick is dealt what has rested longest.
+ */
+export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks | undefined, rand: () => number, played: Played = {}): RoundState[] {
   const usedCategories = new Set<string>();
   const usedSurveys = new Set<string>();
   const reserved = new Set((picks ?? []).flatMap((p) => p ?? []));
@@ -111,7 +125,7 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
   return rules.rounds.map((def, i): RoundState => {
     const picked = picks?.[i] ?? null;
     if (def.mode === 'trivia') {
-      const categories = draw(pool.categories, usedCategories, reserved, picked, def.categories, 'category', rand);
+      const categories = draw(pool.categories, usedCategories, reserved, picked, def.categories, 'category', rand, played);
       const board = categories.map((cat) => boardCategory(cat, def));
       // Wagers hide below the top row so the opening clue is never one.
       const slots = board.flatMap((cat, c) => cat.clues.map((_, k) => ({ c, k }))).filter((s) => s.k > 0 || def.cluesPerCategory === 1);
@@ -119,13 +133,13 @@ export function assembleRounds(rules: GameRules, pool: ContentPool, picks: Picks
       return { mode: 'trivia', def, stage: 'intro', board, controlId: null, roll: null, clue: null };
     }
     if (def.mode === 'final') {
-      const [cat] = draw(pool.categories, usedCategories, reserved, picked, 1, 'category', rand);
+      const [cat] = draw(pool.categories, usedCategories, reserved, picked, 1, 'category', rand, played);
       return {
         mode: 'final', def, stage: 'intro', ...finalQuestion(cat),
         players: [], wagers: {}, answers: {}, deadline: null, timerMs: null, order: [], shown: 0, results: {},
       };
     }
-    const surveys = draw(pool.surveys, usedSurveys, reserved, picked, def.questions, 'survey question', rand);
+    const surveys = draw(pool.surveys, usedSurveys, reserved, picked, def.questions, 'survey question', rand, played);
     return {
       mode: 'fastMoney', def, stage: 'intro', surveys, turns: [], turn: 0, deadline: null, timerMs: null,
       responses: {}, finished: [], revealStep: 0, outcome: null,
@@ -139,6 +153,21 @@ export function createGame(o: { code: string; rules: GameRules; rounds: RoundSta
     phase: 'lobby', paused: false, pausedAt: null, lobbyLocked: false, music: true, roundIndex: 0, rounds: o.rounds,
     players: {}, order: [], teamNames: [...o.rules.teams.names], stats: {}, lastEliminated: [], champions: null, finishedAt: null,
   };
+}
+
+/**
+ * The categories and surveys a game has put in front of the room, by id: a board category once one
+ * of its clues has been played, the final's once its question has been asked, and the surveys once
+ * Fast Money has begun. What was dealt but never reached, or swapped out first, is still fresh.
+ */
+export function playedContent(g: GameState): string[] {
+  const ids = g.rounds.flatMap((r) => {
+    if (r.mode === 'trivia') return r.board.filter((cat) => cat.clues.some((clue) => clue.used)).map((cat) => cat.id);
+    // The question goes up once every wager is in.
+    if (r.mode === 'final') return r.players.length && r.players.every((id) => r.wagers[id] !== undefined) ? [r.categoryId] : [];
+    return r.turns.length ? r.surveys.map((s) => s.id) : [];
+  });
+  return [...new Set(ids.filter((id): id is string => !!id))];
 }
 
 // ---------------------------------------------------------------- transitions
@@ -228,6 +257,7 @@ export function applyHost(state: GameState, action: HostAction, env: Env): Outco
         if (!canStart(playersOf(g))) fail('not_ready', 'Nobody has tapped ready yet');
         g.phase = 'round';
         g.roundIndex = 0;
+        g.startedAt = ctx.now;
         ctx.events.push({ type: 'game.started' }, { type: 'round.intro', index: 0 });
         return;
       }
@@ -386,8 +416,8 @@ export type SystemAction =
   | { t: 'recover'; savedAt: number }
   /** Play again in the same room with the same players. */
   | { t: 'rematch'; rules: GameRules; rounds: RoundState[]; packTitles: string[]; packIds?: string[] }
-  /** Swap one category of the round being introduced for another, drawn at random from the game's packs. */
-  | { t: 'reroll'; cat: number; categories: Category[] };
+  /** Swap one category of the round being introduced for another from the game's packs: the freshest, given what has been played. */
+  | { t: 'reroll'; cat: number; categories: Category[]; played?: Played };
 
 export function applySystem(state: GameState, action: SystemAction, env: Env): Outcome {
   return run(state, env, (g, ctx) => {
@@ -432,9 +462,13 @@ export function applySystem(state: GameState, action: SystemAction, env: Env): O
         const inUse = new Set(g.rounds.flatMap((r) => (r.mode === 'trivia' ? r.board.flatMap((c) => [c.id, c.title]) : r.mode === 'final' ? [r.categoryId, r.category] : [])));
         const spare = action.categories.filter((c) => !inUse.has(c.id) && !inUse.has(c.title));
         if (!spare.length) fail('content', 'Every category in this game’s packs is already in play');
-        const fresh = spare[Math.floor(ctx.rand() * spare.length)];
+        // One the host has already swapped out of this game does not come back while there is another to offer.
+        const passed = (g.passed ??= []);
+        const wanted = spare.filter((c) => !passed.includes(c.id));
+        const fresh = freshest(wanted.length ? wanted : spare, action.played ?? {}, ctx.rand)[0];
         if (round.mode === 'trivia') {
           const old = round.board[action.cat] ?? fail('no_category', 'That category is not on this board');
+          if (old.id) passed.push(old.id);
           const next = boardCategory(fresh, round.def);
           // A hidden wager stays in the row it was in, so the board has as many as before.
           old.clues.forEach((clue, k) => {
@@ -443,12 +477,18 @@ export function applySystem(state: GameState, action: SystemAction, env: Env): O
           round.board[action.cat] = next;
         } else {
           if (action.cat !== 0) fail('no_category', 'The final has only one category');
+          if (round.categoryId) passed.push(round.categoryId);
           Object.assign(round, finalQuestion(fresh));
         }
         ctx.events.push({ type: 'category.changed', cat: action.cat });
         return;
       }
       case 'rematch':
+        // A game in progress is never dealt over: it is finished, or ended, first.
+        if (g.phase !== 'finished' && g.phase !== 'lobby') fail('bad_stage', 'Finish this game before starting the next one');
+        if (g.order.length > action.rules.maxPlayers) {
+          fail('full', `That format takes ${action.rules.maxPlayers} players, and ${g.order.length} are in the room`);
+        }
         g.rules = action.rules;
         g.rounds = action.rounds;
         g.packTitles = action.packTitles;
@@ -459,7 +499,9 @@ export function applySystem(state: GameState, action: SystemAction, env: Env): O
         g.roundIndex = 0;
         g.lastEliminated = [];
         g.champions = null;
+        g.startedAt = null;
         g.finishedAt = null;
+        g.passed = [];
         g.teamNames = g.rules.teams.names.map((name, i) => g.teamNames[i] ?? name);
         for (const p of playersOf(g)) {
           p.score = 0;
@@ -469,6 +511,7 @@ export function applySystem(state: GameState, action: SystemAction, env: Env): O
           else if (p.teamId === null || !g.teamNames[p.teamId]) p.teamId = smallestTeam(g);
           g.stats[p.id] = emptyStats();
         }
+        ctx.events.push({ type: 'game.rematch' });
         return;
     }
   });

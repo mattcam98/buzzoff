@@ -492,30 +492,34 @@ function TeamName({ name, onSave }: { name: string; onSave: (name: string) => vo
 function FinishedStage({ pub, players }: StageProps) {
   const [, navigate] = useLocation();
   const [busy, setBusy] = useState(false);
-  const setup = storage.gameSetup(pub.code);
   const champions = (pub.champions ?? []).map((id) => players[id]?.name).filter(Boolean);
   const again = async () => {
-    if (!setup) return navigate(`/host/new?rematch=${pub.code}`);
     setBusy(true);
     try {
-      // Same rules and packs; fresh questions are drawn where the pack has spares.
-      await api.rematch(pub.code, { packIds: setup.packIds, rules: setup.rules });
+      // The server replays the game's own format and packs, and deals questions the room has not just had.
+      await api.rematch(pub.code);
       toast('New game ready. Everyone’s back in the lobby.', 'good');
     } catch (err) {
       toast(err instanceof ApiFailure ? err.message : 'Couldn’t start a new game', 'error');
+      // A pack that has since been deleted is the one thing only the setup page can put right.
+      if (err instanceof ApiFailure && err.code === 'content') navigate(`/host/new?rematch=${pub.code}`);
     } finally {
       setBusy(false);
     }
   };
   return (
     <StageCard eyebrow="That’s the show" title={champions.length ? `${champions.join(' & ')} ${champions.length > 1 ? 'win' : 'wins'}!` : 'Game over'} tone="buzz">
-      <p>The results are on the TV and saved to History. Everyone’s still connected, so another game is one click away.</p>
+      <p>
+        The results are on the TV and saved to History. <strong>Play again</strong> keeps this room: {pub.players.length > 1 ? `all ${pub.players.length} players go` : 'everyone goes'} straight
+        back to the lobby on their phones with new questions, and nobody has to scan or join again.
+      </p>
       <div className="hc-actions">
+        {/* Not on the space bar: Space has just finished the game, and one press too many must not sweep the results off the TV. */}
         <Button variant="primary" size="l" disabled={busy} onClick={again}>
-          Play again
+          {busy ? 'Setting up…' : 'Play again'}
         </Button>
         <Link className="bz-btn bz-btn--ghost" href={`/host/new?rematch=${pub.code}`}>
-          Change rules or pack
+          Change format or packs
         </Link>
         <Link className="bz-btn bz-btn--ghost" href="/host/history">
           History

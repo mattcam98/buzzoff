@@ -104,6 +104,26 @@ the proxy must pass `Upgrade` requests through.
    pressing it out of habit cannot repeat whatever you last clicked. `C` and
    `X` rule an answer correct or incorrect, `R` reveals an answer nobody got,
    `U` undoes the last step, `P` pauses, `?` lists the shortcuts.
+8. **Reveal Fast Money a question at a time.** When the contestants have
+   answered, check the matches on the console, then press Space once per
+   question. Each answer goes up, its points follow a beat later, and then the
+   next contestant's answer to the same question, on the TV, the phones and
+   the console together. It stops before the next question so you set the
+   pace. Space again skips a wait, `P` holds the reveal where it is, and `U`
+   takes the whole question back.
+9. **Play again.** When the show is over, **Play again** on the console starts
+   the next game in the same room: the same code, the same players in the same
+   seats, scores back to zero and new questions. Every phone goes straight
+   back to the lobby, so nobody scans or joins again; they tap **I'm ready**
+   and you start. **Change format or packs** does the same after a stop at the
+   setup page. Hosting a brand-new game instead makes a new room that everyone
+   has to join from scratch, so the dashboard and the New game page offer the
+   room you already have first.
+
+Questions do not come round again until they have to. The server remembers
+when each category and survey was last played, in any room, and deals a new
+game (or a reroll) what has never been played first, then what has rested
+longest. What you hand-pick is dealt whatever its history.
 
 Things that go wrong at a party, and what to do:
 
@@ -116,7 +136,7 @@ Things that go wrong at a party, and what to do:
 | A clue was bad | **Throw out clue** reverses its scoring and puts it back on the board. |
 | A score needs correcting | `−` / `+` next to the player, or click the player to type a score. |
 | Someone forgot to save their final answer | Nothing to do. Answers are saved as they are typed, within half a second, so what they had written when the clock stopped is what counts. |
-| A phone dies or a browser closes | Reopening the page puts them straight back in their seat. |
+| A phone dies or a browser closes | Reopening the page puts them straight back in their seat. So does opening the site's front page: it shows the room they are in. |
 | Someone switches to a different phone | They join again under the same name; you get a prompt to let them take over the seat. |
 | The server restarts mid-game | The game comes back **paused** with scores and seats intact. Resume when ready. |
 

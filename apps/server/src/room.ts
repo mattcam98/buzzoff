@@ -8,13 +8,14 @@
  */
 import {
   applyBuzz, applyHost, applyPlayer, applySystem, buildResult, findPlayerByName, GameError, HostActionSchema, hostView,
-  nextDeadline, PlayerActionSchema, playerView, publicView, restoreSnapshot,
+  nextDeadline, PlayerActionSchema, playerView, playedContent, publicView, restoreSnapshot,
   type Ack, type Avatar, type Category, type Claim, type ClaimStatus, type ClientToServerEvents, type Env, type GameRules, type GameState,
-  type HostAction, type HostRoomView, type JoinResponse, type NetStat, type Outcome, type PlayerAction, type Role,
+  type HostAction, type HostRoomView, type JoinResponse, type NetStat, type Outcome, type Played, type PlayerAction, type Role,
   type RoundState, type ServerToClientEvents,
 } from '@buzzoff/shared';
 import type { Server, Socket } from 'socket.io';
 import { z } from 'zod';
+import type { PlayLog } from './playLog';
 import type { Results } from './results';
 import type { SavedGame, Store } from './store/types';
 import { Bucket, clock, log, random, randomId, randomToken, RecentIds, sha256, tokenMatches } from './util';
@@ -92,6 +93,7 @@ export class Room {
     private io: AppServer,
     private store: Store,
     private results: Results,
+    private playLog: PlayLog,
     saved: SavedGame,
   ) {
     this.state = saved.state;
@@ -150,8 +152,14 @@ export class Room {
     this.save();
     if (!wasFinished && this.state.phase === 'finished') {
       this.results.save(buildResult(this.state, this.resultId, this.profiles)).catch((err) => log.error('could not save result', { code: this.code, err }));
+      this.recordPlayed();
       log.info('game finished', { code: this.code, players: this.state.order.length });
     }
+  }
+
+  /** Note the questions this game has used, so the games that follow are dealt others. */
+  recordPlayed() {
+    this.playLog.record(playedContent(this.state));
   }
 
   private broadcast() {
@@ -245,17 +253,25 @@ export class Room {
     return out.ack;
   }
 
+  /**
+   * Play again in this room. Seats, tokens and who is in them carry over untouched, so every phone
+   * is simply back in the lobby; only the game is new. The one before keeps its place in History:
+   * each game played in a room is saved under its own id.
+   */
   rematch(rules: GameRules, rounds: RoundState[], packTitles: string[], packIds: string[]) {
+    // Refused (a game is still in play, the room is too full for the format) before anything is given up.
+    const out = applySystem(this.state, { t: 'rematch', rules, rounds, packTitles, packIds }, this.env());
     this.secrets.plays += 1;
+    // The last game is over and recorded: there is no undoing back into it.
     this.history = [];
-    this.commit(applySystem(this.state, { t: 'rematch', rules, rounds, packTitles, packIds }, this.env()));
+    this.commit(out);
   }
 
   /** Change one category of the round being introduced. It can be undone like any other step. */
-  reroll(cat: number, categories: Category[]) {
+  reroll(cat: number, categories: Category[], played: Played) {
     const before = this.state;
     const at = clock();
-    const out = applySystem(before, { t: 'reroll', cat, categories }, this.env(at));
+    const out = applySystem(before, { t: 'reroll', cat, categories, played }, this.env(at));
     this.history.push({ state: before, at, label: 'category change' });
     if (this.history.length > HISTORY_LIMIT) this.history.shift();
     this.commit(out);
@@ -273,8 +289,10 @@ export class Room {
       // Someone is asking for a disconnected player's seat. In the lobby
       // nothing is at stake, so hand it over; mid-game the host decides.
       if (this.state.phase === 'lobby') {
-        // Nothing has been played in this seat, so it is simply whoever holds it now.
-        this.seat(existing.id, profileId);
+        // In a room's first lobby nothing has been played in this seat, so it is simply whoever holds
+        // it now. After a game it is someone coming back to their own seat on another browser, and
+        // they are still who they were: the results already saved in their name stay theirs.
+        if (this.secrets.plays === 1 || !this.profiles[existing.id]) this.seat(existing.id, profileId);
         return { status: 'joined', playerId: existing.id, token: this.issueToken(existing.id) };
       }
       return this.openClaim(existing.id, existing.name, profileId);

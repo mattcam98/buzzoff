@@ -55,7 +55,7 @@ export function buildResult(g: GameState, id: string, profiles: Record<string, s
     code: g.code,
     name: g.rules.name,
     packTitles: g.packTitles,
-    startedAt: g.createdAt,
+    startedAt: g.startedAt ?? g.createdAt,
     finishedAt: g.finishedAt ?? g.createdAt,
     rounds: g.rounds.map((r) => r.def.title),
     players,

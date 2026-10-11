@@ -6,6 +6,11 @@
  * A "turn" is the set of players answering together: one contestant at a time
  * in the classic finale, or every player at once in the party variant. When
  * `reveal` is `afterEachTurn` the reveal happens between turns instead.
+ *
+ * The reveal is led one question at a time. The host asks for a question and it
+ * plays itself out on the server's clock, the same on every screen: an answer,
+ * a beat, its points, and then the next contestant's answer to the same
+ * question. It waits for the host before the next question.
  */
 import type { PlayerAction } from '../actions';
 import type { Survey } from '../content';
@@ -13,6 +18,11 @@ import { matchSurvey, sameAnswer } from '../normalize';
 import type { FastMoneyRound, FmOutcome, FmResponse, GameState } from '../state';
 import type { FastMoneyPublic, FastMoneySecret, FmCellView } from '../views';
 import { activePlayers, addScore, fail, ranked, setTimer, shiftTime, timerView, type Ctx, type Mode } from './core';
+
+/** The beat between an answer going up and its points: long enough to read it out, short enough to keep the room. */
+const POINTS_AFTER_MS = 1_400;
+/** The beat between one contestant's points and the next one's answer to the same question. */
+const NEXT_ANSWER_AFTER_MS = 1_800;
 
 const emptyResponse = (): FmResponse => ({ text: '', match: null, points: 0, matchedBy: null });
 
@@ -69,9 +79,30 @@ function credit(g: GameState, r: FastMoneyRound, playerId: string, points: numbe
   if (r.def.stakes === 'points') addScore(g, playerId, points * r.def.pointMultiplier);
 }
 
+/**
+ * Take the reveal one step on: an answer, or the points for the answer on screen. Then set the
+ * clock for the step after it, unless that belongs to another question (or there is none).
+ */
+function reveal(g: GameState, r: FastMoneyRound, ctx: Ctx): void {
+  const cells = fmCells(r);
+  const cell = cells[Math.floor(r.revealStep / 2)];
+  const group = r.turns[cell.turn];
+  r.revealStep += 1;
+  const points = r.revealStep % 2 === 0;
+  if (points) {
+    for (const id of group) credit(g, r, id, r.responses[id]?.[cell.q].points ?? 0);
+    ctx.events.push({ type: 'fm.reveal', kind: 'points', points: Math.max(0, ...group.map((id) => r.responses[id]?.[cell.q].points ?? 0)) });
+  } else {
+    ctx.events.push({ type: 'fm.reveal', kind: 'answer' });
+  }
+  const next = r.revealStep < revealLimit(r) ? cells[Math.floor(r.revealStep / 2)] : null;
+  r.autoAt = !next || next.q !== cell.q ? null : ctx.now + (points ? NEXT_ANSWER_AFTER_MS : POINTS_AFTER_MS);
+}
+
 function endTurn(r: FastMoneyRound, ctx: Ctx): void {
   r.deadline = null;
   r.timerMs = null;
+  r.autoAt = null;
   r.finished = [];
   const last = r.turn === r.turns.length - 1;
   if (r.def.reveal === 'atEnd' && !last) {
@@ -132,6 +163,7 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
     for (const id of r.turns.flat()) r.responses[id] = r.surveys.map(emptyResponse);
     r.turn = 0;
     r.revealStep = 0;
+    r.autoAt = null;
     r.finished = [];
     r.outcome = null;
     r.stage = 'ready';
@@ -169,22 +201,15 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
         if (shown === 2) credit(g, r, a.playerId, next.points - before.points);
         return true;
       }
-      case 'fm.reveal': {
+      case 'fm.reveal':
+        // Starts the next question, or, while one is playing out, takes its next step now instead of on the beat.
         if (r.stage !== 'reveal') fail('bad_stage', 'Nothing to reveal yet');
         if (r.revealStep >= revealLimit(r)) fail('reveal_done', 'Everything has been revealed');
-        const cell = fmCells(r)[Math.floor(r.revealStep / 2)];
-        const group = r.turns[cell.turn];
-        r.revealStep += 1;
-        if (r.revealStep % 2 === 0) {
-          for (const id of group) credit(g, r, id, r.responses[id]?.[cell.q].points ?? 0);
-          ctx.events.push({ type: 'fm.reveal', kind: 'points', points: Math.max(0, ...group.map((id) => r.responses[id]?.[cell.q].points ?? 0)) });
-        } else {
-          ctx.events.push({ type: 'fm.reveal', kind: 'answer' });
-        }
+        reveal(g, r, ctx);
         return true;
-      }
       case 'fm.next':
         if (r.stage !== 'reveal' || r.revealStep < revealLimit(r)) fail('bad_stage', 'Finish the reveals first');
+        r.autoAt = null;
         if (r.turn < r.turns.length - 1) {
           r.turn += 1;
           r.stage = 'ready';
@@ -213,17 +238,22 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
     }
   },
 
-  tick(_g, r, ctx) {
+  tick(g, r, ctx) {
     if (r.stage === 'answering' && r.deadline !== null && ctx.now >= r.deadline) {
       ctx.events.push({ type: 'timeup', what: 'turn' });
       endTurn(r, ctx);
+    } else if (r.stage === 'reveal' && r.autoAt != null && ctx.now >= r.autoAt) {
+      if (r.revealStep < revealLimit(r)) reveal(g, r, ctx);
+      else r.autoAt = null;
     }
   },
 
-  deadlines: (r) => [r.deadline],
+  deadlines: (r) => [r.deadline, r.autoAt ?? null],
   timer: (r) => r,
+  // A pause holds the reveal where it is, like any other clock: the beat picks up where it stopped.
   shift(r, delta) {
     r.deadline = shiftTime(r.deadline, delta);
+    r.autoAt = shiftTime(r.autoAt ?? null, delta);
   },
   interrupt() {},
   resume() {},
@@ -293,6 +323,7 @@ export const fastMoney: Mode<FastMoneyRound, FastMoneyPublic, FastMoneySecret> =
       cells: fmCells(r),
       revealStep: r.revealStep,
       revealLimit: revealLimit(r),
+      playing: r.stage === 'reveal' && r.autoAt != null,
     };
   },
 

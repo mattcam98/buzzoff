@@ -268,6 +268,7 @@ export function soundFor(event: GameEvent): SoundName | null {
     case 'final.stage': return 'reveal';
     case 'final.shown': return 'reveal';
     case 'game.finished': return 'fanfare';
+    case 'game.rematch': return 'intro';
     case 'cue': return event.name;
     default: return null;
   }

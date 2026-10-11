@@ -1,8 +1,9 @@
 /** Creates, finds, restores and expires rooms. */
 import {
-  applySystem, assembleRounds, createGame, GameError, normalizeRoomCode,
+  applySystem, assembleRounds, createGame, GameError, normalizeRoomCode, playedContent,
   type ContentPool, type CreateGameRequest, type CreateGameResponse,
 } from '@buzzoff/shared';
+import type { PlayLog } from './playLog';
 import type { Results } from './results';
 import { Room, type AppServer } from './room';
 import type { Settings } from './settings';
@@ -21,6 +22,7 @@ export class Rooms {
     private store: Store,
     private results: Results,
     private settings: Settings,
+    private playLog: PlayLog,
   ) {
     this.sweeper = setInterval(() => void this.sweep(), SWEEP_INTERVAL_MS).unref();
   }
@@ -38,13 +40,14 @@ export class Rooms {
   async restore() {
     for (const saved of await this.store.loadGames()) {
       if (this.isExpired(saved.updatedAt, saved.state.phase === 'finished')) {
+        this.playLog.record(playedContent(saved.state), saved.updatedAt);
         await this.store.deleteGame(saved.code);
         continue;
       }
       try {
         const env = { now: clock(), rand: random, rtt: () => null };
         const state = applySystem(saved.state, { t: 'recover', savedAt: saved.updatedAt }, env).state;
-        this.rooms.set(saved.code, new Room(this.io, this.store, this.results, { ...saved, state }));
+        this.rooms.set(saved.code, new Room(this.io, this.store, this.results, this.playLog, { ...saved, state }));
       } catch (err) {
         // One unreadable game must not keep every other game, or the server, from coming back.
         log.error('could not restore game', { code: saved.code, err });
@@ -66,7 +69,7 @@ export class Rooms {
   async create(req: CreateGameRequest): Promise<CreateGameResponse> {
     if (this.rooms.size >= MAX_ROOMS) throw new GameError('busy', 'This server is hosting too many games right now');
     const { pool, titles } = await this.content(req.packIds);
-    const rounds = assembleRounds(req.rules, pool, req.picks, random);
+    const rounds = assembleRounds(req.rules, pool, req.picks, random, this.playLog.current);
 
     // 160,000 possible codes; retry on the rare collision with a live room.
     let code = randomRoomCode();
@@ -77,17 +80,26 @@ export class Rooms {
     const hostKey = randomToken(32);
     const state = createGame({ code, rules: req.rules, rounds, packTitles: titles, packIds: req.packIds, now: clock() });
     const secrets = { hostKeyHash: sha256(hostKey), players: {}, plays: 1, profiles: {} };
-    const room = new Room(this.io, this.store, this.results, { code, state, secrets, updatedAt: Date.now() });
+    const room = new Room(this.io, this.store, this.results, this.playLog, { code, state, secrets, updatedAt: Date.now() });
     this.rooms.set(code, room);
     await room.flush();
     log.info('game created', { code, rules: req.rules.name, packs: titles });
     return { code, hostKey };
   }
 
-  async rematch(room: Room, req: CreateGameRequest) {
-    const { pool, titles } = await this.content(req.packIds);
-    room.rematch(req.rules, assembleRounds(req.rules, pool, req.picks, random), titles, req.packIds);
-    log.info('rematch', { code: room.code });
+  /**
+   * The next game in the same room: its players stay in their seats and go back to the lobby.
+   * With no setup given it is played the way the last one was, with questions dealt afresh.
+   */
+  async rematch(room: Room, req?: CreateGameRequest) {
+    // Asked for twice (a second tap, a request sent again): the room is already back in its lobby.
+    if (!req && room.state.phase === 'lobby') return;
+    const rules = req?.rules ?? room.state.rules;
+    const packIds = req?.packIds ?? room.state.packIds;
+    if (!packIds?.length) throw new GameError('content', 'This game was set up before it could be played again in one step. Choose its packs again.');
+    const { pool, titles } = await this.content(packIds);
+    room.rematch(rules, assembleRounds(rules, pool, req?.picks, random, this.playLog.current), titles, packIds);
+    log.info('rematch', { code: room.code, rules: rules.name, players: room.state.order.length });
   }
 
   /** Swap one category of the round being introduced for another from the game's packs, as they are now. */
@@ -95,13 +107,15 @@ export class Rooms {
     const packIds = room.state.packIds;
     if (!packIds?.length) throw new GameError('content', 'This game was set up before categories could be changed');
     const { pool } = await this.content(packIds);
-    room.reroll(cat, pool.categories);
+    room.reroll(cat, pool.categories, this.playLog.current);
   }
 
   async remove(code: string) {
     const room = this.rooms.get(code);
     if (!room) return;
     this.rooms.delete(code);
+    // A game closed or left part-way through still used the questions it reached.
+    room.recordPlayed();
     await room.close('closed');
     await this.store.deleteGame(code);
   }

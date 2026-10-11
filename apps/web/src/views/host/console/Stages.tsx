@@ -265,7 +265,8 @@ export function FastMoneyStage({ pub, snap, players, run, round, secret }: Stage
   const nextCell = secret.revealStep < secret.revealLimit ? secret.cells[Math.floor(secret.revealStep / 2)] : null;
   const nextIsPoints = secret.revealStep % 2 === 1;
   const moreTurns = round.turn < round.turns.length - 1;
-  const stepName = (cell: { turn: number; q: number }) => `${round.turns[cell.turn].length === 1 ? (players[round.turns[cell.turn][0]]?.name ?? 'Player') : 'Everyone'} · Q${cell.q + 1}`;
+  // One press reveals a question and it plays itself out. A second press only hurries it along.
+  const revealLabel = !nextCell ? '' : secret.playing ? 'Skip the wait' : nextIsPoints ? 'Show the points' : `Reveal question ${nextCell.q + 1}`;
   const shown = (turn: number, q: number) => {
     const i = secret.cells.findIndex((c) => c.turn === turn && c.q === q);
     return Math.max(0, Math.min(2, secret.revealStep - i * 2));
@@ -282,7 +283,7 @@ export function FastMoneyStage({ pub, snap, players, run, round, secret }: Stage
           <h1>
             {round.stage === 'ready' && `Up: ${names}`}
             {round.stage === 'answering' && `${names} answering`}
-            {round.stage === 'reveal' && 'Reveal the answers'}
+            {round.stage === 'reveal' && (secret.playing && nextCell ? `Question ${nextCell.q + 1}: survey says…` : nextCell ? 'Reveal the answers' : 'Every answer is revealed')}
             {(round.stage === 'result' || round.stage === 'done') && 'Result is on screen'}
           </h1>
         </div>
@@ -311,8 +312,8 @@ export function FastMoneyStage({ pub, snap, players, run, round, secret }: Stage
           </Button>
         )}
         {round.stage === 'reveal' && nextCell && (
-          <Button variant="primary" size="l" hotkey="Space" disabled={pub.paused} onClick={() => run({ t: 'fm.reveal' })}>
-            {nextIsPoints ? 'Survey says… (points)' : 'Show answer'} · {stepName(nextCell)}
+          <Button variant={secret.playing ? 'ghost' : 'primary'} size="l" hotkey="Space" disabled={pub.paused} onClick={() => run({ t: 'fm.reveal' })}>
+            {revealLabel}
           </Button>
         )}
         {round.stage === 'reveal' && !nextCell && (
@@ -360,6 +361,12 @@ export function FastMoneyStage({ pub, snap, players, run, round, secret }: Stage
           ))}
         </div>
       ) : null}
+      {round.stage === 'reveal' && (
+        <p className="hc-note">
+          One press reveals a whole question: {round.turns.flat().length > 1 && round.revealMode === 'atEnd' ? 'each contestant’s answer, then its points, one after the other' : 'the answer, then its points'}.
+          Press again to skip a wait, pause to hold it there, and undo takes the question back.
+        </p>
+      )}
       {round.stage !== 'ready' && (
         <p className="hc-note">
           A match marked “close” allowed for a typo, so check it before you reveal. You can change any match, or type in an answer a player said out loud.

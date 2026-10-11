@@ -34,7 +34,7 @@ any mode beyond that interface.
 |---|---|
 | `trivia` | roll → board → open → answering → result → board. The first board opens with a dice roll for the first pick (`engine/dice.ts`). Selecting a clue opens the buzzers; nobody arms them. A wrong answer loops back to *open* for a steal; a wager clue goes wager → answering. |
 | `final` | wager → answering → reveal (show an answer, host rules, repeat). |
-| `fastMoney` | ready → answering, per turn; then reveal (answer, then points, per cell) → result. |
+| `fastMoney` | ready → answering, per turn; then reveal → result. The reveal is two steps per cell (answer, then points), led one question at a time: `fm.reveal` takes one step and the server's clock takes the rest of that question (`autoAt`, a deadline like any other, so a pause holds it and every screen sees the same beats). It stops at the next question. A second `fm.reveal` while one is playing takes the next step at once. Undo restores the state before the press, so it takes back the whole question. |
 
 **Adding a mode** (say, an elimination round):
 
@@ -189,6 +189,35 @@ Redis is not used. One process holds all rooms in memory, which is the right
 size for a house full of people. Running several server processes would need
 sticky routing by room code or a shared room store; the room boundary
 (`Room`, `Rooms`, `Store`) is where that would go.
+
+## Playing again, and fresh questions
+
+Play again does not make a new room. `Room.rematch` deals new rounds into the
+room that just finished: the engine's `rematch` puts it back in the lobby with
+scores, stats, ready flags and eliminations cleared, and everything that says
+who is who (seats, player tokens, the profile behind each seat, the host key)
+is left exactly as it was. That is why no phone has to do anything: its socket
+is still attached, or reconnects with the token it already holds, and the next
+state it is sent is the lobby. A request with no body replays the game's own
+rules and packs, so it does not depend on anything the host's browser kept. It
+is refused while a game is in play, and asking twice is harmless. Each game
+played in a room saves its result under its own id (`code-created-plays`), so
+the earlier games stay in History.
+
+A seat that has played keeps its identity. If its phone drops out of the
+lobby and the player comes back in another browser under the same name, they
+are given the same seat (never a second one) and the profile it already had,
+so the leaderboard still sees one person.
+
+`PlayLog` (`apps/server/src/playLog.ts`) remembers when each category and
+survey was last played, server-wide, in one settings row. `playedContent` says
+what a game actually put in front of the room: a board category once a clue
+from it was played, the final's once its question was asked, the surveys once
+Fast Money began. It is recorded when a game finishes, and when a room is
+closed or expires part-way through. `assembleRounds` and the reroll deal what
+has never been played first, then what has rested longest; hand-picks ignore
+it. A category the host rerolls away is not offered again in that game while
+any other is left.
 
 ## Results and the leaderboard
 
@@ -359,10 +388,10 @@ nothing. Enter still presses a focused button, as it does everywhere.
 | Layer | What it covers |
 |---|---|
 | Leaderboard unit tests (`packages/shared`) | Totals, what counts as a game and as a win, recognising players by profile and by name, shared phones, host merges and their limits, ranking with ties and minimum samples |
-| Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, the dice roll for the first pick, automatic opening, the hidden question and its held timer, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching and reveal order, the final, answer secrecy |
+| Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, the dice roll for the first pick, automatic opening, the hidden question and its held timer, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching, reveal order and the question that plays itself out from one press, fresh questions and surveys before any repeat, the final, answer secrecy |
 | Web unit tests (`apps/web`) | Places on a scoreboard: equals sharing one, champions ahead of the scores |
 | Store contract tests (`apps/server`) | What both stores promise: packs, presets, games with their credentials, results in order, settings, sessions, the audit log and its limit, text a database cannot hold |
-| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; response headers; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch; results saved and removed in order; the leaderboard across games, a returning phone under a new name, merging and separating players, who may see it |
+| Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; response headers; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch; playing again in the same room with seats, identities and both results kept, and questions that do not repeat across games, rooms or restarts; results saved and removed in order; the leaderboard across games, a returning phone under a new name, merging and separating players, who may see it |
 | Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; the space bar on the host console; every phone screen measured for fit across phone sizes, orientations and keyboard heights, with ordinary content and with the longest a pack may hold; every page checked against an iPhone's status bar, notch and home indicator; the shared screen measured with twenty players, a survey table, a winning team and the longest questions and answers a pack may hold, at three display sizes |
 
 The server integration tests use the in-memory store. The store contract tests

@@ -80,7 +80,8 @@ export const api = {
     request<ClaimStatus>('GET', `/games/${code}/claims/${id}?secret=${encodeURIComponent(secret)}`),
   checkHost: (code: string) => request<{ ok: true }>('GET', `/games/${code}/host`, undefined, hostKey(code)),
   reroll: (code: string, cat: number) => request<{ ok: true }>('POST', `/games/${code}/reroll`, { cat }, hostKey(code)),
-  rematch: (code: string, req: CreateGameRequest) => request<{ ok: true }>('POST', `/games/${code}/rematch`, req, hostKey(code)),
+  /** The next game in the same room, with everyone in it. Without a setup it is the same format and packs again. */
+  rematch: (code: string, req?: CreateGameRequest) => request<{ ok: true }>('POST', `/games/${code}/rematch`, req, hostKey(code)),
   deleteGame: (code: string) => request<void>('DELETE', `/games/${code}`, undefined, hostKey(code)),
 
   history: () => request<GameResult[]>('GET', '/history'),

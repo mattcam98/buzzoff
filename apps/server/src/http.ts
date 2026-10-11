@@ -289,8 +289,11 @@ export function createHttp(deps: { config: Config; store: Store; rooms: Rooms; r
     hostOnly(req);
     res.json({ ok: true });
   });
+  // Play again. A request with no setup in it means "the same again": the game's own format and packs.
   api.post('/games/:code/rematch', async (req, res) => {
-    await rooms.rematch(hostOnly(req), parse(CreateGameSchema, req.body));
+    const room = hostOnly(req);
+    const sameAgain = !req.body || !Object.keys(req.body).length;
+    await rooms.rematch(room, sameAgain ? undefined : parse(CreateGameSchema, req.body));
     res.json({ ok: true });
   });
   api.post('/games/:code/reroll', async (req, res) => {
