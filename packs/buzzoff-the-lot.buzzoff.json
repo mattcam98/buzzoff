@@ -4138,7 +4138,7 @@
             "id": "establishing-some-borders-1d",
             "value": 100,
             "difficulty": 1,
-            "question": "Which country lies between Sweden and Russia?",
+            "question": "Which country has Sweden to its west and Norway to its north?",
             "answer": "Finland",
             "accept": []
           },
@@ -5819,7 +5819,7 @@
             "id": "pm-11-x06",
             "value": 200,
             "difficulty": 2,
-            "question": "Which Scottish manager won 13 Premier League titles with Manchester United?",
+            "question": "Which Scottish manager won 13 Premier League titles between 1993 and 2013?",
             "answer": "Sir Alex Ferguson",
             "accept": [
               "Alex Ferguson",
@@ -12658,7 +12658,7 @@
             "id": "park-the-bus-2c",
             "value": 200,
             "difficulty": 2,
-            "question": "In which country's Bundesliga do Bayern Munich and Borussia Dortmund play?",
+            "question": "In which country's Bundesliga do Bayern Munich and Bayer Leverkusen play?",
             "answer": "Germany",
             "accept": []
           },
