@@ -153,6 +153,40 @@ test('the shared screen goes full screen from its button or the F key, and the b
   game.close();
 });
 
+test('the shared screen lights its floor where it can, and Stage lights or the L key turns it off for good', async ({ browser, request, baseURL }) => {
+  const game = await room(request, baseURL!, rules([BOARD]), names(3));
+  const tv = await (await browser.newContext({ viewport: { width: 1280, height: 720 } })).newPage();
+  const errors: string[] = [];
+  tv.on('pageerror', (e) => errors.push(e.message));
+  await tv.goto(`/tv/${game.code}`);
+  const screen = tv.locator('.tv');
+  const lights = tv.getByRole('button', { name: 'Stage lights' });
+  await expect(lights).toHaveAttribute('aria-pressed', 'true');
+  // A browser with no WebGL keeps the flat backdrop, and says nothing about a floor.
+  const canDraw = await tv.evaluate(() => document.createElement('canvas').getContext('webgl2') !== null);
+  if (canDraw) {
+    await expect(screen).toHaveAttribute('data-floor', /^(full|lean|still)$/);
+    await expect(tv.locator('.bz-stage3d')).toHaveAttribute('data-lit');
+  } else {
+    await expect(screen).not.toHaveAttribute('data-floor');
+  }
+  // The floor is behind the game, never in its way: the room is still there to be read and the screen still takes its click.
+  await expect(tv.locator('.tv-lobby__players li')).toHaveCount(3);
+  await lights.click();
+  await expect(lights).toHaveAttribute('aria-pressed', 'false');
+  await expect(tv.locator('.bz-stage3d')).toHaveCount(0);
+  await expect(screen).not.toHaveAttribute('data-floor');
+  // Off is remembered by this browser, and L brings it back.
+  await tv.reload();
+  await expect(lights).toHaveAttribute('aria-pressed', 'false');
+  await expect(tv.locator('.bz-stage3d')).toHaveCount(0);
+  await tv.keyboard.press('l');
+  await expect(lights).toHaveAttribute('aria-pressed', 'true');
+  if (canDraw) await expect(screen).toHaveAttribute('data-floor', /^(full|lean|still)$/);
+  expect(errors).toEqual([]);
+  game.close();
+});
+
 test('a room of twenty fits the shared screen from the lobby to the finish', async ({ browser, request, baseURL }) => {
   test.setTimeout(180_000);
   const game = await room(request, baseURL!, rules([BOARD, FINAL]), names(20));

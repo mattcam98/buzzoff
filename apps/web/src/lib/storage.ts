@@ -86,6 +86,10 @@ export const storage = {
   lastSetup: () => read<LastSetup | null>('buzzoff.lastSetup', null),
   setLastSetup: (setup: LastSetup) => write('buzzoff.lastSetup', setup),
 
+  /** Whether a shared screen opened in this browser draws the lit floor behind the game. On unless switched off there. */
+  stageLights: () => read<boolean>('buzzoff.stageLights', true),
+  setStageLights: (on: boolean) => write('buzzoff.stageLights', on),
+
   /** The exact request a game was created with, so a rematch is one click. */
   gameSetup: (code: string) => read<CreateGameRequest | null>(`buzzoff.setup.${code}`, null),
   setGameSetup: (code: string, setup: CreateGameRequest | null) => write(`buzzoff.setup.${code}`, setup),

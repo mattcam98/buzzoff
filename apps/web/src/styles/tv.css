@@ -90,16 +90,21 @@
 }
 .tv-offline,
 .tv-sound,
-.tv-full {
+.tv-tools {
   position: fixed;
   z-index: 70;
   left: 50%;
   transform: translateX(-50%);
+  font-size: 0.75em;
+  font-weight: 700;
+}
+.tv-offline,
+.tv-sound,
+.tv-tools button {
   padding: 0.5em 1.1em;
   border: 0;
   border-radius: 99px;
-  font-size: 0.75em;
-  font-weight: 700;
+  font-weight: inherit;
 }
 .tv-offline {
   top: max(0.8em, var(--safe-top));
@@ -119,24 +124,32 @@
   animation: bz-rise 0.5s 1s var(--ease-out) both;
 }
 .tv-sound,
-.tv-full {
+.tv-tools button {
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
 }
-/* The other bottom corner. It shares the sound prompt's strip at first, and afterwards only shows while the mouse is moving. */
-.tv-full {
+/* The other bottom corner. The screen's own controls share the sound prompt's strip at first, and afterwards only show while the mouse is moving. */
+.tv-tools {
   left: max(1em, var(--safe-left));
   bottom: max(0.5em, var(--safe-bottom));
   transform: none;
+  display: flex;
+  gap: 0.5em;
+  animation: bz-rise 0.25s var(--ease-out) both;
+}
+.tv-tools button {
   background: rgb(255 255 255 / 0.14);
   color: var(--text);
   cursor: pointer;
   backdrop-filter: blur(6px);
-  animation: bz-rise 0.25s var(--ease-out) both;
+  transition: background 0.15s ease, color 0.15s ease;
 }
-.tv-full:hover {
+.tv-tools button:hover {
   background: rgb(255 255 255 / 0.24);
+}
+.tv-tools button[aria-pressed='false'] {
+  color: var(--text-dim);
 }
 /* Full screen with nobody at the mouse: the pointer goes too. */
 .tv[data-idle] {
@@ -145,6 +158,48 @@
 /* Until the screen has been clicked, everything sits a little higher and the prompt has the bottom edge to itself. */
 .tv:has(> .tv-sound) {
   padding-bottom: calc(max(0.5em, var(--safe-bottom)) + 2.4em);
+}
+
+/* ---------------------------------------------------------------- the lit floor */
+
+/*
+ * The canvas the floor is drawn on (stage/hive.ts) lies over the flat backdrop and under everything
+ * else, and fades in once its first frame is there. `data-floor` on the screen says how it is being
+ * drawn: full, lean (fewer pixels) or still (a single frame, redrawn when the lights change).
+ */
+.bz-stage3d {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.bz-stage3d[data-lit] {
+  opacity: 1;
+}
+/*
+ * Tiles that were a tint of white over a still backdrop sit on ink over a lit one: a name or a
+ * score has the same thing behind it whatever the floor is doing underneath.
+ */
+.tv[data-floor] {
+  --tile-bg: rgb(30 26 64 / 0.8);
+}
+/* Words set straight onto the floor carry a little of the dark with them, so a tile lighting up underneath never takes one away. */
+.tv[data-floor] :is(.tv-top, .tv-main, .tv-finale) {
+  text-shadow: 0 0.04em 0.5em rgb(7 6 26 / 0.85);
+}
+/* Not the two titles filled with a gradient: a shadow would be drawn over the fill. Nor anything on a card of its own colour. */
+.tv[data-floor] :is(.tv-intro h1, .tv-finale h1, .tv-top__join b, .tv-clue__value, .tv-status, .tv-answering__who, .tv-result__answer, .tv-final__card, .tv-wager__burst, .tv-intro__cats--one, .bz-ladder li[data-winner], .bz-pill, .tv-result__rulings li, .tv-final__done li, .tv-fm__cell b, .tv-crowd__answers b, .bz-avatar, .bz-num[data-negative]) {
+  text-shadow: none;
+}
+/* Frosted glass over a floor that moves is blurred again on every frame. That is kept for a screen drawing the floor at full pace. */
+.tv[data-floor='lean'],
+.tv[data-floor='still'] {
+  --glass-blur: none;
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03)), linear-gradient(rgb(26 21 70 / 0.75) 0 0);
 }
 
 /* ---------------------------------------------------------------- lobby */
@@ -546,7 +601,7 @@
   /* The number is sized from the tile, so the tile must not be sized from the number. */
   container-type: size;
   border-radius: 0.7em;
-  background: linear-gradient(180deg, #2c2470, #1e1850);
+  background: var(--board-bg);
   border: 1px solid rgb(255 255 255 / 0.08);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 0.3em 0 rgb(0 0 0 / 0.25);
   animation: bz-pop 0.45s var(--spring) both;
@@ -562,6 +617,19 @@
   background: rgb(255 255 255 / 0.025);
   border-color: transparent;
   box-shadow: none;
+}
+/* Back from a question: the board is already known, so it is simply there again, and the tile that was played settles last. */
+.tv-board[data-back] :is(.tv-board__cat, .tv-board__cell) {
+  animation: bz-fade 0.3s ease both;
+}
+.tv-board[data-back] .tv-board__cell[data-back] {
+  animation: tv-settle 0.6s var(--ease-out) both;
+}
+@keyframes tv-settle {
+  from {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 0.12em var(--buzz), 0 0 2.2em rgb(255 196 0 / 0.5);
+  }
 }
 /* Played: still there to read, plainly out of play. */
 .tv-board__cell[data-used] .bz-num {
@@ -1125,7 +1193,7 @@ video.tv-clue__media {
   gap: 0.4em;
   padding: 0.25em 0.5em 0.25em 0.9em;
   border-radius: 0.8em;
-  background: linear-gradient(180deg, #2c2470, #1e1850);
+  background: var(--board-bg);
   border: 2px solid transparent;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1);
 }
@@ -1253,7 +1321,7 @@ video.tv-clue__media {
   gap: 0.6em;
   padding: 0.4em 0.6em;
   border-radius: 0.8em;
-  background: linear-gradient(180deg, #2c2470, #1e1850);
+  background: var(--board-bg);
   animation: bz-flip-in 0.45s var(--ease-out) both;
 }
 .tv-crowd__answers span {

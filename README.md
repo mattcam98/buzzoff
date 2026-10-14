@@ -71,7 +71,11 @@ the proxy must pass `Upgrade` requests through.
    *Open TV* button) and press **Full screen** in its bottom corner, or F. The
    button hides itself once nobody is at the mouse. Clicking it also turns the
    sound on: browsers will not play any until someone has interacted with the
-   page. The TV then plays
+   page. Behind the game the TV draws a lit studio floor that follows the show:
+   the lights change with each part of it, and a buzz, a right answer or a new
+   arrival sends a ripple out from under that player. A screen that cannot
+   keep up with it draws it smaller, then holds it still; **Stage lights**
+   beside the full-screen button, or L, turns it off. The TV then plays
    BuzzOff's theme between rounds, a quiet pulse while a question is live and
    thinking music during the written final, and falls silent whenever someone
    is answering. **Background music** in the console's sound panel turns it
@@ -320,6 +324,6 @@ state machine, the security model, and how to add a game mode.
 No code, artwork or audio from any other project or show is included. Sounds
 and music are synthesised in the browser, and the tunes are BuzzOff's own. Fonts (Bricolage Grotesque, Figtree, JetBrains
 Mono) are bundled under the SIL Open Font License. Runtime dependencies are
-permissively licensed: React, Express, Socket.IO, pg, zod, multer, compression and qrcode
-under MIT, wouter under the Unlicense. Survey points are informed by published
+permissively licensed: React, Express, Socket.IO, pg, zod, multer, compression, qrcode
+and three.js under MIT, wouter under the Unlicense. Survey points are informed by published
 polls where one exists and estimated otherwise; no poll's wording or data is reproduced.

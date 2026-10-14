@@ -1,6 +1,6 @@
 /** Game-specific pieces shared by the TV, the phones and the host console. */
 import type { Media, PublicAttempt, PublicPlayer, PublicView, RoundPublic } from '@buzzoff/shared';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { Snapshot } from '../lib/connection';
 import { fmtGap, fmtMs, fmtScore, plural } from '../lib/format';
 import { useCountdown } from '../lib/hooks';
@@ -122,40 +122,44 @@ export function MediaView({ media, className }: { media: Media; className?: stri
   return <video className={cx('bz-media', className)} src={media.url} autoPlay controls playsInline />;
 }
 
-const TUMBLE_MS = 90;
-const TUMBLES = 9;
+const TUMBLE_MS = 850;
+const PIPS = Array.from({ length: 9 }, (_, i) => <i key={i} />);
+/** How the cube is turned to bring each of its faces to the front: degrees about the horizontal axis, then the vertical. */
+const TURNS: [x: number, y: number][] = [[0, 0], [0, 0], [-90, 0], [0, -90], [0, 90], [90, 0], [0, 180]];
 
 /**
  * A six-sided die. The number always comes from the server; when one arrives the die
- * tumbles through a few faces before landing on it, which is for show and nothing else.
+ * is thrown, a cube that turns over in the air and lands on it, which is for show and
+ * nothing else. At rest it is the one flat face, so a room full of dice costs no more than it did.
  */
 export function Die({ value, className }: { value: number | null; className?: string }) {
-  const [face, setFace] = useState(value);
   const [tumbling, setTumbling] = useState(false);
   const shown = useRef(value);
   useEffect(() => {
     if (value === shown.current) return;
     shown.current = value;
-    if (value === null || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return setFace(value);
-    let turns = 0;
+    if (value === null || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     setTumbling(true);
-    const timer = window.setInterval(() => {
-      const landed = ++turns >= TUMBLES;
-      setFace(landed ? value : 1 + Math.floor(Math.random() * 6));
-      if (!landed) return;
-      setTumbling(false);
-      window.clearInterval(timer);
-    }, TUMBLE_MS);
+    const timer = window.setTimeout(() => setTumbling(false), TUMBLE_MS);
     return () => {
-      window.clearInterval(timer);
+      window.clearTimeout(timer);
       setTumbling(false);
     };
   }, [value]);
+  const [x, y] = TURNS[value ?? 0];
   return (
-    <span className={cx('bz-die', className)} data-face={face ?? 0} data-tumbling={tumbling || undefined} role="img" aria-label={value === null ? 'Not rolled yet' : `Rolled a ${value}`}>
-      {Array.from({ length: 9 }, (_, i) => (
-        <i key={i} />
-      ))}
+    <span className={cx('bz-die', className)} data-face={value ?? 0} data-tumbling={tumbling || undefined} role="img" aria-label={value === null ? 'Not rolled yet' : `Rolled a ${value}`}>
+      {tumbling ? (
+        <span className="bz-die__cube" style={{ '--turn-x': `${x}deg`, '--turn-y': `${y}deg` } as CSSProperties}>
+          {[1, 2, 3, 4, 5, 6].map((side) => (
+            <span key={side} className="bz-die__side" data-face={side}>
+              {PIPS}
+            </span>
+          ))}
+        </span>
+      ) : (
+        PIPS
+      )}
     </span>
   );
 }

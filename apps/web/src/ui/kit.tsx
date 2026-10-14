@@ -132,7 +132,7 @@ export function Modal({ title, heading, className, children, onClose }: { title:
 export function Notice({ title, children, busy }: { title: string; children?: ReactNode; busy?: boolean }) {
   return (
     <main className="bz-stage bz-center">
-      <div className="bz-rise">
+      <div className="bz-rise" data-busy={busy || undefined}>
         {busy ? <i className="bz-spinner" aria-hidden /> : <Logo size={30} to="/" />}
         <h1>{title}</h1>
         {children}

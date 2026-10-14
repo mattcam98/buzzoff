@@ -15,5 +15,6 @@ export default defineConfig({
       '/socket.io': { target: server, ws: true },
     },
   },
-  build: { target: 'es2022', sourcemap: true },
+  // The shared screen's lit floor brings three.js with it, in a chunk of its own that only that screen asks for, after it is up.
+  build: { target: 'es2022', sourcemap: true, chunkSizeWarningLimit: 600 },
 });

@@ -58,12 +58,14 @@
    *   well   a recessed area inside a card
    *   bar    sticky chrome the page scrolls underneath
    *   scrim  what dims the page behind a dialog or overlay
+   *   board  a tile of the game itself, lit from above: a question's value on a board, an answer on a survey
    */
   --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
   --glass-edge: var(--line);
   --glass-blur: blur(12px) saturate(1.3);
   --glass-shadow: 0 16px 40px -22px rgb(0 0 0 / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.07);
   --tile-bg: rgb(255 255 255 / 0.06);
+  --board-bg: linear-gradient(180deg, #2c2470, #1e1850);
   --well-bg: rgb(0 0 0 / 0.22);
   --bar-bg: rgb(13 11 34 / 0.82);
   --bar-blur: blur(14px) saturate(1.4);
@@ -584,7 +586,8 @@ html.app-fixed body {
   box-shadow: var(--shadow);
   font-weight: 600;
   font-size: 0.9375rem;
-  animation: bz-rise 0.3s var(--spring);
+  /* In, and out again just before it is taken away (kit.tsx keeps a toast for 3.6 seconds). */
+  animation: bz-rise 0.3s var(--spring), bz-sink 0.3s 3.3s ease-in forwards;
 }
 .bz-toast[data-kind='error'] { background: #5a1420; border-color: var(--bad); }
 .bz-toast[data-kind='good'] { background: #0f4527; border-color: var(--good); }
@@ -646,6 +649,10 @@ html.app-fixed body {
 .bz-center p {
   color: var(--text-dim);
 }
+/* A wait that is over in a moment is never shown: the spinner only comes up if there is something to wait for. */
+.bz-center > [data-busy] {
+  animation-delay: 0.3s;
+}
 
 .bz-spinner {
   width: 44px;
@@ -672,6 +679,7 @@ html.app-fixed body {
 @keyframes bz-spin { to { transform: rotate(1turn); } }
 @keyframes bz-fade { from { opacity: 0; } }
 @keyframes bz-rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes bz-sink { to { opacity: 0; transform: translateY(8px); } }
 @keyframes bz-pop { from { opacity: 0; transform: scale(0.86); } }
 @keyframes bz-slam {
   0% { opacity: 0; transform: scale(1.8) rotate(-4deg); }

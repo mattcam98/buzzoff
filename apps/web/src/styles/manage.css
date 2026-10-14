@@ -99,6 +99,15 @@
 .mg-page > * {
   min-width: 0;
 }
+/*
+ * Each part of a page comes up as it arrives, the ones that wait on the server a moment after the
+ * rest. Only its opacity moves, and only while it is arriving, so a bar pinned inside one stays
+ * pinned and a menu that opens out of one still opens over the next. It carries no weight as a
+ * rule: anything with an entrance of its own keeps that.
+ */
+:where(.mg-page) > :where(:not(.bz-modal)) {
+  animation: bz-fade 0.28s ease backwards;
+}
 
 .mg-head {
   display: flex;

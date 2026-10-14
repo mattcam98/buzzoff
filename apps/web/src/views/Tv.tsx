@@ -12,6 +12,10 @@ import { fmtMs, fmtPercent, joinAddress, ordinal, placings, playerMap, plural } 
 import { useFullscreen, useGameEvents, useHotkeys, useRecentInput, useWakeLock } from '../lib/hooks';
 import { duckMusic, moodFor, setMusic } from '../lib/music';
 import { audioReady, play, soundFor, unlockAudio } from '../lib/sound';
+import { storage } from '../lib/storage';
+import type { Quality } from '../stage/hive';
+import { lightingFor, rippleFor } from '../stage/lighting';
+import { Stage, type StageHandle } from '../stage/Stage';
 import { FinalSecondsTick, roundBlurb, Score } from '../ui/game';
 import { Avatar, Button, Confetti, Connecting, cx, Logo, Notice } from '../ui/kit';
 import { columnsFor, FastMoneyScene, FinalScene, inRows, rowsOf, TriviaScene, useFit } from './tv/Scenes';
@@ -58,13 +62,27 @@ export function Tv({ code }: { code: string }) {
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const full = useFullscreen();
   const inUse = useRecentInput();
+  // The lit floor behind everything: wanted unless this screen has been told otherwise, and drawn only where it can be.
+  const [lights, setLights] = useState(storage.stageLights);
+  const [floor, setFloor] = useState<Quality | null>(null);
+  const stage = useRef<StageHandle>(null);
+  const toggleLights = () => {
+    storage.setStageLights(!lights);
+    setLights(!lights);
+    setFloor(null);
+  };
   useWakeLock();
-  useHotkeys((key) => key === 'f' && full.supported && full.toggle());
+  useHotkeys((key) => {
+    if (key === 'f' && full.supported) full.toggle();
+    if (key === 'l') toggleLights();
+  });
 
   useEffect(() => {
     api.info().then((info) => setPublicUrl(info.publicUrl), () => undefined);
   }, []);
 
+  const latest = useRef(snap.pub);
+  latest.current = snap.pub;
   useGameEvents(conn, (event) => {
     const name = soundFor(event);
     if (name) {
@@ -73,6 +91,11 @@ export function Tv({ code }: { code: string }) {
     }
     const celebrate = event.type === 'game.finished' || (event.type === 'fm.result' && event.won) || (event.type === 'cue' && event.name === 'confetti');
     if (celebrate) setConfetti((n) => n + 1);
+    // An event is sent just ahead of the state it belongs to. The ripple waits until the screen has drawn that, so it starts under the right player.
+    window.setTimeout(() => {
+      const ripple = rippleFor(event, latest.current);
+      if (ripple) stage.current?.ripple(ripple);
+    }, 90);
   });
 
   const { pub } = snap;
@@ -100,7 +123,8 @@ export function Tv({ code }: { code: string }) {
 
   return (
     // A click anywhere turns the sound on, and wakes it again if the browser has since put it to sleep.
-    <div className="bz-stage tv" data-phase={pub.phase} data-music={mood ?? 'off'} data-idle={(full.on && !inUse) || undefined} onClick={sound ? unlockAudio : enableSound}>
+    <div className="bz-stage tv" data-phase={pub.phase} data-music={mood ?? 'off'} data-floor={floor ?? undefined} data-idle={(full.on && !inUse) || undefined} onClick={sound ? unlockAudio : enableSound}>
+      {lights && <Stage ref={stage} lighting={lightingFor(pub)} dimmed={pub.paused} onQuality={setFloor} />}
       <TvContent pub={pub} snap={snap} publicUrl={publicUrl} />
       {pub.paused && (
         <div className="tv-overlay" role="status">
@@ -113,14 +137,25 @@ export function Tv({ code }: { code: string }) {
       {snap.status !== 'online' && <div className="tv-offline" role="status">Reconnecting…</div>}
       {/* The screen itself takes the click; the button says so, and gives the keyboard something to press. */}
       {!sound && <button className="tv-sound">🔊 Click anywhere to turn sound on</button>}
-      {/* Offered while someone is at the mouse or keyboard, and until the screen has had its first click; then it gets out of the way. */}
-      {full.supported && (inUse || !sound) && (
-        <button className="tv-full" onClick={full.toggle} title="Press F">
-          <svg viewBox="0 0 16 16" width="1em" height="1em" aria-hidden>
-            <path d={full.on ? 'M6 2v4H2M10 2v4h4M14 10h-4v4M2 10h4v4' : 'M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4'} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          {full.on ? 'Exit full screen' : 'Full screen'}
-        </button>
+      {/* Offered while someone is at the mouse or keyboard, and until the screen has had its first click; then they get out of the way. */}
+      {(inUse || !sound) && (
+        <div className="tv-tools">
+          {full.supported && (
+            <button onClick={full.toggle} title="Press F">
+              <svg viewBox="0 0 16 16" width="1em" height="1em" aria-hidden>
+                <path d={full.on ? 'M6 2v4H2M10 2v4h4M14 10h-4v4M2 10h4v4' : 'M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4'} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {full.on ? 'Exit full screen' : 'Full screen'}
+            </button>
+          )}
+          {/* A screen that struggles with the lit floor goes back to the flat backdrop; so can anyone who prefers it. */}
+          <button onClick={toggleLights} aria-pressed={lights} title="Press L">
+            <svg viewBox="0 0 16 16" width="1em" height="1em" aria-hidden>
+              <path d="M8 1.5 13.6 4.75v6.5L8 14.5 2.4 11.25v-6.5z" fill={lights ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+            </svg>
+            Stage lights
+          </button>
+        </div>
       )}
       <Confetti burst={confetti} />
     </div>
@@ -226,7 +261,7 @@ function Lobby({ pub, join }: { pub: PublicView; join: { url: string; label: str
           // Bigger for a few, smaller for many, and smaller again (useFit) for as long as the whole room is not on the screen.
           <ul ref={list} className="tv-lobby__players" data-many={pub.players.length > 10 || undefined} data-few={pub.players.length <= 6 || undefined}>
             {pub.players.map((p) => (
-              <li key={p.id} data-offline={!p.connected || undefined}>
+              <li key={p.id} data-player={p.id} data-offline={!p.connected || undefined}>
                 <Avatar avatar={p.avatar} size="3.4em" dim={!p.connected} />
                 <strong>{p.name}</strong>
                 {pub.teams && p.teamId !== null && <small>{pub.teams[p.teamId]?.name}</small>}
@@ -358,7 +393,7 @@ function Finale({ pub }: SceneProps) {
       {/* One champion has the stage alone. A tie or a winning team shares it, six to a row. */}
       <div className="tv-finale__champs" style={inRows(champions.length, rowsOf(champions.length, 6, 3))}>
         {champions.map((p) => (
-          <div key={p.id} className="tv-finale__champ">
+          <div key={p.id} className="tv-finale__champ" data-player={p.id}>
             <span className="tv-finale__crown" aria-hidden>
               👑
             </span>
@@ -416,6 +451,7 @@ function Podiums({ pub, players }: SceneProps) {
         return (
           <div
             key={p.id}
+            data-player={p.id}
             className={cx('tv-podium', answering === p.id && 'is-answering', (control === p.id || fmNow.includes(p.id)) && 'is-control')}
             data-out={out || undefined}
             data-offline={!p.connected || undefined}

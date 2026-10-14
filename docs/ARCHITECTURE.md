@@ -298,7 +298,9 @@ system's surfaces are tokens in `base.css`: *glass* for cards and panels
 (`.bz-card`), *tile* for repeated rows, *well* for recessed areas inside a
 card, *bar* for sticky chrome and *scrim* for overlays. Components take their
 background, border, blur and shadow from those rather than defining their
-own, which is what keeps the dashboard, console, phone and TV looking alike. It is built
+own, which is what keeps the dashboard, console, phone and TV looking alike. A
+sixth, *board*, is a tile of the game itself: a value on a board, an answer on
+a survey. It is built
 in pieces: the join screen and phone controller load first, and the TV, the
 leaderboard and the host's pages each load as their own chunk when opened, so a phone
 never downloads the dashboard, the pack editor or zod. `@buzzoff/shared` is
@@ -390,6 +392,51 @@ tile drawn around it or run into its neighbour, at three display sizes. Held
 upright, as a spectator's phone holds it, the same page scrolls and nothing
 is fitted to a height.
 
+**The lit floor.** Behind the shared screen, and nowhere else, is a studio
+floor drawn with three.js: a honeycomb of tiles running back into the haze,
+lit differently for each part of a show, with a ripple crossing it when
+something happens. It is the one place in the app that draws in 3D, because
+it is the one screen a whole room watches and the only one with nothing to do
+between moments; phones and the host's pages keep the flat backdrop, and
+never download three.
+
+It is in three parts (`apps/web/src/stage`). `lighting.ts` is the rules and
+draws nothing: `lightingFor` names the look for a state of the game, the same
+way `moodFor` names its music, and `rippleFor` turns an event into a ripple
+with a colour, a strength and a start, either the middle of the floor or a
+player. The more there is to read on the screen, the less the floor does.
+`hive.ts` is the only file that imports three, and is its own chunk, fetched
+after the screen is up. The floor is one instanced mesh and one draw call:
+where a tile stands, how far the swell and the ripples lift it and how it is
+lit are all worked out in the shaders from a handful of uniforms, so nothing
+is updated per tile on the CPU and a frame costs the same whatever is
+happening. `Stage.tsx` joins the two: it finds where a player is on the
+screen (`data-player` on their podium, lobby tile or die), and the floor
+works out which tile that is over, so a buzz ripples out from under whoever
+buzzed, in their colour.
+
+It is allowed to fail and to slow down. The flat backdrop is always
+underneath: with no WebGL, or if the browser takes the context away, that is
+what is seen. The floor draws at most a 1080p screen's worth of pixels
+however big the display. It measures the display's own pace before it starts,
+and when frames keep arriving late against that it steps its size down, and
+then stops animating and holds a still frame that is redrawn when the lights
+change; `data-floor` on the screen (`full`, `lean`, `still`) says which, and
+the stylesheet drops the frosted glass over a floor it cannot afford to blur
+every frame. Someone who has asked their device for less motion gets the
+still floor from the start. It stops drawing while the tab is hidden or the
+game is paused, and **Stage lights** on the screen (or L) turns it off for
+that browser.
+
+**Continuity.** A question opens out of the tile the host picked: the board
+notes where its tiles stood as it leaves the screen, and the card that
+replaces it starts from the picked one's place and size (`useOpenFrom`). The
+board is dealt out tile by tile once a round; coming back from a question it
+is simply there, with the tile just played settling into place. A die is a
+flat face at rest and a real cube (CSS 3D, six sides) only while it is in the
+air, landing on the face the server dealt, so a room of fifty dice costs no
+more than it did.
+
 The buzzer listens for `pointerdown`, which fires when a finger touches the
 glass, rather than `click`, which fires when it lifts. The written final is
 sent as it is typed (after a pause of 400 ms, or at once with Save), so an
@@ -409,7 +456,7 @@ nothing. Enter still presses a focused button, as it does everywhere.
 |---|---|
 | Leaderboard unit tests (`packages/shared`) | Totals, what counts as a game and as a win, recognising players by profile and by name, shared phones, host merges and their limits, ranking with ties and minimum samples |
 | Engine unit tests (`packages/shared`) | Buzz ordering, ties, duplicates, the dice roll for the first pick, automatic opening, the hidden question and its held timer, latency adjustment, scoring, steals, wagers, round flow, eliminations, pause, undo, restart recovery, Fast Money matching, reveal order and the question that plays itself out from one press, fresh questions and surveys before any repeat, the final, answer secrecy |
-| Web unit tests (`apps/web`) | Places on a scoreboard: equals sharing one, champions ahead of the scores |
+| Web unit tests (`apps/web`) | Places on a scoreboard: equals sharing one, champions ahead of the scores; how the shared screen's floor is lit at each point of a show, and which moments ripple across it, from where and in what colour |
 | Store contract tests (`apps/server`) | What both stores promise: packs, presets, games with their credentials, results in order, settings, sessions, the audit log and its limit, text a database cannot hold |
 | Server integration tests (`apps/server`) | Real sockets and HTTP against a real server: sync across host, TV and phones; twelve simultaneous buzzers; repeated messages; forged roles and malformed input; password gate and throttling; response headers; settings import, validation and live effect; sessions, password changes and the audit log; reconnect, takeover, kick; restart recovery; pack import and export; history and rematch; playing again in the same room with seats, identities and both results kept, and questions that do not repeat across games, rooms or restarts; results saved and removed in order; the leaderboard across games, a returning phone under a new name, merging and separating players, who may see it |
 | Browser tests (`e2e`) | A whole show in Chromium with a host, a TV and three phones; the dashboard; the Settings page from an open server to a locked one; reload and wrong-device behaviour; the space bar on the host console; every phone screen measured for fit across phone sizes, orientations and keyboard heights, with ordinary content and with the longest a pack may hold; every page checked against an iPhone's status bar, notch and home indicator; the shared screen measured with twenty players, a survey table, a winning team and the longest questions and answers a pack may hold, at three display sizes |

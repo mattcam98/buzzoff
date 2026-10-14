@@ -1,6 +1,6 @@
 /** The in-round scenes of the shared screen, one per game mode. */
 import type { FastMoneyPublic, FinalPublic, Media, TriviaPublic } from '@buzzoff/shared';
-import { useEffect, useLayoutEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { fmtDelta, fmtScore } from '../../lib/format';
 import { answerScale, BuzzLadder, Die, MediaView, rollLeaders, Seconds, textScale } from '../../ui/game';
 import { Avatar, cx, TimerBar } from '../../ui/kit';
@@ -68,9 +68,42 @@ export function useFit<T extends HTMLElement>(tiles?: string) {
   return setBox;
 }
 
-/** The card a question is read from, with its picture or sound. `instead` is shown while there is no question to read. */
-function QuestionCard({ question, media, instead }: { question: string | null; media: Media | null; instead?: ReactNode }) {
-  const card = useFit<HTMLDivElement>();
+/** Where on the screen each tile of a board stood when the board was last up, by category and row. */
+type Tiles = RefObject<Map<string, DOMRect>>;
+
+/**
+ * Open a box out of a place on the screen: it starts as small as `from` and where `from` was, and
+ * grows into its own place, with what is inside it arriving once there is room to read it. The
+ * room sees the tile the host picked become the question, rather than one screen replace another.
+ */
+function useOpenFrom(box: HTMLElement | null, tiles: Tiles | undefined, tile: string) {
+  useLayoutEffect(() => {
+    // The board wrote its tiles down as it left, in the same update that put this box up: by now they are there to read.
+    const from = tiles?.current.get(tile);
+    if (!box || !from || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Once only: the tile is where it was when the board left, and nowhere else afterwards.
+    tiles?.current.delete(tile);
+    // The box may be part-way through an entrance of its own: its middle is where it will be, and its size is taken from the layout.
+    const now = box.getBoundingClientRect();
+    const [width, height] = [box.offsetWidth, box.offsetHeight];
+    if (!width || !height) return;
+    const x = from.left + from.width / 2 - (now.left + now.width / 2);
+    const y = from.top + from.height / 2 - (now.top + now.height / 2);
+    const timing = { duration: 520, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' };
+    box.animate([{ transform: `translate(${x}px, ${y}px) scale(${from.width / width}, ${from.height / height})` }, { transform: 'none' }], timing);
+    for (const inside of box.children) inside.animate([{ opacity: 0 }, { opacity: 0, offset: 0.45 }, { opacity: 1 }], timing);
+  }, [box, tiles, tile]);
+}
+
+/** The card a question is read from, with its picture or sound. `instead` is shown while there is no question to read. Given the board's `tiles` and which `tile` was picked, it opens out of that one. */
+function QuestionCard({ question, media, instead, tiles, tile = '' }: { question: string | null; media: Media | null; instead?: ReactNode; tiles?: Tiles; tile?: string }) {
+  const [box, setBox] = useState<HTMLDivElement | null>(null);
+  const fit = useFit<HTMLDivElement>();
+  useOpenFrom(box, tiles, tile);
+  const card = useCallback((el: HTMLDivElement | null) => {
+    fit(el);
+    setBox(el);
+  }, [fit]);
   return (
     <div ref={card} className="tv-clue__body" data-media={media?.kind} data-hidden={question === null || undefined}>
       {media && <MediaView media={media} className="tv-clue__media" />}
@@ -89,8 +122,12 @@ function QuestionCard({ question, media, instead }: { question: string | null; m
 
 export function TriviaScene({ pub, snap, players, round }: SceneProps & { round: TriviaPublic }) {
   const clue = round.clue;
+  // What the board hands on to the question picked from it, and the question hands back: where the tiles stood, and which one was played.
+  const tiles = useRef(new Map<string, DOMRect>());
+  const played = useRef<string | null>(null);
+  if (clue) played.current = `${clue.cat}-${clue.idx}`;
   if (round.stage === 'roll' && round.roll) return <RollScene pub={pub} snap={snap} players={players} roll={round.roll} />;
-  if (!clue) return <Board round={round} players={players} />;
+  if (!clue) return <Board round={round} players={players} tiles={tiles} back={played.current} />;
 
   const answerer = clue.answererId ? players[clue.answererId] : null;
   const wagerer = clue.wager ? players[clue.wager.playerId] : null;
@@ -122,6 +159,9 @@ export function TriviaScene({ pub, snap, players, round }: SceneProps & { round:
         media={clue.media}
         // Nobody reads on while an answer is judged; the question comes back if the buzzers reopen.
         instead={<p className="tv-clue__hidden">Question hidden while {answerer?.name ?? 'the answer'} {answerer ? 'answers' : 'is judged'}</p>}
+        // A wager has had a screen of its own since the board was up: its question simply arrives.
+        tiles={clue.isWager ? undefined : tiles}
+        tile={`${clue.cat}-${clue.idx}`}
       />
 
       <TimerBar timer={clue.timer} held={clue.held} clockOffset={snap.clockOffset} pausedAt={pub.pausedAt} className="tv-clue__timer" />
@@ -208,7 +248,7 @@ function RollScene({ pub, players, roll }: SceneProps & { roll: NonNullable<Triv
         {shown.map((p) => {
           const inIt = roll.contenders.includes(p.id);
           return (
-            <li key={p.id} data-out={!inIt || (tied.length > 0 && !tied.includes(p.id)) || undefined} data-winner={p.id === roll.winnerId || undefined}>
+            <li key={p.id} data-player={p.id} data-out={!inIt || (tied.length > 0 && !tied.includes(p.id)) || undefined} data-winner={p.id === roll.winnerId || undefined}>
               <Avatar avatar={p.avatar} size="3.4em" dim={!inIt} />
               <strong>{p.name}</strong>
               <Die value={roll.rolls[p.id] ?? roll.out[p.id] ?? null} className="tv-roll__die" />
@@ -220,7 +260,17 @@ function RollScene({ pub, players, roll }: SceneProps & { roll: NonNullable<Triv
   );
 }
 
-function Board({ round, players }: { round: TriviaPublic; players: SceneProps['players'] }) {
+/** `back` is the tile the board has just come back from, once a question has been played: the board is not dealt out again, and that tile settles into place. */
+function Board({ round, players, tiles, back }: { round: TriviaPublic; players: SceneProps['players']; tiles: Tiles; back: string | null }) {
+  const board = useRef<HTMLDivElement>(null);
+  // As the board leaves the screen it notes where each tile stood, for the question that opens out of one of them.
+  useLayoutEffect(() => {
+    const el = board.current;
+    return () => {
+      tiles.current.clear();
+      for (const tile of el?.querySelectorAll<HTMLElement>('[data-tile]') ?? []) tiles.current.set(tile.dataset.tile!, tile.getBoundingClientRect());
+    };
+  }, [tiles]);
   const picker = round.controlId ? players[round.controlId] : null;
   const rows = Math.max(...round.board.map((c) => c.clues.length));
   // The widest value on the board, in characters: every tile sets its number small enough for that one.
@@ -230,15 +280,15 @@ function Board({ round, players }: { round: TriviaPublic; players: SceneProps['p
   const grid = { '--digits': digits, '--letters': letters, gridTemplateColumns: `repeat(${round.board.length}, minmax(0, 1fr))`, gridTemplateRows: `auto repeat(${rows}, minmax(0, 1fr))` } as CSSProperties;
   return (
     <div className="tv-board-wrap">
-      <div className="tv-board" style={grid}>
+      <div ref={board} className="tv-board" style={grid} data-back={back !== null || undefined}>
         {round.board.map((cat, c) => (
-          <div key={`h${c}`} className="tv-board__cat" style={{ gridColumn: c + 1, animationDelay: `${c * 70}ms` }}>
+          <div key={`h${c}`} className="tv-board__cat" style={{ gridColumn: c + 1, animationDelay: back === null ? `${c * 70}ms` : undefined }}>
             <span>{cat.title}</span>
           </div>
         ))}
         {round.board.flatMap((cat, c) =>
           cat.clues.map((cl, k) => (
-            <div key={`${c}-${k}`} className="tv-board__cell" data-used={cl.used || undefined} style={{ gridColumn: c + 1, gridRow: k + 2, animationDelay: `${200 + (c + k) * 45}ms` }}>
+            <div key={`${c}-${k}`} className="tv-board__cell" data-tile={`${c}-${k}`} data-used={cl.used || undefined} data-back={back === `${c}-${k}` || undefined} style={{ gridColumn: c + 1, gridRow: k + 2, animationDelay: back === null ? `${200 + (c + k) * 45}ms` : undefined }}>
               {/* A played clue keeps its value, dimmed, with whoever won it in the corner. */}
               <span className="bz-num">{fmtScore(cl.value)}</span>
               {cl.used && cl.winnerId && players[cl.winnerId] && <Avatar avatar={players[cl.winnerId].avatar} size="1em" className="tv-board__won" />}
